@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>סיכום הקורס שפות תכנות</title>
+    <!-- ייבוא גופן Heebo של גוגל לעברית מודרנית -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,7 +23,24 @@
                         accentHover: '#e0f2fe' /* sky 100 */
                     },
                     fontFamily: {
-                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        // הגדרת הגופן החדש כברירת מחדל
+                        sans: ['Heebo', 'sans-serif'],
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards'
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
                     }
                 }
             }
@@ -30,111 +50,278 @@
         body {
             background-color: #f4f7fb;
             background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-size: 32px 32px;
+            /* הגדלתי מעט את המרווח בין הנקודות למראה נקי יותר */
+        }
+
+        /* מחלקות עזר להשהיית האנימציה של הכרטיסיות */
+        .delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .delay-200 {
+            animation-delay: 200ms;
+        }
+
+        .delay-300 {
+            animation-delay: 300ms;
+        }
+
+        .delay-400 {
+            animation-delay: 400ms;
+        }
+
+        .delay-500 {
+            animation-delay: 500ms;
         }
     </style>
 </head>
 
-<body class="text-textMain font-sans min-h-screen">
+<body class="text-textMain font-sans min-h-screen relative overflow-x-hidden">
+
+    <!-- אפקטי תאורה ברקע (Blobs) -->
+    <div
+        class="absolute top-0 right-[-10%] w-96 h-96 bg-sky-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 animate-blob pointer-events-none z-0">
+    </div>
+    <div class="absolute top-20 left-[-10%] w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-60 animate-blob pointer-events-none z-0"
+        style="animation-delay: 2s;"></div>
+
     <!-- Header -->
-    <header class="bg-cardBg/90 backdrop-blur-md border-b border-slate-200 shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-8">
+    <header class="bg-white/70 backdrop-blur-xl border-b border-white/50 shadow-sm sticky top-0 z-50 transition-all">
+        <div class="container mx-auto px-4 py-6 flex flex-col items-center justify-center relative">
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-600 text-xs font-semibold mb-4 tracking-wide shadow-sm">
+                <span class="relative flex h-2 w-2">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                </span>
+                קורס אקדמי
+            </div>
             <h1
-                class="text-4xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-l from-accentStrong to-accentSoft drop-shadow-sm">
+                class="text-4xl md:text-6xl font-black text-center text-transparent bg-clip-text bg-gradient-to-l from-slate-800 via-sky-700 to-sky-500 drop-shadow-sm mb-2 tracking-tight">
                 שפות תכנות
             </h1>
-            <p class="text-center text-textMuted mt-3 text-lg font-medium">הסיכום המלא לקורס שפות תכנות, בתוספת הסברים
-                דוגמאות והכנה למבחן </p>
+            <p class="text-center text-slate-500 mt-2 text-lg font-medium max-w-2xl">
+                הסיכום המקיף והמלא לקורס שפות תכנות. תיאוריה, אלגוריתמים, דוגמאות קוד והכנה ממוקדת למבחן.
+            </p>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-12 max-w-5xl">
+    <main class="container mx-auto px-4 py-16 max-w-5xl relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
             <!-- Volume 1 -->
             <a href="1.html"
-                class="group block bg-cardBg border border-slate-200 rounded-3xl p-8 hover:border-accentSoft transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
-                <div class="flex items-center justify-between mb-4">
+                class="group block bg-white/80 backdrop-blur-sm border border-slate-200 rounded-3xl p-8 hover:border-sky-300 transition-all duration-500 hover:shadow-2xl hover:shadow-sky-100/50 hover:-translate-y-2 opacity-0 animate-fade-in-up delay-100">
+                <div class="flex items-start justify-between mb-6">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-sky-50 flex items-center justify-center text-sky-500 group-hover:bg-sky-500 group-hover:text-white transition-colors duration-300 shadow-inner">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
                     <span
-                        class="text-5xl text-slate-200 font-light group-hover:text-accentSoft transition-colors">01</span>
-                    <span class="bg-slate-100 text-sm px-4 py-1.5 rounded-full text-slate-600 font-medium">ממנים 11
-                        ו12</span>
+                        class="bg-slate-100 border border-slate-200 text-xs px-3 py-1.5 rounded-full text-slate-600 font-bold tracking-wide">ממנים
+                        11 ו-12</span>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-accentStrong transition-colors">
-                    יסודות וכלים</h2>
-                <p class="text-textMuted leading-relaxed"> מבוא לשפות תכנות, שפת scheme וסביבת הפיתוח racket</p>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-sky-600 transition-colors">יסודות
+                    וכלים</h2>
+                <p class="text-slate-500 leading-relaxed font-medium">מבוא לשפות תכנות, עקרונות שפת Scheme והיכרות
+                    מעמיקה עם סביבת הפיתוח Racket.</p>
+                <div
+                    class="mt-6 flex items-center text-sm font-bold text-sky-500 group-hover:text-sky-600 transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300">
+                    התחל קריאה
+                    <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </div>
             </a>
 
             <!-- Volume 2 -->
             <a href="2.html"
-                class="group block bg-cardBg border border-slate-200 rounded-3xl p-8 hover:border-accentSoft transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
-                <div class="flex items-center justify-between mb-4">
+                class="group block bg-white/80 backdrop-blur-sm border border-slate-200 rounded-3xl p-8 hover:border-indigo-300 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-100/50 hover:-translate-y-2 opacity-0 animate-fade-in-up delay-200">
+                <div class="flex items-start justify-between mb-6">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-colors duration-300 shadow-inner">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </div>
                     <span
-                        class="text-5xl text-slate-200 font-light group-hover:text-accentSoft transition-colors">02</span>
-                    <span class="bg-slate-100 text-sm px-4 py-1.5 rounded-full text-slate-600 font-medium">ממנים 13
-                        ו14</span>
+                        class="bg-slate-100 border border-slate-200 text-xs px-3 py-1.5 rounded-full text-slate-600 font-bold tracking-wide">ממנים
+                        13 ו-14</span>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-accentStrong transition-colors">
-                    התפתחות השפות</h2>
-                <p class="text-textMuted leading-relaxed">שפת LET (ויהי), שפת PROG (וישגור), שפת LETREC (וייסוג)</p>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-indigo-600 transition-colors">התפתחות
+                    השפות</h2>
+                <p class="text-slate-500 leading-relaxed font-medium">שפת LET (ויהי), שפת PROG (וישגור), שפת LETREC
+                    (וייסוג) ומושגי יסוד בפיתוח מתקדם.</p>
+                <div
+                    class="mt-6 flex items-center text-sm font-bold text-indigo-500 group-hover:text-indigo-600 transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300">
+                    התחל קריאה
+                    <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </div>
             </a>
 
             <!-- Volume 3 -->
             <a href="3.html"
-                class="group block bg-cardBg border border-slate-200 rounded-3xl p-8 hover:border-accentSoft transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
-                <div class="flex items-center justify-between mb-4">
+                class="group block bg-white/80 backdrop-blur-sm border border-slate-200 rounded-3xl p-8 hover:border-emerald-300 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-100/50 hover:-translate-y-2 opacity-0 animate-fade-in-up delay-300">
+                <div class="flex items-start justify-between mb-6">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300 shadow-inner">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
                     <span
-                        class="text-5xl text-slate-200 font-light group-hover:text-accentSoft transition-colors">03</span>
-                    <span class="bg-slate-100 text-sm px-4 py-1.5 rounded-full text-slate-600 font-medium">ממן 15</span>
+                        class="bg-slate-100 border border-slate-200 text-xs px-3 py-1.5 rounded-full text-slate-600 font-bold tracking-wide">ממן
+                        15</span>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-accentStrong transition-colors">ניהול
+                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-emerald-600 transition-colors">ניהול
                     זיכרון ומצב</h2>
-                <p class="text-textMuted leading-relaxed">שפת EXPLICIT (ויפנה), שפת IMPLICIT-REFS (וירמוז), שפת
-                    MUTABLE-PAIRS (ויבגוד) והעברת פרמטרים</p>
+                <p class="text-slate-500 leading-relaxed font-medium">שפת EXPLICIT (ויפנה), שפת IMPLICIT-REFS (וירמוז),
+                    שפת MUTABLE-PAIRS (ויבגוד) והעברת פרמטרים.</p>
+                <div
+                    class="mt-6 flex items-center text-sm font-bold text-emerald-500 group-hover:text-emerald-600 transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300">
+                    התחל קריאה
+                    <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </div>
             </a>
 
             <!-- Volume 4 -->
             <a href="4.html"
-                class="group block bg-cardBg border border-slate-200 rounded-3xl p-8 hover:border-accentSoft transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
-                <div class="flex items-center justify-between mb-4">
+                class="group block bg-white/80 backdrop-blur-sm border border-slate-200 rounded-3xl p-8 hover:border-violet-300 transition-all duration-500 hover:shadow-2xl hover:shadow-violet-100/50 hover:-translate-y-2 opacity-0 animate-fade-in-up delay-400">
+                <div class="flex items-start justify-between mb-6">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-violet-50 flex items-center justify-center text-violet-500 group-hover:bg-violet-500 group-hover:text-white transition-colors duration-300 shadow-inner">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                        </svg>
+                    </div>
                     <span
-                        class="text-5xl text-slate-200 font-light group-hover:text-accentSoft transition-colors">04</span>
-                    <span class="bg-slate-100 text-sm px-4 py-1.5 rounded-full text-slate-600 font-medium">ממן 16</span>
+                        class="bg-slate-100 border border-slate-200 text-xs px-3 py-1.5 rounded-full text-slate-600 font-bold tracking-wide">ממן
+                        16</span>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-accentStrong transition-colors">
-                    נושאים מתקדמים וטיפוסים</h2>
-                <p class="text-textMuted leading-relaxed">טיפוסים, אלגוריתם הסקת טיפוסים, שפת CHECKED (ויבדוק) ושפת
-                    INFERRED (ויקיש)</p>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-violet-600 transition-colors">נושאים
+                    מתקדמים וטיפוסים</h2>
+                <p class="text-slate-500 leading-relaxed font-medium">הכרת טיפוסים, אלגוריתם הסקת טיפוסים מורכב, שפת
+                    CHECKED (ויבדוק) ושפת INFERRED (ויקיש).</p>
+                <div
+                    class="mt-6 flex items-center text-sm font-bold text-violet-500 group-hover:text-violet-600 transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300">
+                    התחל קריאה
+                    <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </div>
             </a>
 
         </div>
 
-        <div class="mt-8">
-            <!-- Test Prep -->
+        <div class="mt-8 opacity-0 animate-fade-in-up delay-500">
+            <!-- Test Prep (Featured Card) -->
             <a href="5.html"
-                class="group block bg-gradient-to-r from-sky-50 to-white border border-sky-200 rounded-3xl p-8 hover:border-sky-400 transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-4xl text-sky-200 font-light group-hover:text-sky-400 transition-colors">05</span>
-                    <span class="bg-sky-100 text-sm px-4 py-1.5 rounded-full text-sky-700 font-medium">סיכום
-                        והכנה</span>
+                class="group relative overflow-hidden block bg-gradient-to-br from-sky-600 to-indigo-800 rounded-3xl p-1 shadow-2xl hover:shadow-sky-900/30 transition-all duration-500 hover:-translate-y-2">
+                <!-- Inner card -->
+                <div class="bg-white/95 backdrop-blur-md rounded-[22px] p-8 md:p-10 h-full relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="w-14 h-14 rounded-full bg-gradient-to-r from-sky-400 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-sky-500/30">
+                            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                            </svg>
+                        </div>
+                        <span
+                            class="bg-indigo-100/80 text-sm px-4 py-1.5 rounded-full text-indigo-700 font-black">בחינות
+                        </span>
+                    </div>
+                    <h2
+                        class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-800 to-sky-600 mb-3">
+                        הכנה מקיפה לבחינה</h2>
+                    <p class="text-slate-600 leading-relaxed text-lg font-medium max-w-3xl">
+                        מבנה הבחינה, אלגוריתמים מוכנים מראש לפתרון בעיות, ומבחנים פתורים מסודרים לפי נושאים ושנים. כל מה
+                        שצריך כדי לגשת מוכנים.
+                    </p>
+
+                    <!-- decorative background icon -->
+                    <svg class="absolute bottom-[-10%] left-[-5%] w-64 h-64 text-sky-50 opacity-50 pointer-events-none transform -rotate-12"
+                        fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path
+                            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                    </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-sky-900 mb-3 group-hover:text-accentStrong transition-colors">הכנה
-                    לבחינה</h2>
-                <p class="text-sky-700/90 leading-relaxed text-lg">הכנה לבחינה- מבנה הבחינה, אלגוריתמים לפיתרון בעיות
-                    ומבחנים פתורים מסודרים לפי נושאים \ בחינות</p>
+            </a>
+        </div>
+
+        <!-- רשתות חברתיות ויצירת קשר -->
+        <div class="flex justify-center items-center gap-6 mt-16 mb-4 opacity-0 animate-fade-in-up delay-500">
+            <!-- לינקדאין -->
+            <a href="https://linkedin.com/in/yair-kurtzman-382417247" target="_blank" title="לינקדאין"
+                class="group w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-slate-200 hover:border-sky-400 hover:bg-sky-50 hover:shadow-lg hover:shadow-sky-100 hover:-translate-y-1 transition-all duration-300 text-slate-400">
+                <svg class="w-6 h-6 group-hover:text-sky-600 transition-colors" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd"
+                        d="M12.51 8.796v1.697a3.738 3.738 0 0 1 3.288-1.684c3.455 0 4.202 2.16 4.202 4.97V19.5h-3.2v-5.072c0-1.21-.244-2.766-2.128-2.766-1.827 0-2.139 1.317-2.139 2.676V19.5h-3.19V8.796h3.168ZM7.2 6.106a1.61 1.61 0 0 1-1.61 1.61h-.022A1.61 1.61 0 0 1 3.96 6.106a1.61 1.61 0 1 1 3.24 0ZM7.18 19.5H4V8.796h3.18V19.5Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </a>
+
+            <!-- גיטהב -->
+            <a href="https://github.com/7267134-boop/Summary-of-programming-languages.git" target="_blank" title="גיטהב"
+                class="group w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-slate-200 hover:border-slate-800 hover:bg-slate-50 hover:shadow-lg hover:shadow-slate-200 hover:-translate-y-1 transition-all duration-300 text-slate-400">
+                <svg class="w-6 h-6 group-hover:text-slate-800 transition-colors" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd"
+                        d="M12.006 2a9.847 9.847 0 0 0-6.484 2.44 10.32 10.32 0 0 0-3.393 6.17 10.48 10.48 0 0 0 1.317 6.955 10.045 10.045 0 0 0 5.4 4.418c.504.095.683-.223.683-.494 0-.245-.01-1.052-.014-1.908-2.78.62-3.366-1.21-3.366-1.21a2.711 2.711 0 0 0-1.11-1.5c-.907-.637.07-.621.07-.621.995.076 1.52 1.05 1.52 1.05a2.12 2.12 0 0 0 2.895.845 2.146 2.146 0 0 1 .637-1.378c-2.22-.26-4.554-1.144-4.554-5.06a3.94 3.94 0 0 1 1.04-2.72 3.73 3.73 0 0 1 .1-2.68s.84-.277 2.75 1.05a9.42 9.42 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05a3.73 3.73 0 0 1 .1 2.68 3.94 3.94 0 0 1 1.04 2.72c0 3.926-2.338 4.8-4.564 5.05.334.298.63.882.63 1.776 0 1.282-.012 2.316-.012 2.632 0 .274.177.595.688.491a10.046 10.046 0 0 0 5.394-4.42A10.48 10.48 0 0 0 22 10.606a10.318 10.318 0 0 0-3.4-6.166A9.845 9.845 0 0 0 12.006 2Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </a>
+
+            <!-- אימייל -->
+            <a href="mailto:7267134@gmail.com?subject=הצעות לתיקונים" title="הצעות לתיקונים"
+                class="group w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 hover:shadow-lg hover:shadow-emerald-100 hover:-translate-y-1 transition-all duration-300 text-slate-400">
+                <svg class="w-6 h-6 group-hover:text-emerald-500 transition-colors" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+            </a>
+
+            <!-- עיגול רביעי (MEGA) -->
+            <a href="https://mega.nz/folder/bZgRnQbJ#fBIkzvx7nLDUFMqGad6jOw/folder/fZwE1CZZ" target="_blank"
+                title="MEGA"
+                class="group w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg hover:shadow-indigo-100 hover:-translate-y-1 transition-all duration-300 text-slate-400">
+                <svg class="w-6 h-6 group-hover:text-indigo-500 transition-colors" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
+                </svg>
             </a>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="mt-8 py-10">
-        <div class="container mx-auto px-4 text-center text-slate-400">
-            <p>
-                ©נבנה על ידי יאיר קורצמן, למידה מהנה ובהצלחה!
-                האתר נבנה בעזרת בינה מלאכותית ולכן יתכנו (וכנראה יש) טעויות, אשמח לעדכון אם מצאתם על מנת שאוכל לתקן.
-                כמו כן פתרון
-                הממנים מובא בתור דוגמאות ועזרה בלבד ואין להעתיק ישירות
+    <footer class="mt-8 pb-12 border-t border-slate-200/60 bg-white/30 backdrop-blur-sm">
+        <div class="container mx-auto px-4 mt-8 text-center">
+            <p class="text-slate-500 font-medium text-sm md:text-base leading-relaxed max-w-3xl mx-auto">
+                © נבנה על ידי יאיר קורצמן. למידה מהנה ובהצלחה! <br>
+                האתר נבנה בעזרת בינה מלאכותית ולכן ייתכנו טעויות. אשמח לעדכון אם מצאתם על מנת שאוכל לתקן. <br>
+                <span class="text-xs text-slate-400 mt-2 block">פתרון הממ"נים מובא כדוגמה ועזר בלבד - אין להעתיק
+                    ישירות.</span>
             </p>
         </div>
     </footer>
