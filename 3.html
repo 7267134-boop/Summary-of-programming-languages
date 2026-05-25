@@ -61,6 +61,39 @@
         .dark-scroll::-webkit-scrollbar-track { background: #020617; }
         .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
     </style>
+    <style>
+        /* Sidebar collapse transition & styles */
+        aside {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .sidebar-collapsed aside {
+            width: 0 !important;
+            min-width: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        #sidebar-toggle-btn {
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+        }
+        /* When sidebar is open: button floats to the left of the sidebar (RTL right side) */
+        body:not(.sidebar-collapsed) #sidebar-toggle-btn {
+            right: 21rem; /* 20rem (w-80) + 1rem (spacing) */
+        }
+        body.sidebar-collapsed #sidebar-toggle-btn {
+            right: 1rem;
+        }
+        
+        /* Premium navigation buttons styling */
+        .nav-btn-prev, .nav-btn-next {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-btn-prev:hover {
+            transform: translateX(2px);
+        }
+        .nav-btn-next:hover {
+            transform: translateX(-2px);
+        }
+    </style>
 </head>
 <body class="text-slate-800 h-screen flex overflow-hidden">
 
@@ -367,6 +400,87 @@ in begin
                         <div class="text-3xl mb-4 text-center">✍️</div>
                         <h4 class="font-bold text-lg mb-2 text-center text-slate-800">3. השמה סמויה (Set)</h4>
                         <p class="text-sm text-slate-600 text-center">כדי לעדכן משתנה פשוט כותבים <code>set x = 10</code>. המפרש מוצא את הכתובת של x בסביבה ומעדכן ישירות ב-Store.</p>
+                    </div>
+                </div>
+
+                <!-- Env vs Store Simulator -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>סימולטור השוואה: סביבה (Environment) מול זיכרון (Store)</span>
+                        <span class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6">
+                        בחר שפה כדי לראות כיצד המשתנה מוקצה ומעודכן בזיכרון. שימו לב להבדל בערכים של ה-Environment (האם המשתנה מצביע לערך מפורש של כתובת או למיקום פיזי בזיכרון):
+                    </p>
+
+                    <div class="flex gap-2 mb-6">
+                        <button onclick="toggleLangSim('explicit')" id="btn-sim-explicit" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer">
+                            EXPLICIT-REFS (ניהול ידני)
+                        </button>
+                        <button onclick="toggleLangSim('implicit')" id="btn-sim-implicit" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                            IMPLICIT-REFS (ניהול אוטומטי)
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <!-- Left: Code & Steps -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-2">קוד המקור:</h5>
+                                <pre id="sim-code-preview" class="!bg-slate-800 !text-slate-200 !p-3 text-xs font-mono rounded-lg" dir="ltr">let x = newref(5)
+in setref(x, 10)</pre>
+                                
+                                <div class="mt-4">
+                                    <button onclick="stepLangSim()" id="btn-sim-step" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+                                        בצע צעד (Step)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="sim-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[90px] flex items-center justify-center text-center mt-4 leading-relaxed">
+                                לחצו על "בצע צעד" כדי להריץ את השורה הראשונה (הקצאת המשתנה).
+                            </div>
+                        </div>
+
+                        <!-- Right: Tables (Env and Store) -->
+                        <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Environment Table -->
+                            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">טבלת הסביבה (Environment):</h5>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-xs font-mono text-center">
+                                        <thead>
+                                            <tr class="bg-slate-200 text-slate-700 font-sans font-bold">
+                                                <th class="p-2 border border-slate-300">משתנה (Var)</th>
+                                                <th class="p-2 border border-slate-300">ערך בסביבה (Denoted Value)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="sim-env-body">
+                                            <tr class="text-slate-400"><td colspan="2" class="p-4 border border-slate-200 italic">סביבה ריקה</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-2 leading-relaxed" dir="rtl">* Denoted Values מייצג את הערכים השמורים ישירות בסביבה.</p>
+                            </div>
+
+                            <!-- Store Table -->
+                            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">טבלת הזיכרון (Store):</h5>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-xs font-mono text-center">
+                                        <thead>
+                                            <tr class="bg-slate-200 text-slate-700 font-sans font-bold">
+                                                <th class="p-2 border border-slate-300">כתובת (Ref)</th>
+                                                <th class="p-2 border border-slate-300">ערך בזיכרון (Expressed Value)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="sim-store-body">
+                                            <tr class="text-slate-400"><td colspan="2" class="p-4 border border-slate-200 italic">זיכרון ריק</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -695,6 +809,65 @@ Expression ::= setright ( Expression , Expression )<br>
                         <p class="text-sm text-slate-700 mt-3 font-bold">הערך <code>mutpair-val</code> התווסף ל-<code>expval</code>, כך שכל זוג יכול להיות שמור בתוך משתנה בסביבה או להיות פלט של פונקציה.</p>
                     </div>
                 </div>
+
+                <!-- Cons-Cell Box Pointer Visualizer -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>סימולטור זוגות משתנים: דיאגרמת קופסאות וחצים (Cons-Cell Box Pointer)</span>
+                        <span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        חקרו כיצד נבנים ומקודדים מבני נתונים בזיכרון של שפת MUTABLE-PAIRS. בחרו מבנה נתונים, שנו את הקישורים שלו, וראו כיצד החצים והזיכרון משתנים בהתאמה.
+                    </p>
+
+                    <div class="flex gap-2 mb-6">
+                        <button onclick="changePairStructure('simple')" id="btn-pair-struct-simple" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-purple-600 text-white shadow-sm cursor-pointer">
+                            זוג פשוט: pair(11, 22)
+                        </button>
+                        <button onclick="changePairStructure('list')" id="btn-pair-struct-list" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                            רשימה מקושרת: pair(11, pair(22, 33))
+                        </button>
+                        <button onclick="changePairStructure('tree')" id="btn-pair-struct-tree" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                            עץ זוגות: pair(pair(11, 22), 33)
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3" dir="rtl">שינוי המבנה (Mutations):</h5>
+                                <div class="flex flex-col gap-3">
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1 font-bold">פעולת שינוי אינטראקטיבית:</label>
+                                        <div class="flex gap-2">
+                                            <button onclick="mutatePairCell('left')" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded text-xs transition-colors cursor-pointer">
+                                                setleft(Pair1, 99)
+                                            </button>
+                                            <button onclick="mutatePairCell('right')" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded text-xs transition-colors cursor-pointer">
+                                                setright(Pair1, 88)
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button onclick="resetPairSim()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded text-xs transition-colors cursor-pointer">
+                                        איפוס מבנה
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="pair-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[120px] flex flex-col justify-center items-center text-center leading-relaxed mt-4">
+                                <!-- Explanations -->
+                            </div>
+                        </div>
+
+                        <!-- Box Pointer View Area -->
+                        <div class="lg:col-span-2 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center justify-center">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-4 self-end">תרשים תאי הזיכרון (Cons-Cells):</h5>
+                            <div id="pair-cells-canvas" class="w-full flex flex-col items-center gap-6 min-h-[220px] py-4" dir="ltr">
+                                <!-- Draw cell elements -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ==========================================
@@ -815,6 +988,62 @@ in let f = proc (y)
                     <p class="text-slate-700 font-bold mt-4 mb-2 text-teal-700">תשובה: התוצאה היא 10.</p>
                     <p class="text-slate-700">כאשר העברנו את <code>x</code> (שיושב בתא 0), המערכת קראה את ה-10 שבתא 0 ויצרה תא חדש (תא 1) עבור <code>y</code> והכניסה לתוכו 10. ההשמה <code>set y = 20</code> דרסה רק את תא 1! תא 0 של x נשאר 10.</p>
                 </div>
+
+                <!-- Parameter Passing Simulator -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>הדמיה השוואתית: העברת פרמטרים CBV מול CBR</span>
+                        <span class="text-xs bg-teal-100 text-teal-700 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        ראו כיצד משתנים מוקצים בזיכרון (Store) ומקושרים בסביבה (Environment) בכל אחד מהמודלים עבור הקוד: <br>
+                        <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs" dir="ltr">let x = 10 in let f = proc(y) begin set y = 20; y end in begin (f x); x end</code>
+                    </p>
+
+                    <div class="flex gap-2 mb-6">
+                        <button onclick="toggleParamMode('cbv')" id="btn-param-mode-cbv" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-teal-600 text-white shadow-sm cursor-pointer">
+                            Call-by-Value (CBV - ערך)
+                        </button>
+                        <button onclick="toggleParamMode('cbr')" id="btn-param-mode-cbr" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                            Call-by-Reference (CBR - הפניה)
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3" dir="rtl">בקרה:</h5>
+                                <div class="flex gap-2 mb-4">
+                                    <button onclick="stepParamSim()" id="btn-param-step" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+                                        בצע צעד (Step)
+                                    </button>
+                                    <button onclick="resetParamSim()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-lg text-xs transition-colors cursor-pointer">
+                                        איפוס
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="param-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[120px] flex items-center justify-center text-center leading-relaxed">
+                                לחצו על "בצע צעד" כדי לראות את שלבי הרצת הקוד ומעקב הזיכרון.
+                            </div>
+                        </div>
+
+                        <!-- Env & Store Views -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">Environment (הסביבה לקסיקלית):</h5>
+                            <div id="param-env-view" class="w-full flex flex-col gap-2 justify-center items-center min-h-[120px]" dir="ltr">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">Store (הזיכרון הגלובלי):</h5>
+                            <div id="param-store-view" class="w-full flex flex-col gap-2 justify-center items-center min-h-[120px]" dir="ltr">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ==========================================
@@ -928,6 +1157,524 @@ in let f = proc (y)
             
             document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // --- Env vs Store Simulator JS Logic ---
+        let currentSimLang = 'explicit';
+        let currentSimStep = 0;
+
+        function toggleLangSim(lang) {
+            currentSimLang = lang;
+            currentSimStep = 0;
+            
+            const expBtn = document.getElementById('btn-sim-explicit');
+            const impBtn = document.getElementById('btn-sim-implicit');
+            const codePreview = document.getElementById('sim-code-preview');
+            const stepBtn = document.getElementById('btn-sim-step');
+            const explain = document.getElementById('sim-explain-text');
+            const envBody = document.getElementById('sim-env-body');
+            const storeBody = document.getElementById('sim-store-body');
+            
+            if (!expBtn || !impBtn || !codePreview || !stepBtn || !explain || !envBody || !storeBody) return;
+            
+            if (lang === 'explicit') {
+                expBtn.className = "px-4 py-2 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer";
+                impBtn.className = "px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer";
+                codePreview.innerText = "let x = newref(5)\nin setref(x, 10)";
+            } else {
+                impBtn.className = "px-4 py-2 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer";
+                expBtn.className = "px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer";
+                codePreview.innerText = "let x = 5\nin set x = 10";
+            }
+            
+            stepBtn.innerText = "בצע צעד (Step)";
+            stepBtn.className = stepBtn.className.replace('bg-slate-400 hover:bg-slate-500', 'bg-emerald-600 hover:bg-emerald-700');
+            explain.innerText = 'לחצו על "בצע צעד" כדי להריץ את השורה הראשונה (הקצאת המשתנה).';
+            envBody.innerHTML = '<tr class="text-slate-400"><td colspan="2" class="p-4 border border-slate-200 italic">סביבה ריקה</td></tr>';
+            storeBody.innerHTML = '<tr class="text-slate-400"><td colspan="2" class="p-4 border border-slate-200 italic">זיכרון ריק</td></tr>';
+        }
+
+        function stepLangSim() {
+            const explain = document.getElementById('sim-explain-text');
+            const envBody = document.getElementById('sim-env-body');
+            const storeBody = document.getElementById('sim-store-body');
+            const stepBtn = document.getElementById('btn-sim-step');
+            
+            if (!explain || !envBody || !storeBody || !stepBtn) return;
+            
+            if (currentSimStep === 0) {
+                if (currentSimLang === 'explicit') {
+                    envBody.innerHTML = `
+                        <tr class="bg-white border-b hover:bg-slate-50 transition-colors">
+                            <td class="p-2 border border-slate-200 font-bold">x</td>
+                            <td class="p-2 border border-slate-200 text-blue-700 font-bold">ref-val(L0)</td>
+                        </tr>
+                    `;
+                    storeBody.innerHTML = `
+                        <tr class="bg-white border-b hover:bg-slate-50 transition-colors">
+                            <td class="p-2 border border-slate-200 font-bold text-amber-700">L0</td>
+                            <td class="p-2 border border-slate-200">num-val(5)</td>
+                        </tr>
+                    `;
+                    explain.innerHTML = `<strong>צעד 1: הקצאה מפורשת</strong><br>המפרש יוצר תא בזיכרון (כתובת <code>L0</code>) עם הערך <code>5</code>. המשתנה <code>x</code> נשמר בסביבה כערך מטיפוס כתובת: <code>ref-val(L0)</code>.`;
+                } else {
+                    envBody.innerHTML = `
+                        <tr class="bg-white border-b hover:bg-slate-50 transition-colors">
+                            <td class="p-2 border border-slate-200 font-bold">x</td>
+                            <td class="p-2 border border-slate-200 text-purple-700 font-bold">L0 (כתובת ישירה)</td>
+                        </tr>
+                    `;
+                    storeBody.innerHTML = `
+                        <tr class="bg-white border-b hover:bg-slate-50 transition-colors">
+                            <td class="p-2 border border-slate-200 font-bold text-amber-700">L0</td>
+                            <td class="p-2 border border-slate-200">num-val(5)</td>
+                        </tr>
+                    `;
+                    explain.innerHTML = `<strong>צעד 1: הקצאה סמויה</strong><br>המפרש מקצה אוטומטית תא זיכרון <code>L0</code> עם הערך <code>5</code>. בשפה זו Denoted Values הם תמיד כתובות, לכן המשתנה <code>x</code> מצביע בסביבה ישירות לכתובת <code>L0</code> ללא עטיפה!`;
+                }
+                currentSimStep = 1;
+                stepBtn.innerText = "בצע צעד שני (Mutate)";
+            } else if (currentSimStep === 1) {
+                if (currentSimLang === 'explicit') {
+                    storeBody.innerHTML = `
+                        <tr class="bg-yellow-50 border-b hover:bg-yellow-100 transition-colors animate-pulse">
+                            <td class="p-2 border border-slate-200 font-bold text-amber-700">L0</td>
+                            <td class="p-2 border border-slate-200 text-emerald-700 font-bold">num-val(10)</td>
+                        </tr>
+                    `;
+                    explain.innerHTML = `<strong>צעד 2: שינוי ערך (setref)</strong><br>המתכנת קורא מפורשות ל-<code>setref(x, 10)</code>. המפרש מוצא ש-<code>x</code> מכיל את הכתובת <code>L0</code>, והולך ל-Store לעדכן את תוכנה ל-<code>10</code>. שימו לב: <strong>הסביבה לא השתנתה כלל!</strong> רק ה-Store עודכן.`;
+                } else {
+                    storeBody.innerHTML = `
+                        <tr class="bg-yellow-50 border-b hover:bg-yellow-100 transition-colors animate-pulse">
+                            <td class="p-2 border border-slate-200 font-bold text-amber-700">L0</td>
+                            <td class="p-2 border border-slate-200 text-emerald-700 font-bold">num-val(10)</td>
+                        </tr>
+                    `;
+                    explain.innerHTML = `<strong>צעד 2: שינוי ערך (assign)</strong><br>הפקודה <code>set x = 10</code> מופעלת. המפרש מוצא שמשתנה <code>x</code> מצביע בסביבה לכתובת <code>L0</code> ומעדכן את הערך שלה ל-<code>10</code>. גם כאן, רק ה-Store השתנה. השינוי סמוי וקל למתכנת.`;
+                }
+                currentSimStep = 2;
+                stepBtn.innerText = "איפוס סימולציה";
+                stepBtn.className = stepBtn.className.replace('bg-emerald-600 hover:bg-emerald-700', 'bg-slate-400 hover:bg-slate-500');
+            } else {
+                toggleLangSim(currentSimLang);
+            }
+        }
+
+        // --- Call-by-Value vs Call-by-Reference Simulator JS Logic ---
+        let paramMode = 'cbv';
+        let paramStep = 0;
+        
+        function toggleParamMode(mode) {
+            paramMode = mode;
+            const btnCBV = document.getElementById('btn-param-mode-cbv');
+            const btnCBR = document.getElementById('btn-param-mode-cbr');
+            
+            if (mode === 'cbv') {
+                btnCBV.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-teal-600 text-white shadow-sm cursor-pointer';
+                btnCBR.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
+            } else {
+                btnCBR.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-teal-600 text-white shadow-sm cursor-pointer';
+                btnCBV.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
+            }
+            resetParamSim();
+        }
+        
+        function resetParamSim() {
+            paramStep = 0;
+            const explain = document.getElementById('param-explain-text');
+            if (explain) {
+                explain.innerHTML = 'לחצו על "בצע צעד" כדי לראות את שלבי הרצת הקוד ומעקב הזיכרון.';
+            }
+            const envView = document.getElementById('param-env-view');
+            if (envView) {
+                envView.innerHTML = `
+                    <div class="text-slate-400 text-xs italic py-8">סביבה ריקה</div>
+                `;
+            }
+            const storeView = document.getElementById('param-store-view');
+            if (storeView) {
+                storeView.innerHTML = `
+                    <div class="text-slate-400 text-xs italic py-8">זיכרון ריק</div>
+                `;
+            }
+            const stepBtn = document.getElementById('btn-param-step');
+            if (stepBtn) {
+                stepBtn.disabled = false;
+                stepBtn.textContent = 'בצע צעד (Step)';
+                stepBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        function stepParamSim() {
+            paramStep++;
+            const explain = document.getElementById('param-explain-text');
+            const envView = document.getElementById('param-env-view');
+            const storeView = document.getElementById('param-store-view');
+            
+            if (!explain || !envView || !storeView) return;
+            
+            if (paramStep === 1) {
+                explain.innerHTML = '<strong>שלב 1: let x = 10</strong><br>הערך 10 מוערך ומאוחסן בתא הזיכרון הפנוי הראשון L0. המשתנה x נקשר ל-L0 בסביבה.';
+                envView.innerHTML = `
+                    <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono">
+                        x ➔ <span class="text-teal-600 font-bold">L0</span>
+                    </div>
+                `;
+                storeView.innerHTML = `
+                    <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono">
+                        <span class="text-amber-600 font-bold">L0</span> : num-val(10)
+                    </div>
+                `;
+            } else if (paramStep === 2) {
+                explain.innerHTML = '<strong>שלב 2: הגדרת הפרוצדורה f</strong><br>הפונקציה <code>proc(y) ...</code> מוערכת. המפרש יוצר Procedure ומאחסן אותו בתא זיכרון חדש L1. המשתנה f נקשר ל-L1.';
+                envView.innerHTML = `
+                    <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                        <div>x ➔ L0</div>
+                        <div class="text-teal-600 font-bold border-t pt-1">f ➔ L1</div>
+                    </div>
+                `;
+                storeView.innerHTML = `
+                    <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                        <div>L0 : num-val(10)</div>
+                        <div class="text-amber-600 font-bold border-t pt-1">L1 : proc-val(y, body)</div>
+                    </div>
+                `;
+            } else if (paramStep === 3) {
+                if (paramMode === 'cbv') {
+                    explain.innerHTML = '<strong>שלב 3: קריאה לפונקציה (f x) - לפי ערך</strong><br>בשיטת <strong>CBV</strong>, המערכת מחשבת את ערכו של x (הוא 10) ומקצה עבורו <strong>תא זיכרון חדש לגמרי L2</strong>. המשתנה y נקשר ל-L2. הזיכרון המקורי של x (הוא L0) נותר מוגן משינויים בתוך הפונקציה!';
+                    envView.innerHTML = `
+                        <div class="w-full bg-blue-50 border border-blue-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-slate-400 text-[10px] mb-1">סביבת גוף הפונקציה f:</div>
+                            <div class="text-blue-700 font-bold">y ➔ L2</div>
+                            <div class="text-slate-400 border-t pt-1">מצביע לסביבה השמורה (f, x)</div>
+                        </div>
+                    `;
+                    storeView.innerHTML = `
+                        <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div>L0 : num-val(10)</div>
+                            <div>L1 : proc-val(...)</div>
+                            <div class="text-teal-600 font-bold border-t pt-1">L2 : num-val(10) [חדש!]</div>
+                        </div>
+                    `;
+                } else {
+                    explain.innerHTML = '<strong>שלב 3: קריאה לפונקציה (f x) - לפי הפניה</strong><br>בשיטת <strong>CBR</strong>, המערכת מזהה שהארגומנט x הוא משתנה. היא שולפת את ההפניה שלו L0 מהסביבה וקושרת את y <strong>ישירות לאותו תא זיכרון L0</strong>! כעת y הוא Alias של x.';
+                    envView.innerHTML = `
+                        <div class="w-full bg-red-50 border border-red-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-slate-400 text-[10px] mb-1">סביבת גוף הפונקציה f:</div>
+                            <div class="text-red-700 font-bold">y ➔ L0 [הפניה משותפת!]</div>
+                        </div>
+                    `;
+                    storeView.innerHTML = `
+                        <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-red-600 font-bold">L0 : num-val(10) [משותף]</div>
+                            <div>L1 : proc-val(...)</div>
+                        </div>
+                    `;
+                }
+            } else if (paramStep === 4) {
+                if (paramMode === 'cbv') {
+                    explain.innerHTML = '<strong>שלב 4: השמה set y = 20 - לפי ערך</strong><br>מתבצע שינוי ערך בתוך הפונקציה. y מצביע ל-L2, ולכן רק הערך ב-L2 משתנה ל-20. שימו לב: הערך של x ב-L0 נשאר 10!';
+                    envView.innerHTML = `
+                        <div class="w-full bg-blue-50 border border-blue-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-blue-700 font-bold">y ➔ L2</div>
+                        </div>
+                    `;
+                    storeView.innerHTML = `
+                        <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-green-600 font-bold">L0 : num-val(10) [לא השתנה]</div>
+                            <div>L1 : proc-val(...)</div>
+                            <div class="bg-yellow-50 text-teal-600 font-bold border-t pt-1">L2 : num-val(20) [השתנה]</div>
+                        </div>
+                    `;
+                } else {
+                    explain.innerHTML = '<strong>שלב 4: השמה set y = 20 - לפי הפניה</strong><br>מתבצע שינוי ערך בתוך הפונקציה. מכיוון ש-y מצביע ישירות ל-L0, הערך של התא המשותף L0 משתנה ל-20! פירוש הדבר הוא ששינינו גם את x מחוץ לפונקציה!';
+                    envView.innerHTML = `
+                        <div class="w-full bg-red-50 border border-red-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-red-700 font-bold">y ➔ L0</div>
+                        </div>
+                    `;
+                    storeView.innerHTML = `
+                        <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="bg-yellow-50 text-red-600 font-bold">L0 : num-val(20) [השתנה!]</div>
+                            <div>L1 : proc-val(...)</div>
+                        </div>
+                    `;
+                }
+            } else if (paramStep === 5) {
+                if (paramMode === 'cbv') {
+                    explain.innerHTML = '<strong>שלב 5: חזרה לגוף הראשי והערכת x</strong><br>הקריאה לפונקציה הסתיימה וסביבתה נהרסה. המפרש חוזר לסביבה החיצונית ומעריך את הביטוי x. x קשור ל-L0, שערכו נשאר 10.<br><span class="text-green-600 font-bold text-sm block mt-2">תוצאה סופית ב-CBV היא: 10</span>';
+                    envView.innerHTML = `
+                        <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono">
+                            x ➔ L0
+                        </div>
+                    `;
+                    storeView.innerHTML = `
+                        <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-green-600 font-bold">L0 : num-val(10)</div>
+                            <div>L1 : proc-val(...)</div>
+                        </div>
+                    `;
+                } else {
+                    explain.innerHTML = '<strong>שלב 5: חזרה לגוף הראשי והערכת x</strong><br>הקריאה לפונקציה הסתיימה. המפרש חוזר לסביבה החיצונית ומעריך את x. x קשור ל-L0, שערכו שונה ל-20 בעקבות הפעלת הפונקציה.<br><span class="text-red-600 font-bold text-sm block mt-2">תוצאה סופית ב-CBR היא: 20!</span>';
+                    envView.innerHTML = `
+                        <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono">
+                            x ➔ L0
+                        </div>
+                    `;
+                    storeView.innerHTML = `
+                        <div class="w-full bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-red-600 font-bold">L0 : num-val(20)</div>
+                            <div>L1 : proc-val(...)</div>
+                        </div>
+                    `;
+                }
+                const stepBtn = document.getElementById('btn-param-step');
+                if (stepBtn) {
+                    stepBtn.disabled = true;
+                    stepBtn.textContent = 'הסתיים';
+                    stepBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+
+        // --- cons-cell Box Pointer Visualizer JS Logic ---
+        let pairStruct = 'simple';
+        let pairMutations = { left: false, right: false };
+        
+        function changePairStructure(struct) {
+            pairStruct = struct;
+            
+            const btnSimple = document.getElementById('btn-pair-struct-simple');
+            const btnList = document.getElementById('btn-pair-struct-list');
+            const btnTree = document.getElementById('btn-pair-struct-tree');
+            
+            const btns = [btnSimple, btnList, btnTree];
+            btns.forEach(btn => {
+                if (btn) {
+                    btn.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
+                }
+            });
+            
+            let activeBtn = btnSimple;
+            if (struct === 'list') activeBtn = btnList;
+            if (struct === 'tree') activeBtn = btnTree;
+            if (activeBtn) {
+                activeBtn.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-purple-600 text-white shadow-sm cursor-pointer';
+            }
+            
+            resetPairSim();
+        }
+        
+        function resetPairSim() {
+            pairMutations = { left: false, right: false };
+            renderPairCells();
+        }
+        
+        function mutatePairCell(type) {
+            if (type === 'left') pairMutations.left = true;
+            if (type === 'right') pairMutations.right = true;
+            renderPairCells();
+        }
+        
+        function renderPairCells() {
+            const canvas = document.getElementById('pair-cells-canvas');
+            const explain = document.getElementById('pair-explain-text');
+            if (!canvas || !explain) return;
+            
+            let canvasHtml = '';
+            let explainHtml = '';
+            
+            if (pairStruct === 'simple') {
+                const leftVal = pairMutations.left ? '99' : '11';
+                const rightVal = pairMutations.right ? '88' : '22';
+                
+                canvasHtml = `
+                    <div class="flex items-center justify-center py-4">
+                        <div class="bg-white border-2 border-purple-500 rounded-lg shadow-md overflow-hidden flex flex-col w-48 transition-all duration-300">
+                            <div class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-1 border-b border-purple-200 text-center font-mono">PAIR_1 (L0)</div>
+                            <div class="flex text-center font-mono divide-x divide-purple-200">
+                                <div class="flex-1 p-4 \${pairMutations.left ? 'bg-yellow-100 text-yellow-800 font-bold' : 'text-slate-800'}">CAR: \${leftVal}</div>
+                                <div class="flex-1 p-4 \${pairMutations.right ? 'bg-yellow-100 text-yellow-800 font-bold' : 'text-slate-800'}">CDR: \${rightVal}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                explainHtml = `
+                    <p class="font-bold text-purple-800 mb-1 text-xs">מבנה: זוג פשוט</p>
+                    <p class="text-slate-600 text-[11px] leading-relaxed">
+                        זהו זוג המאחסן שני ערכים פשוטים. בקוד השפה: <code>(pair 11 22)</code>.
+                        \${pairMutations.left || pairMutations.right ? '<br><span class="text-purple-600 font-bold">לאחר השינוי:</span> בוצעו פקודות mutation הדורסות את ה-CAR או ה-CDR באמצעות <code>setleft</code>/<code>setright</code>.' : ''}
+                    </p>
+                `;
+            } else if (pairStruct === 'list') {
+                const leftVal = pairMutations.left ? '99' : '11';
+                const rightVal2 = pairMutations.right ? '88' : '33';
+                
+                canvasHtml = `
+                    <div class="flex flex-col md:flex-row items-center gap-6 py-4">
+                        <div class="bg-white border-2 border-purple-500 rounded-lg shadow-md overflow-hidden flex flex-col w-44 transition-all duration-300">
+                            <div class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-1 border-b border-purple-200 text-center font-mono">PAIR_1 (L0)</div>
+                            <div class="flex text-center font-mono divide-x divide-purple-200">
+                                <div class="flex-1 p-4 \${pairMutations.left ? 'bg-yellow-100 text-yellow-800 font-bold' : 'text-slate-800'}">CAR: \${leftVal}</div>
+                                <div class="flex-1 p-4 text-purple-600 font-bold bg-purple-50/50">CDR: 🔗 L1</div>
+                            </div>
+                        </div>
+                        <div class="text-purple-400 font-bold text-2xl rotate-90 md:rotate-0">➔</div>
+                        <div class="bg-white border-2 border-purple-400 rounded-lg shadow-md overflow-hidden flex flex-col w-44 transition-all duration-300">
+                            <div class="bg-purple-50 text-purple-700 text-[10px] font-bold px-2 py-1 border-b border-purple-200 text-center font-mono">PAIR_2 (L1)</div>
+                            <div class="flex text-center font-mono divide-x divide-purple-200">
+                                <div class="flex-1 p-4 text-slate-800">CAR: 22</div>
+                                <div class="flex-1 p-4 \${pairMutations.right ? 'bg-yellow-100 text-yellow-800 font-bold' : 'text-slate-800'}">CDR: \${rightVal2}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                explainHtml = `
+                    <p class="font-bold text-purple-800 mb-1 text-xs">מבנה: רשימה מקושרת</p>
+                    <p class="text-slate-600 text-[11px] leading-relaxed">
+                        ה-CDR של PAIR_1 מכיל הפניה (Pointer) ל-PAIR_2. בקוד: <code>(pair 11 (pair 22 33))</code>.
+                        \${pairMutations.left ? '<br>• <code>setleft(PAIR_1, 99)</code> שינה את הערך השמאלי של האיבר הראשון.' : ''}
+                        \${pairMutations.right ? '<br>• <code>setright(PAIR_2, 88)</code> שינה את ה-CDR של PAIR_2 ל-88.' : ''}
+                    </p>
+                `;
+            } else if (pairStruct === 'tree') {
+                const leftVal2 = pairMutations.left ? '99' : '11';
+                const rightVal = pairMutations.right ? '88' : '33';
+                
+                canvasHtml = `
+                    <div class="flex flex-col items-center gap-4 py-2">
+                        <div class="bg-white border-2 border-purple-500 rounded-lg shadow-md overflow-hidden flex flex-col w-44 transition-all duration-300">
+                            <div class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-1 border-b border-purple-200 text-center font-mono">PAIR_1 (L0)</div>
+                            <div class="flex text-center font-mono divide-x divide-purple-200">
+                                <div class="flex-1 p-4 text-purple-600 font-bold bg-purple-50/50">CAR: 🔗 L1</div>
+                                <div class="flex-1 p-4 \${pairMutations.right ? 'bg-yellow-100 text-yellow-800 font-bold' : 'text-slate-800'}">CDR: \${rightVal}</div>
+                            </div>
+                        </div>
+                        <div class="text-purple-400 font-bold text-xl">↑</div>
+                        <div class="bg-white border-2 border-purple-400 rounded-lg shadow-md overflow-hidden flex flex-col w-44 transition-all duration-300">
+                            <div class="bg-purple-50 text-purple-700 text-[10px] font-bold px-2 py-1 border-b border-purple-200 text-center font-mono">PAIR_2 (L1)</div>
+                            <div class="flex text-center font-mono divide-x divide-purple-200">
+                                <div class="flex-1 p-4 \${pairMutations.left ? 'bg-yellow-100 text-yellow-800 font-bold' : 'text-slate-800'}">CAR: \${leftVal2}</div>
+                                <div class="flex-1 p-4 text-slate-800">CDR: 22</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                explainHtml = `
+                    <p class="font-bold text-purple-800 mb-1 text-xs">מבנה: עץ בינארי פשוט</p>
+                    <p class="text-slate-600 text-[11px] leading-relaxed">
+                        ה-CAR (ולא ה-CDR) של PAIR_1 מכיל הפניה ל-PAIR_2. בקוד: <code>(pair (pair 11 22) 33)</code>.
+                        \${pairMutations.left ? '<br>• שינוי השמאל של PAIR_2 ל-99 עדכן את העלה השמאלי בעץ.' : ''}
+                        \${pairMutations.right ? '<br>• שינוי הימין של PAIR_1 ל-88 עדכן את העלה הימני ישירות.' : ''}
+                    </p>
+                `;
+            }
+            
+            canvas.innerHTML = canvasHtml;
+            explain.innerHTML = explainHtml;
+        }
+    </script>
+    <script>
+        // Sidebar toggle and Navigation Button Injection Logic
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-collapsed');
+            const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+            updateToggleBtnIcon(isCollapsed);
+        }
+
+        function updateToggleBtnIcon(isCollapsed) {
+            const icon = document.getElementById('sidebar-toggle-icon');
+            if (!icon) return;
+            if (isCollapsed) {
+                // Show << (chevron left to open/expand in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />';
+            } else {
+                // Show >> (chevron right to close/collapse in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize Parameter Passing and Pair structure simulators
+            resetParamSim();
+            changePairStructure('simple');
+
+            // 1. Create and inject sidebar toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.id = 'sidebar-toggle-btn';
+            toggleBtn.className = 'fixed top-6 p-2 rounded-lg bg-white/80 backdrop-blur-md hover:bg-white text-slate-600 hover:text-slate-900 border border-slate-200 shadow-md z-30 flex items-center justify-center w-10 h-10 transition-all duration-300 active:scale-95 cursor-pointer';
+            toggleBtn.title = 'הצג/הסתר תפריט ניווט';
+            toggleBtn.onclick = toggleSidebar;
+            toggleBtn.innerHTML = '<svg id="sidebar-toggle-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"></svg>';
+            document.body.appendChild(toggleBtn);
+
+            // 2. Load sidebar collapsed state from localStorage
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                document.body.classList.add('sidebar-collapsed');
+            }
+            updateToggleBtnIcon(isCollapsed);
+
+            // 3. Inject navigation buttons at the bottom of each tab
+            const tabs = [];
+            const seenIds = new Set();
+            document.querySelectorAll('.tab-content').forEach(el => {
+                const id = el.id;
+                if (id && !seenIds.has(id)) {
+                    seenIds.add(id);
+                    tabs.push(el);
+                }
+            });
+
+            tabs.forEach((tab, index) => {
+                const navContainer = document.createElement('div');
+                navContainer.className = 'flex justify-between items-center mt-12 pt-6 border-t border-slate-200';
+
+                // Previous Button (on the right)
+                if (index > 0) {
+                    const prevTabId = tabs[index - 1].id;
+                    const prevBtn = document.createElement('button');
+                    prevBtn.onclick = () => showTab(prevTabId);
+                    prevBtn.className = 'nav-btn-prev flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    prevBtn.innerHTML = `
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span>הקודם</span>
+                    `;
+                    navContainer.appendChild(prevBtn);
+                } else {
+                    // Placeholder to keep spacing alignment
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                // Next Button (on the left)
+                if (index < tabs.length - 1) {
+                    const nextTabId = tabs[index + 1].id;
+                    const nextBtn = document.createElement('button');
+                    nextBtn.onclick = () => showTab(nextTabId);
+                    nextBtn.className = 'nav-btn-next flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98] transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    nextBtn.innerHTML = `
+                        <span>הבא</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    `;
+                    navContainer.appendChild(nextBtn);
+                } else {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                tab.appendChild(navContainer);
+            });
+        });
     </script>
 </body>
 </html>

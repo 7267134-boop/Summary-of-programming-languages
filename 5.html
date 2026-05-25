@@ -213,6 +213,39 @@
             background: #334155;
         }
     </style>
+    <style>
+        /* Sidebar collapse transition & styles */
+        aside {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .sidebar-collapsed aside {
+            width: 0 !important;
+            min-width: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        #sidebar-toggle-btn {
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+        }
+        /* When sidebar is open: button floats to the left of the sidebar (RTL right side) */
+        body:not(.sidebar-collapsed) #sidebar-toggle-btn {
+            right: 21rem; /* 20rem (w-80) + 1rem (spacing) */
+        }
+        body.sidebar-collapsed #sidebar-toggle-btn {
+            right: 1rem;
+        }
+        
+        /* Premium navigation buttons styling */
+        .nav-btn-prev, .nav-btn-next {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-btn-prev:hover {
+            transform: translateX(2px);
+        }
+        .nav-btn-next:hover {
+            transform: translateX(-2px);
+        }
+    </style>
 </head>
 
 <body class="text-slate-800 h-screen flex overflow-hidden">
@@ -531,6 +564,57 @@
                         <div class="text-purple-600 font-black text-xl mb-2">שלב 4: צמצום משוואות</div>
                         <p class="text-slate-600">החליפו כל קריאה למשתנה (למשל בתוך `+ (x, y)`) בערך האמיתי שלו מהסביבה.
                             תמיד חפשו בסביבה הפנימית ביותר, ואם אין, עקבו אחר החץ למעלה עד שתמצאו (Shadowing).</p>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Lexical Scope Trace Player -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-12 animate-fade-in">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>מריץ מעקב סביבות לקסיקלי (Trace Player)</span>
+                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        עקבו אחר שלבי הרצת הקוד צעד-אחר-צעד, וראו כיצד סביבות הזיכרון והקלוז'רים (Closures) נבנים ומצביעים אחד לשני:
+                    </p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <!-- Left: Code & Controls -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-2">קוד המקור:</h5>
+                                <div class="bg-slate-900 text-slate-200 p-4 rounded-lg font-mono text-xs leading-relaxed" dir="ltr">
+                                    <div id="trace-code-0">let x = 10</div>
+                                    <div id="trace-code-1">in let f = proc (y) -(x, y)</div>
+                                    <div id="trace-code-2">&nbsp;&nbsp;&nbsp;in let x = 20</div>
+                                    <div id="trace-code-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in (f 5)</div>
+                                </div>
+                                
+                                <div class="flex gap-2 mt-4">
+                                    <button onclick="stepTrace(-1)" id="btn-trace-prev" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer" disabled>
+                                        ➔ קודם
+                                    </button>
+                                    <button onclick="stepTrace(1)" id="btn-trace-next" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+                                        הבא ➔
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="trace-explain" class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[140px] flex items-center justify-center text-center leading-relaxed">
+                                לחצו על "הבא" כדי להתחיל במעקב ההרצה.
+                            </div>
+                        </div>
+
+                        <!-- Right: Environments Chain Dynamic Display -->
+                        <div class="lg:col-span-2 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center gap-2" dir="ltr">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider self-end mb-2" dir="rtl">שרשרת הסביבות הפעילה (Active Env Chain):</h5>
+                            <div id="trace-env-container" class="w-full flex flex-col items-center gap-1.5 min-h-[300px]">
+                                <!-- Empty Env initially -->
+                                <div class="w-full max-w-[320px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border border-slate-700 text-center font-mono text-xs">
+                                    (empty-env)
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -939,6 +1023,42 @@ ightarrow t_app</code><br><br>
                         <code>foreach</code>) או פקודת השמה (כמו <code>set</code>), הפקודות הללו לא באמת מחשבות מספר, הן
                         נועדו רק ליצור תופעות לוואי בזיכרון. לכן, בסיום הלולאה או ההשמה, <strong>חובה תמיד להחזיר ערך
                             פיקטיבי</strong> כמו <code>(num-val 27)</code> כדי שהמפרש יחזיר משהו חוקי ולא יקרוס.</p>
+                </div>
+
+                <!-- 5-Step Language Extension Recipe Checklist -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>סימולטור 5 השלבים להרחבת שפה במבחן</span>
+                        <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-normal">הנחיות אינטראקטיביות</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        לחצו על כל אחד מהשלבים הבאים כדי לקבל את תוכנית העבודה המלאה שלו, כולל דוגמת קוד Scheme/Racket ותבנית פתרון מוכנה לשימוש במבחן.
+                    </p>
+
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="md:w-1/3 flex flex-col gap-2">
+                            <button onclick="showRecipeStep(1)" id="btn-recipe-1" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-blue-200 bg-blue-600 text-white shadow-sm cursor-pointer">
+                                שלב 1: lang.scm (הדקדוק)
+                            </button>
+                            <button onclick="showRecipeStep(2)" id="btn-recipe-2" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
+                                שלב 2: data-structures.scm (טיפוסים)
+                            </button>
+                            <button onclick="showRecipeStep(3)" id="btn-recipe-3" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
+                                שלב 3: environments.scm (סביבות)
+                            </button>
+                            <button onclick="showRecipeStep(4)" id="btn-recipe-4" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
+                                שלב 4: interp.scm (סמנטיקה)
+                            </button>
+                            <button onclick="showRecipeStep(5)" id="btn-recipe-5" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
+                                שלב 5: בדיקת קצה וערך דאמי
+                            </button>
+                        </div>
+                        <div class="md:w-2/3 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between min-h-[220px]">
+                            <div id="recipe-content-box" class="text-xs text-slate-600 leading-relaxed">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1430,6 +1550,54 @@ ightarrow t_app</code><br><br>
                                      (extend-env (car remaining-vars) val current-env)))))))
       <span class="token-comment">; הפעלה מתוך הסביבה ההתחלתית</span>
       <span class="token-keyword">(evaluate-seq</span> vars exps env))))</code></pre>
+                
+                <!-- Let vs Let* Simulator -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>סימולטור השוואתי: let רגיל (מקבילי) מול let* (סדרתי)</span>
+                        <span class="text-xs bg-sky-100 text-sky-700 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        ראו כיצד מנוע ההרצה מעריך את משתני ההשמה עבור הקוד הבא, וכיצד השילוב בין המשתנים משתנה לפי סוג ההשמה: <br>
+                        <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs" dir="ltr">let x = 1 in let/let* x = 4, y = +(x, 2) in +(x, y)</code>
+                    </p>
+
+                    <div class="flex gap-2 mb-6">
+                        <button onclick="toggleLetMode('let')" id="btn-let-mode-let" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-sky-600 text-white shadow-sm cursor-pointer">
+                            let רגיל (השמה מקבילית)
+                        </button>
+                        <button onclick="toggleLetMode('letstar')" id="btn-let-mode-letstar" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                            let* (השמה סדרתית)
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">בקרה:</h5>
+                                <div class="flex gap-2 mb-4">
+                                    <button onclick="stepLetSim()" id="btn-let-step" class="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+                                        בצע צעד (Step)
+                                    </button>
+                                    <button onclick="resetLetSim()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-lg text-xs transition-colors cursor-pointer">
+                                        איפוס
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="let-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[120px] flex items-center justify-center text-center leading-relaxed">
+                                לחצו על "בצע צעד" כדי לראות את שלבי הרצת הקוד ומעקב הסביבות.
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider self-end mb-3">שרשרת הסביבות הלקסיקליות:</h5>
+                            <div id="let-env-view" class="w-full flex flex-col items-center gap-2 min-h-[180px]" dir="ltr">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ==========================================
@@ -1486,633 +1654,6 @@ ightarrow t_app</code><br><br>
             </div>
 
         </div>
-
-
-        <!-- ==========================================
-                 EXAM 2024b Q1 - ENUM & MATCH
-            =========================================== -->
-        <div id="exam-2024b-q1" class="tab-content">
-            <header class="mb-10 border-b pb-6">
-                <div
-                    class="inline-block px-4 py-1.5 bg-gradient-to-l from-amber-100 to-orange-50 text-amber-800 rounded-full font-bold text-sm mb-4 tracking-wider border border-amber-200">
-                    2024ב מועד א · שאלה 1 · מבני נתונים</div>
-                <h2 class="text-4xl font-black text-slate-900 leading-tight">🎨 שאלה 1: הרחבת שפת PROC עם ביטויי Enum
-                    ו-Match</h2>
-                <p class="text-lg text-slate-500 mt-3">שפה: PROC | נושא: הגדרת טיפוס נקודת מנייה (Enumeration), גישה
-                    לאיבר, והתאמת דפוס (Pattern Matching)</p>
-            </header>
-
-            <!-- THE QUESTION -->
-            <div class="bg-slate-800 rounded-2xl p-8 mb-10 text-slate-100 shadow-xl">
-                <h3 class="text-xl font-bold text-amber-300 mb-4">📋 השאלה המלאה</h3>
-                <p class="mb-4 text-slate-300 leading-relaxed">בשאלה זו מרחיבים את שפת <strong
-                        class="text-white">PROC</strong> (עמודים 74–81 בחוברת) כך שתתמוך בשלושה ביטויים חדשים:</p>
-                <div class="grammar-box bg-slate-900 rounded-xl p-4 mt-4 text-sm"
-                    style="direction:ltr;text-align:left;font-family:'Consolas',monospace;">
-                    <span style="color:#c678dd">; הגדרת enum</span>
-                    Expression ::= enum { {Identifier}* }
-                    = enum-exp (ids)
-
-                    <span style="color:#c678dd">; גישה לאיבר ה-enum</span>
-                    Expression ::= &lt; Expression . Identifier &gt;
-                    = enum-elmt-exp (enm id)
-
-                    <span style="color:#c678dd">; match על enum</span>
-                    Expression ::= match [ Identifier :: Expression ]
-                    { identifier -&gt; Expression ; }*
-                    = match-exp (enmid exp1 enmids exps)
-                </div>
-                <div class="mt-6 text-slate-200">
-                    <p class="font-bold text-amber-300 mb-2">ההרצות שנדרשות לממש (run examples):</p>
-                    <pre style="background:#0f172a;padding:1rem;border-radius:0.5rem;font-size:0.85rem;">
-<span style="color:#94a3b8">; ריצה 1: תוצאה (num-val 100)</span>
-(run "let Colors = enum { Red, Green, Blue }
-      let c = &lt;Colors.Green&gt;
-      in
-      match [Colors::c]
-        ?Red  =&gt; 10;
-        ?Green =&gt; 100;
-        ?Blue =&gt; 1000;")
-
-<span style="color:#94a3b8">; ריצה 2: c הוא ה-identifier-val עצמו, תוצאה (identifier-val 'Green)</span>
-(run "let Colors = enum { Red, Green, Blue }
-      let c = &lt;Colors.Green&gt;
-      in c")
-
-<span style="color:#94a3b8">; ריצה 3: שגיאה - match לא מכסה את כל האיברים</span>
-<span style="color:#f87171">interp.scm: match-exp: match cases is not correspond to enum Colors cases</span>
-
-<span style="color:#94a3b8">; ריצה 4: שגיאה - i אינו enum</span>
-<span style="color:#f87171">interp.scm: enum-elmt-exp: not an enum</span>
-
-<span style="color:#94a3b8">; ריצה 5: שגיאה - Yellow לא קיים ב-Colors</span>
-<span style="color:#f87171">interp.scm: enum-elmt-exp: Yellow not found</span>
-
-<span style="color:#94a3b8">; ריצה 6: שגיאה - enum ריק</span>
-<span style="color:#f87171">interp.scm: enum-exp: empty identifier list in enum definition</span>
-
-<span style="color:#94a3b8">; ריצה 7: תוצאה (num-val 170)</span>
-(run "let Foods = enum { Banana, Humus, Hamburger }
-      let Calories = proc (x)
-        match [Foods::x]
-          ?Banana    =&gt; 90;
-          ?Humus     =&gt; 170;
-          ?Hamburger =&gt; 300;
-      in
-      (Calories &lt;Foods.Humus&gt;)")
-</pre>
-                </div>
-            </div>
-
-            <!-- ANALYSIS -->
-            <div class="thought-box mb-8">
-                <h4 class="font-bold text-lg mb-3 text-purple-800">🧠 ניתוח: מה שאלה זו בוחנת?</h4>
-                <p class="text-slate-700 mb-3">שאלה זו שייכת לסוג הנפוץ ביותר במבחן — <strong>הרחבת שפה</strong>. נדרש
-                    להוסיף לשפת PROC תמיכה בסוג נתונים חדש: <em>Enumeration</em>.</p>
-                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                    <li><strong>enum-exp:</strong> יוצר ערך חדש "enum-val" — רשימה של מזהים שמייצגת את כל האיברים
-                        האפשריים.</li>
-                    <li><strong>enum-elmt-exp:</strong> מחלצת מ-enum ספציפי את ה-identifier המבוקש ומחזירה אותו
-                        כ-"identifier-val".</li>
-                    <li><strong>match-exp:</strong> בדומה ל-switch/case, בוחן על איזה איבר enum מצביע הביטוי, ומחזיר את
-                        הביטוי התואם.</li>
-                </ul>
-            </div>
-
-            <!-- STEP BY STEP SOLUTION -->
-            <h3 class="text-2xl font-bold mb-4 text-slate-800 border-r-4 border-amber-500 pr-4">✅ פתרון שלב-אחר-שלב</h3>
-
-            <h4 class="text-xl font-bold text-slate-700 mt-6 mb-3">שלב 1: הגדרת ערכים (Values)</h4>
-            <p class="text-slate-600 mb-3 leading-relaxed">נצטרך שני ערכים חדשים:</p>
-            <pre>
-<span class="token-comment">; ב-interp.scm — הגדרת טיפוסי הערכים:</span>
-(define-datatype expval expval?
-  ...
-  (enum-val     <span class="token-comment">; ערך enum — מחזיק רשימת מזהים</span>
-    (ids (list-of symbol?)))
-  (identifier-val <span class="token-comment">; ערך מזהה — מחזיק סימבול בודד</span>
-    (id symbol?))
-  ...)
-</pre>
-
-            <h4 class="text-xl font-bold text-slate-700 mt-6 mb-3">שלב 2: case עבור enum-exp</h4>
-            <p class="text-slate-600 mb-3 leading-relaxed">כשמגיעים לביטוי <code>enum { Red, Green, Blue }</code>, צריך
-                לבנות enum-val:</p>
-            <pre>
-(enum-exp (ids)
-  <span class="token-comment">; בדיקת שגיאה: רשימה ריקה אסורה</span>
-  (if (null? ids)
-    (error 'enum-exp "empty identifier list in enum definition")
-    (enum-val ids)))
-</pre>
-            <div class="tip-box">
-                <p class="font-bold text-amber-800">💡 הסבר:</p>
-                <p class="text-slate-700">ה-ids כבר מגיעים מה-parser כרשימת Racket symbols. פשוט עוטפים אותם ב-enum-val
-                    — לא צריך להריץ value-of על כל אחד בנפרד, כי Identifiers הם לא ביטויים שצריך להעריך!</p>
-            </div>
-
-            <h4 class="text-xl font-bold text-slate-700 mt-6 mb-3">שלב 3: case עבור enum-elmt-exp</h4>
-            <p class="text-slate-600 mb-3 leading-relaxed">כשמגיעים לביטוי <code>&lt;Colors.Green&gt;</code>:</p>
-            <pre>
-(enum-elmt-exp (enm-exp id)
-  (let ((enm-val (value-of enm-exp env)))
-    <span class="token-comment">; בדיקה: האם enm הוא באמת enum?</span>
-    (cases expval enm-val
-      (enum-val (ids)
-        <span class="token-comment">; בדיקה: האם id קיים ב-enum?</span>
-        (if (memv id ids)
-            (identifier-val id)
-            (error 'enum-elmt-exp "~s not found" id)))
-      (else
-        (error 'enum-elmt-exp "not an enum")))))
-</pre>
-            <div class="thought-box">
-                <p class="font-bold text-purple-800">🔍 שים לב לדקויות:</p>
-                <ul class="list-disc list-inside space-y-1 text-slate-700">
-                    <li>משתמשים ב-<code>memv</code> (ולא <code>member</code>) כי הסימבולים הם לא strings</li>
-                    <li>המחזירים הוא <strong>identifier-val</strong> ולא enum-val — הוא אנלוגי לאיבר ספציפי שנבחר</li>
-                    <li>שגיאה "not an enum" מוחזרת אם מנסים לגשת לשדה על ביטוי שאינו enum (ריצה 4)</li>
-                </ul>
-            </div>
-
-            <h4 class="text-xl font-bold text-slate-700 mt-6 mb-3">שלב 4: case עבור match-exp</h4>
-            <p class="text-slate-600 mb-3 leading-relaxed">זהו החלק המורכב ביותר. ה-match חייב לבדוק:</p>
-            <ol class="list-decimal list-inside space-y-2 text-slate-600 mb-4">
-                <li>האם ה-<code>enmid</code> (מזהה ה-enum כ-identifier בסביבה) מצביע ל-enum-val?</li>
-                <li>האם ה-<code>exp1</code> (הביטוי שאחרי <code>::</code>) מוערך ל-identifier-val?</li>
-                <li>האם רשימת ה-<code>enmids</code> (ה-cases) תואמת בדיוק לרשימת ה-ids של ה-enum?</li>
-                <li>מצא את ה-case שה-id שלו שווה ל-identifier-val שהתקבל, והחזר את הביטוי המתאים.</li>
-            </ol>
-            <pre>
-(match-exp (enmid exp1 enmids exps)
-  <span class="token-comment">; שלב א: הוצא את ה-enum מהסביבה</span>
-  (let* ((enum-val-from-env (apply-env env enmid))
-         <span class="token-comment">; שלב ב: הוצא את הרשימת-מזהים של ה-enum</span>
-         (enum-ids
-           (cases expval enum-val-from-env
-             (enum-val (ids) ids)
-             (else (error 'match-exp "enmid is not an enum"))))
-         <span class="token-comment">; שלב ג: הערך את הביטוי שמגיע אחרי ::</span>
-         (actual-val (value-of exp1 env))
-         <span class="token-comment">; שלב ד: חלוץ את ה-identifier מתוך identifier-val</span>
-         (actual-id
-           (cases expval actual-val
-             (identifier-val (id) id)
-             (else (error 'match-exp "expression is not an enum element")))))
-    <span class="token-comment">; שלב ה: ודא שה-cases תואמים לאיברי ה-enum בדיוק</span>
-    (if (not (equal? (sort enmids symbol&lt;?) (sort enum-ids symbol&lt;?)))
-        (error 'match-exp "match cases is not correspond to enum ~s cases" enmid)
-        <span class="token-comment">; שלב ו: מצא את הביטוי התואם להרץ אותו</span>
-        (let loop ((ids enmids) (es exps))
-          (cond
-            ((null? ids)
-             (error 'match-exp "no matching case found for ~s" actual-id))
-            ((eqv? (car ids) actual-id)
-             (value-of (car es) env))
-            (else
-             (loop (cdr ids) (cdr es))))))))
-</pre>
-
-            <div class="tip-box">
-                <h4 class="font-bold text-amber-800 mb-2">⚠️ נקודות קריטיות לציון מלא:</h4>
-                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                    <li><strong>בדיקת שלמות ה-cases:</strong> המבחן מדגיש שחייבים לבדוק שכל איברי ה-enum מיוצגים. שימוש
-                        ב-<code>sort</code> להשוואה עוקף בעיות סדר.</li>
-                    <li><strong>ה-enmid הוא identifier:</strong> הוא לא ביטוי שמוערך ב-value-of, אלא מזהה שמחפשים
-                        ב-<code>apply-env</code>!</li>
-                    <li><strong>exp1 מוערך:</strong> לעומתו, <code>exp1</code> הוא ביטוי שמוערך ב-<code>value-of</code>.
-                    </li>
-                    <li><strong>הסמנטיקה:</strong> ה-match מחזיר את הביטוי התואם — הוא <em>מעריך</em> אותו ומחזיר את
-                        תוצאתו.</li>
-                </ul>
-            </div>
-
-            <h3 class="text-2xl font-bold mb-4 text-slate-800 border-r-4 border-amber-500 pr-4 mt-10">📊 מעקב אחר ריצה
-                1: (num-val 100)</h3>
-            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                <p class="font-mono text-sm text-slate-600 mb-4">הביטוי:
-                    <code>let Colors = enum { Red, Green, Blue } let c = &lt;Colors.Green&gt; in match [Colors::c] ?Red=&gt;10; ?Green=&gt;100; ?Blue=&gt;1000;</code>
-                </p>
-                <ol class="list-decimal list-inside space-y-3 text-slate-700">
-                    <li><strong>let Colors = enum{...}</strong> → <code>(enum-val '(Red Green Blue))</code> נשמר בסביבה
-                        כ-Colors</li>
-                    <li><strong>let c = &lt;Colors.Green&gt;</strong> → enum-elmt-exp: Colors הוא enum-val, Green קיים →
-                        <code>(identifier-val 'Green)</code> נשמר כ-c</li>
-                    <li><strong>match [Colors::c]</strong> →
-                        <ul class="list-disc list-inside mr-4 mt-1 space-y-1 text-sm">
-                            <li>enum-ids = (Red Green Blue)</li>
-                            <li>actual-val = value-of(c) = <code>(identifier-val 'Green)</code></li>
-                            <li>actual-id = 'Green</li>
-                            <li>cases = (Red Green Blue) ✓ תואם</li>
-                            <li>חפש Green בlocation 2 → החזר value-of(100) = <code>(num-val 100)</code> ✓</li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="tip-box mt-8">
-                <h4 class="font-bold text-amber-800 mb-2">🎯 טיפ לשאלות דומות במבחן:</h4>
-                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                    <li>כשרואים <strong>ביטוי עם כוכבית</strong> בדקדוק (<code>{Identifier}*</code>), הפרמטר יגיע ל-case
-                        כרשימה — יש לעבד אותה בלולאה.</li>
-                    <li>כשרואים <strong>ביטוי עם נקודה</strong> (<code>&lt;X.Y&gt;</code>), חשבו "גישה לשדה" — הוצאו את
-                        X מהסביבה, בדקו שY שייך אליו.</li>
-                    <li>כשרואים <strong>match/switch</strong>, חשבו: מה מוערך? מה משמש ככתובת? האם יש בדיקת שלמות?</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- ==========================================
-                 EXAM 2024b Q2 - FOR/PROC with GUARDS
-            =========================================== -->
-        <div id="exam-2024b-q2" class="tab-content">
-            <header class="mb-10 border-b pb-6">
-                <div
-                    class="inline-block px-4 py-1.5 bg-gradient-to-l from-orange-100 to-amber-50 text-orange-800 rounded-full font-bold text-sm mb-4 tracking-wider border border-orange-200">
-                    2024ב מועד א · שאלה 2 · לולאות וזרימת בקרה</div>
-                <h2 class="text-4xl font-black text-slate-900 leading-tight">⚙️ שאלה 2: הרחבת IMPLICIT-REFS עם לולאת
-                    for/proc ו-Guards</h2>
-                <p class="text-lg text-slate-500 mt-3">שפה: IMPLICIT-REFS | נושא: לולאה מרובת גופים עם תנאי skip ו-break
-                </p>
-            </header>
-
-            <!-- THE QUESTION -->
-            <div class="bg-slate-800 rounded-2xl p-8 mb-10 text-slate-100 shadow-xl">
-                <h3 class="text-xl font-bold text-orange-300 mb-4">📋 השאלה המלאה</h3>
-                <p class="mb-4 text-slate-300 leading-relaxed">מרחיבים את שפת <strong
-                        class="text-white">IMPLICIT-REFS</strong> (עמודים 113–120) עם ביטוי לולאה חדש:</p>
-                <div class="bg-slate-900 rounded-xl p-4 mt-2 text-sm font-mono" style="direction:ltr;text-align:left;">
-                    Expression ::= for/proc ( identifier ;
-                    [{ identifier }+] :
-                    [{ Expression }+] )
-                    {&lt; Guard &gt;}
-                    Expression
-
-                    forproc-exp (Id Ids Bodies Guards Body)
-
-                    Guard ::= skip: Expression = skip-guard (exp)
-                    Guard ::= break: Expression = break-guard (exp)
-                </div>
-                <div class="mt-6 text-slate-200">
-                    <p class="font-bold text-orange-300 mb-2">דוגמת הרצה (תוצאה: (num-val 6993)):</p>
-                    <pre style="background:#0f172a;padding:1rem;border-radius:0.5rem;font-size:0.85rem;">
-(run "let w1=100
-      let w2=300
-      let w3=500
-      in
-      begin
-        for/proc (p: [a,b,c,d] : [-(a,1), -(b,2), -(c,3), -(d,4)])
-          &lt;skip:  zero?((p 2))&gt;
-          &lt;break: zero?((p 12))&gt;
-          &lt;skip:  zero?((p 200))&gt;
-          if zero?((p 1))
-          then set w1 = 7000
-          else if zero?((p 3))
-               then set w2 = p
-               else set w3 = (p w1)
-        (w2 w3)
-      end")
-<span style="color:#86efac">; תוצאה: (num-val 6993)</span>
-</pre>
-                </div>
-            </div>
-
-            <!-- SEMANTICS EXPLANATION -->
-            <div class="thought-box mb-8">
-                <h4 class="font-bold text-lg mb-3 text-purple-800">🧠 הבנת הסמנטיקה של for/proc</h4>
-                <p class="text-slate-700 mb-3">זהו ביטוי לולאה מורכב שעוברת על רשימת פרוצדורות. כל איטרציה:</p>
-                <ol class="list-decimal list-inside space-y-2 text-slate-700">
-                    <li><strong>p</strong> — נקשר לפרוצדורה הבאה ברשימת ה-Bodies (בנויות מה-Ids ו-Bodies)</li>
-                    <li><strong>Guards</strong> — מוערכים בסדר. אם Guard הוא <code>skip</code> ומוערך ל-true → דלג
-                        לאיטרציה הבאה (continue). אם <code>break</code> ומוערך ל-true → עצור את הלולאה כולה.</li>
-                    <li><strong>Body</strong> — מוערך אם אף Guard לא הפעיל skip/break</li>
-                    <li><strong>גוף הלולאה</strong> האחרון (אחרי הלולאה) — <code>(w2 w3)</code> הוא ה-Body הסופי שמוערך
-                        פעם אחת</li>
-                </ol>
-            </div>
-
-            <!-- TRACE -->
-            <h3 class="text-2xl font-bold mb-4 text-slate-800 border-r-4 border-orange-500 pr-4">📊 מעקב צעד-אחר-צעד
-            </h3>
-
-            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 mb-8">
-                <p class="font-bold text-slate-700 mb-3">מצב התחלתי: w1=100, w2=300, w3=500</p>
-                <p class="font-bold text-slate-600 mb-2">הפרוצדורות: p=<code>proc(x)-(a,1)</code>,
-                    <code>proc(x)-(b,2)</code>, <code>proc(x)-(c,3)</code>, <code>proc(x)-(d,4)</code></p>
-                <p class="text-sm text-slate-500 mb-4">(כל פרוצדורה מחסרת מה-w המתאים את המספר — למשל
-                    <code>proc(x)-(a,1)</code> כשנקראת עם x=N מחזירה a-1=100-1=99)</p>
-
-                <div class="space-y-4">
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p class="font-bold text-blue-800">🔁 איטרציה 1: p = proc(x)-(a,1) [a=100]</p>
-                        <ul class="text-sm space-y-1 text-slate-700 mt-2">
-                            <li>Guard 1 (skip): <code>zero?((p 2))</code> = <code>zero?(100-1)</code> =
-                                <code>zero?(99)</code> = false → ממשיכים</li>
-                            <li>Guard 2 (break): <code>zero?((p 12))</code> = <code>zero?(88)</code> = false → ממשיכים
-                            </li>
-                            <li>Guard 3 (skip): <code>zero?((p 200))</code> = <code>zero?(-100)</code> = false → ממשיכים
-                            </li>
-                            <li>Body: <code>zero?((p 1))</code> = <code>zero?(99)</code> = false → else:
-                                <code>zero?((p 3))</code> = <code>zero?(97)</code> = false → set w3=(p
-                                w1)=<code>(p 100)</code>=<code>100-1=99</code> ... → <strong>w3 = (100-1)=99</strong>
-                            </li>
-                        </ul>
-                        <p class="text-sm text-orange-700 mt-2">⚠️ שים לב: <code>(p w1)</code> =
-                            <code>proc(x)-(a,1)</code> מוחל על <code>w1=100</code> כלומר: <code>-(a,1)</code> כשa=100 →
-                            <strong>99</strong>. אז w3=99.</p>
-                    </div>
-
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <p class="font-bold text-yellow-800">🔁 איטרציה 2: p = proc(x)-(b,2) [b=300]</p>
-                        <ul class="text-sm space-y-1 text-slate-700 mt-2">
-                            <li>Guard 1 (skip): <code>zero?((p 2))</code> = <code>zero?(300-2)</code> =
-                                <code>zero?(298)</code> = false → ממשיכים</li>
-                            <li>Guard 2 (break): <code>zero?((p 12))</code> = <code>zero?(288)</code> = false → ממשיכים
-                            </li>
-                            <li>Guard 3 (skip): <code>zero?((p 200))</code> = <code>zero?(100)</code> = false → ממשיכים
-                            </li>
-                            <li>Body: <code>zero?((p 1))</code> = <code>zero?(299)</code> = false →
-                                <code>zero?((p 3))</code> = <code>zero?(297)</code> = false → set w3=(p w1) =
-                                <code>-(b,2)</code> עם w1=100 = <code>100-2=98</code></li>
-                        </ul>
-                        <p class="text-sm text-slate-600 mt-1">⚠️ <strong>w3 = 98</strong> (w1=100 עדיין)</p>
-                    </div>
-
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                        <p class="font-bold text-green-800">🔁 איטרציה 3: p = proc(x)-(c,3) [c=500 — w3 הנוכחי]</p>
-                        <p class="text-sm text-slate-600 mb-2">⚠️ שים לב: c הוא <em>משתנה לפי שם</em> — קשור ל-w3
-                            בסביבה!</p>
-                        <ul class="text-sm space-y-1 text-slate-700 mt-2">
-                            <li>Guard 1 (skip): <code>zero?((p 2))</code> → (p 2) = <code>-(c,3)</code> כשx=2, c מהסביבה
-                                = w3 = 98 → <code>98-3=95</code> = false</li>
-                            <li>Guard 2 (break): <code>zero?((p 12))</code> → <code>-(98,3)</code>=95 = false</li>
-                            <li>Guard 3 (skip): <code>zero?((p 200))</code> → false</li>
-                            <li>Body: <code>zero?((p 1))</code> = false → <code>zero?((p 3))</code> =
-                                <code>zero?(95)</code> = false → set w3 = (p w1) = <code>-(c,3)</code> עם w1=100 =
-                                <code>100-3=97</code></li>
-                        </ul>
-                        <p class="text-sm text-slate-600 mt-1">w3 = 97</p>
-                    </div>
-
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                        <p class="font-bold text-red-800">🔁 איטרציה 4: p = proc(x)-(d,4) [d=4]</p>
-                        <ul class="text-sm space-y-1 text-slate-700 mt-2">
-                            <li>Guard 1 (skip): <code>zero?((p 2))</code> → p=proc(x)-(d,4), (p 2) = 4-4 = 0 →
-                                <strong>zero? = TRUE → SKIP!</strong></li>
-                            <li>ה-skip מדלג לאיטרציה הבאה — אבל אין יותר איטרציות!</li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-slate-200 rounded-lg p-4">
-                        <p class="font-bold text-slate-800">✅ סיום הלולאה → מחשבים Body האחרון:</p>
-                        <p class="text-sm text-slate-700"><code>(w2 w3)</code> = <code>300 * 97</code>... רגע — w2 הוא
-                            300 ו-w3 הוא 97? 300+97=397? לא — <code>(w2 w3)</code> הוא קריאת פרוצדורה? לא, w2 הוא מספר!
-                        </p>
-                        <p class="text-sm text-orange-700 mt-2">⚠️ <strong>תשומת לב:</strong> <code>(w2 w3)</code> בשפת
-                            PROC אומר "הפעל את w2 כפרוצדורה על w3". אבל w2=300 הוא num-val! כלומר זו שגיאה? לא — במבחן
-                            התשובה היא <code>(num-val 6993)</code>.</p>
-                        <p class="text-sm text-slate-600 mt-2">הבה נחשב שוב: w2 הוא <strong>פרוצדורה</strong> לפי ריצה 3
-                            כי set w2=p! p=proc(x)-(c,3). אז (w2 w3) = (proc(x)-(c,3) 97) = c-3 כשc=97 →
-                            <strong>97-3=94</strong>? עדיין לא 6993...</p>
-                        <p class="text-sm text-emerald-700 font-bold mt-2">📌 לפי המבחן התשובה היא 6993 = 7000 - 7 =
-                            97*... בואו נבדוק את ה-w2: w2=300 לא השתנה. (w2 w3) שגיאה. אם w2 הפרוצדורה שהיתה c, אז (w2
-                            w3)= -(c,3) כשx=w3... ={w3}-3. אבל w3 השתנה לאורך הדרך.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tip-box mb-8">
-                <h4 class="font-bold text-amber-800 mb-3">💡 חישוב נכון — תוצאה: (num-val 6993)</h4>
-                <p class="text-slate-700 mb-2">לפי פתרון המבחן הרשמי:</p>
-                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                    <li>איטרציה 1: p=-(a,1), כל הGuards false. Body: zero?((p 1))=zero?(99)=false, zero?((p
-                        3))=zero?(97)=false → <strong>set w3=(p w1)</strong>. (p w1) = p(100) = 100-1 = 99 → w3=99</li>
-                    <li>איטרציה 2: p=-(b,2). Guards false. Body: same → <strong>set w3=(p w1)</strong> = p(100)=100-2=98
-                        → w3=98</li>
-                    <li>איטרציה 3: p=-(c,3). Guards: zero?((p 2))=zero?(w3-3+offset... )</li>
-                    <li>איטרציה 4: skip כי zero?((p 2))=zero?(d-4+x?) ... ← תלוי בפרוצדורה</li>
-                    <li>Body=(w2 w3)=300+...=6993 → ייתכן w2=proc, w3=6996 → (w2 w3)=6996-3=6993 ✓</li>
-                </ul>
-            </div>
-
-            <!-- IMPLEMENTATION -->
-            <h3 class="text-2xl font-bold mb-4 text-slate-800 border-r-4 border-orange-500 pr-4 mt-8">✅ מימוש: case
-                ב-value-of</h3>
-            <pre>
-(forproc-exp (Id Ids Bodies Guards Body)
-  <span class="token-comment">; שלב א: בנה רשימת פרוצדורות מ-Ids ו-Bodies</span>
-  (let ((procs (map (lambda (id body)
-                      (proc-val (procedure id body env)))
-                    Ids Bodies)))
-    <span class="token-comment">; שלב ב: לולאה על הפרוצדורות</span>
-    (let loop ((ps procs))
-      (if (null? ps)
-          <span class="token-comment">; שלב ג: הלולאה הסתיימה — הרץ את Body הסופי</span>
-          (value-of Body env)
-          <span class="token-comment">; שלב ד: קשור p לפרוצדורה הנוכחית</span>
-          (let* ((current-proc (car ps))
-                 (new-env (extend-env Id (newref current-proc) env))
-                 <span class="token-comment">; שלב ה: בדוק Guards</span>
-                 (guard-result (eval-guards Guards new-env)))
-            (cond
-              ((eq? guard-result 'skip)
-               (loop (cdr ps)))       <span class="token-comment">; דלג לאיטרציה הבאה</span>
-              ((eq? guard-result 'break)
-               (value-of Body env))   <span class="token-comment">; עצור ורוץ Body</span>
-              (else
-               <span class="token-comment">; שלב ו: הרץ את גוף הלולאה</span>
-               (value-of Id new-env)  <span class="token-comment">; מעריך את ה-p (side effect)</span>
-               (loop (cdr ps)))))))))
-
-<span class="token-comment">; פונקציית עזר לבדיקת Guards:</span>
-(define (eval-guards guards env)
-  (if (null? guards)
-      'none
-      (let ((g (car guards)))
-        (cases guard g
-          (skip-guard (exp)
-            (if (expval->bool (value-of exp env))
-                'skip
-                (eval-guards (cdr guards) env)))
-          (break-guard (exp)
-            (if (expval->bool (value-of exp env))
-                'break
-                (eval-guards (cdr guards) env)))))))
-</pre>
-
-            <div class="thought-box mt-6">
-                <h4 class="font-bold text-purple-800 mb-2">🔑 כלל הזהב לשאלות for/proc:</h4>
-                <p class="text-slate-700">כל לולאה שמרחיבה IMPLICIT-REFS חייבת לשים לב: האם ה-<strong>p</strong> (או
-                    המשתנה הקשור) צריך להיות <code>newref</code>? כן! בשפת IMPLICIT-REFS <strong>כל קישור של ערך לסביבה
-                        חייב לעבור דרך reference</strong>. לכן: <code>(extend-env Id (newref current-proc) env)</code>
-                    ולא <code>(extend-env Id current-proc env)</code>.</p>
-            </div>
-
-            <div class="tip-box mt-6">
-                <h4 class="font-bold text-amber-800 mb-2">🎯 טיפ: כיצד לזהות סוג הGuard?</h4>
-                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                    <li><strong>skip:</strong> "דלג על האיטרציה הנוכחית ועבור לבאה" — כמו <code>continue</code>
-                        בפייתון/C</li>
-                    <li><strong>break:</strong> "עצור את הלולאה כולה" — כמו <code>break</code> בפייתון/C</li>
-                    <li>Guards מוערכים בסדר! ראשון שמתקיים — הוא קובע.</li>
-                    <li>אם אף Guard לא מתקיים → מריצים את גוף הלולאה כרגיל.</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- ==========================================
-                 EXAM 2024b Q3 - IF/LET TRACE
-            =========================================== -->
-        <div id="exam-2024b-q3" class="tab-content">
-            <header class="mb-10 border-b pb-6">
-                <div
-                    class="inline-block px-4 py-1.5 bg-gradient-to-l from-teal-100 to-emerald-50 text-teal-800 rounded-full font-bold text-sm mb-4 tracking-wider border border-teal-200">
-                    2024ב מועד א · שאלה 3 · מעקב הרצה</div>
-                <h2 class="text-4xl font-black text-slate-900 leading-tight">🔎 שאלה 3: מעקב הרצת קוד עם if/let</h2>
-                <p class="text-lg text-slate-500 mt-3">שפה: PROC | נושא: מעקב ביצוע ביטויים עם binding מקומי</p>
-            </header>
-
-            <!-- THE QUESTION -->
-            <div class="bg-slate-800 rounded-2xl p-8 mb-10 text-slate-100 shadow-xl">
-                <h3 class="text-xl font-bold text-teal-300 mb-4">📋 השאלה המלאה</h3>
-                <p class="mb-4 text-slate-300 leading-relaxed">הביטוי הבא כתוב בשפת <strong
-                        class="text-white">PROC</strong>. מהי תוצאת הביצוע?</p>
-                <pre style="background:#0f172a;padding:1rem;border-radius:0.5rem;font-size:0.9rem;">
-let p = proc (a) -(a, -(0, a))
-in
-let a = 9
-in
-if/let a = 6
-then a×              <span style="color:#94a3b8">; (×=הביטוי בתנאי ה-then)</span>
-else (p a)
-in zero? (-( (p a), a) )
-                    </pre>
-                <div class="mt-4 text-slate-300 text-sm">
-                    <p class="font-bold text-teal-300 mb-2">אפשרויות (כמו שכתוב במבחן):</p>
-                    <div class="grid grid-cols-2 gap-2 text-sm">
-                        <div class="bg-slate-700 rounded p-2">(א) (num-val 12)</div>
-                        <div class="bg-slate-700 rounded p-2">(ב) (num-val 18)</div>
-                        <div class="bg-slate-700 rounded p-2">(ג) (num-val 6)</div>
-                        <div class="bg-slate-700 rounded p-2">(ד) (num-val 9)</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ANALYSIS -->
-            <div class="thought-box mb-8">
-                <h4 class="font-bold text-lg mb-3 text-purple-800">🧠 ניתוח: מה הביטוי if/let?</h4>
-                <p class="text-slate-700 mb-2">ביטוי <code>if/let</code> הוא ביטוי מיוחד שמשלב <strong>קישור
-                        מקומי</strong> עם <strong>בדיקת תנאי</strong>:</p>
-                <div class="bg-slate-900 rounded-lg p-4 text-sm font-mono text-slate-200 my-3"
-                    style="direction:ltr;text-align:left;">
-                    if/let x = EXPR
-                    then BODY-THEN
-                    else BODY-ELSE
-                    in CONTINUATION
-                </div>
-                <ul class="list-disc list-inside space-y-2 text-slate-700">
-                    <li>מחשב <code>EXPR</code></li>
-                    <li>אם הוא <strong>לא-אפס</strong>: כבלא <code>x=EXPR</code> ורץ <code>BODY-THEN</code></li>
-                    <li>אם הוא <strong>אפס</strong>: רץ <code>BODY-ELSE</code></li>
-                    <li>לאחר מכן מחשב <code>CONTINUATION</code> עם הסביבה המעודכנת</li>
-                </ul>
-            </div>
-
-            <!-- STEP BY STEP SOLUTION -->
-            <h3 class="text-2xl font-bold mb-4 text-slate-800 border-r-4 border-teal-500 pr-4">✅ מעקב שלב-אחר-שלב</h3>
-
-            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                <div class="space-y-4">
-                    <div class="bg-teal-50 border border-teal-200 rounded-lg p-4">
-                        <p class="font-bold text-teal-800 mb-2">שלב 1: let p = proc(a) -(a, -(0,a))</p>
-                        <p class="text-slate-700 text-sm">נגדיר את p. מה עושה -(a, -(0,a))?</p>
-                        <ul class="list-disc list-inside text-sm text-slate-600 mt-1">
-                            <li><code>-(0,a)</code> = 0-a = -a (שלילת a)</li>
-                            <li><code>-(a, -(0,a))</code> = a - (-a) = a + a = <strong>2a</strong></li>
-                        </ul>
-                        <p class="text-sm text-teal-700 font-bold mt-2">∴ p(a) = 2a</p>
-                    </div>
-
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p class="font-bold text-blue-800 mb-2">שלב 2: let a = 9</p>
-                        <p class="text-slate-700 text-sm">בסביבה החיצונית: a = 9.</p>
-                    </div>
-
-                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                        <p class="font-bold text-purple-800 mb-2">שלב 3: if/let a = 6</p>
-                        <p class="text-slate-700 text-sm mb-2">הביטוי מקנה a = 6 (לא אפס, כלומר true). לכן:</p>
-                        <ul class="list-disc list-inside text-sm text-slate-600">
-                            <li>a מקבל ערך 6 ב-<strong>סביבה מקומית חדשה</strong> (not the outer a=9)</li>
-                            <li>מכיוון שאינו 0 → מריץ <code>then a×</code></li>
-                            <li><code>then a</code> = <strong>6</strong> (ה-a המקומי)</li>
-                        </ul>
-                        <p class="text-sm text-purple-700 font-bold mt-2">סיום if/let: מחזיר 6, a=6 בסביבת ה-in</p>
-                    </div>
-
-                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-                        <p class="font-bold text-emerald-800 mb-2">שלב 4: in zero? ( -( (p a), a ) )</p>
-                        <p class="text-slate-700 text-sm mb-2">ב-continuation הזה, <code>a = 6</code> (ה-a הנוכחי לאחר
-                            if/let).</p>
-                        <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
-                            <li><code>(p a)</code> = p(6) = 2×6 = <strong>12</strong></li>
-                            <li><code>-((p a), a)</code> = -(12, 6) = <strong>6</strong></li>
-                            <li><code>zero?(6)</code> = <strong>false</strong> = <code>(bool-val #f)</code></li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-slate-200 rounded-lg p-4">
-                        <p class="font-bold text-slate-800 mb-1">✅ תוצאה סופית: <code>(bool-val #f)</code></p>
-                        <p class="text-sm text-slate-600">⚠️ שים לב: אף אפשרות לא מתאימה? בואו נבדוק שוב — אולי ה-a
-                            ב-continuation הוא 9 (החיצוני)?</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="thought-box mt-8">
-                <h4 class="font-bold text-purple-800 mb-3">🔄 בדיקה נוספת: מהו ה-scope של if/let?</h4>
-                <p class="text-slate-700 mb-2">ביטוי <code>if/let a=6 then ... else ... in CONT</code> — האם ה-a=6 נשמר
-                    גם ב-CONT?</p>
-                <p class="text-slate-700 mb-3">בשפת PROC ב-Implicit-Refs: <strong>כן!</strong> ה-a שנקשר ב-if/let ממשיך
-                    לתקפות ב-continuation הבא (ה-in). לכן:</p>
-                <ul class="list-disc list-inside space-y-1 text-slate-700">
-                    <li>a = 6 לאחר if/let</li>
-                    <li>(p a) = p(6) = 12</li>
-                    <li>-((p a), a) = -(12, 6) = 6</li>
-                    <li>zero?(6) = false</li>
-                </ul>
-                <p class="text-slate-700 mt-3">אם לעומת זאת ה-a ב-CONT היה 9 (החיצוני):</p>
-                <ul class="list-disc list-inside space-y-1 text-slate-700">
-                    <li>(p a) = p(9) = 18</li>
-                    <li>-((p a), a) = -(18, 9) = 9</li>
-                    <li>zero?(9) = false</li>
-                </ul>
-                <p class="font-bold text-purple-800 mt-3">📌 התשובה תלויה בפרשנות ה-scope של if/let. לפי מבנה ה-BNF,
-                    ה-in הוא continuation שרואה את ה-a החדש.</p>
-            </div>
-
-            <div class="bg-slate-800 rounded-xl p-6 mt-6 text-slate-100">
-                <h4 class="font-bold text-teal-400 mb-3">🎯 פתרון הבוחן (לפי קובץ הפתרון הרשמי):</h4>
-                <p class="text-slate-300">לפי הנתונים שבמבחן — התשובה היא <strong>(א) (num-val 12)</strong>.</p>
-                <p class="text-slate-400 text-sm mt-2">המשמעות: (p a) = 12, a = 6 ב-continuation, zero?(12-6) = zero?(6)
-                    = false... או שה-שאלה שואלת מה ערך (p a) ולא zero?? בדקו את הניסוח המדויק של השאלה.</p>
-                <p class="text-sm text-emerald-400 mt-2">✓ במידה ואת p מחליפים ב-a ב-then, ומחשבים p(6)=12 כתשובה לביטוי
-                    הכולל — (num-val 12) ✓</p>
-            </div>
-
-            <div class="tip-box mt-8">
-                <h4 class="font-bold text-amber-800 mb-3">🎯 אסטרטגיה: מעקב מבחן עם if/let</h4>
-                <ol class="list-decimal list-inside space-y-2 text-slate-700">
-                    <li><strong>הגדיר את הפרוצדורות תחילה</strong> — הבן מה כל פרוצדורה עושה אלגברית (כמו p(a)=2a)</li>
-                    <li><strong>עקוב אחר ה-binding</strong> — מה ה-a בכל שלב? האם הוא מהסביבה החיצונית או המקומית?</li>
-                    <li><strong>if/let מייצר סביבה חדשה</strong> — ה-x שנקשר ב-if/let גלוי ב-then/else וב-in
-                        continuation</li>
-                    <li><strong>zero? מחזיר bool-val</strong> — לא num-val! זכרו את ההבדל</li>
-                    <li><strong>בדקו את סוג התשובה המצופה</strong> — אם השאלה שואלת על (num-val X) אז מחפשים ביטוי מספרי
-                    </li>
-                </ol>
-            </div>
-        </div>
-
 
 
         <!-- ==========================================
@@ -2787,6 +2328,466 @@ in zero? (-( (p a), a) )
             }
         }
 
+        // --- Lexical Scope Trace Player JS Logic ---
+        let traceStep = 0;
+
+        function stepTrace(dir) {
+            traceStep = Math.max(0, Math.min(5, traceStep + dir));
+            
+            const prevBtn = document.getElementById('btn-trace-prev');
+            const nextBtn = document.getElementById('btn-trace-next');
+            const explain = document.getElementById('trace-explain');
+            const container = document.getElementById('trace-env-container');
+            
+            if (!prevBtn || !nextBtn || !explain || !container) return;
+            
+            prevBtn.disabled = (traceStep === 0);
+            if (traceStep === 5) {
+                nextBtn.innerText = "איפוס";
+                nextBtn.className = nextBtn.className.replace('bg-purple-600 hover:bg-purple-700', 'bg-slate-400 hover:bg-slate-500');
+            } else {
+                nextBtn.innerText = "הבא ➔";
+                nextBtn.className = nextBtn.className.replace('bg-slate-400 hover:bg-slate-500', 'bg-purple-600 hover:bg-purple-700');
+            }
+            
+            for (let i = 0; i < 4; i++) {
+                const line = document.getElementById(`trace-code-${i}`);
+                if (line) line.className = line.className.replace(' bg-purple-950 text-purple-200 px-1 rounded', '');
+            }
+            
+            if (traceStep === 1) {
+                document.getElementById('trace-code-0').className += ' bg-purple-950 text-purple-200 px-1 rounded';
+            } else if (traceStep === 2) {
+                document.getElementById('trace-code-1').className += ' bg-purple-950 text-purple-200 px-1 rounded';
+            } else if (traceStep === 3) {
+                document.getElementById('trace-code-2').className += ' bg-purple-950 text-purple-200 px-1 rounded';
+            } else if (traceStep === 4 || traceStep === 5) {
+                document.getElementById('trace-code-3').className += ' bg-purple-950 text-purple-200 px-1 rounded';
+            }
+            
+            if (dir === 1 && traceStep === 0) {
+                // If it was reset
+                prevBtn.disabled = true;
+                nextBtn.innerText = "הבא ➔";
+                nextBtn.className = nextBtn.className.replace('bg-slate-400 hover:bg-slate-500', 'bg-purple-600 hover:bg-purple-700');
+            }
+
+            switch(traceStep) {
+                case 0:
+                    container.innerHTML = `
+                        <div class="w-full max-w-[320px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border border-slate-700 text-center font-mono text-xs shadow-inner">
+                            (empty-env)
+                        </div>
+                    `;
+                    explain.innerHTML = 'לחצו על "הבא" כדי להתחיל במעקב ההרצה.';
+                    break;
+                    
+                case 1:
+                    container.innerHTML = `
+                        <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-purple-500 shadow-sm transition-all duration-300 flex justify-between items-center">
+                            <span class="font-bold text-[10px] text-purple-600 font-sans">E0 (let x = 10)</span>
+                            <div class="bg-purple-100 text-purple-800 font-mono text-xs px-2.5 py-1 rounded font-bold">x = 10</div>
+                        </div>
+                        <div class="text-slate-400 text-[10px] font-bold font-mono">↓ parent</div>
+                        <div class="w-full max-w-[320px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border border-slate-700 text-center font-mono text-xs">
+                            (empty-env)
+                        </div>
+                    `;
+                    explain.innerHTML = `<strong>צעד 1: הגדרת x = 10</strong><br>נוצרת סביבה חדשה <code>E0</code> המרחיבה את <code>empty-env</code> ומכילה את הקישור <code>x = 10</code>.`;
+                    break;
+                    
+                case 2:
+                    container.innerHTML = `
+                        <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-purple-500 shadow-sm transition-all duration-300 flex flex-col gap-2">
+                            <div class="flex justify-between items-center border-b pb-1.5 border-slate-100">
+                                <span class="font-bold text-[10px] text-purple-600 font-sans">E1 (let f = proc ...)</span>
+                                <span class="bg-blue-100 text-blue-800 font-mono text-xs px-2.5 py-1 rounded font-bold">f = closure</span>
+                            </div>
+                            <div class="bg-slate-50 border rounded-lg p-2 text-[10px] font-mono text-slate-500 flex flex-col gap-1">
+                                <div>Closure details:</div>
+                                <div>Param: y</div>
+                                <div>Body: -(x, y)</div>
+                                <div class="text-purple-600 font-bold">Saved Env: E0 ➔</div>
+                            </div>
+                        </div>
+                        <div class="text-slate-400 text-[10px] font-bold font-mono">↓ parent</div>
+                        <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center opacity-60">
+                            <span class="font-bold text-[10px] text-slate-400">E0</span>
+                            <div class="bg-slate-100 text-slate-800 font-mono text-xs px-2.5 py-1 rounded">x = 10</div>
+                        </div>
+                        <div class="text-slate-400 text-[10px] font-bold font-mono">↓ parent</div>
+                        <div class="w-full max-w-[320px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border border-slate-700 text-center font-mono text-xs">
+                            (empty-env)
+                        </div>
+                    `;
+                    explain.innerHTML = `<strong>צעד 2: יצירת הקלוז'ר של f</strong><br>המפרש יוצר את הפונקציה <code>f</code>. הוא אורז אותה בתוך <strong>קלוז'ר</strong> ששומר את סביבת ההגדרה שלו: <strong>E0</strong>. הסביבה הנוכחית מורחבת ל-<code>E1</code> המכילה את <code>f</code>.`;
+                    break;
+                    
+                case 3:
+                    container.innerHTML = `
+                        <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-purple-500 shadow-sm transition-all duration-300 flex justify-between items-center">
+                            <span class="font-bold text-[10px] text-purple-600 font-sans">E2 (let x = 20)</span>
+                            <div class="bg-purple-100 text-purple-800 font-mono text-xs px-2.5 py-1 rounded font-bold">x = 20</div>
+                        </div>
+                        <div class="text-slate-400 text-[10px] font-bold font-mono">↓ parent</div>
+                        <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center opacity-60">
+                            <span class="font-bold text-[10px] text-slate-400">E1 (f)</span>
+                            <div class="bg-slate-100 text-slate-800 font-mono text-xs px-2 py-0.5 rounded">f = closure(E0)</div>
+                        </div>
+                        <div class="text-slate-400 text-[10px] font-bold font-mono">↓ parent</div>
+                        <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center opacity-60">
+                            <span class="font-bold text-[10px] text-slate-400">E0</span>
+                            <div class="bg-slate-100 text-slate-800 font-mono text-xs px-2.5 py-1 rounded">x = 10</div>
+                        </div>
+                        <div class="text-slate-400 text-[10px] font-bold font-mono">↓ parent</div>
+                        <div class="w-full max-w-[320px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border border-slate-700 text-center font-mono text-xs">
+                            (empty-env)
+                        </div>
+                    `;
+                    explain.innerHTML = `<strong>צעד 3: הגדרת x = 20 נוסף</strong><br>הקוד מבצע <code>let x = 20</code>. נוצרת סביבה <code>E2</code>. כעת יש לנו שני משתנים בשם <code>x</code>. ה-<code>x</code> ב-<code>E2</code> מסתיר (Shadows) את ה-<code>x</code> ב-<code>E0</code> עבור ביטויים פנימיים.`;
+                    break;
+                    
+                case 4:
+                    container.innerHTML = `
+                        <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-emerald-500 shadow-md transition-all duration-300 flex justify-between items-center animate-fade-in">
+                            <span class="font-bold text-[10px] text-emerald-600 font-sans">E3 (f 5 - Active Body Env)</span>
+                            <div class="bg-emerald-100 text-emerald-800 font-mono text-xs px-2.5 py-1 rounded font-bold">y = 5</div>
+                        </div>
+                        <div class="text-red-500 text-xs font-bold font-mono animate-bounce" dir="rtl">↓ נקודת הקסם: מצביע ל-E0! (ולא ל-E2)</div>
+                        <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center opacity-60">
+                            <span class="font-bold text-[10px] text-slate-400">E0 (Origin of f)</span>
+                            <div class="bg-slate-100 text-slate-800 font-mono text-xs px-2.5 py-1 rounded">x = 10</div>
+                        </div>
+                        <div class="text-slate-400 text-[10px] font-bold font-mono">↓ parent</div>
+                        <div class="w-full max-w-[320px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border border-slate-700 text-center font-mono text-xs">
+                            (empty-env)
+                        </div>
+                    `;
+                    explain.innerHTML = `<strong>צעד 4: קריאה לפונקציה (f 5)</strong><br>הפונקציה <code>f</code> מופעלת עם <code>y = 5</code>. נוצרת סביבת ההרצה <code>E3</code>.<br><span class="text-red-600 font-bold">שימו לב:</span> האבא של <code>E3</code> הוא <strong>E0</strong> (הסביבה ששמורה בקלוז'ר), <strong>ולא E2</strong> שבו הופעלה הפונקציה! זהו סקופ לקסיקלי.`;
+                    break;
+                    
+                case 5:
+                    container.innerHTML = `
+                        <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-emerald-500 shadow-md transition-all duration-300 flex justify-between items-center">
+                            <span class="font-bold text-[10px] text-emerald-600 font-sans">E3</span>
+                            <div class="bg-emerald-100 text-emerald-800 font-mono text-xs px-2.5 py-1 rounded font-bold">y = 5</div>
+                        </div>
+                        <div class="text-slate-400 text-[10px] font-bold font-mono">↓ parent</div>
+                        <div class="w-full max-w-[320px] bg-yellow-50 p-3 rounded-xl border-2 border-yellow-400 shadow-sm flex justify-between items-center animate-pulse">
+                            <span class="font-bold text-[10px] text-yellow-700">E0 (נמצאה התאמה!)</span>
+                            <div class="bg-yellow-100 text-yellow-800 font-mono text-xs px-2.5 py-1 rounded font-bold">x = 10</div>
+                        </div>
+                        <div class="text-slate-400 text-[10px] font-bold font-mono">↓ parent</div>
+                        <div class="w-full max-w-[320px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border border-slate-700 text-center font-mono text-xs">
+                            (empty-env)
+                        </div>
+                    `;
+                    explain.innerHTML = `<strong>צעד 5: חישוב -(x, y)</strong><br>המפרש מחפש את <code>x</code> בסביבת ההרצה הפעילה <code>E3</code>. הוא לא מוצא אותו, לכן עוקב אחרי החץ ועולה ל-<code>E0</code>. שם הוא מוצא <code>x = 10</code>.<br>החישוב הוא: <code>10 - 5 = 5</code>.<br>המשתנה <code>x = 20</code> שבסביבת <code>E2</code> אינו נגיש כלל!`;
+                    break;
+            }
+        }
+
+        // --- 5-Step Language Extension Recipe JS Logic ---
+        function showRecipeStep(step) {
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.getElementById('btn-recipe-' + i);
+                if (btn) {
+                    if (i === step) {
+                        btn.className = 'w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-blue-200 bg-blue-600 text-white shadow-sm cursor-pointer';
+                    } else {
+                        btn.className = 'w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer';
+                    }
+                }
+            }
+            
+            const box = document.getElementById('recipe-content-box');
+            if (!box) return;
+            
+            let html = '';
+            switch(step) {
+                case 1:
+                    html = `
+                        <h5 class="font-bold text-slate-800 text-sm mb-2">📋 שלב 1: עדכון הדקדוק ב-lang.scm</h5>
+                        <p class="mb-3 text-slate-600"><strong>מה עושים במבחן:</strong> מוצאים את הגדרת <code>the-grammar</code> ומוסיפים שורה המייצגת את התחביר החדש. תמיד יש להקפיד לכתוב את המילים השמורות במדויק ולהגדיר שם ל-Variant שישמש אותנו ב-AST.</p>
+                        <pre class="bg-slate-800 text-slate-200 p-2.5 rounded text-[11px] font-mono whitespace-pre-wrap">
+(expression
+  ("let*" (arbno identifier "=" expression) "in" expression)
+  let*-exp)
+                        </pre>
+                    `;
+                    break;
+                case 2:
+                    html = `
+                        <h5 class="font-bold text-slate-800 text-sm mb-2">📦 שלב 2: מבני נתונים ב-data-structures.scm</h5>
+                        <p class="mb-3 text-slate-600"><strong>מה עושים במבחן:</strong> אם הפיצ'ר מחזיר ערך מסוג חדש (למשל: tuple, pair, array) שלא היה קיים קודם בשפה, מוסיפים Variant ל-<code>expval</code> וכותבים פונקציות עזר לחילוץ הערך הבסיסי.</p>
+                        <pre class="bg-slate-800 text-slate-200 p-2.5 rounded text-[11px] font-mono whitespace-pre-wrap">
+(define-datatype expval expval?
+  (num-val (num number?))
+  (bool-val (bool boolean?))
+  (proc-val (proc proc?))
+  (tuple-val (vals (list-of expval?)))) ; variant חדש
+
+(define expval->tuple
+  (lambda (v)
+    (cases expval v
+      (tuple-val (vals) vals)
+      (else (eopl:error 'expval->tuple "Not a tuple: ~s" v)))))
+                        </pre>
+                    `;
+                    break;
+                case 3:
+                    html = `
+                        <h5 class="font-bold text-slate-800 text-sm mb-2">🔑 שלב 3: ניהול סביבות ב-environments.scm</h5>
+                        <p class="mb-3 text-slate-600"><strong>מה עושים במבחן:</strong> בודקים אם הפקודה מגדירה משתנים חדשים שיש לשמור. אם אנחנו בשפה עם הפניות סמויות (Implicit Refs), כל הגדרה של משתנה חדש דורשת יצירת תא זיכרון חדש ב-Store. משתמשים ב-<code>(extend-env var (newref val) env)</code>.</p>
+                        <pre class="bg-slate-800 text-slate-200 p-2.5 rounded text-[11px] font-mono whitespace-pre-wrap">
+; דוגמה להרחבת סביבה עם הפניה בשפת Implicit-Refs:
+(let ((ref (newref val)))
+  (value-of body (extend-env var ref env)))
+                        </pre>
+                    `;
+                    break;
+                case 4:
+                    html = `
+                        <h5 class="font-bold text-slate-800 text-sm mb-2">⚙️ שלב 4: כתיבת הלוגיקה הסמנטית ב-interp.scm</h5>
+                        <p class="mb-3 text-slate-600"><strong>מה עושים במבחן:</strong> מוסיפים Variant מתאים בתוך <code>cases expression</code> בפונקציית <code>value-of</code>. בשלב זה מעריכים את ביטויי המשנה באמצעות <code>value-of</code> ומבצעים את לוגיקת הפיצ'ר.</p>
+                        <pre class="bg-slate-800 text-slate-200 p-2.5 rounded text-[11px] font-mono whitespace-pre-wrap">
+(let*-exp (vars exps body)
+  (letrec ((evaluate-seq
+             (lambda (r-vars r-exps current-env)
+               (if (null? r-vars)
+                   (value-of body current-env)
+                   (let ((val (value-of (car r-exps) current-env)))
+                     (evaluate-seq (cdr r-vars) (cdr r-exps)
+                                   (extend-env (car r-vars) val current-env)))))))
+    (evaluate-seq vars exps env)))
+                        </pre>
+                    `;
+                    break;
+                case 5:
+                    html = `
+                        <h5 class="font-bold text-slate-800 text-sm mb-2">⚠️ שלב 5: מוקשים במבחן וחוק ערך הדאמי</h5>
+                        <p class="mb-3 text-slate-600"><strong>מה עושים במבחן:</strong> שים לב! כל ביטוי Scheme שנקרא ב-<code>value-of</code> חייב להחזיר ערך מטיפוס <code>expval</code>. אם כתבתם לולאה או פקודת השמה שאין להן ערך החזרה טבעי, <strong>חובה להחזיר ערך דאמי</strong> בסופן כדי למנוע קריסה של המפרש.</p>
+                        <pre class="bg-slate-800 text-slate-200 p-2.5 rounded text-[11px] font-mono whitespace-pre-wrap">
+; דוגמה להחזרת ערך דאמי בסיום לולאה או השמה:
+(begin
+  (setref! ref val)
+  (num-val 27)) ; ערך דאמי תקני
+                        </pre>
+                    `;
+                    break;
+            }
+            box.innerHTML = html;
+        }
+
+        // --- Let vs Let* Simulator JS Logic ---
+        let letMode = 'let';
+        let letStep = 0;
+        
+        function toggleLetMode(mode) {
+            letMode = mode;
+            const btnLet = document.getElementById('btn-let-mode-let');
+            const btnLetStar = document.getElementById('btn-let-mode-letstar');
+            
+            if (mode === 'let') {
+                btnLet.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-sky-600 text-white shadow-sm cursor-pointer';
+                btnLetStar.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
+            } else {
+                btnLetStar.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-sky-600 text-white shadow-sm cursor-pointer';
+                btnLet.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
+            }
+            resetLetSim();
+        }
+        
+        function resetLetSim() {
+            letStep = 0;
+            const explain = document.getElementById('let-explain-text');
+            if (explain) {
+                explain.innerHTML = 'לחצו על "בצע צעד" כדי לראות את שלבי הרצת הקוד ומעקב הסביבות.';
+            }
+            const envView = document.getElementById('let-env-view');
+            if (envView) {
+                envView.innerHTML = `
+                    <div class="text-slate-400 text-xs italic py-8">סביבה ריקה</div>
+                `;
+            }
+            const stepBtn = document.getElementById('btn-let-step');
+            if (stepBtn) {
+                stepBtn.disabled = false;
+                stepBtn.textContent = 'בצע צעד (Step)';
+                stepBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        function stepLetSim() {
+            const explain = document.getElementById('let-explain-text');
+            const envView = document.getElementById('let-env-view');
+            
+            if (!explain || !envView) return;
+            letStep++;
+            
+            if (letStep === 1) {
+                explain.innerHTML = '<strong>שלב 1: let x = 1 (הגדרה ראשונית)</strong><br>הערך 1 נקשר ל-x בסביבה החיצונית. זה יוצר את הסביבה הבסיסית <code>ENV_1</code>.';
+                envView.innerHTML = `
+                    <div class="w-full max-w-sm bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono">
+                        ENV_1: [x : 1]
+                    </div>
+                `;
+            } else if (letStep === 2) {
+                if (letMode === 'let') {
+                    explain.innerHTML = '<strong>שלב 2: הערכת הביטויים (השמה מקבילית)</strong><br>ב-<code>let</code> רגיל, מעריכים את <strong>כל</strong> הביטויים בסביבה החיצונית <code>ENV_1</code> (שבה x = 1):<br>• הביטוי x = 4 מוערך כ-4.<br>• הביטוי y = x + 2 מוערך כ-<code>1 + 2 = 3</code> (הוא משתמש ב-x המקורי מ-ENV_1!).';
+                    envView.innerHTML = `
+                        <div class="w-full max-w-sm bg-slate-50 border border-slate-300 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div>ENV_1: [x : 1]</div>
+                            <div class="text-sky-600 font-bold border-t pt-1">חישוב ערכים זמניים במקביל:</div>
+                            <div class="text-sky-700">ערך של x החדש = 4</div>
+                            <div class="text-sky-700">ערך של y החדש = x + 2 = 1 + 2 = 3</div>
+                        </div>
+                    `;
+                } else {
+                    explain.innerHTML = '<strong>שלב 2: הערכת הביטוי הראשון (השמה סדרתית)</strong><br>ב-<code>let*</code>, מעריכים את ההשמות אחת-אחת ומעדכנים את הסביבה מיד:<br>• הביטוי הראשון x = 4 מוערך. נוצרת סביבה חדשה <code>ENV_2</code> שבה x = 4, והיא מונחת מעל <code>ENV_1</code>.';
+                    envView.innerHTML = `
+                        <div class="w-full max-w-sm bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-sky-600 font-bold">ENV_2: [x : 4] [מעודכן!]</div>
+                            <div class="border-t pt-1">ENV_1: [x : 1]</div>
+                        </div>
+                    `;
+                }
+            } else if (letStep === 3) {
+                if (letMode === 'let') {
+                    explain.innerHTML = '<strong>שלב 3: הרחבת הסביבה</strong><br>לאחר שכל הערכים חושבו במקביל, המפרש מרחיב את הסביבה <code>ENV_1</code> עם שני הקישורים יחד. נוצרת סביבה <code>ENV_2</code> המכילה את <code>[x : 4, y : 3]</code>.';
+                    envView.innerHTML = `
+                        <div class="w-full max-w-sm bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-sky-600 font-bold">ENV_2: [x : 4, y : 3]</div>
+                            <div class="border-t pt-1">ENV_1: [x : 1]</div>
+                        </div>
+                    `;
+                } else {
+                    explain.innerHTML = '<strong>שלב 3: הערכת הביטוי השני</strong><br>כעת המפרש מעריך את ההשמה השנייה <code>y = +(x, 2)</code>. שימו לב: החישוב מתבצע בתוך הסביבה החדשה <code>ENV_2</code> (שבה x = 4)! לכן y מוערך כ-<code>4 + 2 = 6</code>! נוצרת סביבה <code>ENV_3</code> המכילה את <code>[y : 6]</code>.';
+                    envView.innerHTML = `
+                        <div class="w-full max-w-sm bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div class="text-sky-600 font-bold">ENV_3: [y : 6]</div>
+                            <div>ENV_2: [x : 4]</div>
+                            <div class="border-t pt-1">ENV_1: [x : 1]</div>
+                        </div>
+                    `;
+                }
+            } else if (letStep === 4) {
+                if (letMode === 'let') {
+                    explain.innerHTML = '<strong>שלב 4: חישוב גוף הביטוי +(x, y)</strong><br>המפרש מעריך את גוף הביטוי <code>+(x, y)</code> בתוך הסביבה <code>ENV_2</code>.<br>• x נמצא כ-4.<br>• y נמצא כ-3.<br>החישוב: <code>4 + 3 = 7</code>.<br><span class="text-sky-600 font-bold text-sm block mt-2">תוצאה סופית ב-let: 7</span>';
+                } else {
+                    explain.innerHTML = '<strong>שלב 4: חישוב גוף הביטוי +(x, y)</strong><br>המפרש מעריך את גוף הביטוי <code>+(x, y)</code> בתוך הסביבה <code>ENV_3</code>.<br>• y נמצא ב-ENV_3 כ-6.<br>• x מחופש ב-ENV_3 (לא קיים) ונמצא ב-ENV_2 כ-4.<br>החישוב: <code>4 + 6 = 10</code>.<br><span class="text-sky-600 font-bold text-sm block mt-2">תוצאה סופית ב-let*: 10</span>';
+                }
+                const stepBtn = document.getElementById('btn-let-step');
+                if (stepBtn) {
+                    stepBtn.disabled = true;
+                    stepBtn.textContent = 'הסתיים';
+                    stepBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+    </script>
+    <script>
+        // Sidebar toggle and Navigation Button Injection Logic
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-collapsed');
+            const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+            updateToggleBtnIcon(isCollapsed);
+        }
+
+        function updateToggleBtnIcon(isCollapsed) {
+            const icon = document.getElementById('sidebar-toggle-icon');
+            if (!icon) return;
+            if (isCollapsed) {
+                // Show << (chevron left to open/expand in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />';
+            } else {
+                // Show >> (chevron right to close/collapse in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Create and inject sidebar toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.id = 'sidebar-toggle-btn';
+            toggleBtn.className = 'fixed top-6 p-2 rounded-lg bg-white/80 backdrop-blur-md hover:bg-white text-slate-600 hover:text-slate-900 border border-slate-200 shadow-md z-30 flex items-center justify-center w-10 h-10 transition-all duration-300 active:scale-95 cursor-pointer';
+            toggleBtn.title = 'הצג/הסתר תפריט ניווט';
+            toggleBtn.onclick = toggleSidebar;
+            toggleBtn.innerHTML = '<svg id="sidebar-toggle-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"></svg>';
+            document.body.appendChild(toggleBtn);
+
+            // 2. Load sidebar collapsed state from localStorage
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                document.body.classList.add('sidebar-collapsed');
+            }
+            updateToggleBtnIcon(isCollapsed);
+
+            // Initialize Lexical Scope Trace Player
+            stepTrace(0);
+            
+            // Initialize Recipe Checklist and Let Simulator
+            showRecipeStep(1);
+            resetLetSim();
+
+            // 3. Inject navigation buttons at the bottom of each tab
+            const tabs = [];
+            const seenIds = new Set();
+            document.querySelectorAll('.tab-content').forEach(el => {
+                const id = el.id;
+                if (id && !seenIds.has(id)) {
+                    seenIds.add(id);
+                    tabs.push(el);
+                }
+            });
+
+            tabs.forEach((tab, index) => {
+                const navContainer = document.createElement('div');
+                navContainer.className = 'flex justify-between items-center mt-12 pt-6 border-t border-slate-200';
+
+                // Previous Button (on the right)
+                if (index > 0) {
+                    const prevTabId = tabs[index - 1].id;
+                    const prevBtn = document.createElement('button');
+                    prevBtn.onclick = () => showTab(prevTabId);
+                    prevBtn.className = 'nav-btn-prev flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    prevBtn.innerHTML = `
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span>הקודם</span>
+                    `;
+                    navContainer.appendChild(prevBtn);
+                } else {
+                    // Placeholder to keep spacing alignment
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                // Next Button (on the left)
+                if (index < tabs.length - 1) {
+                    const nextTabId = tabs[index + 1].id;
+                    const nextBtn = document.createElement('button');
+                    nextBtn.onclick = () => showTab(nextTabId);
+                    nextBtn.className = 'nav-btn-next flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98] transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    nextBtn.innerHTML = `
+                        <span>הבא</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    `;
+                    navContainer.appendChild(nextBtn);
+                } else {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                tab.appendChild(navContainer);
+            });
+        });
     </script>
 </body>
 

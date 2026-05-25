@@ -61,6 +61,39 @@
         .dark-scroll::-webkit-scrollbar-track { background: #020617; }
         .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
     </style>
+    <style>
+        /* Sidebar collapse transition & styles */
+        aside {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .sidebar-collapsed aside {
+            width: 0 !important;
+            min-width: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        #sidebar-toggle-btn {
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+        }
+        /* When sidebar is open: button floats to the left of the sidebar (RTL right side) */
+        body:not(.sidebar-collapsed) #sidebar-toggle-btn {
+            right: 21rem; /* 20rem (w-80) + 1rem (spacing) */
+        }
+        body.sidebar-collapsed #sidebar-toggle-btn {
+            right: 1rem;
+        }
+        
+        /* Premium navigation buttons styling */
+        .nav-btn-prev, .nav-btn-next {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-btn-prev:hover {
+            transform: translateX(2px);
+        }
+        .nav-btn-next:hover {
+            transform: translateX(-2px);
+        }
+    </style>
 </head>
 <body class="text-slate-800 h-screen flex overflow-hidden">
 
@@ -156,7 +189,7 @@
                 <div class="flex flex-col items-center justify-center p-8 bg-slate-50 rounded-xl border border-slate-200 mb-10 shadow-inner" dir="ltr">
                     <div class="flex flex-col md:flex-row items-center justify-between w-full space-y-4 md:space-y-0 md:space-x-4">
                         <!-- Input -->
-                        <div class="bg-white border-2 border-slate-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
+                        <div id="arch-card-input" onclick="showArchDetails('input')" class="cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-md bg-white border-2 border-slate-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
                             <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Source Code</span>
                             <code class="text-slate-800 font-bold text-sm">"-(5, 2)"</code>
                             <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">מחרוזת טקסט רגילה</div>
@@ -165,7 +198,7 @@
                         <div class="text-slate-400 font-bold text-2xl md:hidden">↓</div>
                         
                         <!-- Lexer/Parser -->
-                        <div class="bg-blue-50 border-2 border-blue-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
+                        <div id="arch-card-lang" onclick="showArchDetails('lang')" class="cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-md bg-blue-50 border-2 border-blue-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
                             <span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider block mb-1">lang.scm</span>
                             <span class="text-slate-700 font-bold text-sm">scan&amp;parse</span>
                             <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-blue-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">ניתוח לקסיקלי ותחבירי</div>
@@ -174,7 +207,7 @@
                         <div class="text-slate-400 font-bold text-2xl md:hidden">↓</div>
                         
                         <!-- AST -->
-                        <div class="bg-purple-50 border-2 border-purple-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
+                        <div id="arch-card-ast" onclick="showArchDetails('ast')" class="cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-md bg-purple-50 border-2 border-purple-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
                             <span class="text-[10px] font-bold text-purple-500 uppercase tracking-wider block mb-1">AST</span>
                             <code class="text-purple-700 text-sm">(diff-exp ...)</code>
                             <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-purple-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">עץ ביטויים</div>
@@ -183,7 +216,7 @@
                         <div class="text-slate-400 font-bold text-2xl md:hidden">↓</div>
                         
                         <!-- Interpreter -->
-                        <div class="bg-green-50 border-2 border-green-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
+                        <div id="arch-card-interp" onclick="showArchDetails('interp')" class="cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-md bg-green-50 border-2 border-green-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
                             <span class="text-[10px] font-bold text-green-500 uppercase tracking-wider block mb-1">interp.scm</span>
                             <span class="text-slate-700 font-bold text-sm">value-of</span>
                             <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
@@ -196,11 +229,17 @@
                         <div class="text-slate-400 font-bold text-2xl md:hidden">↓</div>
                         
                         <!-- Output -->
-                        <div class="bg-white border-2 border-slate-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
+                        <div id="arch-card-expval" onclick="showArchDetails('expval')" class="cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-md bg-white border-2 border-slate-300 p-4 rounded-lg shadow-sm text-center w-full md:w-40 relative group">
                             <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">ExpVal</span>
                             <code class="text-green-600 font-bold">(num-val 3)</code>
                             <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">ערך סופי עטוף בקופסה</div>
                         </div>
+                    </div>
+                    
+                    <!-- Explanation Panel for Architecture Pipeline -->
+                    <div id="arch-details-box" class="w-full mt-8 bg-white p-5 rounded-lg border border-slate-200 shadow-sm transition-all duration-300 min-h-[120px]">
+                        <p class="font-bold text-slate-800 mb-2 border-b pb-1 text-sm">💡 סימולטור ארכיטקטורה אינטראקטיבי</p>
+                        <p class="text-slate-600 text-sm">לחצו על אחד השלבים בצינור העיבוד למעלה כדי לחשוף את תפקידו ומאחורי הקלעים שלו במפרש EOPL.</p>
                     </div>
                 </div>
 
@@ -681,6 +720,54 @@ in let f = proc (z) -(z, x)  <span class="token-comment">% הפונקציה מש
     (body expression?)      <span class="token-comment">; עץ ה-AST של גוף הפונקציה</span>
     (saved-env environment?))) <span class="token-comment">; הסביבה השמורה!! זה הצילום מסך!</span></code></pre>
                 </div>
+
+                <!-- Scope Simulator -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>הדמיה השוואתית: סקופ לקסיקלי מול דינמי (Lexical vs Dynamic Scoping)</span>
+                        <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        ראו כיצד מנוע ההרצה מחפש משתנים בכל אחד מהמודלים עבור הקוד: <br>
+                        <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs" dir="ltr">let x = 3 in let f = proc(z) -(z, x) in let x = 4 in (f 10)</code>
+                    </p>
+
+                    <div class="flex gap-2 mb-6">
+                        <button onclick="toggleScopingMode('lexical')" id="btn-scope-lexical" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer">
+                            Lexical Scoping (לקסיקלי - PROC תקני)
+                        </button>
+                        <button onclick="toggleScopingMode('dynamic')" id="btn-scope-dynamic" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                            Dynamic Scoping (דינמי - שאלת הרחבה)
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3" dir="rtl">בקרה:</h5>
+                                <div class="flex gap-2 mb-4">
+                                    <button onclick="stepScopeSim()" id="btn-scope-step" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+                                        בצע צעד (Step)
+                                    </button>
+                                    <button onclick="resetScopeSim()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-lg text-xs transition-colors cursor-pointer">
+                                        איפוס
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="scope-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[120px] flex items-center justify-center text-center leading-relaxed">
+                                לחצו על "בצע צעד" כדי לראות את שלבי הרצת הקוד ומעקב הסביבות.
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider self-end mb-3" dir="rtl">שרשרת הסביבות ברגע חישוב גוף הפונקציה:</h5>
+                            <div id="scope-env-view" class="w-full flex flex-col items-center gap-2 min-h-[180px]" dir="ltr">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ==========================================
@@ -1093,6 +1180,62 @@ in
                     <p class="text-sm text-slate-700 mt-2 font-bold">כיצד <code>apply-env</code> עובד עם רשימות אלו?</p>
                     <p class="text-sm text-slate-700">החיפוש ייעשה בעזרת פונקציית עזר למציאת ה<strong>אינדקס</strong> של הפונקציה המבוקשת בתוך רשימת <code>p-names</code>. אם הפונקציה נמצאה באינדקס <code>i</code>, נשלוף את הפרמטר והגוף מאותו האינדקס (באמצעות <code>list-ref</code> על <code>b-vars</code> ו-<code>p-bodies</code>) ונרכיב מהם את הקלוז'ר בו במקום.</p>
                 </div>
+
+                <!-- Circular Environment Diagram -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>תרשים מעגל הסביבות של LETREC</span>
+                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-normal">הסבר חזותי</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        כשפונקציה רקורסיבית מוגדרת בתוך <code>letrec</code>, המפרש מייצר סביבה מיוחדת מסוג <code>extend-env-rec</code>. בעת חיפוש שם הפונקציה ב-<code>apply-env</code>, נוצר קלוז'ר שסביבתו השמורה היא <strong>הסביבה הזו עצמה</strong>, ובכך נוצר מעגל (Circular Reference) המאפשר רקורסיה:
+                    </p>
+
+                    <div class="flex flex-col items-center justify-center p-6 bg-slate-50 rounded-xl border border-slate-200 relative overflow-visible" dir="ltr">
+                        <!-- Environment Frame -->
+                        <div class="relative w-full max-w-[360px] bg-white border-2 border-purple-500 rounded-2xl shadow-md p-5 flex flex-col gap-4">
+                            <div class="absolute -top-3 right-4 bg-purple-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" dir="rtl">
+                                סביבה מורחבת רקורסיבית: E1 (extend-env-rec)
+                            </div>
+                            
+                            <div class="flex justify-between items-center mt-2 border-b pb-2 border-slate-100">
+                                <span class="font-bold text-xs text-slate-500">שם הפונקציה (p-name)</span>
+                                <span class="font-mono text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded">"fact"</span>
+                            </div>
+                            
+                            <!-- Closure Box inside Environment -->
+                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-col gap-2">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">הערך המוחזר: Closure (פרוצדורה)</div>
+                                
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-slate-500">פרמטר (b-var)</span>
+                                    <span class="font-mono bg-white px-2 py-0.5 border rounded">n</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-slate-500">גוף (p-body)</span>
+                                    <span class="font-mono bg-white px-2 py-0.5 border rounded">if zero?(n) ...</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs bg-yellow-50 border border-yellow-200 rounded p-1.5 font-bold">
+                                    <span class="text-yellow-800">סביבה שמורה (saved-env)</span>
+                                    <span class="font-mono text-purple-700">E1 (מצביע לעצמו!)</span>
+                                </div>
+                            </div>
+
+                            <!-- SVG Loop Arrow -->
+                            <svg class="absolute -left-12 top-10 w-16 h-28 hidden sm:block pointer-events-none" viewBox="0 0 100 150" fill="none">
+                                <path d="M 60,115 C -20,115 -20,10 50,10" stroke="#a21caf" stroke-width="3" stroke-dasharray="4 2" />
+                                <polygon points="50,5 60,10 50,15" fill="#a21caf" />
+                            </svg>
+                        </div>
+                        
+                        <!-- Arrow pointing to parent env -->
+                        <div class="my-3 text-slate-400 text-xs font-bold font-mono">↓ saved-env (הסביבה החיצונית)</div>
+                        
+                        <div class="w-full max-w-[360px] bg-slate-800 text-slate-400 p-3 rounded-2xl border border-slate-700 text-center font-mono text-xs shadow-inner">
+                            E0 (empty-env or base-env)
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ==========================================
@@ -1233,6 +1376,61 @@ let x = 3 in let y = 4 in -(x, y)
   (nameless-let-exp 4 
     (diff-exp (nameless-var-exp 1) (nameless-var-exp 0))))</code></pre>
                     <p class="text-sm text-slate-600 mt-2">המשתנה הפנימי ביותר <code>y</code> מקבל את האינדקס 0 (האחרון שהוכנס לזיכרון והקרוב ביותר לסקופ), והמשתנה <code>x</code> מקבל את האינדקס 1.</p>
+
+                    <!-- Lexical Address Visualizer -->
+                    <div class="mt-8 pt-8 border-t border-slate-200">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span>מחשב כתובות לקסיקליות אינטראקטיבי</span>
+                            <span class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                        </h4>
+                        <p class="text-xs text-slate-600 mb-4">
+                            עמדו עם העכבר או לחצו על המשתנים שבתוך פעולת החיסור בשורה התחתונה כדי לראות כיצד מתבצע התרגום הסטטי לאינדקסים (Nameless Variables):
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                            <!-- Left: Code representation -->
+                            <div class="bg-slate-900 text-slate-200 p-6 rounded-xl font-mono text-sm leading-relaxed relative flex flex-col justify-center" dir="ltr">
+                                <div id="lex-line-x" class="transition-all duration-300 py-1 px-2 rounded"><span class="text-purple-400 font-bold">let</span> x = 37</div>
+                                <div id="lex-line-y" class="transition-all duration-300 py-1 px-2 rounded ml-4"><span class="text-purple-400 font-bold">let</span> y = 11</div>
+                                <div id="lex-line-z" class="transition-all duration-300 py-1 px-2 rounded ml-8"><span class="text-purple-400 font-bold">let</span> z = 5</div>
+                                <div class="py-1 px-2 rounded ml-12">
+                                    in - ( 
+                                    <span id="lex-var-x" onmouseover="highlightLex('x')" onmouseout="clearLex()" onclick="highlightLex('x')" class="bg-slate-800 hover:bg-red-500 hover:text-white px-2 py-0.5 rounded font-bold cursor-pointer transition-colors text-red-400">x</span> 
+                                    , 
+                                    <span id="lex-var-z" onmouseover="highlightLex('z')" onmouseout="clearLex()" onclick="highlightLex('z')" class="bg-slate-800 hover:bg-emerald-500 hover:text-white px-2 py-0.5 rounded font-bold cursor-pointer transition-colors text-emerald-400">z</span> 
+                                    )
+                                </div>
+                            </div>
+
+                            <!-- Right: Static Environment stack visualization -->
+                            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                                <div>
+                                    <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">חישוב מול הסביבה הסטטית (Senv):</h5>
+                                    <div class="flex flex-col gap-1.5" dir="ltr">
+                                        <!-- Stack item z -->
+                                        <div id="senv-z" class="flex justify-between items-center bg-white p-2.5 rounded-lg border border-slate-200 transition-all duration-300">
+                                            <span class="font-mono text-xs font-bold text-slate-600">index 0 (Innermost)</span>
+                                            <span class="font-mono text-sm font-bold bg-slate-100 px-2 py-0.5 rounded">z</span>
+                                        </div>
+                                        <!-- Stack item y -->
+                                        <div id="senv-y" class="flex justify-between items-center bg-white p-2.5 rounded-lg border border-slate-200 transition-all duration-300">
+                                            <span class="font-mono text-xs font-bold text-slate-600">index 1</span>
+                                            <span class="font-mono text-sm font-bold bg-slate-100 px-2 py-0.5 rounded">y</span>
+                                        </div>
+                                        <!-- Stack item x -->
+                                        <div id="senv-x" class="flex justify-between items-center bg-white p-2.5 rounded-lg border border-slate-200 transition-all duration-300">
+                                            <span class="font-mono text-xs font-bold text-slate-600">index 2 (Outermost)</span>
+                                            <span class="font-mono text-sm font-bold bg-slate-100 px-2 py-0.5 rounded">x</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="lex-explain-box" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[60px] flex items-center justify-center text-center mt-4 leading-relaxed">
+                                    הציבו את העכבר מעל x או z בקוד משמאל כדי לראות את חישוב הכתובת הלקסיקלית שלו.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="bg-codebg text-white p-6 rounded-xl overflow-x-auto shadow-lg">
@@ -1345,6 +1543,482 @@ let x = 3 in let y = 4 in -(x, y)
             
             document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // --- Lexical Address Visualizer JS Logic ---
+        function highlightLex(variable) {
+            const lineX = document.getElementById('lex-line-x');
+            const lineY = document.getElementById('lex-line-y');
+            const lineZ = document.getElementById('lex-line-z');
+            const senvZ = document.getElementById('senv-z');
+            const senvY = document.getElementById('senv-y');
+            const senvX = document.getElementById('senv-x');
+            const explain = document.getElementById('lex-explain-box');
+            
+            if (!explain) return;
+            
+            clearLex();
+            
+            if (variable === 'x') {
+                if (lineX) lineX.className += ' bg-red-950 text-red-200';
+                if (senvX) senvX.className = senvX.className.replace('border-slate-200', 'border-red-500 bg-red-50');
+                explain.innerHTML = `המשתנה <strong>x</strong> נמצא בסביבה הסטטית במרחק של <strong>2 שלבים</strong> (אינדקס 2).<br>הקומפיילר יחליף אותו ב: <code>(nameless-var-exp 2)</code>.`;
+            } else if (variable === 'z') {
+                if (lineZ) lineZ.className += ' bg-emerald-950 text-emerald-200';
+                if (senvZ) senvZ.className = senvZ.className.replace('border-slate-200', 'border-emerald-500 bg-emerald-50');
+                explain.innerHTML = `המשתנה <strong>z</strong> הוא הפנימי ביותר (הוגדר אחרון), לכן הוא ממוקם בראש המחסנית.<br>מרחקו הוא <strong>0 שלבים</strong> (אינדקס 0). מוחלף ב: <code>(nameless-var-exp 0)</code>.`;
+            }
+        }
+
+        function clearLex() {
+            const lineX = document.getElementById('lex-line-x');
+            const lineY = document.getElementById('lex-line-y');
+            const lineZ = document.getElementById('lex-line-z');
+            const senvZ = document.getElementById('senv-z');
+            const senvY = document.getElementById('senv-y');
+            const senvX = document.getElementById('senv-x');
+            const explain = document.getElementById('lex-explain-box');
+            
+            if (lineX) lineX.className = lineX.className.replace(' bg-red-950 text-red-200', '');
+            if (lineY) lineY.className = lineY.className.replace(' bg-purple-950 text-purple-200', '');
+            if (lineZ) lineZ.className = lineZ.className.replace(' bg-emerald-950 text-emerald-200', '');
+            
+            if (senvZ) senvZ.className = senvZ.className.replace('border-emerald-500 bg-emerald-50', 'border-slate-200');
+            if (senvY) senvY.className = senvY.className.replace('border-purple-500 bg-purple-50', 'border-slate-200');
+            if (senvX) senvX.className = senvX.className.replace('border-red-500 bg-red-50', 'border-slate-200');
+            
+            if (explain) {
+                explain.innerHTML = "הציבו את העכבר מעל x או z בקוד משמאל כדי לראות את חישוב הכתובת הלקסיקלית שלו.";
+            }
+        }
+
+        // --- EOPL Architecture Data-Flow Details JS Logic ---
+        function showArchDetails(step) {
+            const box = document.getElementById('arch-details-box');
+            if (!box) return;
+            
+            const cardIds = ['input', 'lang', 'ast', 'interp', 'expval'];
+            cardIds.forEach(id => {
+                const card = document.getElementById('arch-card-' + id);
+                if (card) {
+                    card.classList.remove('border-amber-400', 'ring-2', 'ring-amber-200');
+                }
+            });
+            
+            const activeCard = document.getElementById('arch-card-' + step);
+            if (activeCard) {
+                activeCard.classList.add('border-amber-400', 'ring-2', 'ring-amber-200');
+            }
+            
+            let html = '';
+            switch(step) {
+                case 'input':
+                    html = `
+                        <p class="font-bold text-slate-800 mb-1 text-sm">📝 קוד המקור (Source Code)</p>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            <strong>תפקיד:</strong> מחרוזת טקסט חופשית שכותב המשתמש. בשלב זה אין למחשב שום הבנה מבנית של הקוד.
+                            <br><strong>דוגמה:</strong> <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">"-(5, 2)"</code>
+                            <br><strong>מאחורי הקלעים:</strong> מועבר ישירות כקלט (String) לפונקציה הראשית <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">(run "...")</code>.
+                        </p>
+                    `;
+                    break;
+                case 'lang':
+                    html = `
+                        <p class="font-bold text-slate-800 mb-1 text-sm">📁 הגדרת השפה (lang.scm - scan&parse)</p>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            <strong>תפקיד:</strong> ניתוח לקסיקלי ותחבירי המתרגם את מחרוזת הטקסט למבנה עץ.
+                            <br><strong>מאחורי הקלעים:</strong> מבוסס על כלי ה-Parser הגנרי של EOPL שנקרא <strong>SLLGen</strong>. הוא משתמש ב-<code>the-lexical-spec</code> (להגדרת תווים, רווחים ומזהים) וב-<code>the-grammar</code> (להגדרת כללי התחביר).
+                            <br><strong>מדריך למבחן:</strong> כאשר מבקשים להוסיף ביטוי חדש לשפה, חובה לעדכן קודם כל את <code>the-grammar</code> בקובץ זה כדי שה-Parser ידע לזהות אותו.
+                        </p>
+                    `;
+                    break;
+                case 'ast':
+                    html = `
+                        <p class="font-bold text-slate-800 mb-1 text-sm">🌳 עץ תחבירי מופשט (AST - Abstract Syntax Tree)</p>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            <strong>תפקיד:</strong> ייצוג מובנה של מבנה הקוד, המקל על עיבוד וחישוב.
+                            <br><strong>דוגמה:</strong> הביטוי <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">"-(5, 2)"</code> הופך לצומת <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">(diff-exp (const-exp 5) (const-exp 2))</code>.
+                            <br><strong>מאחורי הקלעים:</strong> מוגדר באמצעות <code>define-datatype expression</code> בקובץ <code>data-structures.scm</code>. כל צומת מיוצג על ידי Variant של הטיפוס expression.
+                        </p>
+                    `;
+                    break;
+                case 'interp':
+                    html = `
+                        <p class="font-bold text-slate-800 mb-1 text-sm">⚙️ המפרש (interp.scm - value-of)</p>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            <strong>תפקיד:</strong> מנוע ההרצה הסמנטי של המפרש. מקבל עץ ביטוי וסביבה לקסיקלית, ומחשב את התוצאה שלו.
+                            <br><strong>מאחורי הקלעים:</strong> הפונקציה <code>value-of</code> משתמשת ב-<code>(cases expression exp ...)</code> כדי לבצע Pattern Matching על צומת ה-AST ולחשב את ערכו בהתאם לסוג הביטוי.
+                            <br><strong>מדריך למבחן:</strong> זהו הלב של כתיבת הפיצ'רים. כאן מחליטים מתי ואיך להעריך ביטויי משנה, כיצד לעדכן או לגשת לסביבה (או לזיכרון), ואיזה ערך להחזיר.
+                        </p>
+                    `;
+                    break;
+                case 'expval':
+                    html = `
+                        <p class="font-bold text-slate-800 mb-1 text-sm">📦 ערך מבוטא (ExpVal - Expressed Value)</p>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            <strong>תפקיד:</strong> ערך החזרת החישוב כפי שמיוצג בתוך שפת היעד (Target Language).
+                            <br><strong>דוגמה:</strong> <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">(num-val 3)</code> או <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">(bool-val #t)</code>.
+                            <br><strong>מאחורי הקלעים:</strong> שפת LET לא מחזירה סתם מספרים או בוליאנים של Scheme, אלא עוטפת אותם בטיפוס <code>expval</code> המוגדר ב-<code>data-structures.scm</code>. זהו מנגנון המיסוך המפריד בין ערכי שפת המפרש לבין ערכי שפת היישום.
+                        </p>
+                    `;
+                    break;
+            }
+            box.innerHTML = html;
+        }
+
+        // --- Lexical vs Dynamic Scoping Simulator JS Logic ---
+        let scopeMode = 'lexical';
+        let scopeStep = 0;
+        
+        function toggleScopingMode(mode) {
+            scopeMode = mode;
+            const btnLex = document.getElementById('btn-scope-lexical');
+            const btnDyn = document.getElementById('btn-scope-dynamic');
+            
+            if (mode === 'lexical') {
+                btnLex.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer';
+                btnDyn.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
+            } else {
+                btnDyn.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer';
+                btnLex.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
+            }
+            resetScopeSim();
+        }
+        
+        function resetScopeSim() {
+            scopeStep = 0;
+            const explain = document.getElementById('scope-explain-text');
+            if (explain) {
+                explain.innerHTML = 'לחצו על "בצע צעד" כדי לראות את שלבי הרצת הקוד ומעקב הסביבות.';
+            }
+            const envView = document.getElementById('scope-env-view');
+            if (envView) {
+                envView.innerHTML = `
+                    <div class="text-slate-400 text-xs italic py-8">סביבה ריקה. התחילו להריץ צעדים.</div>
+                `;
+            }
+            const stepBtn = document.getElementById('btn-scope-step');
+            if (stepBtn) {
+                stepBtn.disabled = false;
+                stepBtn.textContent = 'בצע צעד (Step)';
+                stepBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        function stepScopeSim() {
+            scopeStep++;
+            const explain = document.getElementById('scope-explain-text');
+            const envView = document.getElementById('scope-env-view');
+            
+            if (!explain || !envView) return;
+            
+            if (scopeStep === 1) {
+                explain.innerHTML = '<strong>שלב 1: let x = 3</strong><br>הערך 3 מוערך ונשמר בסביבה חדשה המשוייכת ל-x. כעת המפרש יפנה להעריך את גוף ה-let.';
+                envView.innerHTML = `
+                    <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between transition-all duration-300 transform scale-100">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_1</span>
+                            <span class="text-slate-700 font-mono text-xs">x : num-val(3)</span>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-mono">📍 נוצר ב-let x = 3</span>
+                    </div>
+                    <div class="text-slate-300 text-sm">↓</div>
+                    <div class="w-full max-w-md bg-slate-100 border border-dashed border-slate-300 rounded-lg p-2 text-center text-slate-500 font-mono text-[10px]">
+                        Empty Env (סביבה ריקה)
+                    </div>
+                `;
+            } else if (scopeStep === 2) {
+                if (scopeMode === 'lexical') {
+                    explain.innerHTML = '<strong>שלב 2: הגדרת הפונקציה f (לקסיקלי)</strong><br>הפונקציה <code>proc(z) -(z, x)</code> מוערכת. בסקופ לקסיקלי נוצרת Procedure השומרת בתוכה צילום (Closure) של הסביבה שבה היא הוגדרה. הסביבה השמורה (Saved Env) מכילה את <code>[x: 3]</code>.';
+                    envView.innerHTML = `
+                        <div class="w-full max-w-md bg-white border border-blue-400 rounded-lg p-3 shadow-sm flex flex-col gap-2 transition-all duration-300">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_2</span>
+                                    <span class="text-slate-700 font-mono text-xs">f : proc-val(z, body, <span class="text-blue-600 font-bold">saved_env=ENV_1</span>)</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 font-mono">📍 נוצר ב-let f = proc...</span>
+                            </div>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_1</span>
+                                <span class="text-slate-700 font-mono text-xs"><span class="text-blue-600 font-bold">x : 3</span></span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 סביבה שמורה ב-f</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-slate-100 border border-dashed border-slate-300 rounded-lg p-2 text-center text-slate-500 font-mono text-[10px]">
+                            Empty Env
+                        </div>
+                    `;
+                } else {
+                    explain.innerHTML = '<strong>שלב 2: הגדרת הפונקציה f (דינמי)</strong><br>הפונקציה <code>proc(z) -(z, x)</code> מוערכת. בסקופ דינמי היא <strong>אינה שומרת</strong> את הסביבה הלקסיקלית שלה. היא תשתמש בכל סביבה שתהיה פעילה ברגע הקריאה.';
+                    envView.innerHTML = `
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between transition-all duration-300">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_2</span>
+                                <span class="text-slate-700 font-mono text-xs">f : proc-val(z, body, <span class="text-red-500 font-bold">no_saved_env</span>)</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 נוצר ב-let f = proc...</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_1</span>
+                                <span class="text-slate-700 font-mono text-xs">x : 3</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 סביבה נוכחית</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-slate-100 border border-dashed border-slate-300 rounded-lg p-2 text-center text-slate-500 font-mono text-[10px]">
+                            Empty Env
+                        </div>
+                    `;
+                }
+            } else if (scopeStep === 3) {
+                explain.innerHTML = '<strong>שלב 3: let x = 4</strong><br>הערך 4 מוערך ונשמר בסביבה חדשה. x = 4 מסתיר (shadowing) את הקישור הקודם של x = 3 עבור ביטויי המשך.';
+                if (scopeMode === 'lexical') {
+                    envView.innerHTML = `
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between transition-all duration-300">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_3</span>
+                                <span class="text-slate-700 font-mono text-xs"><span class="text-purple-600 font-bold">x : 4</span></span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 נוצר ב-let x = 4</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex flex-col gap-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_2</span>
+                                    <span class="text-slate-700 font-mono text-xs">f : proc-val(z, body, saved_env=ENV_1)</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 font-mono">📍 f מוגדרת</span>
+                            </div>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_1</span>
+                                <span class="text-slate-700 font-mono text-xs">x : 3</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 x = 3 (נסתר בסביבה השוטפת)</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-slate-100 border border-dashed border-slate-300 rounded-lg p-2 text-center text-slate-500 font-mono text-[10px]">
+                            Empty Env
+                        </div>
+                    `;
+                } else {
+                    envView.innerHTML = `
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between transition-all duration-300">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_3</span>
+                                <span class="text-slate-700 font-mono text-xs"><span class="text-red-500 font-bold">x : 4</span></span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 נוצר ב-let x = 4</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_2</span>
+                                <span class="text-slate-700 font-mono text-xs">f : proc-val(z, body, no_saved_env)</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 f מוגדרת</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_1</span>
+                                <span class="text-slate-700 font-mono text-xs">x : 3</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 x = 3 (נסתר בסביבה השוטפת)</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-slate-100 border border-dashed border-slate-300 rounded-lg p-2 text-center text-slate-500 font-mono text-[10px]">
+                            Empty Env
+                        </div>
+                    `;
+                }
+            } else if (scopeStep === 4) {
+                if (scopeMode === 'lexical') {
+                    explain.innerHTML = '<strong>שלב 4: קריאה לפונקציה (f 10) - (לקסיקלי)</strong><br>הקריאה לפונקציה f מתבצעת. המפרש שולף את f, מזהה שהיא procedure עם <strong>סביבה שמורה ENV_1</strong>, ויוצר סביבה חדשה עבור z = 10 <strong>המצביעה ל-ENV_1</strong>. שימו לב: הסביבה שבה x = 4 נעקפה לחלוטין!';
+                    envView.innerHTML = `
+                        <div class="w-full max-w-md bg-blue-50 border border-blue-500 rounded-lg p-3 shadow-sm flex items-center justify-between transition-all duration-300">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">ENV_CALL</span>
+                                <span class="text-slate-800 font-bold font-mono text-xs">z : 10</span>
+                            </div>
+                            <span class="text-[10px] text-blue-600 font-bold">📍 סביבת הרצת גוף הפונקציה</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_1</span>
+                                <span class="text-slate-700 font-mono text-xs"><span class="text-blue-600 font-bold">x : 3</span></span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 סביבה שמורה (ENV_1)</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-slate-100 border border-dashed border-slate-300 rounded-lg p-2 text-center text-slate-500 font-mono text-[10px]">
+                            Empty Env
+                        </div>
+                    `;
+                } else {
+                    explain.innerHTML = '<strong>שלב 4: קריאה לפונקציה (f 10) - (דינמי)</strong><br>בסביבה דינמית, המפרש יוצר סביבה חדשה z = 10 <strong>המצביעה ישירות לסביבה השוטפת הנוכחית</strong> ברגע הקריאה (היא ENV_3 שבה x = 4). לכן הסביבה שבה x = 4 משתתפת בחישוב!';
+                    envView.innerHTML = `
+                        <div class="w-full max-w-md bg-red-50 border border-red-500 rounded-lg p-3 shadow-sm flex items-center justify-between transition-all duration-300">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">ENV_CALL</span>
+                                <span class="text-slate-800 font-bold font-mono text-xs">z : 10</span>
+                            </div>
+                            <span class="text-[10px] text-red-600 font-bold">📍 סביבת הרצת גוף הפונקציה</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_3</span>
+                                <span class="text-slate-700 font-mono text-xs"><span class="text-red-500 font-bold">x : 4</span></span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 סביבת הקריאה (ENV_3)</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_2</span>
+                                <span class="text-slate-700 font-mono text-xs">f : proc-val(...)</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 f מוגדרת</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-white border border-slate-200 rounded-lg p-3 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">ENV_1</span>
+                                <span class="text-slate-700 font-mono text-xs">x : 3</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">📍 סביבה ישנה</span>
+                        </div>
+                        <div class="text-slate-300 text-sm">↓</div>
+                        <div class="w-full max-w-md bg-slate-100 border border-dashed border-slate-300 rounded-lg p-2 text-center text-slate-500 font-mono text-[10px]">
+                            Empty Env
+                        </div>
+                    `;
+                }
+            } else if (scopeStep === 5) {
+                if (scopeMode === 'lexical') {
+                    explain.innerHTML = '<strong>שלב 5: חישוב גוף הפונקציה -(z, x)</strong><br>המפרש מחפש את הערכים בסביבה הלקסיקלית הפעילה:<br>• z נמצא מיד: 10<br>• x מחופש ב-ENV_CALL (לא נמצא) ועובר ל-ENV_1 (נמצא: 3).<br>החישוב הוא: <code>10 - 3 = 7</code>.<br><span class="text-green-600 font-bold text-sm block mt-2">תוצאה סופית: 7</span>';
+                } else {
+                    explain.innerHTML = '<strong>שלב 5: חישוב גוף הפונקציה -(z, x)</strong><br>המפרש מחפש את הערכים בסביבה הדינמית הפעילה:<br>• z נמצא מיד: 10<br>• x מחופש ב-ENV_CALL (לא נמצא) ועובר ל-ENV_3 (נמצא: 4).<br>החישוב הוא: <code>10 - 4 = 6</code>.<br><span class="text-red-600 font-bold text-sm block mt-2">תוצאה סופית: 6</span>';
+                }
+                const stepBtn = document.getElementById('btn-scope-step');
+                if (stepBtn) {
+                    stepBtn.disabled = true;
+                    stepBtn.textContent = 'הסתיים';
+                    stepBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+    </script>
+    <script>
+        // Sidebar toggle and Navigation Button Injection Logic
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-collapsed');
+            const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+            updateToggleBtnIcon(isCollapsed);
+        }
+
+        function updateToggleBtnIcon(isCollapsed) {
+            const icon = document.getElementById('sidebar-toggle-icon');
+            if (!icon) return;
+            if (isCollapsed) {
+                // Show << (chevron left to open/expand in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />';
+            } else {
+                // Show >> (chevron right to close/collapse in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize Scope Simulator and Architecture Details
+            resetScopeSim();
+            showArchDetails('input');
+
+            // 1. Create and inject sidebar toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.id = 'sidebar-toggle-btn';
+            toggleBtn.className = 'fixed top-6 p-2 rounded-lg bg-white/80 backdrop-blur-md hover:bg-white text-slate-600 hover:text-slate-900 border border-slate-200 shadow-md z-30 flex items-center justify-center w-10 h-10 transition-all duration-300 active:scale-95 cursor-pointer';
+            toggleBtn.title = 'הצג/הסתר תפריט ניווט';
+            toggleBtn.onclick = toggleSidebar;
+            toggleBtn.innerHTML = '<svg id="sidebar-toggle-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"></svg>';
+            document.body.appendChild(toggleBtn);
+
+            // 2. Load sidebar collapsed state from localStorage
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                document.body.classList.add('sidebar-collapsed');
+            }
+            updateToggleBtnIcon(isCollapsed);
+
+            // 3. Inject navigation buttons at the bottom of each tab
+            const tabs = [];
+            const seenIds = new Set();
+            document.querySelectorAll('.tab-content').forEach(el => {
+                const id = el.id;
+                if (id && !seenIds.has(id)) {
+                    seenIds.add(id);
+                    tabs.push(el);
+                }
+            });
+
+            tabs.forEach((tab, index) => {
+                const navContainer = document.createElement('div');
+                navContainer.className = 'flex justify-between items-center mt-12 pt-6 border-t border-slate-200';
+
+                // Previous Button (on the right)
+                if (index > 0) {
+                    const prevTabId = tabs[index - 1].id;
+                    const prevBtn = document.createElement('button');
+                    prevBtn.onclick = () => showTab(prevTabId);
+                    prevBtn.className = 'nav-btn-prev flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    prevBtn.innerHTML = `
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span>הקודם</span>
+                    `;
+                    navContainer.appendChild(prevBtn);
+                } else {
+                    // Placeholder to keep spacing alignment
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                // Next Button (on the left)
+                if (index < tabs.length - 1) {
+                    const nextTabId = tabs[index + 1].id;
+                    const nextBtn = document.createElement('button');
+                    nextBtn.onclick = () => showTab(nextTabId);
+                    nextBtn.className = 'nav-btn-next flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98] transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    nextBtn.innerHTML = `
+                        <span>הבא</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    `;
+                    navContainer.appendChild(nextBtn);
+                } else {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                tab.appendChild(navContainer);
+            });
+        });
     </script>
 </body>
 </html>

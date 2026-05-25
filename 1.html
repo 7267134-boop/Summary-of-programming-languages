@@ -210,6 +210,47 @@
             background: #334155;
         }
     </style>
+    <style>
+        /* Sidebar collapse transition & styles */
+        aside {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .sidebar-collapsed aside {
+            width: 0 !important;
+            min-width: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        #sidebar-toggle-btn {
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+        }
+
+        /* When sidebar is open: button floats to the left of the sidebar (RTL right side) */
+        body:not(.sidebar-collapsed) #sidebar-toggle-btn {
+            right: 21rem;
+            /* 20rem (w-80) + 1rem (spacing) */
+        }
+
+        body.sidebar-collapsed #sidebar-toggle-btn {
+            right: 1rem;
+        }
+
+        /* Premium navigation buttons styling */
+        .nav-btn-prev,
+        .nav-btn-next {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-btn-prev:hover {
+            transform: translateX(2px);
+        }
+
+        .nav-btn-next:hover {
+            transform: translateX(-2px);
+        }
+    </style>
 </head>
 
 <body class="text-slate-800 h-screen flex overflow-hidden">
@@ -226,9 +267,9 @@
         <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
 
             <div class="nav-group">
-                <div class="nav-group-title">חלק 1: שפת האם (Racket)</div>
+                <div class="nav-group-title">חלק 1: שפת האם (Scheme)</div>
                 <button onclick="showTab('racket-philosophy')" id="btn-racket-philosophy" class="nav-btn active-nav">
-                    <span>🤔 1.1 למה Racket? ותחביר בסיסי</span>
+                    <span>🤔 1.1 למה Scheme? ותחביר בסיסי</span>
                 </button>
                 <button onclick="showTab('racket-bindings')" id="btn-racket-bindings" class="nav-btn">
                     <span>🔗 1.2 משתנים: define, let, letrec</span>
@@ -257,6 +298,9 @@
                 </button>
                 <button onclick="showTab('maman12-poly')" id="btn-maman12-poly" class="nav-btn">
                     <span>📦 2.6 ממן 12: ADT פולינומים (define-datatype)</span>
+                </button>
+                <button onclick="showTab('maman12-poly-spec')" id="btn-maman12-poly-spec" class="nav-btn">
+                    <span>📦 2.7 ממן 12: ADT פולינומים (ספציפיקציה ומימוש)</span>
                 </button>
             </div>
 
@@ -295,10 +339,15 @@
                         class="inline-block px-4 py-1 bg-racket text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
                         חלק 1.1</div>
                     <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">למה <span
-                            class="text-racket">Racket?</span> ותחביר בסיסי</h2>
-                    <p class="text-xl text-slate-600 leading-relaxed">לפני שמתחילים לבנות מפרשים, עלינו להבין את "שפת
-                        האם" שבה הקורס מועבר: Racket (ניב מודרני של Scheme ממשפחת LISP). הבחירה בשפה זו אינה מקרית.
-                        הארכיטקטורה של LISP מתאימה באופן מושלם לעיבוד קוד של שפות אחרות.</p>
+                            class="text-racket">Scheme?</span> ותחביר בסיסי</h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">לפני שמתחילים לבנות מפרשים, עלינו להבין היטב את
+                        סביבת העבודה שבה הקורס מועבר.
+                        <strong>שפת התכנות</strong> עצמה היא <strong class="text-[#0f172a]">Scheme</strong> (שפה
+                        מינימליסטית ועוצמתית ממשפחת LISP). לעומת זאת, <strong class="text-[#0f172a]">DrRacket</strong>
+                        איננה שפה ואיננה הרחבה - היא פשוט <strong>סביבת הפיתוח (IDE)</strong> שבה אנו משתמשים כדי לכתוב
+                        ולהריץ את קוד ה-Scheme שלנו. הבחירה בשפה ממשפחת LISP אינה מקרית: הארכיטקטורה שלה מתאימה באופן
+                        מושלם לעיבוד קוד של שפות אחרות.
+                    </p>
                 </header>
 
                 <div class="concept-box">
@@ -307,20 +356,22 @@
                     <p class="mb-4 text-slate-700">בשפות כמו Java או C, יש הבדל ברור בין <strong>פקודה
                             (Statement)</strong> שלא מחזירה כלום (כמו <code>if (x>0) {y=1;}</code>), לבין <strong>ביטוי
                             (Expression)</strong> שמחזיר ערך (כמו <code>x + 1</code>). </p>
-                    <p class="mb-4 text-slate-700 font-bold">ב-Racket ההפרדה הזו אינה קיימת! הכל מחזיר ערך. אין דבר כזה
+                    <p class="mb-4 text-slate-700 font-bold">ב-Scheme ההפרדה הזו אינה קיימת! הכל מחזיר ערך. אין דבר כזה
                         שורת קוד שלא מחושבת למשהו. אם כתבת <code>if</code>, הוא חייב להחזיר ערך. זהו עיקרון קריטי בעולם
                         השפות הפונקציונליות וזה מה שמאפשר לפונקציית ה-<code>value-of</code> שלנו להחזיר תמיד
-                        <code>expval</code>.</p>
+                        <code>expval</code>.
+                    </p>
                 </div>
 
                 <div class="deep-dive mb-10">
                     <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">תחביר תחילי מבוסס סוגריים (Prefix
                         Notation)</h3>
-                    <p class="text-sm text-slate-700 mb-4">ב-Racket, פקודה תמיד נפתחת בסוגריים עגולים. המילה הראשונה מיד
+                    <p class="text-sm text-slate-700 mb-4">ב-Scheme, פקודה תמיד נפתחת בסוגריים עגולים. המילה הראשונה מיד
                         לאחר הסוגר השמאלי היא <strong>הפונקציה או האופרטור</strong>, ושאר המילים המופרדות ברווחים הם
-                        <strong>הארגומנטים</strong>. אין משמעות לרווחים נוספים או שורות חדשות.</p>
+                        <strong>הארגומנטים</strong>. אין משמעות לרווחים נוספים או שורות חדשות.
+                    </p>
                     <pre><code><span class="token-comment">; בשפות רגילות: 1 + 2</span>
-<span class="token-comment">; ב-Racket: "הפעל את הפונקציה + על 1 ו-2"</span>
+<span class="token-comment">; ב-Scheme: "הפעל את הפונקציה + על 1 ו-2"</span>
 (+ 1 2) <span class="token-comment">; מחזיר 3</span>
 
 <span class="token-comment">; פעולות מורכבות מקוננות - מחשבים מבפנים החוצה:</span>
@@ -352,9 +403,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                     <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
                         <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">הגדרות גלובליות:
-                            <code>define</code></h3>
+                            <code>define</code>
+                        </h3>
                         <p class="text-sm text-slate-700 mb-4">משמש להגדרת משתנים שיהיו מוכרים בכל הקובץ. במקביל, המילה
-                            <code>lambda</code> מייצרת פונקציה אנונימית. שילוב של שניהם מייצר פונקציה רגילה.</p>
+                            <code>lambda</code> מייצרת פונקציה אנונימית. שילוב של שניהם מייצר פונקציה רגילה.
+                        </p>
                         <pre class="text-xs"><code><span class="token-comment">; הגדרת קבוע גלובלי</span>
 (define pi 3.14159)
 
@@ -375,7 +428,8 @@
                         </h3>
                         <p class="text-sm text-slate-700 mb-4">יוצר משתנים שחיים רק בתוך הבלוק הספציפי.
                             <strong>חשוב:</strong> המשתנים המוגדרים ב-let אינם מכירים זה את זה בזמן ההגדרה, ולא יכולים
-                            לקרוא לעצמם.</p>
+                            לקרוא לעצמם.
+                        </p>
                         <pre class="text-xs"><code><span class="token-comment">; מבנה: (let ((var1 val1) (var2 val2)) body)</span>
 (define calc-area
   (lambda (width)
@@ -390,7 +444,8 @@
 
                 <div class="thought-box">
                     <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">הבעיה עם פונקציות מקומיות: הכירו את
-                        <code>letrec</code></h3>
+                        <code>letrec</code>
+                    </h3>
                     <p class="mb-4 text-slate-700">מה קורה אם אנחנו רוצים לכתוב פונקציה רקורסיבית (למשל עצרת -
                         Factorial) <strong>כמשתנה מקומי</strong> בתוך פונקציה אחרת? אם נשתמש ב-<code>let</code>,
                         הפונקציה לא תכיר את השם של עצמה כשתנסה לקרוא לעצמה!</p>
@@ -421,7 +476,7 @@
                         חלק 1.3</div>
                     <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">זרימת בקרה: <span
                             class="text-blue-600">if ו-cond</span></h2>
-                    <p class="text-xl text-slate-600 leading-relaxed">ב-Racket לוגיקה תנאית חייבת להיות ביטוי שמחזיר
+                    <p class="text-xl text-slate-600 leading-relaxed">ב-Scheme לוגיקה תנאית חייבת להיות ביטוי שמחזיר
                         ערך. נסקור את שני המבנים העיקריים לשליטה בזרימת התוכנית: התנאי הבסיסי, ותנאי מרובה אפשרויות
                         שיהיה "סוס העבודה" שלנו במפרש.</p>
                 </header>
@@ -429,7 +484,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                     <div class="concept-box border-l-4 border-l-blue-500 !my-0">
                         <h3 class="text-2xl font-bold mb-4 text-blue-800">התנאי הבסיסי: <code>if</code></h3>
-                        <p class="mb-4 text-slate-700">מבנה ה-if ב-Racket הוא פשוט וקשיח: הוא חייב לכלול תנאי, ביטוי
+                        <p class="mb-4 text-slate-700">מבנה ה-if ב-Scheme הוא פשוט וקשיח: הוא חייב לכלול תנאי, ביטוי
                             לאמת, <strong>וביטוי לשקר</strong>. אי אפשר לכתוב if ללא else!</p>
                         <p class="font-mono text-sm text-slate-800 bg-white p-2 rounded mb-4">(if condition-expr
                             true-expr false-expr)</p>
@@ -462,7 +517,8 @@
 
                 <div class="tip-box">
                     <h4 class="font-bold text-lg mb-2 text-amber-800">💡 טריק למבחן: ביצוע מספר פעולות עם
-                        <code>begin</code></h4>
+                        <code>begin</code>
+                    </h4>
                     <p class="text-slate-700 mb-2">אמרנו ש-if מקבל רק <strong>ביטוי אחד</strong> במקרה של אמת וביטוי אחד
                         לשקר. מה עושים אם רוצים לבצע מספר פעולות (למשל: גם לשנות ערך בזיכרון וגם להחזיר מספר)?</p>
                     <p class="text-slate-700">כאן נכנסת המילה <code>begin</code>. היא לוקחת רשימה של פקודות, מריצה אותן
@@ -534,7 +590,8 @@
                     <p class="mb-4 text-slate-700">מכיוון שאין ב-Scheme לולאות <code>for</code> או <code>while</code>
                         (שפת Lisp בסיסית היא ללא state), הדרך היחידה לעבור על רשימה היא באמצעות פונקציה רקורסיבית.
                         <strong>התבנית הזו מופיעה כמעט בכל פתרון של שאלת מבחן מורכבת!</strong> התבנית מורכבת תמיד מ-2
-                        שלבים: מה עושים כשהרשימה ריקה, ומה עושים כשיש בה איברים.</p>
+                        שלבים: מה עושים כשהרשימה ריקה, ומה עושים כשיש בה איברים.
+                    </p>
 
                     <pre><code><span class="token-comment">; דוגמה: פונקציה המקבלת רשימת מספרים ומחזירה רשימה שבה הכל הוכפל ב-2</span>
 (define double-list
@@ -653,6 +710,57 @@
            '() <span class="token-comment">; ערך האתחול הוא רשימה ריקה, אליה נאגור איברים</span>
            lst)))</code></pre>
                 </div>
+
+                <!-- Map/Filter/Foldr Pipeline Simulator -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mt-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>סימולטור פעולות רשימה מסדר גבוה (Map, Filter, Foldr)</span>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    
+                    <p class="text-sm text-slate-600 mb-6">
+                        עקבו אחר עיבוד הרשימה <code>'(1 2 3 4)</code> שלב אחר שלב באמצעות הפעולות הפונקציונליות השונות:
+                    </p>
+
+                    <div class="flex gap-2 mb-6">
+                        <button onclick="setFuncSim('map')" id="btn-func-map" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer">
+                            (map (* x 2))
+                        </button>
+                        <button onclick="setFuncSim('filter')" id="btn-func-filter" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                            (filter even?)
+                        </button>
+                        <button onclick="setFuncSim('foldr')" id="btn-func-foldr" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                            (foldr + 0)
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-2">הרצת שלבים:</h5>
+                                <div class="flex gap-2 mb-4">
+                                    <button onclick="stepFuncSim()" id="btn-func-step" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+                                        בצע צעד (Step)
+                                    </button>
+                                    <button onclick="resetFuncSim()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-lg text-xs transition-colors cursor-pointer">
+                                        איפוס
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="func-explain" class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[100px] flex items-center justify-center text-center leading-relaxed">
+                                לחצו על "בצע צעד" כדי לראות את הפעלת הפונקציה על הרשימה.
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-center items-center">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider self-end mb-4" dir="rtl">מצב הרשימה:</h5>
+                            <div id="func-list-view" class="flex items-center gap-3 font-mono text-sm" dir="ltr">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ==========================================
@@ -698,7 +806,8 @@
                     <p class="mt-4 text-slate-700"><strong>מימוש append עם foldr (שאלה 1ב בממ"ן):</strong> במקום לכתוב
                         רקורסיה מפורשת כנ"ל, ניתן לקפל את הרשימה הראשונה <code>lst1</code> מימין לשמאל באמצעות
                         <code>cons</code>, כאשר ערך האתחול של הקיפול הוא הרשימה השנייה <code>lst2</code>. כך נוצר שרשור
-                        אלגנטי ביותר ללא רקורסיה מפורשת!</p>
+                        אלגנטי ביותר ללא רקורסיה מפורשת!
+                    </p>
                     <pre class="text-xs"><code>(define my-append-fr
   (lambda (lst1 lst2)
     <span class="token-comment">; אנו מקפלים את lst1, ומלבישים את האיברים ב-cons מעל lst2</span>
@@ -832,7 +941,7 @@
       (extend-poly (coeff exp rest-p)
         (extend-poly coeff exp (add-poly rest-p p2))))))
 
-<span class="token-comment">; חישוב ערך הפולינום עבור X מסוים בעזרת עזר: expt מובנה ב-Racket</span>
+<span class="token-comment">; חישוב ערך הפולינום עבור X מסוים בעזרת עזר: expt מובנה בסביבת DrRacket</span>
 (define calc-poly
   (lambda (p x)
     (cases poly p
@@ -851,7 +960,8 @@
                     <p class="text-slate-700">בזכות <code>poly->list</code> שכתבנו, אנו מקבלים רשימה של זוגות
                         <code>((coeff exp) (coeff exp) ...)</code>. על הרשימה הזו קל מאוד להפעיל <code>filter</code>
                         (להסיר מקדמי 0) ולהפעיל פונקציית <code>sort</code> למיון חזקות, ולאחר מכן לעבור עליה בלולאה
-                        ולהדפיס ברוגע.</p>
+                        ולהדפיס ברוגע.
+                    </p>
                 </div>
             </div>
 
@@ -873,7 +983,7 @@
 
                 <div class="concept-box border-l-4 border-l-purple-500 !my-0 mb-8">
                     <h3 class="text-2xl font-bold mb-4 text-purple-800">למה צריך define-datatype?</h3>
-                    <p class="mb-4 text-slate-700">ב-Racket רגיל, היינו מייצגים מבנים מסובכים בעזרת רשימות (למשל, לייצג
+                    <p class="mb-4 text-slate-700">ב-Scheme רגיל, היינו מייצגים מבנים מסובכים בעזרת רשימות (למשל, לייצג
                         סביבה כ-<code>(list 'extend-env var val prev-env)</code>). אבל זה מועד לשגיאות וקשה לקריאה.</p>
                     <p class="mb-4 text-slate-700"><code>define-datatype</code> מאפשר להגדיר "קופסת אב" (למשל: Type כללי
                         שנקרא <code>expression</code>), שיכולה ללבוש מספר <strong>צורות שונות (Variants)</strong> (למשל:
@@ -900,7 +1010,8 @@
   (bool-val
     (bool boolean?)))</code></pre>
                         <p class="text-sm text-slate-600 mt-4">הקוד הזה מייצר אוטומטית פונקציות כמו
-                            <code>(num-val 5)</code> שיוצרות את הקופסה בזיכרון.</p>
+                            <code>(num-val 5)</code> שיוצרות את הקופסה בזיכרון.
+                        </p>
                     </div>
 
                     <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -927,7 +1038,8 @@
                     <p class="text-slate-700">נניח ובמבחן מבקשים ממך להוסיף <strong>מערך (Array)</strong> או
                         <strong>רשימה (Tuple)</strong>. הדבר הראשון שעליך לעשות הוא ללכת
                         ל-<code>data-structures.scm</code> ולהוסיף Variant חדש לתוך ההגדרה הקיימת של
-                        <code>expval</code>. למשל:</p>
+                        <code>expval</code>. למשל:
+                    </p>
                     <pre class="text-sm"><code>(define-datatype expval expval?
   ... <span class="token-comment">; existing variants</span>
   (array-val
@@ -949,7 +1061,8 @@
                     <p class="text-xl text-slate-600 leading-relaxed">החצי השני של המטבע! אם
                         <code>define-datatype</code> "אורז" נתונים לתוך קופסה שחורה בזיכרון, פקודת <code>cases</code>
                         היא הדרך הבטוחה והיחידה <strong>"לפתוח" את הקופסה</strong>, לבדוק איזו צורה (Variant) יש בפנים,
-                        ולחלץ את המידע לתוך משתנים שנוכל לעבוד איתם.</p>
+                        ולחלץ את המידע לתוך משתנים שנוכל לעבוד איתם.
+                    </p>
                 </header>
 
                 <div class="thought-box mb-8">
@@ -957,7 +1070,8 @@
                     <p class="mb-4 text-slate-700">פקודת ה-cases עובדת כמו מתג חכם. אנו נותנים לה טיפוס כללי (למשל
                         <code>expval</code>) ואת המשתנה שאנחנו רוצים לבדוק. היא בודקת באיזה Variant מדובר, וכשהיא מוצאת
                         התאמה, היא מחלצת את השדות הפנימיים לתוך שמות חדשים (שמופיעים בסוגריים) שזמינים לשימוש רק בתוך
-                        אותו בלוק.</p>
+                        אותו בלוק.
+                    </p>
                     <p class="mb-4 text-slate-700"><strong>השימוש הנפוץ ביותר של <code>cases</code> הוא ב"חולצים"
                             (Extractors)</strong>: פונקציות שמטרתן לקבל קופסה כללית (<code>expval</code>) ולהחזיר ערך
                         נקי (למשל מספר או בוליאני).</p>
@@ -1005,16 +1119,60 @@
               <span class="token-comment">; אחרת מעריכים את תת-העץ של השקר</span>
               (value-of exp3 env)))))))</code></pre>
                 </div>
+
+                <!-- Datatype Variant & Cases dispatch simulator -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mt-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>סימולטור פירוק מבני נתונים (define-datatype & cases)</span>
+                        <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    
+                    <p class="text-sm text-slate-600 mb-6">
+                        נניח שהגדרנו טיפוס נתונים עבור צורות הנדסיות <code>shape</code>. בחרו ערך כדי לראות כיצד פקודת <code>cases</code> מפרקת אותו ומתאימה אותו לבלוק הנכון:
+                    </p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">1. בחרו ערך לבדיקה (s):</h5>
+                                <div class="flex flex-col gap-2 mb-4">
+                                    <button onclick="dispatchShape('circle')" id="btn-shape-circle" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg text-xs hover:bg-blue-700 transition-colors cursor-pointer">
+                                        (circle 5)
+                                    </button>
+                                    <button onclick="dispatchShape('rect')" id="btn-shape-rect" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg text-xs hover:bg-blue-700 transition-colors cursor-pointer">
+                                        (rectangle 4 6)
+                                    </button>
+                                    <button onclick="dispatchShape('invalid')" id="btn-shape-invalid" class="w-full bg-slate-600 text-white font-bold py-2 rounded-lg text-xs hover:bg-slate-700 transition-colors cursor-pointer">
+                                        (triangle) - ערך לא חוקי
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="shape-explain" class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[100px] flex items-center justify-center text-center leading-relaxed">
+                                לחצו על אחד הכפתורים כדי להזין את הערך לפונקציה.
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 text-slate-200 p-5 rounded-xl font-mono text-xs leading-relaxed lg:col-span-2 relative">
+                            <h5 class="font-sans font-bold text-[10px] text-slate-500 uppercase tracking-wider mb-2">פקודת cases במפרש:</h5>
+                            <div class="text-slate-500 mb-2">// (define-datatype shape shape? ...)</div>
+                            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800" dir="ltr">
+                                <div id="cases-line-header">(cases shape s</div>
+                                <div id="cases-line-circle" class="transition-all duration-300 py-1 px-2 rounded">&nbsp;&nbsp;(circle (r) (* 3.14 r r))</div>
+                                <div id="cases-line-rect" class="transition-all duration-300 py-1 px-2 rounded">&nbsp;&nbsp;(rectangle (w h) (* w h))</div>
+                                <div id="cases-line-else" class="transition-all duration-300 py-1 px-2 rounded">&nbsp;&nbsp;(else (eopl:error "Invalid shape")))</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ==========================================
                  PART 2.6: MAMAN 12 - POLYNOMIAL ADT (define-datatype)
             =========================================== -->
-            <div id="maman12-poly" class="tab-content">
+            <div id="maman12-poly-spec" class="tab-content">
                 <header class="mb-12 border-b pb-6">
-                    <div
-                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
-                        חלק 2.6 (ממן 12 שאלה 1)</div>
+                    <div class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">חלק 2.7 (ממן 12 שאלה 1 - המשך)</div>
                     <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">ADT פולינומים: <span
                             class="text-blue-600">ספציפיקציה ומימוש</span></h2>
                     <p class="text-xl text-slate-600 leading-relaxed">בממן 12 אנו נדרשים לתאר, להגדיר ולממש טיפוס נתונים
@@ -1177,7 +1335,7 @@
 (define print-poly
   (lambda (p)
     (let ((exps (remove-duplicates (get-exponents p))))
-      (let ((sorted-exps (sort exps >))) <span class="token-comment">; מיון מובנה ב-Racket</span>
+      (let ((sorted-exps (sort exps >))) <span class="token-comment">; מיון מובנה בסביבת DrRacket</span>
         (letrec ((build-list
                   (lambda (lst)
                     (cond
@@ -1196,7 +1354,8 @@
                         <code>add-poly(p1, p2)</code>), הדרך הפשוטה ביותר היא <strong>להפריד את המימוש לשני
                             שלבים:</strong> שלב 1: איסוף כל הנתונים לרשימה שטוחה (באמצעות פונקציית עזר רקורסיבית פשוטה
                         כמו <code>get-exponents</code>). שלב 2: ביצוע המניפולציה (מיון, סינון, כיווץ) על הרשימה השטוחה
-                        בעזרת הפונקציות הסטנדרטיות של Scheme. גישה זו מונעת סיבוכיות מיותרת בעיבוד העץ.</p>
+                        בעזרת הפונקציות הסטנדרטיות של Scheme. גישה זו מונעת סיבוכיות מיותרת בעיבוד העץ.
+                    </p>
                 </div>
             </div>
 
@@ -1213,7 +1372,8 @@
                     <p class="text-xl text-slate-600 leading-relaxed">המפרש שלנו לעולם אינו עובד ישירות על מחרוזות של
                         טקסט חופשי (Raw Text). השלב הראשון בכל ריצה הוא תהליך ה-<strong>Parsing</strong> (ניתוח תחבירי).
                         הצעד הראשון בתהליך הזה מתבצע על ידי ה<strong>לקסר (Lexer / Scanner)</strong>, והוא מוגדר בקובץ
-                        <code>lang.scm</code>.</p>
+                        <code>lang.scm</code>.
+                    </p>
                 </header>
 
                 <div class="concept-box border-l-4 border-l-emerald-500 !my-0 mb-10">
@@ -1294,15 +1454,19 @@
                         class="!mt-0 !bg-indigo-50 !text-indigo-900 !border-indigo-200"><code>( <span class="text-red-600">LHS</span> ( <span class="text-green-600">RHS (Terminals & Non-Terminals)</span> ) <span class="text-purple-600">Variant-Name</span> )</code></pre>
                     <ul class="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
                         <li><strong>LHS (Left Hand Side):</strong> לאיזה משפחה הכלל הזה שייך (תמיד
-                            <code>expression</code> בקורס שלנו).</li>
+                            <code>expression</code> בקורס שלנו).
+                        </li>
                         <li><strong>Terminals (בתוך מרכאות ""):</strong> מילים שמורות בשפה (כמו <code>"if"</code>,
                             <code>"then"</code>, <code>"-"</code>, <code>","</code>). המתכנת כותב אותן, הפרסר מוודא שהן
-                            קיימות בסדר הנכון, <strong>ואז זורק אותן לפח!</strong> הן לא מגיעות לעץ ה-AST.</li>
+                            קיימות בסדר הנכון, <strong>ואז זורק אותן לפח!</strong> הן לא מגיעות לעץ ה-AST.
+                        </li>
                         <li><strong>Non-Terminals:</strong> מילים ללא מרכאות (כמו <code>expression</code>,
                             <code>identifier</code>, <code>number</code>). אלו ביטויים רקורסיביים שיש לחשב. <strong>אלו
-                                הערכים האמיתיים שיישמרו כצמתים (Nodes) בעץ!</strong></li>
+                                הערכים האמיתיים שיישמרו כצמתים (Nodes) בעץ!</strong>
+                        </li>
                         <li><strong>Variant-Name:</strong> השם של הצומת שייווצר (כמו <code>if-exp</code> או
-                            <code>diff-exp</code>). זהו השם שיקפוץ לנו ב-<code>cases expression</code> בתוך המפרש.</li>
+                            <code>diff-exp</code>). זהו השם שיקפוץ לנו ב-<code>cases expression</code> בתוך המפרש.
+                        </li>
                     </ul>
                 </div>
 
@@ -1313,12 +1477,68 @@
                         class="!bg-slate-800 !text-slate-200"><code>(expression ("-" "(" expression "," expression ")") diff-exp)</code></pre>
 
                     <p class="mb-4 text-slate-700 mt-6">והמתכנת כתב את הקוד הבא: <code>-(55, 11)</code>. <br>פונקציית
-                        <code>scan&parse</code> תהפוך את המחרוזת הזו לעץ הבא (שימו לב שאין בעץ פסיקים או סוגריים):</p>
-                    <div class="bg-slate-100 p-6 rounded-lg border border-slate-300 font-mono text-sm leading-relaxed"
+                        <code>scan&parse</code> תהפוך את המחרוזת הזו לעץ הבא (שימו לב שאין בעץ פסיקים או סוגריים):
+                    </p>
+                    <div class="bg-slate-100 p-6 rounded-lg border border-slate-300 font-mono text-sm leading-relaxed mb-6"
                         dir="ltr">
                         #(struct:diff-exp<br>
                         &nbsp;&nbsp;#(struct:const-exp 55)<br>
                         &nbsp;&nbsp;#(struct:const-exp 11))
+                    </div>
+
+                    <!-- AST Visualizer -->
+                    <div class="mt-8 pt-8 border-t border-slate-200">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span>מפרק עצי ה-AST האינטראקטיבי</span>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                        </h4>
+                        
+                        <div class="flex gap-2 mb-6">
+                            <button onclick="setAstDemo('simple')" id="btn-ast-simple" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer">
+                                -(55, 11)
+                            </button>
+                            <button onclick="setAstDemo('nested')" id="btn-ast-nested" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                                -(55, -(22, 11))
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-2">שלב 1: מחרוזת קוד</h5>
+                                <div id="ast-code-display" class="bg-slate-800 text-slate-200 p-3 rounded-lg font-mono text-sm mb-4" dir="ltr">-(55, 11)</div>
+                                
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-2">שלב 2: אסימונים (Lexer Tokens)</h5>
+                                <div id="ast-tokens-display" class="flex flex-wrap gap-1.5" dir="ltr">
+                                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">-</span>
+                                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">(</span>
+                                    <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Number">55</span>
+                                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">,</span>
+                                    <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Number">11</span>
+                                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">)</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 mt-2">הלקסר מחלק את הטקסט כולל מילים שמורות וסימני פיסוק (Terminals בצהוב).</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 lg:col-span-2 flex flex-col justify-between">
+                                <div>
+                                    <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-2">שלב 3: עץ ה-AST שנוצר בפרסר</h5>
+                                    <p class="text-[11px] text-slate-500 mb-4">הפרסר מסנן את סימני הפיסוק המיותרים ובונה עץ היררכי רקורסיבי (בירוק - צמתים שמכילים נתונים).</p>
+                                </div>
+                                
+                                <div class="flex justify-center py-4 bg-white rounded-lg border border-slate-100 min-h-[160px] relative overflow-hidden" dir="ltr">
+                                    <div id="ast-tree-container" class="flex flex-col items-center gap-4 w-full">
+                                        <div class="flex flex-col items-center">
+                                            <div class="bg-blue-600 text-white font-mono text-xs px-3 py-1.5 rounded-lg font-bold shadow-sm z-10">diff-exp</div>
+                                            <div class="w-20 h-6 border-r-2 border-l-2 border-t-2 border-slate-300 mt-0.5"></div>
+                                            <div class="flex gap-8 -mt-0.5">
+                                                <div class="bg-emerald-500 text-white font-mono text-xs px-3 py-1.5 rounded-lg shadow-sm">const-exp (55)</div>
+                                                <div class="bg-emerald-500 text-white font-mono text-xs px-3 py-1.5 rounded-lg shadow-sm">const-exp (11)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1384,6 +1604,76 @@
                             בזיכרון:<br>
                             <code>[y=2] -> [x=1] -> EmptyEnv</code>.
                         </p>
+                    </div>
+                </div>
+
+                <!-- Environment Shadowing Visualizer -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>הדמיית שרשרת סביבות והסתרה (Shadowing)</span>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    
+                    <p class="text-sm text-slate-600 mb-6">
+                        נריץ מעקב של פונקציית החיפוש <code>apply-env</code> על הסביבה שנוצרת עבור הקוד הבא: <code>let x=1 in let y=2 in let x=3 in x+y</code>.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                        <!-- Left: Interactive controls -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h5 class="font-bold text-sm text-slate-800 mb-3">חיפוש משתנה בסביבה:</h5>
+                            <div class="flex flex-col sm:flex-row gap-2 mb-4">
+                                <button onclick="lookupEnv('x')" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg font-bold text-xs hover:bg-blue-700 transition-colors cursor-pointer">
+                                    חפש את x (מקרה הסתרה)
+                                </button>
+                                <button onclick="lookupEnv('y')" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg font-bold text-xs hover:bg-blue-700 transition-colors cursor-pointer">
+                                    חפש את y (חיפוש בשרשרת)
+                                </button>
+                                <button onclick="lookupEnv('z')" class="flex-1 bg-slate-600 text-white py-2 px-3 rounded-lg font-bold text-xs hover:bg-slate-700 transition-colors cursor-pointer">
+                                    חפש את z (שגיאה)
+                                </button>
+                            </div>
+                            <div id="env-lookup-output" class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[80px] flex items-center justify-center text-center leading-relaxed">
+                                לחצו על אחד הכפתורים כדי לראות את אלגוריתם החיפוש (apply-env) בפעולה
+                            </div>
+                        </div>
+
+                        <!-- Right: Visual environment chain -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center gap-1.5" dir="ltr">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider self-end mb-2" dir="rtl">מבנה שרשרת הסביבות (מבנה נתונים):</h5>
+                            
+                            <!-- Frame x=3 -->
+                            <div id="env-frame-x3" class="w-full max-w-[240px] bg-white p-3 rounded-xl border-2 border-slate-200 shadow-sm transition-all duration-300 flex justify-between items-center">
+                                <span class="font-bold text-[10px] text-slate-400">Layer 3 (Innermost)</span>
+                                <div class="bg-purple-100 text-purple-800 font-mono text-xs px-2.5 py-1 rounded font-bold">x = 3</div>
+                            </div>
+                            
+                            <!-- Arrow -->
+                            <div class="text-slate-400 text-[10px] font-bold font-mono">↓ saved-env</div>
+
+                            <!-- Frame y=2 -->
+                            <div id="env-frame-y2" class="w-full max-w-[240px] bg-white p-3 rounded-xl border-2 border-slate-200 shadow-sm transition-all duration-300 flex justify-between items-center">
+                                <span class="font-bold text-[10px] text-slate-400">Layer 2</span>
+                                <div class="bg-blue-100 text-blue-800 font-mono text-xs px-2.5 py-1 rounded font-bold">y = 2</div>
+                            </div>
+
+                            <!-- Arrow -->
+                            <div class="text-slate-400 text-[10px] font-bold font-mono">↓ saved-env</div>
+
+                            <!-- Frame x=1 -->
+                            <div id="env-frame-x1" class="w-full max-w-[240px] bg-white p-3 rounded-xl border-2 border-slate-200 shadow-sm transition-all duration-300 flex justify-between items-center">
+                                <span class="font-bold text-[10px] text-slate-400">Layer 1 (Outer)</span>
+                                <div class="bg-slate-100 text-slate-800 font-mono text-xs px-2.5 py-1 rounded font-bold opacity-60">x = 1</div>
+                            </div>
+
+                            <!-- Arrow -->
+                            <div class="text-slate-400 text-[10px] font-bold font-mono">↓ saved-env</div>
+
+                            <!-- Empty Env -->
+                            <div id="env-frame-empty" class="w-full max-w-[240px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border-2 border-slate-700 shadow-sm transition-all duration-300 text-center font-mono text-xs">
+                                (empty-env)
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1478,20 +1768,35 @@
                             דרך להסתכל "פנימה" או לדעת אילו משתנים מוגדרים בה בלי להפעיל אותה בפועל.</p>
                         <p class="text-sm text-slate-700 mb-3"><strong>הבעיה בממן 12:</strong> אנו צריכים לכתוב פונקציה
                             <code>(is-num? e x)</code> הבודקת האם המשתנה <code>x</code> קיים בסביבה <code>e</code> והאם
-                            ערכו מספרי. </p>
+                            ערכו מספרי.
+                        </p>
                         <p class="text-sm text-slate-700">אם נפעיל סתם כך <code>(apply-env e x)</code> והמשתנה
                             <strong>אינו קיים</strong>, הפונקציה <code>empty-env</code> תזרוק שגיאה קריטית (Crash)
-                            ותעצור את ריצת התוכנית. כדי לפתור זאת נדרשת גישה מיוחדת.</p>
+                            ותעצור את ריצת התוכנית. כדי לפתור זאת נדרשת גישה מיוחדת.
+                        </p>
                     </div>
                 </div>
 
                 <div class="thought-box mb-10">
                     <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">פתרון 1: שימוש במנגנון תפיסת שגיאות ב-Racket
                         (הכי נקי ומתאים לריצה)</h3>
-                    <p class="mb-4 text-slate-700">ב-Racket, ניתן לעטוף את הקריאה ל-<code>apply-env</code> במנגנון תפיסת
-                        חריגות <code>with-handlers</code>. אם החיפוש נכשל וקורס, אנו "תופסים" את השגיאה ומחזירים
-                        <code>#f</code> (מכיוון שאין כריכה כזו, ובפרט אין כריכה למספר). אם הוא מצליח, אנו בודקים האם
-                        הערך הוא מספר בעזרת <code>number?</code>.</p>
+                    <p class="mb-4 text-slate-700">בסביבת DrRacket (ובשפת Racket), ניתן לעטוף את הקריאה
+                        ל-<code>apply-env</code> במנגנון תפיסת
+                        חריגות <code
+                            class="bg-gray-100 px-1 rounded text-sm text-[#0f172a] font-mono">with-handlers</code> .
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 my-4 rounded-md shadow-sm">
+                        <div class="flex items-center mb-2">
+                            <span class="text-red-500 text-xl mr-2">⚠️</span>
+                            <h4 class="font-bold text-red-800">אזהרה קריטית למבחן: זה לא Scheme תקני!</h4>
+                        </div>
+                        <p class="text-red-700 text-sm">
+                            <code class="font-mono bg-red-100 px-1 rounded">with-handlers</code> <strong>אינו</strong>
+                            חלק משפת Scheme הסטנדרטית. שימוש בו במבחן תיאורטי עלול להוביל להורדת נקודות. במבחן, יש
+                            להשתמש תמיד <strong>בפתרון 2 (העברת Failure Callback)</strong>!
+                        </p>
+                    </div> אם החיפוש נכשל וקורס, אנו "תופסים" את השגיאה ומחזירים
+                    <code>#f</code> (מכיוון שאין כריכה כזו, ובפרט אין כריכה למספר). אם הוא מצליח, אנו בודקים האם
+                    הערך הוא מספר בעזרת <code>number?</code>.</p>
                     <pre><code>(define is-num?
   (lambda (e x)
     (with-handlers
@@ -1561,6 +1866,386 @@
 
             document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // --- Interactive Diagrams JS Logic ---
+        function setAstDemo(type) {
+            const simpleBtn = document.getElementById('btn-ast-simple');
+            const nestedBtn = document.getElementById('btn-ast-nested');
+            const codeDisplay = document.getElementById('ast-code-display');
+            const tokensDisplay = document.getElementById('ast-tokens-display');
+            const treeContainer = document.getElementById('ast-tree-container');
+            
+            if (!simpleBtn || !nestedBtn || !codeDisplay || !tokensDisplay || !treeContainer) return;
+
+            if (type === 'simple') {
+                simpleBtn.className = "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer";
+                nestedBtn.className = "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer";
+                codeDisplay.innerText = "-(55, 11)";
+                tokensDisplay.innerHTML = `
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">-</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">(</span>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Number">55</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">,</span>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Number">11</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">)</span>
+                `;
+                treeContainer.innerHTML = `
+                    <div class="flex flex-col items-center">
+                        <div class="bg-blue-600 text-white font-mono text-xs px-3 py-1.5 rounded-lg font-bold shadow-sm z-10">diff-exp</div>
+                        <div class="w-20 h-6 border-r-2 border-l-2 border-t-2 border-slate-300 mt-0.5"></div>
+                        <div class="flex gap-8 -mt-0.5">
+                            <div class="bg-emerald-500 text-white font-mono text-xs px-3 py-1.5 rounded-lg shadow-sm animate-pulse">const-exp (55)</div>
+                            <div class="bg-emerald-500 text-white font-mono text-xs px-3 py-1.5 rounded-lg shadow-sm animate-pulse">const-exp (11)</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                simpleBtn.className = "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer";
+                nestedBtn.className = "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer";
+                codeDisplay.innerText = "-(55, -(22, 11))";
+                tokensDisplay.innerHTML = `
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">-</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">(</span>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Number">55</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">,</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">-</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">(</span>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Number">22</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">,</span>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Number">11</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">)</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-mono font-bold" title="Terminal">)</span>
+                `;
+                treeContainer.innerHTML = `
+                    <div class="flex flex-col items-center">
+                        <div class="bg-blue-600 text-white font-mono text-xs px-3 py-1.5 rounded-lg font-bold shadow-sm z-10">diff-exp</div>
+                        <div class="w-36 h-6 border-r-2 border-l-2 border-t-2 border-slate-300 mt-0.5"></div>
+                        <div class="flex gap-6 -mt-0.5">
+                            <div class="bg-emerald-500 text-white font-mono text-xs px-3 py-1.5 rounded-lg shadow-sm h-fit">const-exp (55)</div>
+                            <div class="flex flex-col items-center">
+                                <div class="bg-blue-600 text-white font-mono text-xs px-3 py-1.5 rounded-lg font-bold shadow-sm z-10">diff-exp</div>
+                                <div class="w-20 h-6 border-r-2 border-l-2 border-t-2 border-slate-300 mt-0.5"></div>
+                                <div class="flex gap-4 -mt-0.5">
+                                    <div class="bg-emerald-500 text-white font-mono text-xs px-3 py-1.5 rounded-lg shadow-sm animate-pulse">const-exp (22)</div>
+                                    <div class="bg-emerald-500 text-white font-mono text-xs px-3 py-1.5 rounded-lg shadow-sm animate-pulse">const-exp (11)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        let envLookupTimeout = null;
+        function lookupEnv(variable) {
+            if (envLookupTimeout) {
+                clearTimeout(envLookupTimeout);
+                envLookupTimeout = null;
+            }
+            
+            const frames = {
+                'x3': document.getElementById('env-frame-x3'),
+                'y2': document.getElementById('env-frame-y2'),
+                'x1': document.getElementById('env-frame-x1'),
+                'empty': document.getElementById('env-frame-empty')
+            };
+            const output = document.getElementById('env-lookup-output');
+            if (!output) return;
+            
+            // Reset colors
+            for (let k in frames) {
+                if (!frames[k]) continue;
+                frames[k].className = frames[k].className.replace(/border-red-500|border-emerald-500|border-blue-500/g, 'border-slate-200');
+                if (k === 'empty') {
+                    frames[k].className = frames[k].className.replace(/border-red-500/g, 'border-slate-700');
+                }
+            }
+            
+            if (variable === 'x') {
+                // Find x in layer 3
+                frames['x3'].className = frames['x3'].className.replace('border-slate-200', 'border-emerald-500');
+                output.innerHTML = `<strong>שלב 1:</strong> <code>apply-env</code> בודק את השכבה הפנימית ביותר.<br>נמצאה התאמה מיידית: <code>x = 3</code>! החיפוש מסתיים בהצלחה והערך המוחזר הוא <strong>3</strong>.<br><span class="text-emerald-600 font-bold">הסבר:</span> הערך <code>x = 1</code> בשכבה החיצונית מוסתר (Shadowed).`;
+            } else if (variable === 'y') {
+                // Step 1: Look at layer 3
+                frames['x3'].className = frames['x3'].className.replace('border-slate-200', 'border-blue-500');
+                output.innerHTML = `<strong>שלב 1:</strong> בודקים בשכבה 3. המשתנה בשכבה הוא <code>x</code> אך מחפשים <code>y</code>. אין התאמה.<br>עוברים לשכבה הבאה דרך <code>saved-env</code>...`;
+                
+                // Step 2: Look at layer 2
+                envLookupTimeout = setTimeout(() => {
+                    frames['y2'].className = frames['y2'].className.replace('border-slate-200', 'border-emerald-500');
+                    output.innerHTML = `<strong>שלב 2:</strong> בודקים בשכבה 2. המשתנה הוא <code>y</code>. נמצאה התאמה!<br>החיפוש מסתיים בהצלחה והערך המוחזר הוא <strong>2</strong>.`;
+                }, 1000);
+            } else if (variable === 'z') {
+                // Step 1: Look at layer 3
+                frames['x3'].className = frames['x3'].className.replace('border-slate-200', 'border-blue-500');
+                output.innerHTML = `<strong>שלב 1:</strong> בודקים בשכבה 3 (<code>x</code>). אין התאמה. עוברים לשכבה 2...`;
+                
+                // Step 2: Look at layer 2
+                envLookupTimeout = setTimeout(() => {
+                    frames['x3'].className = frames['x3'].className.replace('border-blue-500', 'border-slate-200');
+                    frames['y2'].className = frames['y2'].className.replace('border-slate-200', 'border-blue-500');
+                    output.innerHTML = `<strong>שלב 2:</strong> בודקים בשכבה 2 (<code>y</code>). אין התאמה. עוברים לשכבה 1...`;
+                    
+                    // Step 3: Look at layer 1
+                    envLookupTimeout = setTimeout(() => {
+                        frames['y2'].className = frames['y2'].className.replace('border-blue-500', 'border-slate-200');
+                        frames['x1'].className = frames['x1'].className.replace('border-slate-200', 'border-blue-500');
+                        output.innerHTML = `<strong>שלב 3:</strong> בודקים בשכבה 1 (<code>x</code>). אין התאמה. עוברים ל-empty-env...`;
+                        
+                        // Step 4: Look at empty-env
+                        envLookupTimeout = setTimeout(() => {
+                            frames['x1'].className = frames['x1'].className.replace('border-blue-500', 'border-slate-200');
+                            frames['empty'].className = frames['empty'].className.replace('border-slate-700', 'border-red-500');
+                            output.innerHTML = `<strong>שלב 4:</strong> הגענו ל-<code>empty-env</code>.<br><span class="text-red-500 font-bold">שגיאה:</span> המשתנה <code>z</code> אינו מוגדר בסביבה! (Unbound variable error).`;
+                        }, 1200);
+                    }, 1200);
+                }, 1200);
+            }
+        }
+
+        // --- Map/Filter/Foldr Pipeline Simulator JS Logic ---
+        let funcMode = 'map';
+        let funcStep = 0;
+        const origList = [1, 2, 3, 4];
+        let currentList = [1, 2, 3, 4];
+
+        function setFuncSim(mode) {
+            funcMode = mode;
+            funcStep = 0;
+            
+            const mapBtn = document.getElementById('btn-func-map');
+            const filterBtn = document.getElementById('btn-func-filter');
+            const foldrBtn = document.getElementById('btn-func-foldr');
+            
+            if (mapBtn) mapBtn.className = mode === 'map' ? "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer" : "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer";
+            if (filterBtn) filterBtn.className = mode === 'filter' ? "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer" : "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer";
+            if (foldrBtn) foldrBtn.className = mode === 'foldr' ? "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer" : "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer";
+            
+            resetFuncSim();
+        }
+
+        function resetFuncSim() {
+            funcStep = 0;
+            currentList = [...origList];
+            
+            const stepBtn = document.getElementById('btn-func-step');
+            if (stepBtn) {
+                stepBtn.innerText = "בצע צעד (Step)";
+                stepBtn.className = stepBtn.className.replace('bg-slate-400 hover:bg-slate-500', 'bg-emerald-600 hover:bg-emerald-700');
+            }
+            
+            renderFuncList();
+            const explain = document.getElementById('func-explain');
+            if (explain) explain.innerHTML = 'לחצו על "בצע צעד" כדי לראות את הפעלת הפונקציה על הרשימה.';
+        }
+
+        function renderFuncList() {
+            const listContainer = document.getElementById('func-list-view');
+            if (!listContainer) return;
+            
+            if (funcMode === 'foldr' && funcStep > 0) {
+                let expr = '0';
+                for (let i = 3; i >= 4 - funcStep; i--) {
+                    expr = `(+ ${origList[i]} ${expr})`;
+                }
+                listContainer.innerHTML = `<span class="bg-yellow-100 text-yellow-800 px-3 py-1.5 rounded-lg border border-yellow-300 font-bold">${expr}</span>`;
+                return;
+            }
+
+            listContainer.innerHTML = currentList.map((item, idx) => {
+                let bgClass = "bg-white text-slate-800 border-slate-200";
+                if (funcMode === 'map') {
+                    if (idx < funcStep) bgClass = "bg-blue-100 text-blue-800 border-blue-300 font-bold";
+                    else if (idx === funcStep) bgClass = "bg-yellow-100 border-yellow-400 border-2 font-bold animate-pulse";
+                } else if (funcMode === 'filter') {
+                    if (idx < funcStep) {
+                        if (origList[idx] % 2 === 0) bgClass = "bg-emerald-100 text-emerald-800 border-emerald-300 font-bold";
+                        else bgClass = "bg-red-50 text-red-400 border-red-200 line-through opacity-50";
+                    } else if (idx === funcStep) bgClass = "bg-yellow-100 border-yellow-400 border-2 font-bold animate-pulse";
+                }
+                return `
+                    <div class="${bgClass} w-10 h-10 border rounded-full flex items-center justify-center shadow-sm text-xs font-bold transition-all duration-300">
+                        ${item}
+                    </div>
+                `;
+            }).join(currentList.length > 0 ? ' <span class="text-slate-400 font-bold">➔</span> ' : '<span class="text-slate-400 italic">רשימה ריקה</span>');
+        }
+
+        function stepFuncSim() {
+            const explain = document.getElementById('func-explain');
+            const stepBtn = document.getElementById('btn-func-step');
+            if (!explain || !stepBtn) return;
+            
+            if (funcMode === 'map') {
+                if (funcStep >= 4) {
+                    explain.innerHTML = `<strong>סיום תהליך Map!</strong><br>הפקודה <code>map</code> סיימה לעבור על כל האיברים והחזירה רשימה חדשה: <code>'(2 4 6 8)</code>.<br>שימו לב שגודל הרשימה נשמר.`;
+                    stepBtn.innerText = "הסתיים";
+                    stepBtn.className = stepBtn.className.replace('bg-emerald-600 hover:bg-emerald-700', 'bg-slate-400 hover:bg-slate-500');
+                    return;
+                }
+                
+                currentList[funcStep] = origList[funcStep] * 2;
+                explain.innerHTML = `<strong>צעד ${funcStep + 1}: הכפלת האיבר</strong><br>מפעילים את הפונקציה <code>(* ${origList[funcStep]} 2)</code> על האיבר באינדקס ${funcStep}.<br>האיבר הופך מ-<code>${origList[funcStep]}</code> ל-<code>${currentList[funcStep]}</code>.`;
+                funcStep++;
+                renderFuncList();
+            } else if (funcMode === 'filter') {
+                if (funcStep >= 4) {
+                    const filtered = origList.filter(x => x % 2 === 0);
+                    currentList = filtered;
+                    renderFuncList();
+                    explain.innerHTML = `<strong>סיום תהליך Filter!</strong><br>הפקודה <code>filter</code> סיימה וסילקה את האיברים שלא החזירו אמת עבור הפרדיקט <code>even?</code>.<br>הרשימה החדשה שהתקבלה היא <code>'(2 4)</code>.`;
+                    stepBtn.innerText = "הסתיים";
+                    stepBtn.className = stepBtn.className.replace('bg-emerald-600 hover:bg-emerald-700', 'bg-slate-400 hover:bg-slate-500');
+                    return;
+                }
+                
+                const isEven = (origList[funcStep] % 2 === 0);
+                explain.innerHTML = `<strong>צעד ${funcStep + 1}: בדיקת זוגיות</strong><br>מפעילים <code>(even? ${origList[funcStep]})</code>.<br>התוצאה היא <code>${isEven ? '#t' : '#f'}</code>. ${isEven ? 'האיבר נשאר.' : 'האיבר יסונן מהרשימה.'}`;
+                funcStep++;
+                renderFuncList();
+            } else if (funcMode === 'foldr') {
+                if (funcStep >= 4) {
+                    explain.innerHTML = `<strong>סיום תהליך Foldr!</strong><br>המפרש חישב את עץ הפעולות מימין לשמאל (מלמעלה למטה):<br><code>(+ 1 (+ 2 (+ 3 (+ 4 0)))) = 10</code>.`;
+                    stepBtn.innerText = "הסתיים";
+                    stepBtn.className = stepBtn.className.replace('bg-emerald-600 hover:bg-emerald-700', 'bg-slate-400 hover:bg-slate-500');
+                    return;
+                }
+                
+                funcStep++;
+                renderFuncList();
+                
+                let expr = '0';
+                for (let i = 3; i >= 4 - funcStep; i--) {
+                    expr = `(+ ${origList[i]} ${expr})`;
+                }
+                explain.innerHTML = `<strong>צעד ${funcStep}: קיפול איבר מהסוף</strong><br>מפעילים את פונקציית החיבור על האיבר <code>${origList[4 - funcStep]}</code> יחד עם תוצאת הקיפול שנצברה מימין (המתחיל מ-0):<br><code>${expr}</code>.`;
+            }
+        }
+
+        // --- Shape Datatype Cases Simulator JS Logic ---
+        function dispatchShape(type) {
+            const lineCircle = document.getElementById('cases-line-circle');
+            const lineRect = document.getElementById('cases-line-rect');
+            const lineElse = document.getElementById('cases-line-else');
+            const explain = document.getElementById('shape-explain');
+            
+            if (!explain || !lineCircle || !lineRect || !lineElse) return;
+            
+            // Clear highlights
+            lineCircle.className = lineCircle.className.replace(' bg-emerald-950 text-emerald-200 font-bold', '');
+            lineRect.className = lineRect.className.replace(' bg-emerald-950 text-emerald-200 font-bold', '');
+            lineElse.className = lineElse.className.replace(' bg-red-950 text-red-200 font-bold', '');
+            
+            if (type === 'circle') {
+                lineCircle.className += ' bg-emerald-950 text-emerald-200 font-bold';
+                explain.innerHTML = `<strong>התאמה נמצאה!</strong><br>הערך הוא מסוג <code>circle</code>.<br>הפרסר שולף את רדיוס המעגל לתוך המשתנה <code>r = 5</code> ומחשב:<br><code>(* 3.14 5 5) = 78.5</code>.`;
+            } else if (type === 'rect') {
+                lineRect.className += ' bg-emerald-950 text-emerald-200 font-bold';
+                explain.innerHTML = `<strong>התאמה נמצאה!</strong><br>הערך הוא מסוג <code>rectangle</code>.<br>הפרסר שולף את הרוחב <code>w = 4</code> והגובה <code>h = 6</code> ומחשב:<br><code>(* 4 6) = 24</code>.`;
+            } else {
+                lineElse.className += ' bg-red-950 text-red-200 font-bold';
+                explain.innerHTML = `<strong>אין התאמה לטיפוס!</strong><br>הערך שנשלח אינו <code>circle</code> ואינו <code>rectangle</code>.<br>בלוק ה-<code>else</code> מופעל וזורק שגיאת ריצה בעזרת <code>eopl:error</code>.`;
+            }
+        }
+    </script>
+    <script>
+        // Sidebar toggle and Navigation Button Injection Logic
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-collapsed');
+            const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+            updateToggleBtnIcon(isCollapsed);
+        }
+
+        function updateToggleBtnIcon(isCollapsed) {
+            const icon = document.getElementById('sidebar-toggle-icon');
+            if (!icon) return;
+            if (isCollapsed) {
+                // Show << (chevron left to open/expand in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />';
+            } else {
+                // Show >> (chevron right to close/collapse in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Create and inject sidebar toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.id = 'sidebar-toggle-btn';
+            toggleBtn.className = 'fixed top-6 p-2 rounded-lg bg-white/80 backdrop-blur-md hover:bg-white text-slate-600 hover:text-slate-900 border border-slate-200 shadow-md z-30 flex items-center justify-center w-10 h-10 transition-all duration-300 active:scale-95 cursor-pointer';
+            toggleBtn.title = 'הצג/הסתר תפריט ניווט';
+            toggleBtn.onclick = toggleSidebar;
+            toggleBtn.innerHTML = '<svg id="sidebar-toggle-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"></svg>';
+            document.body.appendChild(toggleBtn);
+
+            // 2. Load sidebar collapsed state from localStorage
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                document.body.classList.add('sidebar-collapsed');
+            }
+            updateToggleBtnIcon(isCollapsed);
+
+            // Initialize functional programming list simulator
+            resetFuncSim();
+
+            // 3. Inject navigation buttons at the bottom of each tab
+            const tabs = [];
+            const seenIds = new Set();
+            document.querySelectorAll('.tab-content').forEach(el => {
+                const id = el.id;
+                if (id && !seenIds.has(id)) {
+                    seenIds.add(id);
+                    tabs.push(el);
+                }
+            });
+
+            tabs.forEach((tab, index) => {
+                const navContainer = document.createElement('div');
+                navContainer.className = 'flex justify-between items-center mt-12 pt-6 border-t border-slate-200';
+
+                // Previous Button (on the right)
+                if (index > 0) {
+                    const prevTabId = tabs[index - 1].id;
+                    const prevBtn = document.createElement('button');
+                    prevBtn.onclick = () => showTab(prevTabId);
+                    prevBtn.className = 'nav-btn-prev flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    prevBtn.innerHTML = `
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span>הקודם</span>
+                    `;
+                    navContainer.appendChild(prevBtn);
+                } else {
+                    // Placeholder to keep spacing alignment
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                // Next Button (on the left)
+                if (index < tabs.length - 1) {
+                    const nextTabId = tabs[index + 1].id;
+                    const nextBtn = document.createElement('button');
+                    nextBtn.onclick = () => showTab(nextTabId);
+                    nextBtn.className = 'nav-btn-next flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98] transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    nextBtn.innerHTML = `
+                        <span>הבא</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    `;
+                    navContainer.appendChild(nextBtn);
+                } else {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                tab.appendChild(navContainer);
+            });
+        });
     </script>
 </body>
 

@@ -61,6 +61,39 @@
         .dark-scroll::-webkit-scrollbar-track { background: #020617; }
         .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
     </style>
+    <style>
+        /* Sidebar collapse transition & styles */
+        aside {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .sidebar-collapsed aside {
+            width: 0 !important;
+            min-width: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        #sidebar-toggle-btn {
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+        }
+        /* When sidebar is open: button floats to the left of the sidebar (RTL right side) */
+        body:not(.sidebar-collapsed) #sidebar-toggle-btn {
+            right: 21rem; /* 20rem (w-80) + 1rem (spacing) */
+        }
+        body.sidebar-collapsed #sidebar-toggle-btn {
+            right: 1rem;
+        }
+        
+        /* Premium navigation buttons styling */
+        .nav-btn-prev, .nav-btn-next {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-btn-prev:hover {
+            transform: translateX(2px);
+        }
+        .nav-btn-next:hover {
+            transform: translateX(-2px);
+        }
+    </style>
 </head>
 <body class="text-slate-800 h-screen flex overflow-hidden">
 
@@ -163,6 +196,65 @@
                     <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">איך בודקים קוד בלי להריץ אותו?</h3>
                     <p class="mb-4 text-slate-700">הטריק הוא לבנות מפרש מקביל. אם למדנו שהפונקציה <code>value-of</code> רצה על ה-AST ומחשבת <strong>ערכים</strong>, אנחנו נבנה פונקציה חדשה שנקראת <code>type-of</code>. היא תרוץ על אותו ה-AST, אבל במקום לחשב מספרים, היא תחשב <strong>טיפוסים</strong>.</p>
                     <p class="text-slate-700">במקום סביבה רגילה (Environment) ששומרת <code>[x=5]</code>, היא תשתמש ב<strong>סביבת טיפוסים (Type Environment)</strong> ששומרת <code>[x=int]</code>.</p>
+                </div>
+
+                <!-- Type Checker vs Interpreter Simulator -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>הדמיה השוואתית: בדיקת טיפוסים סטטית מול מפרש ריצה</span>
+                        <span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        ראו כיצד מערכת בדיקה סטטית (Type Checker) תופסת שגיאות טיפוס לפני ההרצה, לעומת מפרש רגיל (Interpreter) המגלה שגיאות רק בזמן ריצה וקורס.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1">בחרו קוד להרצה:</label>
+                            <select id="pipe-code-select" onchange="resetPipeSim()" class="w-full bg-slate-50 border border-slate-300 rounded p-2 text-xs font-mono cursor-pointer">
+                                <option value="valid">let x = 5 in -(x, 2)  [תקין]</option>
+                                <option value="invalid">let x = 5 in -(x, true) [שגיאת טיפוס]</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1">בחרו מסלול עיבוד:</label>
+                            <div class="flex gap-2">
+                                <button onclick="setPipeMode('checker')" id="btn-pipe-checker" class="flex-1 px-3 py-2 text-xs font-bold rounded bg-purple-600 text-white shadow-sm cursor-pointer">
+                                    Static Type Checker (type-of)
+                                </button>
+                                <button onclick="setPipeMode('interp')" id="btn-pipe-interp" class="flex-1 px-3 py-2 text-xs font-bold rounded bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                                    Runtime Interpreter (value-of)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3 font-bold">בקרה:</h5>
+                                <div class="flex gap-2 mb-4">
+                                    <button onclick="stepPipeSim()" id="btn-pipe-step" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded text-xs transition-colors cursor-pointer">
+                                        בצע שלב (Step)
+                                    </button>
+                                    <button onclick="resetPipeSim()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded text-xs transition-colors cursor-pointer">
+                                        איפוס
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="pipe-explain-text" class="bg-white p-3 rounded border border-slate-200 text-xs text-slate-600 min-h-[120px] flex items-center justify-center text-center leading-relaxed">
+                                לחצו על "בצע שלב" כדי להתחיל את הדמיית צינור העיבוד.
+                            </div>
+                        </div>
+
+                        <!-- Visual Pipeline Flow -->
+                        <div class="lg:col-span-2 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center justify-center">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-4 self-end">צינור העיבוד ומצב הסביבה:</h5>
+                            <div id="pipe-visual-area" class="w-full flex flex-col items-center gap-2 min-h-[220px]" dir="ltr">
+                                <!-- Dynamic rendering of pipeline steps -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -376,6 +468,56 @@ in (fact 5)</code></pre>
                         <li><strong>סביבת טיפוסים (Type Environment - Tenv)</strong>: מופעלת ב-<code>type-of</code>, שומרת שמות של משתנים ומקשרת אותם לטיפוסים הסטטיים שלהם (למשל: <code>x = int-type</code>). סביבה זו קיימת רק בזמן הקומפילציה!</li>
                     </ul>
                 </div>
+
+                <!-- High-Order Type Builder -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>מחולל טיפוסים מסדר גבוה (High-Order Type Builder)</span>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        בנו טיפוסים של פונקציות מסדר גבוה (פונקציות שמקבלות או מחזירות פונקציות) וראו כיצד מיוצגים הטיפוסים במפרש <code>checker.scm</code> של EOPL ומה משמעותם התחרותית.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <label class="block text-xs font-bold text-slate-500 mb-2">טיפוס הארגומנט (קלט):</label>
+                            <select id="builder-arg" onchange="buildType()" class="w-full bg-white border border-slate-300 rounded p-2 text-xs font-mono cursor-pointer">
+                                <option value="int">int</option>
+                                <option value="bool">bool</option>
+                                <option value="int_to_int">int -> int (פונקציה)</option>
+                                <option value="int_to_bool">int -> bool (פונקציה)</option>
+                            </select>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <label class="block text-xs font-bold text-slate-500 mb-2">טיפוס ההחזרה (פלט):</label>
+                            <select id="builder-res" onchange="buildType()" class="w-full bg-white border border-slate-300 rounded p-2 text-xs font-mono cursor-pointer">
+                                <option value="int">int</option>
+                                <option value="bool">bool</option>
+                                <option value="int_to_int">int -> int (פונקציה)</option>
+                                <option value="int_to_bool">int -> bool (פונקציה)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                        <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-4 border-b pb-1">התוצאה המיוצרת:</h5>
+                        <div class="space-y-4">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                                <span class="text-xs font-bold text-slate-700">הטיפוס לקריאה ידידותית:</span>
+                                <span id="builder-friendly" class="font-mono font-bold text-sm bg-emerald-50 text-emerald-700 px-3 py-1 rounded border border-emerald-200 font-bold">int -> int</span>
+                            </div>
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                                <span class="text-xs font-bold text-slate-700">ייצוג ה-AST במפרש EOPL:</span>
+                                <span id="builder-eopl" class="font-mono text-xs bg-slate-800 text-slate-200 px-3 py-1 rounded border border-slate-700 whitespace-pre-wrap">(proc-type (int-type) (int-type))</span>
+                            </div>
+                            <div class="flex flex-col gap-1 border-t pt-3">
+                                <span class="text-xs font-bold text-slate-700">הסבר סמנטי (בעברית):</span>
+                                <p id="builder-desc" class="text-xs text-slate-600 leading-relaxed">פונקציה המקבלת מספר שלם ומחזירה מספר שלם.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ==========================================
@@ -525,6 +667,55 @@ in (f 10)</code></pre>
                         <li><strong>פירוק פונקציות:</strong> אם הגענו למשוואה המורכבת משני חצים, למשל $t_1 \r\rightarrow int = bool \r\rightarrow t_2$. כדי שזה יהיה שווה, צד שמאל של החץ חייב להיות שווה לשמאל, והימני לימני. לכן, מוחקים את המשוואה הזו ומפצלים אותה לשתי משוואות חדשות בתחתית הרשימה: $t_1 = bool$ ו-$int = t_2$.</li>
                         <li><strong>שגיאת טיפוס (Failure):</strong> אם הגענו למצב של התנגשות מהותית, למשל $int = bool$, או $int = t_1 \r\rightarrow t_2$, האלגוריתם קורס. המשמעות: יש שגיאת טיפוס בקוד! המפרש פולט Type Error.</li>
                     </ul>
+                </div>
+
+                <!-- Unification Solver -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>פתרון משוואות טיפוסים אינטראקטיבי (Unification Solver)</span>
+                        <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-6">
+                        עקבו אחר אלגוריתם ה-Unification הפותר את משוואות הטיפוסים עבור הקוד הבא: <br>
+                        <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs" dir="ltr">letrec f(x) = -(x, 1) in f(5)</code>
+                    </p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <!-- Left: Controls & Progress -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3" dir="rtl">בקרה:</h5>
+                                <div class="flex gap-2 mb-4">
+                                    <button onclick="stepUnification()" id="btn-unif-step" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+                                        צעד הבא (Step)
+                                    </button>
+                                    <button onclick="resetUnification()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-lg text-xs transition-colors cursor-pointer">
+                                        איפוס
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="unif-explain" class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[140px] flex items-center justify-center text-center leading-relaxed">
+                                לחצו על "צעד הבא" כדי להתחיל לפתור את מערכת המשוואות.
+                            </div>
+                        </div>
+
+                        <!-- Center: Equations list -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3" dir="rtl">רשימת משוואות (Equations):</h5>
+                            <div id="unif-eqs" class="flex flex-col gap-2 font-mono text-xs" dir="ltr">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Right: Substitution map -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3" dir="rtl">טבלת הצבות (Substitutions):</h5>
+                            <div id="unif-subs" class="flex flex-col gap-2 font-mono text-xs" dir="ltr">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -995,6 +1186,434 @@ in (f 10)</code></pre>
             
             document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // --- Unification Solver JS Logic ---
+        let unifStep = 0;
+        const initialEqs = [
+            { left: 't_x', right: 'int' },
+            { left: 't_body', right: 'int' },
+            { left: 't_f', right: 't_x ➔ t_body' },
+            { left: 't_f', right: 'int ➔ t_res' },
+            { left: 't_let', right: 't_res' }
+        ];
+
+        let eqs = [];
+        let subs = [];
+
+        function resetUnification() {
+            unifStep = 0;
+            eqs = JSON.parse(JSON.stringify(initialEqs));
+            subs = [];
+            
+            const stepBtn = document.getElementById('btn-unif-step');
+            if (stepBtn) {
+                stepBtn.innerText = "צעד הבא (Step)";
+                stepBtn.className = stepBtn.className.replace('bg-slate-400 hover:bg-slate-500', 'bg-emerald-600 hover:bg-emerald-700');
+            }
+            
+            renderUnification();
+            const explain = document.getElementById('unif-explain');
+            if (explain) explain.innerHTML = 'לחצו על "צעד הבא" כדי להתחיל לפתור את מערכת המשוואות.';
+        }
+
+        function renderUnification() {
+            const eqsContainer = document.getElementById('unif-eqs');
+            const subsContainer = document.getElementById('unif-subs');
+            if (!eqsContainer || !subsContainer) return;
+            
+            if (eqs.length === 0) {
+                eqsContainer.innerHTML = '<span class="text-slate-400 italic">אין משוואות שנותרו</span>';
+            } else {
+                eqsContainer.innerHTML = eqs.map((eq, i) => `
+                    <div class="${i === 0 ? 'bg-amber-100 border-amber-300 font-bold' : 'bg-white border-slate-200'} border p-2 rounded flex justify-between items-center transition-all duration-300">
+                        <span>${eq.left}</span>
+                        <span class="text-slate-400">=</span>
+                        <span>${eq.right}</span>
+                    </div>
+                `).join('');
+            }
+            
+            if (subs.length === 0) {
+                subsContainer.innerHTML = '<span class="text-slate-400 italic">אין הצבות מוגמרות</span>';
+            } else {
+                subsContainer.innerHTML = subs.map(sub => `
+                    <div class="bg-emerald-50 border-emerald-200 border p-2 rounded flex justify-between items-center animate-pulse">
+                        <span>${sub.from}</span>
+                        <span class="text-emerald-500">➔</span>
+                        <span>${sub.to}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function stepUnification() {
+            const explain = document.getElementById('unif-explain');
+            const stepBtn = document.getElementById('btn-unif-step');
+            if (!explain || !stepBtn) return;
+            
+            if (eqs.length === 0) {
+                explain.innerHTML = `<strong>סיום מוצלח!</strong><br>האלגוריתם סיים לפתור בהצלחה.<br>טיפוס ה-letrec כולו נקבע ל-<code>int</code>. הקוד תקין טיפוסית!`;
+                stepBtn.innerText = "הסתיים";
+                stepBtn.className = stepBtn.className.replace('bg-emerald-600 hover:bg-emerald-700', 'bg-slate-400 hover:bg-slate-500');
+                return;
+            }
+            
+            const active = eqs[0];
+            
+            if (active.left === 't_x' && active.right === 'int') {
+                subs.push({ from: 't_x', to: 'int' });
+                eqs.shift();
+                eqs = eqs.map(eq => ({
+                    left: eq.left.replace('t_x', 'int'),
+                    right: eq.right.replace('t_x', 'int')
+                }));
+                explain.innerHTML = `<strong>שלב 1: גילוי משתנה (Substitution)</strong><br>המשוואה הראשונה היא <code>t_x = int</code>. מצאנו הצבה! אנו מוסיפים אותה לטבלת ההצבות ומחליפים את <code>t_x</code> ב-<code>int</code> בכל שאר המשוואות.`;
+            } else if (active.left === 't_body' && active.right === 'int') {
+                subs.push({ from: 't_body', to: 'int' });
+                eqs.shift();
+                eqs = eqs.map(eq => ({
+                    left: eq.left.replace('t_body', 'int'),
+                    right: eq.right.replace('t_body', 'int')
+                }));
+                explain.innerHTML = `<strong>שלב 2: גילוי משתנה</strong><br>המשוואה הראשונה היא <code>t_body = int</code>. אנו מוסיפים אותה להצבות ומבצעים החלפה של <code>t_body</code> ב-<code>int</code> בשאר המשוואות שנותרו.`;
+            } else if (active.left === 't_f' && active.right === 'int ➔ int') {
+                subs.push({ from: 't_f', to: 'int ➔ int' });
+                eqs.shift();
+                eqs = eqs.map(eq => ({
+                    left: eq.left.replace('t_f', 'int ➔ int'),
+                    right: eq.right.replace('t_f', 'int ➔ int')
+                }));
+                explain.innerHTML = `<strong>שלב 3: גילוי משתנה</strong><br>המשוואה הראשונה היא <code>t_f = int ➔ int</code>. אנו מוסיפים הצבה זו לטבלה ומחליפים את <code>t_f</code> בשאר המשוואות.`;
+            } else if (active.left === 'int ➔ int' && active.right === 'int ➔ t_res') {
+                eqs.shift();
+                eqs.push({ left: 'int', right: 'int' });
+                eqs.push({ left: 'int', right: 't_res' });
+                explain.innerHTML = `<strong>שלב 4: פירוק פונקציות (Decomposition)</strong><br>הגענו למשוואת חצים: <code>int ➔ int = int ➔ t_res</code>.<br>כדי שפונקציות יהיו שוות, טיפוס הקלט והפלט חייב להיות זהה. אנו מפרקים אותה לשתי משוואות חדשות: <code>int = int</code> ו-<code>int = t_res</code>.`;
+            } else if (active.left === 'int' && active.right === 'int') {
+                eqs.shift();
+                explain.innerHTML = `<strong>שלב 5: זהות (Identity)</strong><br>המשוואה היא <code>int = int</code>. משוואה זו טריוויאלית, ולכן אנו פשוט זורקים אותה וממשיכים הלאה.`;
+            } else if (active.left === 'int' && active.right === 't_res') {
+                subs.push({ from: 't_res', to: 'int' });
+                eqs.shift();
+                eqs = eqs.map(eq => ({
+                    left: eq.left.replace('t_res', 'int'),
+                    right: eq.right.replace('t_res', 'int')
+                }));
+                explain.innerHTML = `<strong>שלב 6: גילוי משתנה (Substitution)</strong><br>המשוואה היא <code>int = t_res</code>. אנו מוסיפים את ההצבה <code>t_res = int</code> ומחליפים את <code>t_res</code> ב-<code>int</code> במשוואות שנותרו.`;
+            } else if (active.left === 't_let' && active.right === 'int') {
+                subs.push({ from: 't_let', to: 'int' });
+                eqs.shift();
+                explain.innerHTML = `<strong>שלב 7: גילוי משתנה (סיום)</strong><br>המשוואה האחרונה היא <code>t_let = int</code>. אנו רושמים את ההצבה האחרונה.<br>לא נותרו יותר משוואות!`;
+            }
+            
+            renderUnification();
+        }
+
+        // --- Static Checker vs Interpreter Simulator JS Logic ---
+        let pipeMode = 'checker';
+        let pipeStep = 0;
+        
+        function setPipeMode(mode) {
+            pipeMode = mode;
+            const btnChecker = document.getElementById('btn-pipe-checker');
+            const btnInterp = document.getElementById('btn-pipe-interp');
+            
+            if (mode === 'checker') {
+                btnChecker.className = 'flex-1 px-3 py-2 text-xs font-bold rounded bg-purple-600 text-white shadow-sm cursor-pointer';
+                btnInterp.className = 'flex-1 px-3 py-2 text-xs font-bold rounded bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
+            } else {
+                btnInterp.className = 'flex-1 px-3 py-2 text-xs font-bold rounded bg-purple-600 text-white shadow-sm cursor-pointer';
+                btnChecker.className = 'flex-1 px-3 py-2 text-xs font-bold rounded bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
+            }
+            resetPipeSim();
+        }
+        
+        function resetPipeSim() {
+            pipeStep = 0;
+            const explain = document.getElementById('pipe-explain-text');
+            if (explain) {
+                explain.innerHTML = 'לחצו על "בצע שלב" כדי להתחיל את הדמיית צינור העיבוד.';
+            }
+            const visual = document.getElementById('pipe-visual-area');
+            if (visual) {
+                visual.innerHTML = `
+                    <div class="text-slate-400 text-xs italic py-8">מערכת מוכנה להרצה</div>
+                `;
+            }
+            const stepBtn = document.getElementById('btn-pipe-step');
+            if (stepBtn) {
+                stepBtn.disabled = false;
+                stepBtn.textContent = 'בצע שלב (Step)';
+                stepBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        function stepPipeSim() {
+            pipeStep++;
+            const select = document.getElementById('pipe-code-select');
+            const explain = document.getElementById('pipe-explain-text');
+            const visual = document.getElementById('pipe-visual-area');
+            
+            if (!select || !explain || !visual) return;
+            const codeType = select.value;
+            
+            if (pipeStep === 1) {
+                explain.innerHTML = '<strong>שלב 1: Parsing (ניתוח תחבירי)</strong><br>הקוד מנותח על ידי ה-Parser ומיוצר עץ AST. שלב זה משותף לשני המסלולים.';
+                visual.innerHTML = `
+                    <div class="w-full max-w-sm bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono">
+                        Source Code ➔ scan&amp;parse ➔ AST
+                    </div>
+                `;
+            } else if (pipeStep === 2) {
+                if (pipeMode === 'checker') {
+                    explain.innerHTML = '<strong>שלב 2: סביבת טיפוסים (Type Environment)</strong><br>הפונקציה <code>type-of</code> מתחילה לעבוד עם סביבת טיפוסים ריקה. היא קושרת את <code>x</code> לטיפוס <code>int</code>.';
+                    visual.innerHTML = `
+                        <div class="w-full max-w-sm bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div>AST: let x = 5 in -(x, 2)</div>
+                            <div class="text-purple-600 font-bold border-t pt-1">Tenv: [x : int]</div>
+                        </div>
+                    `;
+                } else {
+                    explain.innerHTML = '<strong>שלב 2: סביבת ריצה (Runtime Environment)</strong><br>הפונקציה <code>value-of</code> מתחילה לעבוד עם סביבת ערכים ריקה. היא מעריכה את 5 ומקשרת את <code>x</code> לערך <code>num-val(5)</code>.';
+                    visual.innerHTML = `
+                        <div class="w-full max-w-sm bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div>AST: let x = 5 in -(x, ...)</div>
+                            <div class="text-green-600 font-bold border-t pt-1">Env: [x : num-val(5)]</div>
+                        </div>
+                    `;
+                }
+            } else if (pipeStep === 3) {
+                if (pipeMode === 'checker') {
+                    if (codeType === 'valid') {
+                        explain.innerHTML = '<strong>שלב 3: בדיקת גוף ה-let (תקין)</strong><br>המנוע בודק את <code>-(x, 2)</code>. הוא מוודא שמשתנה x הוא int (נמצא: int) ו-2 הוא int (נמצא: int). הכל תקין!';
+                        visual.innerHTML = `
+                            <div class="w-full max-w-sm bg-green-50 border border-green-300 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                                <div>Check: diff-exp(x, 2)</div>
+                                <div class="text-green-700 font-bold">int = int &amp;&amp; int = int</div>
+                                <div class="text-slate-500 text-[10px] mt-1">Status: Success (Compile Pass)</div>
+                            </div>
+                        `;
+                    } else {
+                        explain.innerHTML = '<strong>שלב 3: בדיקת גוף ה-let (שגיאת טיפוס!)</strong><br>המנוע בודק את <code>-(x, true)</code>. הוא מוודא ש-x הוא int, אך מגלה ש-true הוא bool. מכיוון שפעולת חיסור דורשת int, מתרחשת <strong>שגיאת קומפילציה סטטית</strong>!';
+                        visual.innerHTML = `
+                            <div class="w-full max-w-sm bg-red-50 border border-red-400 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                                <div>Check: diff-exp(x, true)</div>
+                                <div class="text-red-600 font-bold">Expected int, found bool!</div>
+                                <div class="text-red-700 font-bold text-[10px] mt-1">Status: Compile Error (Rejected)</div>
+                            </div>
+                        `;
+                        const stepBtn = document.getElementById('btn-pipe-step');
+                        if (stepBtn) {
+                            stepBtn.disabled = true;
+                            stepBtn.textContent = 'הקומפילציה נכשלה';
+                            stepBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                        }
+                    }
+                } else {
+                    explain.innerHTML = '<strong>שלב 3: הערכת גוף ה-let</strong><br>המפרש מריץ את גוף ה-let בסביבה. הוא שולף את הערך של x (הוא 5) ומבצע את פעולת החיסור.';
+                    visual.innerHTML = `
+                        <div class="w-full max-w-sm bg-white border border-slate-200 rounded p-2 text-center text-xs font-mono flex flex-col gap-1">
+                            <div>Eval: diff-exp(x, operand)</div>
+                            <div>x = 5</div>
+                        </div>
+                    `;
+                }
+            } else if (pipeStep === 4) {
+                if (pipeMode === 'checker') {
+                    explain.innerHTML = '<strong>שלב 4: תוצאה סטטית</strong><br>הקוד עבר קומפילציה בהצלחה והוכח כבטוח מטיפוסים! כעת ניתן להריץ אותו בבטחה ללא שום בדיקות טיפוסים בזמן ריצה.<br><span class="text-green-600 font-bold text-sm block mt-2">תוצאה: הטיפוס הוא int</span>';
+                    visual.innerHTML = `
+                        <div class="w-full max-w-sm bg-green-100 border border-green-400 rounded p-3 text-center text-xs font-mono">
+                            <span class="text-green-800 font-bold">Success! Static Type: int</span>
+                        </div>
+                    `;
+                } else {
+                    if (codeType === 'valid') {
+                        explain.innerHTML = '<strong>שלב 4: תוצאה בזמן ריצה (תקין)</strong><br>המפרש מחסר 2 מ-5 ומחזיר את הערך המבוטא 3.<br><span class="text-green-600 font-bold text-sm block mt-2">תוצאה סופית: num-val(3)</span>';
+                        visual.innerHTML = `
+                            <div class="w-full max-w-sm bg-green-100 border border-green-400 rounded p-3 text-center text-xs font-mono">
+                                <span class="text-green-800 font-bold">Result: num-val(3)</span>
+                            </div>
+                        `;
+                    } else {
+                        explain.innerHTML = '<strong>שלב 4: קריסת המפרש בזמן ריצה!</strong><br>המפרש מנסה לחסר את הבוליאני true (bool-val) מהמספר 5 (num-val). מכיוון שאין שלב בדיקה מוקדם, המפרש קורס בזמן הריצה!<br><span class="text-red-600 font-bold text-sm block mt-2">תוצאה: Runtime Crash!</span>';
+                        visual.innerHTML = `
+                            <div class="w-full max-w-sm bg-red-100 border border-red-400 rounded p-3 text-center text-xs font-mono">
+                                <span class="text-red-800 font-bold">CRASH: Expected number, got true</span>
+                            </div>
+                        `;
+                    }
+                }
+                const stepBtn = document.getElementById('btn-pipe-step');
+                if (stepBtn) {
+                    stepBtn.disabled = true;
+                    stepBtn.textContent = 'הסתיים';
+                    stepBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+
+        // --- High-Order Type Builder JS Logic ---
+        function buildType() {
+            const arg = document.getElementById('builder-arg').value;
+            const res = document.getElementById('builder-res').value;
+            
+            const friendlyEl = document.getElementById('builder-friendly');
+            const eoplEl = document.getElementById('builder-eopl');
+            const descEl = document.getElementById('builder-desc');
+            
+            if (!friendlyEl || !eoplEl || !descEl) return;
+            
+            let argText = '';
+            let argEopl = '';
+            if (arg === 'int') {
+                argText = 'int';
+                argEopl = '(int-type)';
+            } else if (arg === 'bool') {
+                argText = 'bool';
+                argEopl = '(bool-type)';
+            } else if (arg === 'int_to_int') {
+                argText = '(int -> int)';
+                argEopl = '(proc-type (int-type) (int-type))';
+            } else if (arg === 'int_to_bool') {
+                argText = '(int -> bool)';
+                argEopl = '(proc-type (int-type) (bool-type))';
+            }
+            
+            let resText = '';
+            let resEopl = '';
+            if (res === 'int') {
+                resText = 'int';
+                resEopl = '(int-type)';
+            } else if (res === 'bool') {
+                resText = 'bool';
+                resEopl = '(bool-type)';
+            } else if (res === 'int_to_int') {
+                resText = '(int -> int)';
+                resEopl = '(proc-type (int-type) (int-type))';
+            } else if (res === 'int_to_bool') {
+                resText = '(int -> bool)';
+                resEopl = '(proc-type (int-type) (bool-type))';
+            }
+            
+            friendlyEl.textContent = `${argText} -> ${resText}`;
+            eoplEl.textContent = `(proc-type ${argEopl} ${resEopl})`;
+            
+            let desc = '';
+            const isArgProc = arg.includes('to');
+            const isResProc = res.includes('to');
+            
+            if (!isArgProc && !isResProc) {
+                desc = `פונקציה בסיסית מטיפוס פשוט. היא מקבלת ערך בסיסי מטיפוס <strong>${arg}</strong> ומחזירה ערך מטיפוס <strong>${res}</strong>.`;
+            } else if (isArgProc && !isResProc) {
+                desc = `פונקציה מסדר גבוה (High-order function). היא <strong>מקבלת פונקציה כקלט</strong> (פונקציה מסוג ${argText}) ומחזירה ערך בסיסי מסוג <strong>${resText}</strong>. למשל: פונקציית אינטגרל שמקבלת פונקציה מתמטית ומחזירה מספר.`;
+            } else if (!isArgProc && isResProc) {
+                desc = `פונקציה המבצעת קארינג (Currying). היא מקבלת ערך בסיסי מסוג <strong>${argText}</strong> ו<strong>מחזירה פונקציה חדשה</strong> (מטיפוס ${resText}). למשל: פונקציה המקבלת מזהה של עובד ומחזירה פונקציית שאילתה מתאימה.`;
+            } else {
+                desc = `פונקציה מסדר גבוה מורכבת במיוחד. היא גם <strong>מקבלת פונקציה כקלט</strong> וגם <strong>מחזירה פונקציה כפלט</strong>. למשל: פונקציה שמבצעת הרכבת פונקציות (Composition).`;
+            }
+            descEl.innerHTML = desc;
+        }
+    </script>
+    <script>
+        // Sidebar toggle and Navigation Button Injection Logic
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-collapsed');
+            const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+            updateToggleBtnIcon(isCollapsed);
+        }
+
+        function updateToggleBtnIcon(isCollapsed) {
+            const icon = document.getElementById('sidebar-toggle-icon');
+            if (!icon) return;
+            if (isCollapsed) {
+                // Show << (chevron left to open/expand in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />';
+            } else {
+                // Show >> (chevron right to close/collapse in RTL)
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Create and inject sidebar toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.id = 'sidebar-toggle-btn';
+            toggleBtn.className = 'fixed top-6 p-2 rounded-lg bg-white/80 backdrop-blur-md hover:bg-white text-slate-600 hover:text-slate-900 border border-slate-200 shadow-md z-30 flex items-center justify-center w-10 h-10 transition-all duration-300 active:scale-95 cursor-pointer';
+            toggleBtn.title = 'הצג/הסתר תפריט ניווט';
+            toggleBtn.onclick = toggleSidebar;
+            toggleBtn.innerHTML = '<svg id="sidebar-toggle-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"></svg>';
+            document.body.appendChild(toggleBtn);
+
+            // 2. Load sidebar collapsed state from localStorage
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                document.body.classList.add('sidebar-collapsed');
+            }
+            updateToggleBtnIcon(isCollapsed);
+
+            // Initialize Unification Solver
+            resetUnification();
+            resetPipeSim();
+            buildType();
+
+            // 3. Inject navigation buttons at the bottom of each tab
+            const tabs = [];
+            const seenIds = new Set();
+            document.querySelectorAll('.tab-content').forEach(el => {
+                const id = el.id;
+                if (id && !seenIds.has(id)) {
+                    seenIds.add(id);
+                    tabs.push(el);
+                }
+            });
+
+            tabs.forEach((tab, index) => {
+                const navContainer = document.createElement('div');
+                navContainer.className = 'flex justify-between items-center mt-12 pt-6 border-t border-slate-200';
+
+                // Previous Button (on the right)
+                if (index > 0) {
+                    const prevTabId = tabs[index - 1].id;
+                    const prevBtn = document.createElement('button');
+                    prevBtn.onclick = () => showTab(prevTabId);
+                    prevBtn.className = 'nav-btn-prev flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    prevBtn.innerHTML = `
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span>הקודם</span>
+                    `;
+                    navContainer.appendChild(prevBtn);
+                } else {
+                    // Placeholder to keep spacing alignment
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                // Next Button (on the left)
+                if (index < tabs.length - 1) {
+                    const nextTabId = tabs[index + 1].id;
+                    const nextBtn = document.createElement('button');
+                    nextBtn.onclick = () => showTab(nextTabId);
+                    nextBtn.className = 'nav-btn-next flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98] transition-all duration-200 shadow-sm text-sm cursor-pointer';
+                    nextBtn.innerHTML = `
+                        <span>הבא</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    `;
+                    navContainer.appendChild(nextBtn);
+                } else {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'w-10 invisible';
+                    navContainer.appendChild(placeholder);
+                }
+
+                tab.appendChild(navContainer);
+            });
+        });
     </script>
 </body>
 </html>
