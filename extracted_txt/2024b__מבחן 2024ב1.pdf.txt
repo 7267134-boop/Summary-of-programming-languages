@@ -1,0 +1,188 @@
+=== PAGE 1 ===
+525 NU 
+(9mp) 35) 1 n5NU 
+3 pr9i Tn 90 MNINNN (PROC nov) ma naU 5u aMTUI Npy nNV n>NVN .NIDp) NS 1791N9 5y nby nman nvND noU .81-74 D)DyI 
+DTPID ST2 T N) RUST MTnn noVI D»p noa enum Dy ntay my yDN) T DUS 
+.1)NNna5 niy 5y N NIN enum MTA 
+enum TINI NOVn TNN5 oNNn5 ¬vNOn ) VTn enum 1tNpn 10 ,n9W 
+Expression := enum { {Identifier }*} 
+enum-exp (ids) 
+Expression ::= < Expression. Identifier > 
+enum-elmt-exp (enm id) 
+Expression := match [ Identifier :: Expression ] { identifier -> Expression ; }* 
+match-exp (enmid exp1 enmids exps) 
+21D0 Nn 1NNYNy 12 NN enm .id DV) enm I0 )) enum-elmt-exp )0 
+290 N enm-V npi.enm-i byn ThN NN AY)) NU DV NIN id-) .enum 
+1PPn 5ny nipp1.n0N) DNNV DOTN) enum 1NND pbn N id-y N enum 
+2 
+ulu of 
+84.48.1 M2 
+
+=== PAGE 2 ===
+1, b . .. 
+enum y NS nt DN.] DTp TADy enum 1y))n nnto DV NINV enmid .enmid ny )912n enum-n Nyp TNN 5V nO DV 1NNYNy 0-expl 
+NTI5 .enmid y )9)pn enum -n5y DVN DNyn T5vnnyn enmids 
+1275v 191D1¬tn NOVND.enmids-Tyb) TNN,D01 NOVn-exps .expl 5 1yS nmen enmids-Ts5 DNNDn 1an 5w 1y 
+in 
+: enum Dy nTyb DUTNN Dyn 5 NANNnn1 wipUn nUn NOAT 19D 
+> (run "let Colors = enum { Red, Green, Blue) 
+let c= <Colors.Green> in 
+-
+match [Colors::c] 
+") (num-val 100) 
+DN match )2 
+?Red 2Green => 100: ?Blue => 1000: 
+=> 10; 
+3 
+1TA1 9 NNS Red Green Blue DyiYn NN AY0N Colors DVI enum 172) 1 DNTA .Green t nNpp enum-NYN TNN NN TIyD 5pn c nNUn .100 ¬tn Green 5y nnppb DNN NINN NNO) c 5y match )U1 yY)n,) NNNS 
+num-al 
+
+=== PAGE 3 ===
+525 |7Nw 
+84.48.1 M2 
+(enum-val (4n ehum!) (ident:tior-ul (it striny?.) 
+in 
+") 
+> (run "let Colors = enum { Red, Green, Blue) 
+in 
+> (run "let Colors = enum { Red, Green, Blue) 
+in 
+c") (identifier-val 'Green) 
+let c= <Colors.Green> 
+?Red 
+in 
+match (Colors: :c] 
+let c= <Colors.Green> 
+in 
+det in nym? 
+2Green => 100: 
+co cese for eech unti ll hyll 
+in 
+10: 
+c") 
+3 in terp. scm: 108: 39: match-exp: mat ch cases is not correspond to enum Colors cases 
+> (run "let Colors = enum { Red, Green, Blue} 
+let C= <i.Green> 
+:2 9211 
+nNND NNNU NDSTN , y) Blue T1 np1a non match 
+interp.scn: 93:32: enum-elmt-exp: not an enum 
+:3 1921T 
+4 
+n20 Dpn DNVpn TNN NiN ,9D 9D NIN) enum 2y NV i - Green 
+
+=== PAGE 4 ===
+525 I7NU 
+84.48.1 M2 
+> (run "let Colors = enum { Red, Green, Blue) in 
+>| 
+let c= <Colors.Yellow> 
+in 
+in 
+3 S interp. scm:9l: 42: enum-elmt-exp: Yellow not found >| 
+> (run "let Colors = enum { } 
+c") 
+nbapnn p 5y) (Yellow) 1a 199 NSv Ty Colors - n5 0) yV MN5 npNTI 
+in let c= <Colors. Red> 
+c") 
+(run "let Foods = enum (Banana, Humus, Hamburger) 
+interp. scm: 80: 22: enum-exp: empty identifier list in enum definition 
+in let Calories= proc (x) 
+in 
+(num-val 170) 
+match [Foods: :x] ?Banana => 90: 2Humus => 170: ?Hamburger => 300; 
+:5 12211I 
+(Calories <Foods.Humus>) ") 
+:6 12211 
+by noy) (DMn) Humus 5N NN AYpn 100N9n Dy Calories .nN1TSn9n y2ViNy 
+5 
+:7 19211 
+nbppn Calories DV nTS)N9 NTAND ),D1V DNO AYDn enum TA)0 ,1t niTI 
+N NN DD5) ( enum Foods - 5y DNDN NOUN) 
+3-7-4 
+bT Nn Ay5 NNU N0nN9 
+.19 noNNpn bpn 17Y1N9n Ny)0 91D 170 Nn DIn 5T 
+
+=== PAGE 5 ===
+(n5NU 
+6 
+identifier pa5 (expval) 
+((*N {))i20 5bv niby terminals, non-terminals -)12) 51901 
+
+=== PAGE 6 ===
+(np) 35) 2 n5NU .(IMPLICIT-REFS)"" no nMNIDO 113-120 OTY1Mn 90 
+Expression := for/proc ( identifier ; 
+Expression 
+[{ identifier }') ]: [{ Expression }') 1) {< Guard} 
+forproc-exp (Id Ids Bodies Guards Body) 
+Guard ::= skip: Expression skip-guard (exp) 
+Guard := break: Expression break-guard (exp) 
+7 
+
+=== PAGE 7 ===
+525 NU 
+84.48 1 M 
+.bodies MUN NIN Un 95 yip» nNy 5.break -skip :Guard 21 2 Dp.Guard a)Dn bnN 5U n NNGuards NINN NND Skip 21Dn Guard-i.)N511 n5 N DNYU,UIN I10 DND TNN .MNIN YN yn nNSb,nN nyNn 5y 2157 yY) ,nON Nn N)2n 
+92 .po9N NNn nbys,nON NIN NS)30 Nn UN,break n Guard -
+>| 
+:bNIN DONn forproc U5 Id nON MOWn) DONNNi D5U,Dnt NNOV 5V NUn -Bodies -) Ids 
+-1lds mpU DNVN n) NS NUND 1N ,break a1on Guard b»pnp,wNO MYV nNSSN .Bodies 
+> (run "let wl=100 in 
+in let w2=300 
+in 
+(num-val 6993) 
+num-val 27 5u ops TY NnS v p,n Tiy Px forproc-exp oaS 
+let w3=500 
+.YN DMNI YY DNSbn q2 DN Yap) Dn9 5y),0)n Guards .nYUN 521 yY15 V NNSI5n q2 Nn -Body 
+end") 
+begin for/proc (p: [a,b, ç, d] : [-(a, l) , -(b, 2) , -(c, 3) , -(d, 4) ]) <skip: zero? ((p 2))> <break: zero? ((p 12) ) > <skip: zero? ((p 200) ) > 
+if zero? ((p 1)) then set Wl = 7000 else if zero? ((p 3)) then set w2 = p else set w3= (p wl) 
+(w2 w3) 
+bodey 
+8 
+
+=== PAGE 8 ===
+nyNS ¬y) Y1N 5y 2)7 V,D»pNn Guard -) NNOb,2) yYIpn nNTYN9 
+.nnNna 100.300,500 Dy5 DbnNNON Wl,w2,w3 0NUD3 DNT)n, N2 IIYN9 4 N t nNS1ba.p Dwi nN15 nTNUD nbya for/proc nNbib nyyn. 0N 
+ThN 9N,c, 3) VYIDN niTYN ) c DVI NONn9 Dy nIT9no 19Dp,mubun nnynUNA 
+TNN QN,d,4) yyIn mTSN 
+.6996 Nnb w3 nNen 
+> (run "let wl=100 in 
+W2 -VmTN9n nbysn5 o (w2 w3) >10n yyan nnN),nnoD nNSN n abwa 6993 NIN NDINN 5bwny by.(n5 nayIpU NUHN9nn 3 nnonon) 1y 
+let w2=300 in let w3=500 in 
+(num-val 6700) 
+begin 
+end") 
+for/proc (p: [a, b, C, d] : [-(a, 1),-(b, 2) , -(c, 3), -(d, 4) )) < break: zero? ((p 2)) > 
+{ 
+< break: zero? ((p 12) ) > < skip: zero? ((p 200) ) > 
+12) d oU D0n9 Dy TS1N9 2yp p ,NYINN hNI 
+y NN PTynn ,nNb1n q yyan p,p»pno NS Guards-nn 
+if zero? ((p 1)) then set wl1 = 7000 else if zero? ((p 3) ) then set w2 = p else 
+.7000 
+set w3=(p wl) 
+-(wl, w2) 
+9 
+
+=== PAGE 9 ===
+525 INU 
+nNNDD NN1Tn ,jpi Dpnn Guard-n nUn nYNI,7000 -5 w1 5y 1y NN MNU .6700 NNi 1YU-(w1,w2) 102n yy)an nNS15n bponN5,(break guard nti nND) 
+.ID) 2)90 TIp 5y),12 aNT 5y T9Pn (1 
+D)DN NppI DN1D NNN5y 1T9P (2 
+identifier 25 (expval) 
+({}+ 1N{)i 5u 5y91 terminals, non-terminals ]12) 519) 
+10 
+(S 
+
+=== PAGE 10 ===
+let p = proc (a) -(a, -(0,a) ) in let a=9 in 
+if/let a= 6 
+then ax else (p á) 
+(n1Mp) 30) 3 n5Nw 
+-(6, -(0, G)) 
+11 
+in zero? (-( (p a), a) ) 
+d4d 
+: NN NIDIN SV nyNNNNYIN 
+(num-val 12) (N (num-val 18) ( 
+(num-val 6) (mum-val 9) (T ( 
+( 
