@@ -321,59 +321,7 @@ unified_setup_script = """
             }
         });
 
-        // 6. Inject navigation buttons at the bottom of each section to scroll to adjacent sections
-        tabs.forEach((tab, index) => {
-            const navContainer = document.createElement('div');
-            navContainer.className = 'flex justify-between items-center mt-12 pt-6 border-t border-slate-200';
-
-            // Previous Button (on the right)
-            if (index > 0) {
-                const prevTabId = tabs[index - 1].id;
-                const prevBtn = document.createElement('button');
-                prevBtn.onclick = () => showTab(prevTabId);
-                prevBtn.className = 'nav-btn-prev flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all duration-200 shadow-sm text-sm cursor-pointer';
-                prevBtn.innerHTML = `
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                    <span>הקודם</span>
-                `;
-                navContainer.appendChild(prevBtn);
-            } else {
-                const placeholder = document.createElement('div');
-                placeholder.className = 'w-10 invisible';
-                navContainer.appendChild(placeholder);
-            }
-
-            // Next Button (on the left)
-            if (index < tabs.length - 1) {
-                const nextTabId = tabs[index + 1].id;
-                const nextBtn = document.createElement('button');
-                nextBtn.onclick = () => showTab(nextTabId);
-                nextBtn.className = 'nav-btn-next flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98] transition-all duration-200 shadow-sm text-sm cursor-pointer';
-                nextBtn.innerHTML = `
-                    <span>הבא</span>
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                `;
-                navContainer.appendChild(nextBtn);
-            } else {
-                // For the last chapter of Volume 4, we can add a link back to index.html
-                const backBtn = document.createElement('a');
-                backBtn.href = 'index.html';
-                backBtn.className = 'nav-btn-next flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-500/20 active:scale-[0.98] transition-all duration-200 shadow-sm text-sm cursor-pointer';
-                backBtn.innerHTML = `
-                    <span>חזרה לדף הבית</span>
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 12l9-9m-9 9l9 9" />
-                    </svg>
-                `;
-                navContainer.appendChild(backBtn);
-            }
-
-            tab.appendChild(navContainer);
-        });
+        // 6. Navigation buttons removed as requested
     });
 """
 
