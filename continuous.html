@@ -495,7 +495,49 @@ body { background-color: #f8fafc; }
                 </svg>
             </button>
             <div id="volume-1-content" class="volume-content hidden bg-slate-950/20 p-3 max-h-[400px] overflow-y-auto border-t border-slate-850">
-                  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>
+                  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 1: שפת האם (Scheme)</div>
+  <button onclick="showTab('racket-philosophy')" id="btn-racket-philosophy" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🤔 1.1 למה Scheme? ותחביר בסיסי</span>
+  </button>
+  <button onclick="showTab('racket-bindings')" id="btn-racket-bindings" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🔗 1.2 משתנים: define, let, letrec</span>
+  </button>
+  <button onclick="showTab('racket-control')" id="btn-racket-control" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🔀 1.3 זרימת בקרה: if ו-cond</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 2: מבני נתונים מתקדמים</div>
+  <button onclick="showTab('racket-lists')" id="btn-racket-lists" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📚 2.1 רשימות, זוגות (Cons) ורקורסיה</span>
+  </button>
+  <button onclick="showTab('eopl-datatypes')" id="btn-eopl-datatypes" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📦 2.2 הכלים של EOPL: define-datatype</span>
+  </button>
+  <button onclick="showTab('eopl-cases')" id="btn-eopl-cases" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🔍 2.3 פירוק נתונים: פקודת cases</span>
+  </button>
+  <button onclick="showTab('scheme-advanced')" id="btn-scheme-advanced" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>⚡ 2.4 מתקדם: S.O.F (foldr, filter)</span>
+  </button>
+  <button onclick="showTab('scheme-recursion')" id="btn-scheme-recursion" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🧠 2.5 רקורסיות מורכבות ו-Powerset</span>
+  </button>
+  <button onclick="showTab('maman12-poly')" id="btn-maman12-poly" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📦 2.6 ממן 12: ADT פולינומים (define-datatype)</span>
+  </button>
+  <button onclick="showTab('maman12-poly-spec')" id="btn-maman12-poly-spec" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📦 2.7 ממן 12: ADT פולינומים (ספציפיקציה ומימוש)</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 3: מנתח תחבירי (SLLGen)</div>
+  <button onclick="showTab('sllgen-lexer')" id="btn-sllgen-lexer" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>✂️ 3.1 הלקסר (Lexical Specification)</span>
+  </button>
+  <button onclick="showTab('sllgen-parser')" id="btn-sllgen-parser" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🌳 3.2 הפרסר ובניית עץ ה-AST</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 4: ניהול זיכרון בסיסי</div>
+  <button onclick="showTab('environments')" id="btn-environments" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🌍 4.1 סביבות (Environments)</span>
+  </button>
+  <button onclick="showTab('maman12-env')" id="btn-maman12-env" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🌍 4.2 ממן 12: ייצוג פרוצדורלי של סביבות</span>
+  </button>
             </div>
         </div>
         
@@ -508,7 +550,55 @@ body { background-color: #f8fafc; }
                 </svg>
             </button>
             <div id="volume-2-content" class="volume-content hidden bg-slate-950/20 p-3 max-h-[400px] overflow-y-auto border-t border-slate-850">
-                  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>
+                  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 1: שפת LET וארכיטקטורה</div>
+  <button onclick="showTab('let-files')" id="btn-let-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 1.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('let-intro')" id="btn-let-intro" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📄 1.2 מבוא, דקדוק וערכים (ExpVal)</span>
+  </button>
+  <button onclick="showTab('let-interpreter')" id="btn-let-interpreter" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>⚙️ 1.3 המפרש ו-Multi-Let</span>
+  </button>
+  <button onclick="showTab('let-maman')" id="btn-let-maman" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📝 1.4 ממן: המרות טיפוסים ולולאת do</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 2: שפת PROC</div>
+  <button onclick="showTab('proc-files')" id="btn-proc-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 2.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('proc-intro')" id="btn-proc-intro" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📦 2.2 פונקציות כאזרחים מסוג ראשון</span>
+  </button>
+  <button onclick="showTab('proc-closure')" id="btn-proc-closure" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🧠 2.3 קלוז'ר וסקופ לקסיקלי מול דינמי</span>
+  </button>
+  <button onclick="showTab('proc-interpreter')" id="btn-proc-interpreter" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🚀 2.4 מנוע ההפעלה: apply-procedure</span>
+  </button>
+  <button onclick="showTab('proc-maman')" id="btn-proc-maman" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📝 2.5 ממן: סביבה דינמית, קארינג ורפלקציה</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 3: שפת LETREC</div>
+  <button onclick="showTab('letrec-files')" id="btn-letrec-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 3.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('letrec-problem')" id="btn-letrec-problem" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>❓ 3.2 פרדוקס הרקורסיה (הביצה והתרנגולת)</span>
+  </button>
+  <button onclick="showTab('letrec-solution')" id="btn-letrec-solution" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🔁 3.3 סביבות מעגליות ורקורסיה הדדית</span>
+  </button>
+  <button onclick="showTab('letrec-jit')" id="btn-letrec-jit" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>✨ 3.4 הקסם: יצירה בזמן אמת (JIT)</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 4: כתובות לקסיקליות</div>
+  <button onclick="showTab('lexaddr-files')" id="btn-lexaddr-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 4.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('lexaddr-intro')" id="btn-lexaddr-intro" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🗺️ 4.2 שפת LEXADDR ומערכת התרגום</span>
+  </button>
+  <button onclick="showTab('lexaddr-interp')" id="btn-lexaddr-interp" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>⚡ 4.3 המפרש נטול השמות (Nameless)</span>
+  </button>
             </div>
         </div>
         
@@ -521,7 +611,49 @@ body { background-color: #f8fafc; }
                 </svg>
             </button>
             <div id="volume-3-content" class="volume-content hidden bg-slate-950/20 p-3 max-h-[400px] overflow-y-auto border-t border-slate-850">
-                  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>
+                  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 1: ניהול ידני (EXPLICIT)</div>
+  <button onclick="showTab('explicit-files')" id="btn-explicit-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 1.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('explicit-concept')" id="btn-explicit-concept" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>💾 1.2 ניהול ידני (Pointers)</span>
+  </button>
+  <button onclick="showTab('explicit-interp')" id="btn-explicit-interp" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>⚙️ 1.3 המפרש: newref, deref, setref</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 2: שפת IMPLICIT-REFS</div>
+  <button onclick="showTab('implicit-files')" id="btn-implicit-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 2.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('implicit-concept')" id="btn-implicit-concept" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>✨ 2.2 ניהול אוטומטי (המודל המודרני)</span>
+  </button>
+  <button onclick="showTab('implicit-interp')" id="btn-implicit-interp" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🚀 2.3 המפרש: הקצאה ושליפה סמויה</span>
+  </button>
+  <button onclick="showTab('implicit-maman')" id="btn-implicit-maman" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📝 2.4 ממן: העמסת פרוצדורות (Overloading)</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 3: שפת MUTABLE-PAIRS</div>
+  <button onclick="showTab('mutable-files')" id="btn-mutable-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 3.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('mutable-concept')" id="btn-mutable-concept" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>⛓️ 3.2 מבנה זוגות משתנים</span>
+  </button>
+  <button onclick="showTab('mutable-interp')" id="btn-mutable-interp" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>⚙️ 3.3 המפרש: שני מימושים שונים</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">חלק 4: העברת פרמטרים</div>
+  <button onclick="showTab('param-files')" id="btn-param-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 4.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('param-cbv')" id="btn-param-cbv" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📥 4.2 Call by Value (לפי ערך)</span>
+  </button>
+  <button onclick="showTab('param-cbr')" id="btn-param-cbr" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🔗 4.3 Call by Reference (לפי הפניה)</span>
+  </button>
+  <button onclick="showTab('param-lazy')" id="btn-param-lazy" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>😴 4.4 Call by Name / Need (עצלנות)</span>
+  </button>
             </div>
         </div>
         
@@ -534,7 +666,43 @@ body { background-color: #f8fafc; }
                 </svg>
             </button>
             <div id="volume-4-content" class="volume-content hidden bg-slate-950/20 p-3 max-h-[400px] overflow-y-auto border-t border-slate-850">
-                  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs"></div>
+                  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">מבוא למערכות טיפוסים</div>
+  <button onclick="showTab('intro-types')" id="btn-intro-types" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🛡️ למה צריך טיפוסים (Types)?</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">שפת CHECKED</div>
+  <button onclick="showTab('checked-files')" id="btn-checked-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 1.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('lang-checked')" id="btn-lang-checked" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>✔️ 1.2 שפת CHECKED (בדיקה סטטית)</span>
+  </button>
+  <button onclick="showTab('type-of-func')" id="btn-type-of-func" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>⚙️ 1.3 מנוע הבדיקה: type-of</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">שפת INFERRED</div>
+  <button onclick="showTab('inferred-files')" id="btn-inferred-files" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🏗️ 2.1 הקבצים שיוצרים אותה</span>
+  </button>
+  <button onclick="showTab('lang-inferred')" id="btn-lang-inferred" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>✨ 2.2 שפת INFERRED (הסקה אוטומטית)</span>
+  </button>  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">אלגוריתם הסקת טיפוסים</div>
+  <button onclick="showTab('algo-equations')" id="btn-algo-equations" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📝 3.1 יצירת המשוואות (Constraints)</span>
+  </button>
+  <button onclick="showTab('algo-unification')" id="btn-algo-unification" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🧩 3.2 פתרון משוואות (Unification)</span>
+  </button>
+  <button onclick="showTab('algo-examples')" id="btn-algo-examples" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>💡 3.3 דוגמאות הפעלה צעד-אחר-צעד</span>
+  </button>
+  <button onclick="showTab('algo-errors')" id="btn-algo-errors" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>⚠️ 3.4 מקרי קצה ושגיאות טיפוס</span>
+  </button>
+  <button onclick="showTab('algo-comprehensive')" id="btn-algo-comprehensive" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>🎓 3.5 דוגמה מסכמת מורכבת</span>
+  </button>
+  <button onclick="showTab('algo-maman')" id="btn-algo-maman" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">
+    <span>📝 3.6 פתרון מטלת סיכום (ממ"ן)</span>
+  </button>
             </div>
         </div>
         

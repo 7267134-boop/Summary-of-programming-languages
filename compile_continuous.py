@@ -83,8 +83,8 @@ for idx, fname in enumerate(files):
     aside_m = re.search(r'<aside[^>]*>(.*?)</aside>', html_content, re.DOTALL)
     if aside_m:
         aside_html = aside_m.group(1)
-        # Find all nav-groups inside this aside
-        nav_groups = re.findall(r'<div class="nav-group">(.*?)</div>', aside_html, re.DOTALL)
+        # Split by nav-group
+        nav_groups = aside_html.split('<div class="nav-group">')[1:]
         
         accordion_content = []
         for ng in nav_groups:
@@ -92,13 +92,15 @@ for idx, fname in enumerate(files):
             title = title_m.group(1).strip() if title_m else ""
             title_clean = re.sub(r'<[^>]+>', '', title).strip()
             
-            buttons = re.findall(r'<button[^>]*onclick="showTab\(\'([^\'\"]+)\'\)"[^>]* id="([^"]+)"[^>]*>(.*?)</button>', ng, re.DOTALL)
+            buttons = re.findall(r'<button[^>]*onclick="showTab\(\'([^\'\"]+)\'\)"[^>]*>(.*?)</button>', ng, re.DOTALL)
             
+            if not buttons:
+                continue
+                
             group_html = []
             group_html.append(f'  <div class="nav-group-title mt-3 text-slate-500 font-bold border-b border-slate-800/40 pb-1 mb-2 text-xs">{title_clean}</div>')
             for b in buttons:
-                b_id = b[1]
-                b_text = re.sub(r'<[^>]+>', '', b[2]).strip().replace("\n", " ")
+                b_text = re.sub(r'<[^>]+>', '', b[1]).strip().replace("\n", " ")
                 # Replace the ID in compiled sidebar to avoid collisions, but trigger showTab
                 # We can add an indicator class or custom id for the sidebar button
                 group_html.append(f'  <button onclick="showTab(\'{b[0]}\')" id="btn-{b[0]}" class="nav-btn text-right w-full text-sm py-2 px-3 hover:bg-slate-800/50 hover:text-white rounded-md transition-all text-slate-400 mb-1 flex items-center gap-2">')
