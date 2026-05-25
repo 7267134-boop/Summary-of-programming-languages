@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Interpreters - כרך א': יסודות וכלים</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        body {
+            background-color: #f8fafc;
+        }
+
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        pre {
+            direction: ltr;
+            text-align: left;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        code {
+            font-family: 'Consolas', monospace;
+        }
+
+        .token-comment {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .token-keyword {
+            color: #c678dd;
+            font-weight: bold;
+        }
+
+        .token-function {
+            color: #61afef;
+        }
+
+        .token-string {
+            color: #98c379;
+        }
+
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        .thought-box {
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .tip-box {
+            background: #fffbeb;
+            border-right: 4px solid #f59e0b;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .grammar-box {
+            background: #eff6ff;
+            border-right: 4px solid #3b82f6;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Consolas', monospace;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .concept-box {
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .deep-dive {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-right: 4px solid #64748b;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .dark-scroll::-webkit-scrollbar-track {
+            background: #020617;
+        }
+
+        .dark-scroll::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside
+        class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-3xl font-black text-white tracking-tight leading-tight">Mastering<br><span
+                    class="text-blue-500">Foundations</span></h1>
+            <p class="text-xs text-slate-400 mt-2">כרך א': יסודות קורס שפות תכנות</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+
+            <div class="nav-group">
+                <div class="nav-group-title">חלק 1: שפת האם (Racket)</div>
+                <button onclick="showTab('racket-philosophy')" id="btn-racket-philosophy" class="nav-btn active-nav">
+                    <span>🤔 1.1 למה Racket? ותחביר בסיסי</span>
+                </button>
+                <button onclick="showTab('racket-bindings')" id="btn-racket-bindings" class="nav-btn">
+                    <span>🔗 1.2 משתנים: define, let, letrec</span>
+                </button>
+                <button onclick="showTab('racket-control')" id="btn-racket-control" class="nav-btn">
+                    <span>🔀 1.3 זרימת בקרה: if ו-cond</span>
+                </button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">חלק 2: מבני נתונים מתקדמים</div>
+                <button onclick="showTab('racket-lists')" id="btn-racket-lists" class="nav-btn">
+                    <span>📚 2.1 רשימות, זוגות (Cons) ורקורסיה</span>
+                </button>
+                <button onclick="showTab('eopl-datatypes')" id="btn-eopl-datatypes" class="nav-btn">
+                    <span>📦 2.2 הכלים של EOPL: define-datatype</span>
+                </button>
+                <button onclick="showTab('eopl-cases')" id="btn-eopl-cases" class="nav-btn">
+                    <span>🔍 2.3 פירוק נתונים: פקודת cases</span>
+                </button>
+                <button onclick="showTab('scheme-advanced')" id="btn-scheme-advanced" class="nav-btn">
+                    <span>⚡ 2.4 מתקדם: S.O.F (foldr, filter)</span>
+                </button>
+                <button onclick="showTab('scheme-recursion')" id="btn-scheme-recursion" class="nav-btn">
+                    <span>🧠 2.5 רקורסיות מורכבות ו-Powerset</span>
+                </button>
+                <button onclick="showTab('maman12-poly')" id="btn-maman12-poly" class="nav-btn">
+                    <span>📦 2.6 ממן 12: ADT פולינומים (define-datatype)</span>
+                </button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">חלק 3: מנתח תחבירי (SLLGen)</div>
+                <button onclick="showTab('sllgen-lexer')" id="btn-sllgen-lexer" class="nav-btn">
+                    <span>✂️ 3.1 הלקסר (Lexical Specification)</span>
+                </button>
+                <button onclick="showTab('sllgen-parser')" id="btn-sllgen-parser" class="nav-btn">
+                    <span>🌳 3.2 הפרסר ובניית עץ ה-AST</span>
+                </button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">חלק 4: ניהול זיכרון בסיסי</div>
+                <button onclick="showTab('environments')" id="btn-environments" class="nav-btn">
+                    <span>🌍 4.1 סביבות (Environments)</span>
+                </button>
+                <button onclick="showTab('maman12-env')" id="btn-maman12-env" class="nav-btn">
+                    <span>🌍 4.2 ממן 12: ייצוג פרוצדורלי של סביבות</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-white relative">
+        <div class="max-w-5xl mx-auto p-10 lg:p-16 pb-32">
+
+            <!-- ==========================================
+                 PART 1.1: RACKET PHILOSOPHY
+            =========================================== -->
+            <div id="racket-philosophy" class="tab-content active">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-racket text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 1.1</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">למה <span
+                            class="text-racket">Racket?</span> ותחביר בסיסי</h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">לפני שמתחילים לבנות מפרשים, עלינו להבין את "שפת
+                        האם" שבה הקורס מועבר: Racket (ניב מודרני של Scheme ממשפחת LISP). הבחירה בשפה זו אינה מקרית.
+                        הארכיטקטורה של LISP מתאימה באופן מושלם לעיבוד קוד של שפות אחרות.</p>
+                </header>
+
+                <div class="concept-box">
+                    <h3 class="text-2xl font-bold mb-4 text-green-800">הפילוסופיה: הכל הוא ביטוי (Everything is an
+                        Expression)</h3>
+                    <p class="mb-4 text-slate-700">בשפות כמו Java או C, יש הבדל ברור בין <strong>פקודה
+                            (Statement)</strong> שלא מחזירה כלום (כמו <code>if (x>0) {y=1;}</code>), לבין <strong>ביטוי
+                            (Expression)</strong> שמחזיר ערך (כמו <code>x + 1</code>). </p>
+                    <p class="mb-4 text-slate-700 font-bold">ב-Racket ההפרדה הזו אינה קיימת! הכל מחזיר ערך. אין דבר כזה
+                        שורת קוד שלא מחושבת למשהו. אם כתבת <code>if</code>, הוא חייב להחזיר ערך. זהו עיקרון קריטי בעולם
+                        השפות הפונקציונליות וזה מה שמאפשר לפונקציית ה-<code>value-of</code> שלנו להחזיר תמיד
+                        <code>expval</code>.</p>
+                </div>
+
+                <div class="deep-dive mb-10">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">תחביר תחילי מבוסס סוגריים (Prefix
+                        Notation)</h3>
+                    <p class="text-sm text-slate-700 mb-4">ב-Racket, פקודה תמיד נפתחת בסוגריים עגולים. המילה הראשונה מיד
+                        לאחר הסוגר השמאלי היא <strong>הפונקציה או האופרטור</strong>, ושאר המילים המופרדות ברווחים הם
+                        <strong>הארגומנטים</strong>. אין משמעות לרווחים נוספים או שורות חדשות.</p>
+                    <pre><code><span class="token-comment">; בשפות רגילות: 1 + 2</span>
+<span class="token-comment">; ב-Racket: "הפעל את הפונקציה + על 1 ו-2"</span>
+(+ 1 2) <span class="token-comment">; מחזיר 3</span>
+
+<span class="token-comment">; פעולות מורכבות מקוננות - מחשבים מבפנים החוצה:</span>
+<span class="token-comment">; מתמטיקה רגילה: (5 * 2) - (8 / 4)</span>
+(- (* 5 2) (/ 8 4)) <span class="token-comment">; מחזיר 8</span>
+
+<span class="token-comment">; גם קריאה לפונקציה מוגדרת-משתמש (למשל my-func) נראית זהה:</span>
+(my-func arg1 arg2)</code></pre>
+                    <p class="text-sm text-slate-600 mt-4"><strong>למה התחביר הזה מושלם למפרשים?</strong> מכיוון שהוא
+                        מונע דו-משמעות (Ambiguity). המחשב אף פעם לא צריך לתהות לגבי סדר פעולות חשבון (קדימות אופרטורים).
+                        הקוד עצמו כבר כתוב בצורה של עץ (AST)!</p>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 1.2: RACKET BINDINGS
+            =========================================== -->
+            <div id="racket-bindings" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-racket text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 1.2</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">משתנים ופונקציות: <span
+                            class="text-blue-600">define, let, letrec</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">שמירת מידע בזיכרון היא פעולה בסיסית. Racket מציעה
+                        מספר דרכים לקשור (Bind) ערכים למשתנים, בהתאם לטווח ההכרה (Scope) הנדרש.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">הגדרות גלובליות:
+                            <code>define</code></h3>
+                        <p class="text-sm text-slate-700 mb-4">משמש להגדרת משתנים שיהיו מוכרים בכל הקובץ. במקביל, המילה
+                            <code>lambda</code> מייצרת פונקציה אנונימית. שילוב של שניהם מייצר פונקציה רגילה.</p>
+                        <pre class="text-xs"><code><span class="token-comment">; הגדרת קבוע גלובלי</span>
+(define pi 3.14159)
+
+<span class="token-comment">; פונקציה אנונימית המקבלת x ומחזירה x+1</span>
+(lambda (x) (+ x 1))
+
+<span class="token-comment">; קשירת הפונקציה האנונימית לשם</span>
+(define add-one
+  (lambda (x)
+    (+ x 1)))
+
+<span class="token-comment">; הפעלת הפונקציה</span>
+(add-one 5) <span class="token-comment">; -> 6</span></code></pre>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">משתנים מקומיים: <code>let</code>
+                        </h3>
+                        <p class="text-sm text-slate-700 mb-4">יוצר משתנים שחיים רק בתוך הבלוק הספציפי.
+                            <strong>חשוב:</strong> המשתנים המוגדרים ב-let אינם מכירים זה את זה בזמן ההגדרה, ולא יכולים
+                            לקרוא לעצמם.</p>
+                        <pre class="text-xs"><code><span class="token-comment">; מבנה: (let ((var1 val1) (var2 val2)) body)</span>
+(define calc-area
+  (lambda (width)
+    (let ((length 10)
+          (height 5))
+      <span class="token-comment">; רק כאן length ו-height מוכרים</span>
+      (* width length height))))
+
+(calc-area 2) <span class="token-comment">; -> 100</span></code></pre>
+                    </div>
+                </div>
+
+                <div class="thought-box">
+                    <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">הבעיה עם פונקציות מקומיות: הכירו את
+                        <code>letrec</code></h3>
+                    <p class="mb-4 text-slate-700">מה קורה אם אנחנו רוצים לכתוב פונקציה רקורסיבית (למשל עצרת -
+                        Factorial) <strong>כמשתנה מקומי</strong> בתוך פונקציה אחרת? אם נשתמש ב-<code>let</code>,
+                        הפונקציה לא תכיר את השם של עצמה כשתנסה לקרוא לעצמה!</p>
+                    <p class="mb-4 text-slate-700">לשם כך נועד ה-<code>letrec</code> (Let Recursive). הוא פועל בדיוק כמו
+                        let, אך הוא "מכריז" על כל השמות מראש, כך שהמשתנים יכולים לפנות לעצמם ולמשתנים האחרים המוגדרים
+                        לצידם. אנו נשתמש בו המון כדי לכתוב פונקציות <code>loop</code> מקומיות לטיפול ברשימות במבחנים.
+                    </p>
+                    <pre><code><span class="token-comment">; דוגמה קלאסית: לולאה רקורסיבית מקומית (מופיעה כמעט בכל פתרון מבחן)</span>
+(define count-down
+  (lambda (start)
+    (letrec ((loop 
+               (lambda (n)
+                 (if (= n 0)
+                     "Done!"
+                     <span class="token-comment">; בזכות letrec, ה-loop מכיר את עצמו!</span>
+                     (loop (- n 1))))))
+      (loop start)))) <span class="token-comment">; התנעה ראשונית של הלולאה</span></code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 1.3: RACKET CONTROL FLOW
+            =========================================== -->
+            <div id="racket-control" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-racket text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 1.3</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">זרימת בקרה: <span
+                            class="text-blue-600">if ו-cond</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">ב-Racket לוגיקה תנאית חייבת להיות ביטוי שמחזיר
+                        ערך. נסקור את שני המבנים העיקריים לשליטה בזרימת התוכנית: התנאי הבסיסי, ותנאי מרובה אפשרויות
+                        שיהיה "סוס העבודה" שלנו במפרש.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="concept-box border-l-4 border-l-blue-500 !my-0">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-800">התנאי הבסיסי: <code>if</code></h3>
+                        <p class="mb-4 text-slate-700">מבנה ה-if ב-Racket הוא פשוט וקשיח: הוא חייב לכלול תנאי, ביטוי
+                            לאמת, <strong>וביטוי לשקר</strong>. אי אפשר לכתוב if ללא else!</p>
+                        <p class="font-mono text-sm text-slate-800 bg-white p-2 rounded mb-4">(if condition-expr
+                            true-expr false-expr)</p>
+                        <pre class="text-xs"><code>(define get-absolute-value
+  (lambda (n)
+    (if (< n 0)
+        (* n -1)  <span class="token-comment">; מבוצע אם אמת</span>
+        n)))      <span class="token-comment">; מבוצע אם שקר (else)</span>
+
+<span class="token-comment">; שים לב: הערכים הבוליאניים בסקים הם #t (אמת) ו-#f (שקר)</span>
+(if #t "Yes" "No") <span class="token-comment">; -> "Yes"</span></code></pre>
+                    </div>
+
+                    <div class="concept-box border-l-4 border-l-purple-500 !my-0">
+                        <h3 class="text-2xl font-bold mb-4 text-purple-800">תנאים מרובים: <code>cond</code></h3>
+                        <p class="mb-4 text-slate-700">כאשר יש לנו סדרה של תנאים (כמו if-else-if-else בשפות אחרות או
+                            switch-case), נשתמש במבנה <code>cond</code>. המפרש שלנו ישתמש ב-cond המון (למשל בפונקציות
+                            החיפוש).</p>
+                        <pre class="text-xs"><code>(define analyze-number
+  (lambda (n)
+    (cond
+      <span class="token-comment">; [תנאי] [מה להחזיר אם התנאי מתקיים]</span>
+      ((> n 0) "Positive")
+      ((< n 0) "Negative")
+      ((= n 0) "Zero")
+      <span class="token-comment">; בלוק else אופציונלי שיתפוס כל מקרה אחר</span>
+      (else "Not a number"))))</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 טריק למבחן: ביצוע מספר פעולות עם
+                        <code>begin</code></h4>
+                    <p class="text-slate-700 mb-2">אמרנו ש-if מקבל רק <strong>ביטוי אחד</strong> במקרה של אמת וביטוי אחד
+                        לשקר. מה עושים אם רוצים לבצע מספר פעולות (למשל: גם לשנות ערך בזיכרון וגם להחזיר מספר)?</p>
+                    <p class="text-slate-700">כאן נכנסת המילה <code>begin</code>. היא לוקחת רשימה של פקודות, מריצה אותן
+                        אחת אחרי השנייה, ומחזירה <strong>רק את התוצאה של הפקודה האחרונה</strong>. זהו כלי חובה כשעובדים
+                        עם השמות (Store) במבחן!</p>
+                    <pre><code>(if (> x 0)
+    (begin
+      (setref! my-ref 10) <span class="token-comment">; פעולה 1 (תופעת לוואי)</span>
+      (num-val 27))       <span class="token-comment">; פעולה 2 (הערך שיוחזר מה-if כולו)</span>
+    (num-val 0))</code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.1: LISTS & RECURSION
+            =========================================== -->
+            <div id="racket-lists" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 2.1</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4"><span
+                            class="text-blue-600">רשימות מקושרות</span> (Lists) ורקורסיה</h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">המבנה הנתונים השולט בשפת LISP (List Processing)
+                        הוא כמובן הרשימה. כשתקבלו שאלת מבחן שמבקשת ליישם Tuple, Array, או מבנה Foreach - אתם תעבדו עם
+                        רשימות. הבנת האופרטורים של הרשימה והתבנית הרקורסיבית היא קריטית.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-800">האטום של הרשימה: ה-<code>cons</code></h3>
+                        <p class="mb-4 text-slate-700">אין באמת "מערכים" רציפים ב-Scheme. כל רשימה מורכבת משרשור של
+                            זוגות (Cons cells). תארו לעצמכם קופסה עם שני תאים. התא הראשון נקרא <strong>car</strong>
+                            ומחזיק את הערך. התא השני נקרא <strong>cdr</strong> ומחזיק חץ (מצביע) לקופסה הבאה.</p>
+                        <ul class="list-disc list-inside space-y-2 mb-4 text-slate-700 font-mono">
+                            <li><strong>cons</strong> - הפונקציה שיוצרת את הזוג (הקופסה).</li>
+                            <li><strong>car</strong> - שולף את האיבר ה"נוכחי" מהקופסה.</li>
+                            <li><strong>cdr</strong> (מבוטא "קוּ-דֶר") - שולף את שארית הרשימה.</li>
+                            <li><strong>'() או null</strong> - מסמל את סוף השרשרת.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">דוגמאות לשימוש (הבנה מעשית)</h3>
+                        <pre class="text-xs"><code><span class="token-comment">; הרכבת רשימה בעזרת cons</span>
+(define my-list (cons 1 (cons 2 (cons 3 '()))))
+<span class="token-comment">; הדרך המקוצרת והשקולה לחלוטין:</span>
+(define my-list (list 1 2 3))
+
+<span class="token-comment">; חילוץ איברים:</span>
+(car my-list) <span class="token-comment">; -> 1</span>
+(cdr my-list) <span class="token-comment">; -> '(2 3) (רשימה שמכילה את 2 ו-3)</span>
+
+<span class="token-comment">; איך נוציא את האיבר השני? נעשה cdr כדי לזרוק את הראשון,</span>
+<span class="token-comment">; ואז car כדי להוציא את מה שנשאר בהתחלה.</span>
+(car (cdr my-list)) <span class="token-comment">; -> 2</span>
+<span class="token-comment">; Scheme מספקת קיצור דרך לנוחות:</span>
+(cadr my-list)      <span class="token-comment">; -> 2</span>
+
+<span class="token-comment">; בדיקות עצירה</span>
+(null? my-list) <span class="token-comment">; -> #f</span>
+(null? '())     <span class="token-comment">; -> #t</span></code></pre>
+                    </div>
+                </div>
+
+                <div class="deep-dive">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">התבנית הקדושה: רקורסיה על רשימה (List Traversal)
+                    </h3>
+                    <p class="mb-4 text-slate-700">מכיוון שאין ב-Scheme לולאות <code>for</code> או <code>while</code>
+                        (שפת Lisp בסיסית היא ללא state), הדרך היחידה לעבור על רשימה היא באמצעות פונקציה רקורסיבית.
+                        <strong>התבנית הזו מופיעה כמעט בכל פתרון של שאלת מבחן מורכבת!</strong> התבנית מורכבת תמיד מ-2
+                        שלבים: מה עושים כשהרשימה ריקה, ומה עושים כשיש בה איברים.</p>
+
+                    <pre><code><span class="token-comment">; דוגמה: פונקציה המקבלת רשימת מספרים ומחזירה רשימה שבה הכל הוכפל ב-2</span>
+(define double-list
+  (lambda (lst)
+    <span class="token-comment">; 1. תנאי העצירה: אם הרשימה ריקה, נחזיר רשימה ריקה כדי לסיים את השרשרת.</span>
+    (if (null? lst)
+        '()
+        
+        <span class="token-comment">; 2. הלוגיקה: ניקח את האיבר הראשון (car lst), נכפיל אותו, </span>
+        <span class="token-comment">; ונחבר אותו (בעזרת cons) לתוצאת הפעלה הרקורסיבית על שאר הרשימה (cdr lst).</span>
+        (cons (* (car lst) 2) 
+              (double-list (cdr lst))))))
+
+(double-list (list 1 2 3)) <span class="token-comment">; -> '(2 4 6)</span></code></pre>
+
+                    <p class="mt-4 text-slate-700"><strong>שימו לב ל-map:</strong> הפעולה של "לעבור על רשימה ולהפעיל
+                        פונקציה על כל איבר" היא כה נפוצה, שקיימת פונקציה מובנית שעושה זאת בשם <code>map</code>. למשל,
+                        במבחן כשיש לכם <code>tuple-exp(exps)</code> עם רשימת ביטויים שצריך להעריך את כולם בסביבה, אפשר
+                        פשוט לכתוב: <br><code>(map (lambda (e) (value-of e env)) exps)</code></p>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.4: HIGHER ORDER FUNCTIONS (foldr, filter)
+            =========================================== -->
+            <div id="scheme-advanced" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 2.4</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">פונקציות מתקדמות: <span
+                            class="text-blue-600">map, filter, foldr</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">כדי לשלוט ב-Scheme ולפתור מטלות כמו ממ"ן 11, עלינו
+                        להכיר פונקציות מסדר גבוה (Higher-Order Functions). אלו פונקציות שמקבלות פונקציה אחרת כפרמטר,
+                        ומאפשרות לנו לבצע פעולות מורכבות על רשימות בשורת קוד אחת, ללא צורך בכתיבת רקורסיה מפורשת.</p>
+                </header>
+
+                <div class="concept-box border-l-4 border-l-amber-500 bg-amber-50 !mt-0 mb-10">
+                    <h3 class="text-xl font-bold mb-2 text-amber-800">🎯 הפן הפדגוגי: מה לומדים ולמה?</h3>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700">
+                        <li><strong>למה הוספנו את זה?</strong> כדי לפתור את הבעיה של כתיבת רקורסיות מייגעות שוב ושוב
+                            עבור פעולות דומות, וכדי לייצר הפשטה (Abstraction) לעיבוד רשימות.</li>
+                        <li><strong>מה לומדים מזה?</strong> אנו לומדים כיצד פונקציה יכולה לקבל פונקציה אחרת כארגומנט,
+                            וכיצד פעולת "הקיפול" (Fold) מהווה תשתית מתמטית שעליה ניתן לבסס כמעט כל מניפולציה של רשימה.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-800">הפונקציה <code>map</code></h3>
+                        <p class="mb-4 text-slate-700">עוברת על כל איבר ברשימה, מפעילה עליו פונקציה, ומחזירה רשימה חדשה
+                            של התוצאות. (שומרת על גודל הרשימה המקורית).</p>
+                        <pre class="text-xs"><code><span class="token-comment">; הכפלת כל האיברים פי 2</span>
+(map (lambda (x) (* x 2)) '(1 2 3)) 
+<span class="token-comment">; מחזיר: '(2 4 6)</span></code></pre>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-800">הפונקציה <code>filter</code> (הכנה לממ"ן)
+                        </h3>
+                        <p class="mb-2 text-slate-700">מקבלת פרדיקט (פונקציה שמחזירה אמת/שקר) ורשימה, ומחזירה רק את
+                            האיברים שעבורם הפרדיקט החזיר אמת.</p>
+                        <p class="text-sm font-bold text-slate-600 mb-2">שימוש ב-Filter המובנית:</p>
+                        <pre class="text-xs !mt-0 !mb-4"><code><span class="token-comment">; סינון זוגיים בלבד</span>
+(filter even? '(1 2 3 4 5 6)) 
+<span class="token-comment">; מחזיר: '(2 4 6)</span></code></pre>
+                        <p class="text-sm font-bold text-slate-600 mb-2">מימוש רקורסיבי מאפס (שאלה 2א בממ"ן):</p>
+                        <pre class="text-xs !mt-0"><code>(define my-filter
+  (lambda (pred lst)
+    (cond
+      ((null? lst) '()) <span class="token-comment">; תנאי העצירה: רשימה ריקה</span>
+      
+      <span class="token-comment">; אם האיבר הראשון מקיים את התנאי, נשמור אותו ב-cons</span>
+      ((pred (car lst)) 
+       (cons (car lst) (my-filter pred (cdr lst))))
+       
+      <span class="token-comment">; אחרת, נתעלם ממנו ונמשיך רקורסיבית לשאר הרשימה</span>
+      (else 
+       (my-filter pred (cdr lst))))))</code></pre>
+                    </div>
+                </div>
+
+                <div class="concept-box border-l-4 border-l-purple-500 !my-0 mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-purple-800">מלכת הרשימות: <code>foldr</code> (קיפול ימני)
+                    </h3>
+                    <p class="mb-4 text-slate-700">הפונקציה <code>foldr</code> (Fold Right) היא החשובה ביותר במטלות
+                        (ובחיים כשמתכנתים פונקציונלית). היא מאפשרת "לקפל" רשימה לערך בודד על ידי הפעלת פונקציה המשלבת כל
+                        איבר עם התוצאה של קיפול שאר הרשימה (מימין לשמאל).</p>
+                    <p class="mb-4 text-slate-700 font-mono">מבנה: (foldr func initial-value list)</p>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+                        <li><code>func</code> - פונקציה המקבלת שני ארגומנטים: האיבר הנוכחי מהרשימה (curr), והתוצאה
+                            המצטברת (acc) משאר הרשימה.</li>
+                        <li><code>initial-value</code> - ערך ההתחלה, שמוחזר כשהרשימה ריקה.</li>
+                    </ul>
+                    <pre><code><span class="token-comment">; דוגמה: סכימת כל האיברים ברשימה</span>
+(foldr (lambda (curr acc) (+ curr acc)) 0 '(1 2 3))
+<span class="token-comment">; חישוב מאחורי הקלעים: (+ 1 (+ 2 (+ 3 0))) => 6</span></code></pre>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 מימוש פונקציות בעזרת <code>foldr</code></h4>
+                    <p class="text-slate-700 mb-2">אפשר לממש כמעט כל פונקציית רשימה (כולל map, filter, append) בעזרת
+                        foldr, וזה נדרש בממ"ן!</p>
+                    <p class="text-slate-700 mb-2"><strong>איך לממש filter עם foldr?</strong> החשוב הוא להבין ש-acc
+                        מייצג את הרשימה שכבר סוננה (מהסוף אחורה). עלינו לבדוק את curr (האיבר הנוכחי שעליו אנו עובדים):
+                        אם הוא מקיים את התנאי נחבר אותו ל-acc (בעזרת cons), ואם לא, פשוט נחזיר את acc כמות שהוא כדי לדלג
+                        עליו.</p>
+                    <pre><code><span class="token-comment">; שלד למימוש filter בעזרת foldr</span>
+(define my-filter
+  (lambda (pred lst)
+    (foldr (lambda (curr acc)
+             (if (pred curr)
+                 (cons curr acc) <span class="token-comment">; הוסף את האיבר לרשימה הנבנית</span>
+                 acc))           <span class="token-comment">; דלג עליו, שמור על מה שנאסף עד כה</span>
+           '() <span class="token-comment">; ערך האתחול הוא רשימה ריקה, אליה נאגור איברים</span>
+           lst)))</code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.5: ADVANCED RECURSION (append, powerset)
+            =========================================== -->
+            <div id="scheme-recursion" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 2.5</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">רקורסיות מורכבות: <span
+                            class="text-blue-600">append ו-powerset</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">בחלק מהמטלות תדרשו לכתוב אלגוריתמים רקורסיביים שלא
+                        רק עובדים על איבר אחד, אלא משלבים רשימות קיימות ליצירת קומבינציות חדשות, ממש כמו בשאלות הקשורות
+                        למבנים מתמטיים של קבוצות.</p>
+                </header>
+
+                <div class="concept-box border-l-4 border-l-amber-500 bg-amber-50 !mt-0 mb-10">
+                    <h3 class="text-xl font-bold mb-2 text-amber-800">🎯 הפן הפדגוגי: מה לומדים ולמה?</h3>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700">
+                        <li><strong>למה הוספנו את זה?</strong> אנו צריכים ללמוד לפתור בעיות קומבינטוריות שבהן עלינו
+                            להרכיב ולמזג נתונים (כמו בניית קבוצת חזקה).</li>
+                        <li><strong>מה לומדים מזה?</strong> הבנה של אלגוריתם "לקחת או לא לקחת" המהווה אבן יסוד בבניית
+                            תתי-קבוצות, ולמידת השילוב העוצמתי של <code>map</code> ו-<code>append</code> בתוך רקורסיה.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="concept-box border-l-4 border-l-blue-500 !my-0 mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-800">1. שרשור רשימות: איך עובד <code>append</code>?
+                    </h3>
+                    <p class="mb-4 text-slate-700">שרשור שתי רשימות דורש בנייה מחדש. אי אפשר פשוט "להדביק" אותן. הגישה
+                        היא "לפרק" את הרשימה הראשונה בעזרת רקורסיה על ה-cdr, וכשמגיעים לקצה שלה (כשהיא ריקה), להחזיר את
+                        הרשימה השנייה - וכל הקריאות הקודמות כבר יוסיפו ב-cons את איברי הרשימה הראשונה אליה.</p>
+                    <pre><code><span class="token-comment">; מימוש רקורסיבי ל-append (מחבר את lst1 ל-lst2)</span>
+(define my-append
+  (lambda (lst1 lst2)
+    (if (null? lst1)
+        lst2 <span class="token-comment">; אם הראשונה ריקה, נחזיר את השנייה במלואה (זה הבסיס!)</span>
+        <span class="token-comment">; אחרת, נחבר את האיבר הראשון להמשך השרשור</span>
+        (cons (car lst1) 
+              (my-append (cdr lst1) lst2)))))</code></pre>
+                    <p class="mt-4 text-slate-700"><strong>מימוש append עם foldr (שאלה 1ב בממ"ן):</strong> במקום לכתוב
+                        רקורסיה מפורשת כנ"ל, ניתן לקפל את הרשימה הראשונה <code>lst1</code> מימין לשמאל באמצעות
+                        <code>cons</code>, כאשר ערך האתחול של הקיפול הוא הרשימה השנייה <code>lst2</code>. כך נוצר שרשור
+                        אלגנטי ביותר ללא רקורסיה מפורשת!</p>
+                    <pre class="text-xs"><code>(define my-append-fr
+  (lambda (lst1 lst2)
+    <span class="token-comment">; אנו מקפלים את lst1, ומלבישים את האיברים ב-cons מעל lst2</span>
+    (foldr cons lst2 lst1)))</code></pre>
+                </div>
+
+                <div class="thought-box mb-8">
+                    <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">2. קבוצת חזקה (Powerset)</h3>
+                    <p class="mb-4 text-slate-700">איך מייצרים את כל תתי-הקבוצות האפשריות מתוך רשימה? תרגיל קלאסי
+                        (ומופיע כמעט תמיד במטלה 11). </p>
+                    <p class="mb-4 text-slate-700 font-bold">העיקרון המנחה (אלגוריתם "לקחת או לא לקחת"):</p>
+                    <p class="mb-4 text-slate-700">כדי למצוא את Powerset של רשימה, נשאל את עצמנו מה עושים עם האיבר
+                        הראשון. תת-קבוצות יכולות להיות אלו ש<strong>כוללות</strong> אותו, ואלו ש<strong>לא
+                            כוללות</strong> אותו.</p>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+                        <li><strong>אלו שבלעדיו:</strong> זה בדיוק שווה ל-(powerset (cdr lst)). ניקח את זה כבסיס!</li>
+                        <li><strong>אלו שאיתו:</strong> ניקח את הבסיס שמצאנו כרגע, ולכל תת-קבוצה בו נוסיף (cons) את
+                            האיבר המקורי ששמרנו. נוכל לעשות זאת בקלות בעזרת <code>map</code>.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-codebg text-white p-6 rounded-xl overflow-x-auto shadow-lg mb-10">
+                    <h4 class="font-bold text-lg text-highlight mb-3">דוגמת חשיבה לקוד עובד:</h4>
+                    <pre class="!bg-transparent !p-0 !m-0 !shadow-none !border-none"><code><span class="token-comment">; תנאי העצירה: קבוצת החזקה של קבוצה ריקה היא רשימה המכילה רשימה ריקה '(()</span>
+
+(define powerset
+  (lambda (lst)
+    (if (null? lst)
+        '(()) <span class="token-comment">; רשימה המכילה רשימה ריקה</span>
+        (let ((rest-ps (powerset (cdr lst))))
+          (append 
+           rest-ps <span class="token-comment">; כל תתי הקבוצות בלי האיבר הראשון (car lst)</span>
+           <span class="token-comment">; בעזרת map, נעבור על rest-ps ונוסיף את (car lst) לכל איבר בפנים:</span>
+           (map (lambda (subset) (cons (car lst) subset)) rest-ps))))))
+</code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.6: MAMAN 12 - POLYNOMIALS ADT
+            =========================================== -->
+            <div id="maman12-poly" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 2.6 (ממן 12 שאלה 1)</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">ADT פולינומים: <span
+                            class="text-blue-600">define-datatype</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">שימוש מתקדם בטיפוסי נתונים אלגבריים (ADT) לייצוג
+                        מבנה מתמטי מורכב (פולינום) באמצעות כלי ה-<code>define-datatype</code> של הקורס.</p>
+                </header>
+
+                <div class="concept-box border-l-4 border-l-amber-500 bg-amber-50 !mt-0 mb-10">
+                    <h3 class="text-xl font-bold mb-2 text-amber-800">🎯 הפן הפדגוגי: מה לומדים ולמה?</h3>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700">
+                        <li><strong>למה הוספנו את זה?</strong> פולינום הוא מקרה מבחן מצוין לייצוג ביטויים מתמטיים
+                            מורכבים במחשב, והוא מהווה הכנה ישירה לאופן שבו נממש את ביטויי השפה (Expressions) במפרש בפרק
+                            3.</li>
+                        <li><strong>מה לומדים מזה?</strong> הבנה עמוקה של עמודי התווך של ADT (בנאים, בוררים, פרדיקטים),
+                            הפרדת ממשק ממימוש, והבנת הניתוח של עץ רקורסיבי בעזרת <code>cases</code>.</li>
+                    </ul>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-800">הספציפיקציה של פולינום</h3>
+                        <p class="mb-4 text-slate-700">פולינום יכול להיות או פולינום ריק (אפס) או מורכב מגורם (Term -
+                            חזקה ומקדם) ומשאר הפולינום.</p>
+                        <pre class="text-xs"><code>(define-datatype poly poly?
+  (zero-poly)
+  (extend-poly
+   (coeff number?)
+   (exp number?)
+   (rest-poly poly?)))</code></pre>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-800">החילוץ מתוך ה-ADT</h3>
+                        <p class="mb-4 text-slate-700">כדי לגשת למידע, עלינו לכתוב פונקציה שעושה <code>cases</code>
+                            (Pattern Matching) על הפולינום שקיבלנו.</p>
+                        <pre class="text-xs"><code>(define poly->list
+  (lambda (p)
+    (cases poly p
+      (zero-poly () '())
+      (extend-poly (coeff exp rest)
+        (cons (list coeff exp)
+              (poly->list rest))))))</code></pre>
+                    </div>
+                </div>
+
+                <div class="deep-dive mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">מימוש מלא לממן 12 (שאלה 1)</h3>
+                    <p class="mb-4 text-slate-700">כדי שהמימוש יהיה מושלם, עלינו לספק גם את שאר הפונקציות הנדרשות
+                        מהספציפיקציה האלגברית. שימו לב לשימוש בבנאים שיצרנו ב-<code>define-datatype</code> ולצורת כתיבת
+                        הבוררים שמחזירים שגיאה בעת הפעלה על הפולינום הריק.</p>
+                    <pre><code><span class="token-comment">; בנאים (Constructors) שעוטפים את ה-datatype</span>
+(define zero (lambda () (zero-poly)))
+(define make-poly (lambda (coeff exp rest) (extend-poly coeff exp rest)))
+
+<span class="token-comment">; פרדיקט (Predicate) הבודק אם פולינום הוא אפס</span>
+(define is-zero?
+  (lambda (p)
+    (cases poly p
+      (zero-poly () #t)
+      (extend-poly (coeff exp rest) #f))))
+
+<span class="token-comment">; בוררים (Selectors)</span>
+(define coeff
+  (lambda (p)
+    (cases poly p
+      (zero-poly () (eopl:error 'coeff "Cannot get coeff of zero polynomial"))
+      (extend-poly (coeff exp rest) coeff))))
+
+(define degree
+  (lambda (p)
+    (cases poly p
+      (zero-poly () (eopl:error 'degree "Cannot get degree of zero polynomial"))
+      (extend-poly (coeff exp rest) exp))))
+
+(define rest
+  (lambda (p)
+    (cases poly p
+      (zero-poly () (eopl:error 'rest "Cannot get rest of zero polynomial"))
+      (extend-poly (coeff exp rest) rest))))
+
+<span class="token-comment">; חיבור שני פולינומים בעזרת הבנאי</span>
+(define add-poly
+  (lambda (p1 p2)
+    (cases poly p1
+      (zero-poly () p2)
+      (extend-poly (coeff exp rest-p)
+        (extend-poly coeff exp (add-poly rest-p p2))))))
+
+<span class="token-comment">; חישוב ערך הפולינום עבור X מסוים בעזרת עזר: expt מובנה ב-Racket</span>
+(define calc-poly
+  (lambda (p x)
+    (cases poly p
+      (zero-poly () 0)
+      (extend-poly (coeff exp rest-p)
+        (+ (* coeff (expt x exp))
+           (calc-poly rest-p x))))))</code></pre>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 טיפ למבחן: עיבוד מסובך של עץ ADT</h4>
+                    <p class="text-slate-700 mb-2">שאלה 1 מבקשת לכתוב גם פונקציית <code>print-poly</code> שמדפיסה
+                        פולינום ממוין מהחזקה הגדולה לקטנה וללא מקדמי אפס. במקום לנסות לכתוב לוגיקה מורכבת שרצה ישירות על
+                        עץ ה-<code>cases</code> הרקורסיבי, הגישה המנצחת היא: <strong>להמיר קודם את העץ לרשימה
+                            שטוחה!</strong></p>
+                    <p class="text-slate-700">בזכות <code>poly->list</code> שכתבנו, אנו מקבלים רשימה של זוגות
+                        <code>((coeff exp) (coeff exp) ...)</code>. על הרשימה הזו קל מאוד להפעיל <code>filter</code>
+                        (להסיר מקדמי 0) ולהפעיל פונקציית <code>sort</code> למיון חזקות, ולאחר מכן לעבור עליה בלולאה
+                        ולהדפיס ברוגע.</p>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.2: EOPL DATATYPES
+            =========================================== -->
+            <div id="eopl-datatypes" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 2.2</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">הכלים של הקורס: <span
+                            class="text-blue-600">define-datatype</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">שפות תכנות פועלות על ידי מניפולציה של מבני נתונים
+                        מורכבים (כמו עצי AST, סביבות מורחבות, וערכים חישוביים). ספר הקורס (EOPL) פיתח ספריה מיוחדת
+                        המרחיבה את Racket ומקלה על יצירת <strong>טיפוסי נתונים אלגבריים (Algebraic Data Types)</strong>.
+                        זהו הכלי שנמצא בכל קובץ <code>data-structures.scm</code>.</p>
+                </header>
+
+                <div class="concept-box border-l-4 border-l-purple-500 !my-0 mb-8">
+                    <h3 class="text-2xl font-bold mb-4 text-purple-800">למה צריך define-datatype?</h3>
+                    <p class="mb-4 text-slate-700">ב-Racket רגיל, היינו מייצגים מבנים מסובכים בעזרת רשימות (למשל, לייצג
+                        סביבה כ-<code>(list 'extend-env var val prev-env)</code>). אבל זה מועד לשגיאות וקשה לקריאה.</p>
+                    <p class="mb-4 text-slate-700"><code>define-datatype</code> מאפשר להגדיר "קופסת אב" (למשל: Type כללי
+                        שנקרא <code>expression</code>), שיכולה ללבוש מספר <strong>צורות שונות (Variants)</strong> (למשל:
+                        ביטוי מספרי, ביטוי תנאי, קריאה לפונקציה). המערכת בודקת עבורנו אוטומטית שכל צורה מקבלת בדיוק את
+                        השדות המתאימים לה, מאמתת את הטיפוסים שלהם, ומייצרת פונקציות בנאיות (Constructors) מאחורי הקלעים.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">דוגמה קלאסית: הערכים בשפה
+                            (expval)</h3>
+                        <p class="text-sm text-slate-700 mb-4">בשפת LET, ביטוי שמחשב המפרש יכול להחזיר מספר או בוליאני.
+                            אנו מגדירים את קופסת האב <code>expval</code> ואת הצורות האפשריות שלה:</p>
+                        <pre class="text-xs"><code><span class="token-comment">; שם-הטיפוס | פונקציית-הבדיקה-הכללית</span>
+(define-datatype expval expval?
+  
+  <span class="token-comment">; צורה (Variant) 1: ערך מספרי</span>
+  (num-val
+    <span class="token-comment">; (שם-השדה | פונקציית-בדיקת-טיפוס)</span>
+    (num number?))
+  
+  <span class="token-comment">; צורה 2: ערך בוליאני</span>
+  (bool-val
+    (bool boolean?)))</code></pre>
+                        <p class="text-sm text-slate-600 mt-4">הקוד הזה מייצר אוטומטית פונקציות כמו
+                            <code>(num-val 5)</code> שיוצרות את הקופסה בזיכרון.</p>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">דוגמה 2: מבנה הסביבות
+                            (environment)</h3>
+                        <p class="text-sm text-slate-700 mb-4">סביבה יכולה להיות ריקה (Root), או מורחבת. זהו מבנה שקורא
+                            לעצמו (Recursive Datatype):</p>
+                        <pre class="text-xs"><code>(define-datatype environment environment?
+  
+  <span class="token-comment">; צורה 1: סביבה ריקה (ללא שדות כלל)</span>
+  (empty-env)
+  
+  <span class="token-comment">; צורה 2: סביבה מורחבת (מכילה 3 שדות)</span>
+  (extend-env
+    (bvar symbol?)
+    (bval expval?)
+    <span class="token-comment">; שימו לב! השדה הזה בודק שהוא מקבל environment!</span>
+    (saved-env environment?)))</code></pre>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 במבחן: כשהוספת פיצ'ר דורשת סוג חדש של ערך</h4>
+                    <p class="text-slate-700">נניח ובמבחן מבקשים ממך להוסיף <strong>מערך (Array)</strong> או
+                        <strong>רשימה (Tuple)</strong>. הדבר הראשון שעליך לעשות הוא ללכת
+                        ל-<code>data-structures.scm</code> ולהוסיף Variant חדש לתוך ההגדרה הקיימת של
+                        <code>expval</code>. למשל:</p>
+                    <pre class="text-sm"><code>(define-datatype expval expval?
+  ... <span class="token-comment">; existing variants</span>
+  (array-val
+    <span class="token-comment">; השדה יהיה רשימה שמכילה כתובות זיכרון (במקרה של שפת Explicit Refs)</span>
+    (refs (list-of reference?))))</code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.3: CASES (Pattern Matching)
+            =========================================== -->
+            <div id="eopl-cases" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 2.3</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">פירוק נתונים: <span
+                            class="text-blue-600">פקודת cases</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">החצי השני של המטבע! אם
+                        <code>define-datatype</code> "אורז" נתונים לתוך קופסה שחורה בזיכרון, פקודת <code>cases</code>
+                        היא הדרך הבטוחה והיחידה <strong>"לפתוח" את הקופסה</strong>, לבדוק איזו צורה (Variant) יש בפנים,
+                        ולחלץ את המידע לתוך משתנים שנוכל לעבוד איתם.</p>
+                </header>
+
+                <div class="thought-box mb-8">
+                    <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">Pattern Matching (התאמת תבניות)</h3>
+                    <p class="mb-4 text-slate-700">פקודת ה-cases עובדת כמו מתג חכם. אנו נותנים לה טיפוס כללי (למשל
+                        <code>expval</code>) ואת המשתנה שאנחנו רוצים לבדוק. היא בודקת באיזה Variant מדובר, וכשהיא מוצאת
+                        התאמה, היא מחלצת את השדות הפנימיים לתוך שמות חדשים (שמופיעים בסוגריים) שזמינים לשימוש רק בתוך
+                        אותו בלוק.</p>
+                    <p class="mb-4 text-slate-700"><strong>השימוש הנפוץ ביותר של <code>cases</code> הוא ב"חולצים"
+                            (Extractors)</strong>: פונקציות שמטרתן לקבל קופסה כללית (<code>expval</code>) ולהחזיר ערך
+                        נקי (למשל מספר או בוליאני).</p>
+                </div>
+
+                <div class="bg-codebg text-white p-6 rounded-xl overflow-x-auto shadow-lg mb-10">
+                    <h4 class="font-bold text-lg text-highlight mb-3">דוגמה אופיינית מ-<code>data-structures.scm</code>
+                    </h4>
+                    <pre class="!bg-transparent !p-0 !m-0 !shadow-none !border-none"><code><span class="token-comment">; פונקציית Extract ששולפת מספר מקופסת expval</span>
+(define expval->num
+  (lambda (v)
+    <span class="token-comment">; פתח את המשתנה v, תוך ידיעה שהוא מטיפוס expval</span>
+    (cases expval v
+      
+      <span class="token-comment">; אם הוא מהצורה num-val:</span>
+      <span class="token-comment">; חלץ את השדה הפנימי אל תוך משתנה חדש בשם 'num'</span>
+      <span class="token-comment">; והרץ את הקוד שאחריו (שפשוט מחזיר את num)</span>
+      (num-val (num) num)
+      
+      <span class="token-comment">; חובה לספק בלוק else לתפוס שגיאות (במקרה ש-v היה בכלל bool-val)</span>
+      (else (eopl:error 'expval->num "Expected number, got ~s" v)))))</code></pre>
+                </div>
+
+                <div class="deep-dive">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">הלב של המפרש: <code>cases expression</code></h3>
+                    <p class="mb-4 text-slate-700">כל פונקציית <code>value-of</code> (הפונקציה המרכזית
+                        ב-<code>interp.scm</code> שמריצה את התוכנית) היא למעשה פקודת <code>cases</code> אחת ענקית שרצה
+                        על ה-AST (העץ התחבירי). העץ מוגדר תחת הטיפוס <code>expression</code>.</p>
+                    <p class="mb-4 text-slate-700">זה המקום שבו אנחנו לוקחים צומת בעץ (למשל צומת תנאי), מחלצים את
+                        הביטויים הפנימיים שלו, ומפעילים עליהם לוגיקה:</p>
+                    <pre class="!bg-slate-100 !text-slate-800 !border-slate-300"><code>(define value-of
+  (lambda (exp env)
+    (cases expression exp
+      <span class="token-comment">; ... צמתים אחרים ...</span>
+      
+      <span class="token-comment">; הנה איך מטפלים בצומת IF:</span>
+      <span class="token-comment">; חולצים את 3 תתי-העצים אל תוך המשתנים exp1, exp2, exp3</span>
+      (if-exp (exp1 exp2 exp3)
+        <span class="token-comment">; מעריכים את תנאי הבדיקה (exp1) בעזרת קריאה רקורסיבית</span>
+        (let ((val1 (value-of exp1 env)))
+          <span class="token-comment">; חולצים את הערך הבוליאני מתוך קופסת ה-expval</span>
+          (if (expval->bool val1)
+              <span class="token-comment">; אם אמת, מעריכים את תת-העץ של האמת</span>
+              (value-of exp2 env)
+              <span class="token-comment">; אחרת מעריכים את תת-העץ של השקר</span>
+              (value-of exp3 env)))))))</code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.6: MAMAN 12 - POLYNOMIAL ADT (define-datatype)
+            =========================================== -->
+            <div id="maman12-poly" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 2.6 (ממן 12 שאלה 1)</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">ADT פולינומים: <span
+                            class="text-blue-600">ספציפיקציה ומימוש</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">בממן 12 אנו נדרשים לתאר, להגדיר ולממש טיפוס נתונים
+                        מופשט (ADT) המייצג פולינום מהצורה $p(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_k x^k$. נלמד איך
+                        מאפיינים ADT בשלושה שלבים: חתימות, ספציפיקציה אלגברית, ומימוש בפועל בעזרת הכלים של EOPL.</p>
+                </header>
+
+                <div class="concept-box border-l-4 border-l-blue-500 !my-0 mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-800">א' - אפיון הפעולות (Signatures / Types)</h3>
+                    <p class="mb-4 text-slate-700">בחלוקה הקלאסית של ADT, אנו מחלקים את הממשק לשלושה סוגי פונקציות:</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm text-slate-700">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-right font-bold text-slate-800">סוג הפעולה</th>
+                                    <th class="px-4 py-2 text-right font-bold text-slate-800">שם הפונקציה וחתימה</th>
+                                    <th class="px-4 py-2 text-right font-bold text-slate-800">תיאור</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200">
+                                <tr>
+                                    <td class="px-4 py-3 font-bold text-green-700">בנאים (Constructors)</td>
+                                    <td class="px-4 py-3 font-mono">zero : () -> Poly<br>make-poly : Int x Int ->
+                                        Poly<br>add-poly : Poly x Poly -> Poly</td>
+                                    <td class="px-4 py-3">יוצרים מופעים חדשים של הטיפוס. `zero` מייצג את פולינום האפס.
+                                        `make-poly` מייצג איבר בודד (מקדם וחזקה). `add-poly` מחבר שני פולינומים.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-bold text-blue-700">בוררים (Selectors)</td>
+                                    <td class="px-4 py-3 font-mono">degree : Poly -> Int<br>coeff : Poly x Int ->
+                                        Int<br>print-poly : Poly -> List<br>calc-poly : Poly x Number -> Number</td>
+                                    <td class="px-4 py-3">שולפים מידע מתוך הטיפוס. `degree` מחזיר את הדרגה הגבוהה ביותר.
+                                        `coeff` מחזיר מקדם לחזקה נתונה. `print-poly` ממיר לרשימת זוגות ממוינת.
+                                        `calc-poly` מחשב עבור X מסוים.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-bold text-purple-700">פרדיקטים (Predicates)</td>
+                                    <td class="px-4 py-3 font-mono">is-zero? : Poly -> Bool</td>
+                                    <td class="px-4 py-3">בודקים תנאים ומחזירים ערך בוליאני. בודק האם הפולינום הוא
+                                        פולינום האפס.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">ב' - ספציפיקציה אלגברית (Algebraic Specification)
+                    </h3>
+                    <p class="mb-4 text-slate-700">הספציפיקציה האלגברית מגדירה את הלוגיקה והסמנטיקה של הטיפוס על ידי
+                        יצירת משוואות המקשרות בין הבוררים/פרדיקטים לבנאים השונים. עבור פולינום $p$ כלשהו, מספרים $c, e$
+                        ומספר $x$:</p>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 font-mono text-sm leading-relaxed space-y-3"
+                        dir="ltr">
+                        <div><strong>Predicate - is-zero?:</strong>
+                            <ul class="list-disc list-inside ml-4 text-slate-700">
+                                <li>(is-zero? (zero)) = true</li>
+                                <li>(is-zero? (make-poly c e)) = (c == 0)</li>
+                                <li>(is-zero? (add-poly p1 p2)) = (is-zero? p1) ∧ (is-zero? p2) <span
+                                        class="text-slate-500 font-sans">(לאחר צמצום איברים)</span></li>
+                            </ul>
+                        </div>
+                        <hr class="my-2">
+                        <div><strong>Selector - coeff:</strong>
+                            <ul class="list-disc list-inside ml-4 text-slate-700">
+                                <li>(coeff (zero) e_search) = 0</li>
+                                <li>(coeff (make-poly c e) e_search) = if (e == e_search) then c else 0</li>
+                                <li>(coeff (add-poly p1 p2) e_search) = (coeff p1 e_search) + (coeff p2 e_search)</li>
+                            </ul>
+                        </div>
+                        <hr class="my-2">
+                        <div><strong>Selector - degree:</strong>
+                            <ul class="list-disc list-inside ml-4 text-slate-700">
+                                <li>(degree (zero)) = 0</li>
+                                <li>(degree (make-poly c e)) = if (c == 0) then 0 else e</li>
+                                <li>(degree (add-poly p1 p2)) = max(e) for all exponents where (coeff (add-poly p1 p2)
+                                    e) ≠ 0, or 0 if all are 0.</li>
+                            </ul>
+                        </div>
+                        <hr class="my-2">
+                        <div><strong>Selector - calc-poly:</strong>
+                            <ul class="list-disc list-inside ml-4 text-slate-700">
+                                <li>(calc-poly (zero) x) = 0</li>
+                                <li>(calc-poly (make-poly c e) x) = c * x^e</li>
+                                <li>(calc-poly (add-poly p1 p2) x) = (calc-poly p1 x) + (calc-poly p2 x)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-codebg text-white p-6 rounded-xl overflow-x-auto shadow-lg mb-10">
+                    <h4 class="font-bold text-lg text-highlight mb-3">ג' - מימוש מלא ב-Scheme/Racket (interp.scm &
+                        data-structures.scm)</h4>
+                    <pre class="!bg-transparent !p-0 !m-0 !shadow-none !border-none"><code><span class="token-comment">; 1. הגדרת טיפוס הנתונים בעזרת define-datatype</span>
+(define-datatype poly poly?
+  (zero)
+  (make-poly
+    (coeff number?)
+    (exponent number?))
+  (add-poly
+    (p1 poly?)
+    (p2 poly?)))
+
+<span class="token-comment">; 2. מימוש הפרדיקט is-zero?</span>
+(define is-zero?
+  (lambda (p)
+    (cases poly p
+      (zero () #t)
+      (make-poly (c e) (= c 0))
+      (add-poly (p1 p2) (and (is-zero? p1) (is-zero? p2))))))
+
+<span class="token-comment">; 3. מימוש הבורר coeff (מחזיר מקדם לחזקה נתונה)</span>
+(define coeff
+  (lambda (p search-exp)
+    (cases poly p
+      (zero () 0)
+      (make-poly (c e) (if (= e search-exp) c 0))
+      (add-poly (p1 p2) (+ (coeff p1 search-exp) (coeff p2 search-exp))))))
+
+<span class="token-comment">; פונקציית עזר להוצאת כל החזקות בפולינום לצורך בירור דרגה ומיון</span>
+(define get-exponents
+  (lambda (p)
+    (cases poly p
+      (zero () '())
+      (make-poly (c e) (list e))
+      (add-poly (p1 p2) (append (get-exponents p1) (get-exponents p2))))))
+
+<span class="token-comment">; 4. מימוש הבורר degree (החזקה הגבוהה ביותר בעלת מקדם שונה מ-0)</span>
+(define degree
+  (lambda (p)
+    (let ((exps (get-exponents p)))
+      (letrec ((highest-deg
+                (lambda (lst max-so-far)
+                  (cond
+                    ((null? lst) max-so-far)
+                    ((and (> (car lst) max-so-far) (not (= (coeff p (car lst)) 0)))
+                     (highest-deg (cdr lst) (car lst)))
+                    (else (highest-deg (cdr lst) max-so-far))))))
+        (highest-deg exps 0)))))
+
+<span class="token-comment">; 5. מימוש הבורר calc-poly (חישוב ערך הפולינום עבור x)</span>
+(define calc-poly
+  (lambda (p x)
+    (cases poly p
+      (zero () 0)
+      (make-poly (c e) (* c (expt x e)))
+      (add-poly (p1 p2) (+ (calc-poly p1 x) (calc-poly p2 x))))))
+
+<span class="token-comment">; פונקציות עזר עבור print-poly (הסרת כפילויות)</span>
+(define remove-duplicates
+  (lambda (lst)
+    (cond
+      ((null? lst) '())
+      ((member (car lst) (cdr lst)) (remove-duplicates (cdr lst)))
+      (else (cons (car lst) (remove-duplicates (cdr lst)))))))
+
+<span class="token-comment">; 6. מימוש הבורר print-poly </span>
+<span class="token-comment">; מחזיר רשימה של זוגות (מקדם, חזקה) ממוינת בסדר יורד של חזקות, ללא מקדמי 0</span>
+(define print-poly
+  (lambda (p)
+    (let ((exps (remove-duplicates (get-exponents p))))
+      (let ((sorted-exps (sort exps >))) <span class="token-comment">; מיון מובנה ב-Racket</span>
+        (letrec ((build-list
+                  (lambda (lst)
+                    (cond
+                      ((null? lst) '())
+                      (else
+                       (let ((c (coeff p (car lst))))
+                         (if (= c 0)
+                             (build-list (cdr lst)) <span class="token-comment">; התעלם ממקדמי אפס</span>
+                             (cons (list c (car lst)) (build-list (cdr lst))))))))))
+          (build-list sorted-exps))))))</code></pre>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 דגש למבחן ולמטלות</h4>
+                    <p class="text-slate-700">כאשר מבקשים מיון או הדפסה של ADT שמיוצג כעץ (כמו
+                        <code>add-poly(p1, p2)</code>), הדרך הפשוטה ביותר היא <strong>להפריד את המימוש לשני
+                            שלבים:</strong> שלב 1: איסוף כל הנתונים לרשימה שטוחה (באמצעות פונקציית עזר רקורסיבית פשוטה
+                        כמו <code>get-exponents</code>). שלב 2: ביצוע המניפולציה (מיון, סינון, כיווץ) על הרשימה השטוחה
+                        בעזרת הפונקציות הסטנדרטיות של Scheme. גישה זו מונעת סיבוכיות מיותרת בעיבוד העץ.</p>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 3.1: SLLGEN LEXER
+            =========================================== -->
+            <div id="sllgen-lexer" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 3.1</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">המנתח התחבירי: <span
+                            class="text-blue-600">SLLGen Lexer</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">המפרש שלנו לעולם אינו עובד ישירות על מחרוזות של
+                        טקסט חופשי (Raw Text). השלב הראשון בכל ריצה הוא תהליך ה-<strong>Parsing</strong> (ניתוח תחבירי).
+                        הצעד הראשון בתהליך הזה מתבצע על ידי ה<strong>לקסר (Lexer / Scanner)</strong>, והוא מוגדר בקובץ
+                        <code>lang.scm</code>.</p>
+                </header>
+
+                <div class="concept-box border-l-4 border-l-emerald-500 !my-0 mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-emerald-800">מה התפקיד של הלקסר? (The Lexical Spec)</h3>
+                    <p class="mb-4 text-slate-700">הלקסר דומה לאדם שקורא טקסט בשפה שהוא לא מכיר, אבל יודע לזהות את
+                        האותיות והמילים. הוא קורא את קובץ הטקסט תו-אחר-תו, וחותך אותו ל<strong>אסימונים
+                            (Tokens)</strong> לפי חוקים קבועים מראש (ביטויים רגולריים). הלקסר אינו בודק האם התחביר
+                        הגיוני או חוקי, הוא רק מזהה את חלקיקי המידע.</p>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+                        <li>הוא מתעלם לחלוטין מרווחים, טאבים, ושורות חדשות (אלא אם הוגדר אחרת).</li>
+                        <li>הוא יודע לזהות מהי מחרוזת, מהו מספר (המורכב מספרות), ומהו שם של משתנה (Identifier).</li>
+                        <li>הוא מסנן החוצה הערות (Comments) כדי שלא יפריעו בהמשך למפרש.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">איך זה נראה בקוד? (lang.scm)</h3>
+                    <p class="mb-4 text-slate-700">הלקסר של EOPL נקרא SLLGen, וכך נראית ההגדרה הקלאסית שלו בתוך השפות של
+                        הקורס:</p>
+                    <pre class="!bg-slate-800 !text-slate-200"><code>(define the-lexical-spec
+  '(
+    <span class="token-comment">; (שם-הטוקן | תבנית-זיהוי | פעולה)</span>
+    
+    <span class="token-comment">; 1. כל תו שהוא מסוג 'רווח' - בצע עליו skip (התעלם והמשך הלאה)</span>
+    (whitespace (whitespace) skip)
+    
+    <span class="token-comment">; 2. כל שורה שמתחילה באחוז '%' - היא הערה. בצע skip.</span>
+    <span class="token-comment">; הפירוש: תו '%' ואז רצף שרירותי (arbno) של תווים שאינם ירידת שורה.</span>
+    (comment ("%" (arbno (not #\newline))) skip)
+    
+    <span class="token-comment">; 3. מזהה (Identifier/Variable). מיוצג כ-symbol.</span>
+    <span class="token-comment">; חייב להתחיל באות, ויכול להמשיך באותיות, ספרות או תווים מיוחדים.</span>
+    (identifier
+      (letter (arbno (or letter digit "_" "-" "?")))
+      symbol)
+      
+    <span class="token-comment">; 4. מספרים. מיוצג כ-number.</span>
+    <span class="token-comment">; ספרה אחת לפחות, אולי עם מינוס בהתחלה עבור מספרים שליליים.</span>
+    (number (digit (arbno digit)) number)
+    (number ("-" digit (arbno digit)) number)
+   ))</code></pre>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 דוגמה מהמבחן: הוספת מחרוזות (Strings)</h4>
+                    <p class="text-slate-700 mb-2">בשאלות מבחן שבהן מבקשים מכם להוסיף תמיכה במחרוזות (למשל, מילים
+                        שמתחילות בסימן <code>@</code> כפי שהופיע באחת הדוגמאות בספר), תצטרכו להוסיף שורה
+                        ל-<code>the-lexical-spec</code> כדי שהלקסר בכלל ידע לקרוא את זה:</p>
+                    <p class="font-mono bg-white p-2 rounded border border-amber-200 text-sm">(string-token ("@" letter
+                        (arbno letter)) string)</p>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 3.2: SLLGEN PARSER
+            =========================================== -->
+            <div id="sllgen-parser" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 3.2</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">בניית העץ: <span
+                            class="text-blue-600">SLLGen Parser (הדקדוק)</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">לאחר שהלקסר חילק את הטקסט לאסימונים (Tokens), נכנס
+                        לפעולה ה<strong>פרסר (Parser)</strong>. תפקידו הוא לקחת את שורת המילים ולוודא שהן יוצרות משפט
+                        בעל משמעות לפי <strong>חוקי הדקדוק (Grammar)</strong>. אם המשפט חוקי, הוא בונה ממנו <strong>עץ
+                            תחבירי מופשט (AST)</strong> המורכב מאותן קופסאות (<code>define-datatype</code>) שלמדנו עליהן
+                        בפרק 2.</p>
+                </header>
+
+                <div class="concept-box border-l-4 border-l-indigo-500 !my-0 mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-indigo-800">האנטומיה של חוק דקדוק</h3>
+                    <p class="mb-4 text-slate-700">קובץ <code>lang.scm</code> מגדיר את <code>the-grammar</code> בעזרת
+                        סדרה של חוקים. כל חוק (כל שורה) מייצר אוטומטית שדה (Variant) חדש בתוך ה-datatype המרכזי של השפה
+                        (שנקרא לרוב <code>expression</code>).</p>
+                    <p class="text-slate-700 font-bold mb-2">מבנה סטנדרטי של שורה ב-Grammar:</p>
+                    <pre
+                        class="!mt-0 !bg-indigo-50 !text-indigo-900 !border-indigo-200"><code>( <span class="text-red-600">LHS</span> ( <span class="text-green-600">RHS (Terminals & Non-Terminals)</span> ) <span class="text-purple-600">Variant-Name</span> )</code></pre>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+                        <li><strong>LHS (Left Hand Side):</strong> לאיזה משפחה הכלל הזה שייך (תמיד
+                            <code>expression</code> בקורס שלנו).</li>
+                        <li><strong>Terminals (בתוך מרכאות ""):</strong> מילים שמורות בשפה (כמו <code>"if"</code>,
+                            <code>"then"</code>, <code>"-"</code>, <code>","</code>). המתכנת כותב אותן, הפרסר מוודא שהן
+                            קיימות בסדר הנכון, <strong>ואז זורק אותן לפח!</strong> הן לא מגיעות לעץ ה-AST.</li>
+                        <li><strong>Non-Terminals:</strong> מילים ללא מרכאות (כמו <code>expression</code>,
+                            <code>identifier</code>, <code>number</code>). אלו ביטויים רקורסיביים שיש לחשב. <strong>אלו
+                                הערכים האמיתיים שיישמרו כצמתים (Nodes) בעץ!</strong></li>
+                        <li><strong>Variant-Name:</strong> השם של הצומת שייווצר (כמו <code>if-exp</code> או
+                            <code>diff-exp</code>). זהו השם שיקפוץ לנו ב-<code>cases expression</code> בתוך המפרש.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">דוגמה לתרגום: מהטקסט אל העץ</h3>
+                    <p class="mb-4 text-slate-700">נניח שזה חוק הדקדוק שלנו לפעולת חיסור:</p>
+                    <pre
+                        class="!bg-slate-800 !text-slate-200"><code>(expression ("-" "(" expression "," expression ")") diff-exp)</code></pre>
+
+                    <p class="mb-4 text-slate-700 mt-6">והמתכנת כתב את הקוד הבא: <code>-(55, 11)</code>. <br>פונקציית
+                        <code>scan&parse</code> תהפוך את המחרוזת הזו לעץ הבא (שימו לב שאין בעץ פסיקים או סוגריים):</p>
+                    <div class="bg-slate-100 p-6 rounded-lg border border-slate-300 font-mono text-sm leading-relaxed"
+                        dir="ltr">
+                        #(struct:diff-exp<br>
+                        &nbsp;&nbsp;#(struct:const-exp 55)<br>
+                        &nbsp;&nbsp;#(struct:const-exp 11))
+                    </div>
+                </div>
+
+                <div class="thought-box">
+                    <h4 class="font-bold text-xl mb-3 text-fuchsia-800">איך קוראים דקדוק מורכב במבחן?</h4>
+                    <p class="text-slate-700 mb-4">במבחן תמיד ייתנו לכם הרחבת דקדוק שכוללת <strong>רשימות</strong>.
+                        הפרסר משתמש בסמלים מיוחדים כדי להגיד שיש כאן איבר שחוזר על עצמו כמה פעמים (כמו מערך).</p>
+                    <p class="text-slate-700 font-bold bg-white p-2 rounded mb-2">דוגמה מהמבחן על Switch-Case:</p>
+                    <p class="font-mono text-sm bg-white p-2 border border-slate-200 rounded mb-4" dir="ltr">Expression
+                        ::= switch Expression { {Type identifier when (Expression ) => Expression}+(,) default =>
+                        Expression }</p>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700 ml-4">
+                        <li>הסוגריים <code>{}*(,)</code> או <code>{}+(,)</code> מסמנים שכל מה שבפנים חוזר על עצמו 0 או
+                            יותר פעמים (כוכבית) או 1 או יותר פעמים (פלוס), ומופרד באמצעות פסיק <code>,</code>.</li>
+                        <li>כשהפרסר קורא את החוק הזה ובונה ממנו את הצומת (למשל <code>switch-exp</code>), הוא יארוז את כל
+                            החזרות האלו לתוך <strong>רשימות (list-of)</strong> מקבילות! לכן המפרש יצטרך לקבל משתנים שהם
+                            רשימות: רשימה של identifiers, רשימה של condition expressions וכו'.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 4.1: ENVIRONMENTS
+            =========================================== -->
+            <div id="environments" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 4.1</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">ניהול מצב וזיכרון: <span
+                            class="text-blue-600">Environments</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">סביבה (Environment) היא הפנקס או טבלת הסמלים
+                        (Symbol Table) שבה המפרש רושם אילו משתנים קיימים ומה הערך (או כתובת הזיכרון) הקשור אליהם. אופן
+                        בניית הסביבות קובע את חוקי טווח ההכרה (Lexical Scoping) של השפה.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="concept-box border-l-4 border-l-sky-500 !my-0">
+                        <h3 class="text-2xl font-bold mb-4 text-sky-800">למה לא מילון רגיל? (מודל הבצל)</h3>
+                        <p class="mb-4 text-slate-700">למה אנחנו לא משתמשים פשוט בטבלת Hash או מילון רגיל כדי לשמור
+                            משתנים? הסיבה היא ששפות מחשב מאפשרות <strong>הסתרה (Shadowing)</strong>. משתנה פנימי בתוך
+                            פונקציה יכול להסתיר משתנה חיצוני בעל אותו שם, וכשהפונקציה מסתיימת - המשתנה החיצוני צריך
+                            "לחזור לחיים".</p>
+                        <p class="mb-4 text-slate-700">כדי לפתור זאת, הסביבה בקורס בנויה כ<strong>רשימה מקושרת (Linked
+                                List)</strong>. כל פקודת <code>extend-env</code> יוצרת שכבה חדשה (כמו שכבת בצל) ששומרת
+                            רק משתנה אחד, ומחזיקה מצביע (Pointer) לסביבה הקודמת. הסביבה החיצונית המקורית מעולם לא נהרסת!
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">מבנה הנתונים השכבתי
+                            (data-structures)</h3>
+                        <pre class="text-xs"><code>(define-datatype environment environment?
+  <span class="token-comment">; תחתית הבצל - סביבה ריקה ללא משתנים (השורש)</span>
+  (empty-env)
+  
+  <span class="token-comment">; סביבה המכילה שכבה חדשה:</span>
+  (extend-env
+    (bvar symbol?)          <span class="token-comment">; שם המשתנה (למשל 'x')</span>
+    (bval expval?)          <span class="token-comment">; הערך שלו (למשל 5)</span>
+    (saved-env environment?))) <span class="token-comment">; הצבעה לסביבה החיצונית</span></code></pre>
+                        <p class="text-sm text-slate-600 mt-4">למשל, הקוד <code>let x=1 in let y=2 in x+y</code> ייצר
+                            בזיכרון:<br>
+                            <code>[y=2] -> [x=1] -> EmptyEnv</code>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="thought-box mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">פונקציית החיפוש המרכזית: <code>apply-env</code>
+                    </h3>
+                    <p class="mb-4 text-slate-700">פונקציה זו (היושבת ב-<code>environments.scm</code>) אחראית למצוא ערך
+                        של משתנה. היא עובדת בצורה רקורסיבית מבריקה שמממשת את רעיון ה-Shadowing:</p>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700 mb-4 ml-4">
+                        <li>היא מסתכלת על ה"שכבה" הנוכחית של הסביבה (הבצל החיצוני ביותר).</li>
+                        <li>אם שם המשתנה שמחפשים (<code>search-var</code>) תואם למשתנה בשכבה (<code>bvar</code>), היא
+                            מצאה! היא מחזירה את הערך. ההסתרה עובדת אוטומטית כי מצאנו את ההגדרה הטרייה ביותר!</li>
+                        <li>אם לא, היא <strong>קולפת</strong> את השכבה, וקוראת לעצמה שוב באופן רקורסיבי על
+                            ה-<code>saved-env</code> (השכבה הפנימית יותר).</li>
+                        <li>אם היא הגיעה ל-<code>empty-env</code> ועדיין לא מצאה כלום, המשמעות היא שהמשתנה אינו מוגדר -
+                            נזרקת שגיאה!</li>
+                    </ul>
+                    <pre><code>(define apply-env
+  (lambda (env search-var)
+    (cases environment env
+      
+      <span class="token-comment">; מקרה בסיס: הגענו לסוף הרשימה ולא מצאנו</span>
+      (empty-env ()
+        (eopl:error 'apply-env "Unbound variable ~s" search-var))
+        
+      <span class="token-comment">; מקרה רקורסיבי: פותחים את השכבה הנוכחית</span>
+      (extend-env (bvar bval saved-env)
+        (if (eqv? search-var bvar)
+            bval <span class="token-comment">; מצאנו! נחזיר את הערך</span>
+            <span class="token-comment">; לא מצאנו, נמשיך לחפש בשכבות הפנימיות</span>
+            (apply-env saved-env search-var))))))</code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 4.2: MAMAN 12 - PROCEDURAL ENVIRONMENTS
+            =========================================== -->
+            <div id="maman12-env" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                        חלק 4.2 (ממן 12 שאלה 2)</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">ייצוג פרוצדורלי של סביבות: <span
+                            class="text-blue-600">תיאוריה ומימוש</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">בספר EOPL (עמוד 40) מוצג ייצוג אלטרנטיבי וחשוב
+                        לסביבות: **ייצוג פרוצדורלי (Procedural Representation)**. בניגוד לייצוג המבוסס על מבני נתונים
+                        (Linked List בעזרת `define-datatype`), בייצוג הפרוצדורלי הסביבה עצמה היא **פונקציה (Lambda)**
+                        שממתינה לקבל משתנה ומחזירה את ערכו.</p>
+                </header>
+
+                <div class="concept-box border-l-4 border-l-amber-500 bg-amber-50 !mt-0 mb-10">
+                    <h3 class="text-xl font-bold mb-2 text-amber-800">🎯 הפן הפדגוגי: מה לומדים ולמה?</h3>
+                    <ul class="list-disc list-inside space-y-2 text-slate-700">
+                        <li><strong>למה הוספנו את זה?</strong> סביבה היא מושג הליבה של מפרשים. אנו רוצים להמחיש שאין
+                            חובה לייצג זיכרון כמבנה נתונים פיזי, אלא אפשר לייצגו כפונקציה התנהגותית לכל דבר.</li>
+                        <li><strong>מה לומדים מזה?</strong> עיקרון הדואליות (Dualism) של תכנות פונקציונלי (החלפת מבנה
+                            נתונים בפרוצדורה), הבנת תפקיד ה-Closure בשימור מצב (הסביבה זוכרת את המשתנים בהקשר שבו
+                            נוצרה), ולמידת מודל ה-Continuations לצורך ניהול זרימה ושגיאות.</li>
+                    </ul>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">קוד המימוש הפרוצדורלי הבסיסי
+                        </h3>
+                        <p class="text-sm text-slate-700 mb-4 font-sans">כאן אנו לא משתמשים
+                            ב-<code>define-datatype</code>! כל סביבה מוחזרת כפונקציה של ארגומנט אחד:</p>
+                        <pre class="text-xs"><code><span class="token-comment">; 1. סביבה ריקה: פונקציה שזורקת שגיאה תמיד</span>
+(define empty-env
+  (lambda ()
+    (lambda (search-var)
+      (eopl:error 'apply-env "No binding for ~s" search-var))))
+
+<span class="token-comment">; 2. הרחבת סביבה: מחזירה פונקציה חדשה שמבצעת השוואה</span>
+(define extend-env
+  (lambda (saved-var saved-val saved-env)
+    (lambda (search-var)
+      (if (eqv? search-var saved-var)
+          saved-val <span class="token-comment">; אם זה המשתנה שלנו, נחזיר את הערך</span>
+          (apply-env saved-env search-var))))) <span class="token-comment">; אחרת, נמשיך לסביבה האב</span>
+
+<span class="token-comment">; 3. חיפוש בסביבה: פשוט מריץ את הסביבה כפונקציה!</span>
+(define apply-env
+  (lambda (env search-var)
+    (env search-var)))</code></pre>
+                    </div>
+
+                    <div class="concept-box border-l-4 border-l-emerald-500 !my-0">
+                        <h3 class="text-xl font-bold text-emerald-800 mb-3 border-b border-emerald-200 pb-2">בעיית
+                            "הקופסה השחורה" (The Black-Box Problem)</h3>
+                        <p class="text-sm text-slate-700 mb-3">בייצוג פרוצדורלי, הסביבה היא פונקציה בלבד. אין לנו שום
+                            דרך להסתכל "פנימה" או לדעת אילו משתנים מוגדרים בה בלי להפעיל אותה בפועל.</p>
+                        <p class="text-sm text-slate-700 mb-3"><strong>הבעיה בממן 12:</strong> אנו צריכים לכתוב פונקציה
+                            <code>(is-num? e x)</code> הבודקת האם המשתנה <code>x</code> קיים בסביבה <code>e</code> והאם
+                            ערכו מספרי. </p>
+                        <p class="text-sm text-slate-700">אם נפעיל סתם כך <code>(apply-env e x)</code> והמשתנה
+                            <strong>אינו קיים</strong>, הפונקציה <code>empty-env</code> תזרוק שגיאה קריטית (Crash)
+                            ותעצור את ריצת התוכנית. כדי לפתור זאת נדרשת גישה מיוחדת.</p>
+                    </div>
+                </div>
+
+                <div class="thought-box mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">פתרון 1: שימוש במנגנון תפיסת שגיאות ב-Racket
+                        (הכי נקי ומתאים לריצה)</h3>
+                    <p class="mb-4 text-slate-700">ב-Racket, ניתן לעטוף את הקריאה ל-<code>apply-env</code> במנגנון תפיסת
+                        חריגות <code>with-handlers</code>. אם החיפוש נכשל וקורס, אנו "תופסים" את השגיאה ומחזירים
+                        <code>#f</code> (מכיוון שאין כריכה כזו, ובפרט אין כריכה למספר). אם הוא מצליח, אנו בודקים האם
+                        הערך הוא מספר בעזרת <code>number?</code>.</p>
+                    <pre><code>(define is-num?
+  (lambda (e x)
+    (with-handlers
+        <span class="token-comment">; תפוס כל שגיאה/כישלון והחזר #f</span>
+        ([exn:fail? (lambda (exn) #f)])
+      
+      <span class="token-comment">; גוף החישוב: נסה לבצע חיפוש, ובדוק האם התוצאה היא מספר</span>
+      (number? (apply-env e x)))))</code></pre>
+                </div>
+
+                <div class="deep-dive mb-10">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">פתרון 2: סגנון שאלות מבחן (העברת Failure
+                        Callback)</h3>
+                    <p class="mb-4 text-slate-700">במבחנים רבים, במקום להשתמש במנגנון שגיאות של Racket, מניחים כי
+                        פונקציית החיפוש <code>apply-env</code> (והסביבה עצמה) מעודכנת לקבל פרמטר נוסף: <strong>פונקציית
+                            כישלון (Failure Continuation / Callback)</strong> שתופעל במקרה שהמשתנה אינו נמצא, במקום
+                        לקרוס.</p>
+                    <p class="mb-4 text-slate-700 font-bold">מימוש סביבה פרוצדורלית תומכת כישלון:</p>
+                    <pre class="text-xs"><code><span class="token-comment">; empty-env מקבל כעת את פונקציית הכישלון ומפעיל אותה</span>
+(define empty-env
+  (lambda ()
+    (lambda (search-var fail-cont)
+      (fail-cont))))
+
+<span class="token-comment">; extend-env מעביר את פונקציית הכישלון הלאה</span>
+(define extend-env
+  (lambda (saved-var saved-val saved-env)
+    (lambda (search-var fail-cont)
+      (if (eqv? search-var saved-var)
+          saved-val
+          (apply-env saved-env search-var fail-cont)))))
+
+<span class="token-comment">; apply-env מעביר את פונקציית הכישלון</span>
+(define apply-env
+  (lambda (env search-var fail-cont)
+    (env search-var fail-cont)))</code></pre>
+
+                    <p class="mt-4 text-slate-700 font-bold">כתיבת הפתרון <code>is-num?</code> תחת מודל זה:</p>
+                    <pre><code>(define is-num?
+  (lambda (e x)
+    (apply-env e x
+               <span class="token-comment">; 1. פונקציית הכישלון: אם המשתנה לא נמצא, החזר #f</span>
+               (lambda () #f) 
+               
+               <span class="token-comment">; 2. פונקציית ההצלחה: במבחנים לפעמים apply-env מחזיר ישירות את הערך </span>
+               <span class="token-comment">; ואז נבדוק את הערך המוחזר בעזרת number? בחוץ:</span>
+               )))
+               
+<span class="token-comment">; כלומר, אם apply-env החזיר ערך ללא קריסה:</span>
+(define is-num?
+  (lambda (e x)
+    (let ((val (apply-env e x (lambda () #f))))
+      (number? val))))</code></pre>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-nav'));
+
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('btn-' + tabId).classList.add('active-nav');
+
+            document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>

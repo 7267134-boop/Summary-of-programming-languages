@@ -1,0 +1,8 @@
+**/compiled/
+*.zo
+*.dep
+*.tmp
+~$*
+
+.DS_Store
+Thumbs.db

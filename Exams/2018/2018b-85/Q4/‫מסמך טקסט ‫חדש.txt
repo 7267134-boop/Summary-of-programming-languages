@@ -1,0 +1,6 @@
+(check "let y=9
+      in
+        let z = zero? (-(y,3))
+         in
+            proc(w)
+           if z then (w 2) else z")

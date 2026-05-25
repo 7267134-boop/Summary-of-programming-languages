@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Interpreters - כרך ג': ניהול זיכרון (פרק 4)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        body { background-color: #f8fafc; }
+        .tab-content { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
+        .tab-content.active { display: block; opacity: 1; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        pre { direction: ltr; text-align: left; background-color: #1e293b; color: #e2e8f0; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border: 1px solid #334155; margin-top: 1rem; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;}
+        code { font-family: 'Consolas', monospace; }
+        .token-comment { color: #94a3b8; font-style: italic; }
+        .token-keyword { color: #c678dd; font-weight: bold; }
+        .token-function { color: #61afef; }
+        .token-string { color: #98c379; }
+        
+        .nav-group { margin-top: 1.5rem; padding-right: 0.5rem; }
+        .nav-group-title { font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .nav-btn { display: block; width: 100%; text-align: right; padding: 0.85rem 1rem; border-radius: 0.5rem; color: #cbd5e1; transition: all 0.2s; margin-bottom: 0.25rem; font-size: 0.95rem; }
+        .nav-btn:hover { background-color: #1e293b; color: #fff; padding-right: 1.5rem; }
+        .nav-btn.active-nav { background-color: #2563eb; color: #fff; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); border-right: 4px solid #60a5fa;}
+        
+        .thought-box { background: #fdf4ff; border-right: 4px solid #d946ef; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .tip-box { background: #fffbeb; border-right: 4px solid #f59e0b; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .grammar-box { background: #eff6ff; border-right: 4px solid #3b82f6; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; font-family: 'Consolas', monospace; direction: ltr; text-align: left; }
+        .concept-box { background: #f0fdf4; border-right: 4px solid #22c55e; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .deep-dive { background: #f8fafc; border: 1px solid #cbd5e1; border-right: 4px solid #64748b; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0;}
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-3xl font-black text-white tracking-tight leading-tight">Mastering<br><span class="text-amber-500">Memory</span></h1>
+            <p class="text-xs text-slate-400 mt-2">כרך ג': ניהול זיכרון ופרמטרים (פרק 4)</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            
+            <div class="nav-group">
+                <div class="nav-group-title">חלק 1: ניהול ידני (EXPLICIT)</div>
+                <button onclick="showTab('explicit-files')" id="btn-explicit-files" class="nav-btn active-nav">
+                    <span>🏗️ 1.1 הקבצים שיוצרים אותה</span>
+                </button>
+                <button onclick="showTab('explicit-concept')" id="btn-explicit-concept" class="nav-btn">
+                    <span>💾 1.2 ניהול ידני (Pointers)</span>
+                </button>
+                <button onclick="showTab('explicit-interp')" id="btn-explicit-interp" class="nav-btn">
+                    <span>⚙️ 1.3 המפרש: newref, deref, setref</span>
+                </button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">חלק 2: שפת IMPLICIT-REFS</div>
+                <button onclick="showTab('implicit-files')" id="btn-implicit-files" class="nav-btn">
+                    <span>🏗️ 2.1 הקבצים שיוצרים אותה</span>
+                </button>
+                <button onclick="showTab('implicit-concept')" id="btn-implicit-concept" class="nav-btn">
+                    <span>✨ 2.2 ניהול אוטומטי (המודל המודרני)</span>
+                </button>
+                <button onclick="showTab('implicit-interp')" id="btn-implicit-interp" class="nav-btn">
+                    <span>🚀 2.3 המפרש: הקצאה ושליפה סמויה</span>
+                </button>
+                <button onclick="showTab('implicit-maman')" id="btn-implicit-maman" class="nav-btn">
+                    <span>📝 2.4 ממן: העמסת פרוצדורות (Overloading)</span>
+                </button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">חלק 3: שפת MUTABLE-PAIRS</div>
+                <button onclick="showTab('mutable-files')" id="btn-mutable-files" class="nav-btn">
+                    <span>🏗️ 3.1 הקבצים שיוצרים אותה</span>
+                </button>
+                <button onclick="showTab('mutable-concept')" id="btn-mutable-concept" class="nav-btn">
+                    <span>⛓️ 3.2 מבנה זוגות משתנים</span>
+                </button>
+                <button onclick="showTab('mutable-interp')" id="btn-mutable-interp" class="nav-btn">
+                    <span>⚙️ 3.3 המפרש: שני מימושים שונים</span>
+                </button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">חלק 4: העברת פרמטרים</div>
+                <button onclick="showTab('param-files')" id="btn-param-files" class="nav-btn">
+                    <span>🏗️ 4.1 הקבצים שיוצרים אותה</span>
+                </button>
+                <button onclick="showTab('param-cbv')" id="btn-param-cbv" class="nav-btn">
+                    <span>📥 4.2 Call by Value (לפי ערך)</span>
+                </button>
+                <button onclick="showTab('param-cbr')" id="btn-param-cbr" class="nav-btn">
+                    <span>🔗 4.3 Call by Reference (לפי הפניה)</span>
+                </button>
+                <button onclick="showTab('param-lazy')" id="btn-param-lazy" class="nav-btn">
+                    <span>😴 4.4 Call by Name / Need (עצלנות)</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-white relative">
+        <div class="max-w-5xl mx-auto p-10 lg:p-16 pb-32">
+
+            <!-- ==========================================
+                 PART 1.1: EXPLICIT FILES
+            =========================================== -->
+            <div id="explicit-files" class="tab-content active">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">מבוא ו-EXPLICIT-REFS</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">ניהול ידני: <span class="text-amber-600">הקבצים שיוצרים אותה</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">בפרקים הקודמים (LET, PROC) עבדנו בעולם שבו משתנים אינם משתנים (Immutable). בפרק 4 אנו מכניסים לראשונה את <strong>תופעות הלוואי (Side Effects)</strong> ואת מערכת ניהול הזיכרון בעזרת קובץ חדש ומרכזי בארכיטקטורה: <code>store.scm</code>.</p>
+                </header>
+
+                <div class="flex flex-col md:flex-row gap-6 mb-10">
+                    <!-- קבצים -->
+                    <div class="w-full md:w-1/3 space-y-3">
+                        <div class="bg-amber-50 border-r-4 border-amber-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-amber-800 font-mono text-sm mb-1">store.scm (חדש!)</h4>
+                            <p class="text-xs text-slate-700">מודול הזיכרון הראשי. מגדיר מערך גלובלי השומר את הערכים, ומספק את פונקציות הליבה להקצאה וקריאה.</p>
+                        </div>
+                        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-blue-800 font-mono text-sm mb-1">lang.scm</h4>
+                            <p class="text-xs text-slate-700">הורחב עם הפקודות <code>newref</code>, <code>deref</code>, <code>setref</code> ו-<code>begin</code>.</p>
+                        </div>
+                        <div class="bg-purple-50 border-r-4 border-purple-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-purple-800 font-mono text-sm mb-1">data-structures.scm</h4>
+                            <p class="text-xs text-slate-700">הטיפוס <code>expval</code> הורחב להכיל <code>ref-val</code> - עטיפה מיוחדת לכתובות זיכרון.</p>
+                        </div>
+                        <div class="bg-green-50 border-r-4 border-green-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-green-800 font-mono text-sm mb-1">environments.scm</h4>
+                            <p class="text-xs text-slate-700">בשפת EXPLICIT, <strong>הסביבה נותרת ללא שינוי</strong> - משתנה רגיל יכול להצביע למספר, ורק משתנה שנוצר עם <code>newref</code> יקבל כתובת.</p>
+                        </div>
+                    </div>
+
+                    <!-- Store Explain -->
+                    <div class="w-full md:w-2/3 bg-slate-50 border border-slate-200 p-6 rounded-xl">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2">צללילה לקובץ <code class="text-amber-600 bg-amber-100 px-1 rounded">store.scm</code></h3>
+                        <p class="text-sm text-slate-700 mb-4">"המפרש הטיפש ביותר בעולם לזיכרון": ה-Store ממומש פשוט כרשימה (List) ב-Racket, וכתובת זיכרון (Reference) היא פשוט אינדקס (מספר שלם) בתוך הרשימה הזו.</p>
+                        <pre class="!p-4 !text-xs !my-0"><code>(define the-store 'uninitialized)
+
+<span class="token-comment">;; הקצאת תא חדש. הערך נדחף לסוף הרשימה ומוחזר האינדקס שלו.</span>
+(define newref
+  (lambda (val)
+    (let ((next-ref (length the-store)))
+      (set! the-store (append the-store (list val)))
+      next-ref)))
+
+<span class="token-comment">;; שליפת ערך. ניגשים למקום ה-ref ברשימה.</span>
+(define deref 
+  (lambda (ref)
+    (list-ref the-store ref)))</code></pre>
+                        <p class="text-xs text-slate-600 mt-4"><strong>הערה:</strong> פונקציית <code>setref!</code> יוצרת עותק חדש של כל רשימת ה-Store עם התא המעודכן ושומרת אותו. זה לא יעיל, אבל עובד מצוין לצורך למידה.</p>
+                    </div>
+                </div>
+
+                <div class="thought-box">
+                    <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">למה בכלל צריך זיכרון מחוץ לסביבה (Environment)?</h3>
+                    <p class="mb-4 text-slate-700">עד עכשיו, הסביבה (Environment) קשרה ישירות בין שם לערך: <code>x -> 5</code>. אי אפשר היה לשנות את הערך של <code>x</code> ללא יצירת סביבה חדשה לגמרי. כדי לאפשר למשתנה להשתנות (Mutation), אנו מפצלים את התהליך:</p>
+                    <div class="flex items-center justify-center space-x-4 space-x-reverse my-6">
+                        <div class="bg-blue-100 p-4 rounded-lg text-center font-bold">הסביבה (Env)<br><span class="text-sm text-blue-600">x -> Ref(0)</span></div>
+                        <div class="text-2xl">➡️</div>
+                        <div class="bg-amber-100 p-4 rounded-lg text-center font-bold">הזיכרון (Store)<br><span class="text-sm text-amber-600">Ref(0) -> 5</span><br><span class="text-xs text-amber-800 mt-1 block">ניתן לדריסה!</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 1.2: EXPLICIT CONCEPT
+            =========================================== -->
+            <div id="explicit-concept" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">מבוא ו-EXPLICIT-REFS</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">ניהול ידני: <span class="text-amber-600">Pointers</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">בשפת EXPLICIT-REFS המתכנת שולט בזיכרון בצורה <strong>ידנית ומפורשת</strong> (בדומה לשפת C). רוצה זיכרון? תקצה אותו. רוצה לקרוא? תשלוף במפורש.</p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+                    <div class="grammar-box !my-0">
+                        <h3 class="text-xl font-bold mb-4 border-b pb-2 text-blue-800">4 הפקודות החדשות בדקדוק</h3>
+                        <code class="text-sm">
+Expression ::= newref ( Expression )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;newref-exp (exp1)<br><br>
+Expression ::= deref ( Expression )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;deref-exp (exp1)<br><br>
+Expression ::= setref ( Expression , Expression )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;setref-exp (exp1 exp2)<br><br>
+Expression ::= begin Expression {; Expression}* end<br>
+&nbsp;&nbsp;&nbsp;&nbsp;begin-exp (exp1 exps)
+                        </code>
+                    </div>
+
+                    <div class="concept-box border-l-4 border-l-amber-500 !my-0">
+                        <h3 class="text-xl font-bold text-amber-800 mb-3 border-b border-amber-200 pb-2">מה כל פקודה עושה?</h3>
+                        <ul class="list-disc list-inside space-y-3 text-slate-700">
+                            <li><strong>newref(val):</strong> לוקח ערך, מקצה לו תא ב-Store, ומחזיר את <strong>הכתובת (Reference)</strong>.</li>
+                            <li><strong>deref(ref):</strong> מקבל כתובת, הולך ל-Store <strong>ומחזיר את הערך</strong> שיש שם.</li>
+                            <li><strong>setref(ref, val):</strong> מקבל כתובת וערך, <strong>ודורס</strong> את התוכן הישן. מחזיר ערך שרירותי (למשל 23).</li>
+                            <li><strong>begin:</strong> פקודה קריטית! מכיוון ש-<code>setref</code> מבצע שינוי ולא חישוב מתמטי טהור, חובה להריץ רצף פקודות ולספק תוצאה בסוף. <code>begin</code> מריץ סדרה ומחזיר את הערך של האחרונה.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 דוגמת קוד בשפה: איך זה נראה למתכנת?</h4>
+                    <p class="text-slate-700 mb-2">שימו לב לסרבול: יש להשתמש ב-<code>deref</code> בכל פעם שרוצים לגשת לערך שנמצא בכתובת.</p>
+                    <pre class="!bg-white !text-slate-800 border !border-slate-300"><code>let x = newref(0) <span class="token-comment">% מקצה כתובת. x הוא *מצביע* ל-0</span>
+in begin
+    setref(x, 1) ; <span class="token-comment">% משנה את התוכן של הכתובת ל-1</span>
+    -(deref(x), -5) <span class="token-comment">% שולף במפורש את ה-1, ומחסר מינוס 5</span>
+   end
+<span class="token-comment">% תוצאה: 6</span></code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 1.3: EXPLICIT INTERP
+            =========================================== -->
+            <div id="explicit-interp" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">מבוא ו-EXPLICIT-REFS</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">המפרש: <span class="text-amber-600">newref, deref, setref</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">איך פונקציית <code>value-of</code> (ב-<code>interp.scm</code>) מפעילה את הפקודות על מודול הזיכרון שלנו.</p>
+                </header>
+
+                <div class="bg-codebg text-white p-6 rounded-xl overflow-x-auto shadow-lg mb-10">
+                    <pre class="!bg-transparent !p-0 !m-0 !shadow-none !border-none"><code>(cases expression exp
+  ...
+  <span class="token-comment">; 1. הקצאת זיכרון: חשב את הביטוי, צור תא ב-Store, וארוז את הכתובת כ-ref-val</span>
+  (newref-exp (exp1)
+    (let ((v1 (value-of exp1 env)))
+      (ref-val (newref v1))))
+
+  <span class="token-comment">; 2. קריאה מזיכרון: חשב ביטוי (שחייב להחזיר כתובת), חלץ אותה, ושלוף מה-Store</span>
+  (deref-exp (exp1)
+    (let ((v1 (value-of exp1 env)))
+      (let ((ref1 (expval->ref v1))) <span class="token-comment">; שלוף את המספר של האינדקס</span>
+        (deref ref1))))
+
+  <span class="token-comment">; 3. כתיבה לזיכרון: חשב כתובת, חשב ערך חדש, ודרוס!</span>
+  (setref-exp (exp1 exp2)
+    (let ((ref (expval->ref (value-of exp1 env))))
+      (let ((v2 (value-of exp2 env)))
+        (begin
+          (setref! ref v2)
+          (num-val 23))))) <span class="token-comment">; פקודות מחזירות "ערך דאמי" (23) מכיוון שחובה להחזיר ExpVal</span>
+          
+  <span class="token-comment">; 4. הרצת בלוק (begin): לולאה שמריצה את כל הפקודות ומחזירה את האחרונה</span>
+  (begin-exp (exp1 exps)
+    (letrec ((value-of-begins 
+               (lambda (e1 es)
+                 (let ((v1 (value-of e1 env)))
+                   (if (null? es)
+                       v1 <span class="token-comment">; הגענו לפקודה האחרונה - נחזיר אותה</span>
+                       (value-of-begins (car es) (cdr es)))))))
+      (value-of-begins exp1 exps)))
+)</code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.1: IMPLICIT FILES
+            =========================================== -->
+            <div id="implicit-files" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-red-100 text-red-700 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">שפת IMPLICIT-REFS</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">השפה המודרנית: <span class="text-red-600">הקבצים שיוצרים אותה</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">שפת EXPLICIT הייתה מעצבנת לכתיבה. בשפות מודרניות (JavaScript, Python) המפרש מבצע עבורנו את פעולות ההקצאה והקריאה <strong>בסתר (Implicitly)</strong>. שפה זו מספקת חוויית פיתוח חלקה, אך דורשת שינוי ארכיטקטוני עמוק.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-red-50 p-6 rounded-xl border border-red-200">
+                        <h3 class="text-xl font-bold text-red-800 mb-3 border-b pb-2">הקובץ שעבר רעידת אדמה: <code class="text-red-600">environments.scm</code></h3>
+                        <p class="text-sm text-slate-700 mb-4">ב-IMPLICIT-REFS חל חוק הברזל החדש: <strong>הסביבה מכילה תמיד אך ורק כתובות זיכרון! (References)</strong>. כתוצאה מכך, הפונקציות שמייצרות סביבות צריכות לייצר תאים ב-Store באופן עצמאי.</p>
+                        <pre class="!p-4 !text-xs !my-0 !bg-slate-800 !text-slate-100"><code><span class="token-comment">;; ה-init-env המסורתי הפסיק להשתמש ישירות ב-(num-val 1) ועטף הכל ב-newref</span>
+(define init-env 
+  (lambda ()
+    (extend-env 
+      'i (newref (num-val 1))
+      (extend-env
+        'v (newref (num-val 5)) ...))))
+
+<span class="token-comment">;; גם בסביבות רקורסיביות, apply-env יוצר newref בזמן אמת עבור קלוז'רים!</span>
+(extend-env-rec* (p-names b-vars p-bodies saved-env)
+  (let ((n (location search-var p-names)))
+    (if n
+      (newref <span class="token-comment">; &lt;-- התוספת החיונית שנופלים עליה במבחנים!</span>
+        (proc-val
+          (procedure (list-ref b-vars n) ...)))
+      (apply-env saved-env search-var))))</code></pre>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-blue-800 font-mono text-sm mb-1">lang.scm</h4>
+                            <p class="text-xs text-slate-700">הפקודות <code>newref</code> ו-<code>deref</code> <strong>נמחקו לחלוטין מהשפה!</strong> השארנו רק פקודת השמה אחת שהפכה לפשוטה: <code>set x = 10</code> (נקראת <code>assign-exp</code>).</p>
+                        </div>
+                        <div class="bg-green-50 border-r-4 border-green-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-green-800 font-mono text-sm mb-1">interp.scm</h4>
+                            <p class="text-xs text-slate-700">כל מקום שמוסיף משתנה לסביבה (כמו פקודת <code>let</code> ו-<code>apply-procedure</code>) עוודכן לקרוא ל-<code>newref</code>, וכל קריאת משתנה (<code>var-exp</code>) קוראת כעת ל-<code>deref</code> באופן סמוי.</p>
+                        </div>
+                        <div class="bg-slate-50 border-r-4 border-slate-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-slate-800 font-mono text-sm mb-1">store.scm & data-structures.scm</h4>
+                            <p class="text-xs text-slate-700">נשארו כמעט ללא שינוי לעומת EXPLICIT-REFS. הזיכרון פועל באותה צורה, פשוט קוראים לו פחות באופן ידני.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.2: IMPLICIT CONCEPT
+            =========================================== -->
+            <div id="implicit-concept" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-red-100 text-red-700 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">שפת IMPLICIT-REFS</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">ניהול אוטומטי: <span class="text-red-600">המודל המודרני</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">שינוי הפרדיגמה הגדול: <strong>Denoted Values הם רק כתובות (References)!</strong> השפה מקצה זיכרון כשהיא צריכה, וקוראת זיכרון אוטומטית כשאנחנו מבקשים משתנה.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 hover:shadow-lg transition-shadow">
+                        <div class="text-3xl mb-4 text-center">📥</div>
+                        <h4 class="font-bold text-lg mb-2 text-center text-slate-800">1. הקצאה סמויה (Allocation)</h4>
+                        <p class="text-sm text-slate-600 text-center">מתי נוצר משתנה חדש? כאשר אנו קוראים ל-<code>let x = ...</code> או מפעילים פונקציה. ברגעים אלו המפרש מבצע <code>newref</code> ומכניס את הכתובת לסביבה.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-green-500 hover:shadow-lg transition-shadow">
+                        <div class="text-3xl mb-4 text-center">👀</div>
+                        <h4 class="font-bold text-lg mb-2 text-center text-slate-800">2. שליפה סמויה (Deref)</h4>
+                        <p class="text-sm text-slate-600 text-center">כאשר כותבים בקוד שם של משתנה (למשל <code>x</code>), הסביבה מחזירה כתובת בזיכרון, ואז המפרש מבצע עליה <code>deref</code> באופן אוטומטי לחלוטין כדי לחלץ ולמסור את הערך האמיתי.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-red-500 hover:shadow-lg transition-shadow">
+                        <div class="text-3xl mb-4 text-center">✍️</div>
+                        <h4 class="font-bold text-lg mb-2 text-center text-slate-800">3. השמה סמויה (Set)</h4>
+                        <p class="text-sm text-slate-600 text-center">כדי לעדכן משתנה פשוט כותבים <code>set x = 10</code>. המפרש מוצא את הכתובת של x בסביבה ומעדכן ישירות ב-Store.</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 דוגמת קוד בשפה: כמה זה נראה טבעי!</h4>
+                    <p class="text-slate-700 mb-2">שימו לב כמה הקוד כעת נקי, ללא שום <code>newref</code> או <code>deref</code>.</p>
+                    <pre class="!bg-white !text-slate-800 border !border-slate-300"><code>let x = 0 
+in begin
+    set x = 1; 
+    -(x, -5)
+   end
+<span class="token-comment">% תוצאה: 6</span></code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 2.3: IMPLICIT INTERP
+            =========================================== -->
+            <div id="implicit-interp" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-red-100 text-red-700 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">שפת IMPLICIT-REFS</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">המפרש: <span class="text-red-600">הקצאה ושליפה סמויה</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">כך נראה הקסם מאחורי הקלעים בפונקציית <code>value-of</code>. מודל זה משמש תשתית ל-90% מהשאלות במבחנים הכוללות שינוי זיכרון.</p>
+                </header>
+
+                <div class="bg-codebg text-white p-6 rounded-xl overflow-x-auto shadow-lg mb-10">
+                    <pre class="!bg-transparent !p-0 !m-0 !shadow-none !border-none"><code>(cases expression exp
+  ...
+  <span class="token-comment">; 1. משתנה רגיל - שליפה אוטומטית (Deref)</span>
+  (var-exp (var)
+    <span class="token-comment">; apply-env מחזיר לנו תמיד כתובת (Reference). חובה לעשות deref!</span>
+    (deref (apply-env env var)))
+
+  <span class="token-comment">; 2. פקודת Set - השמה קלה וטבעית למתכנת</span>
+  (assign-exp (var exp1)
+    (begin
+      <span class="token-comment">; apply-env יביא לנו את הכתובת של var במקום להשתמש ב-ref ידני</span>
+      (setref! (apply-env env var) (value-of exp1 env))
+      (num-val 27)))
+
+  <span class="token-comment">; 3. פקודת Let - הקצאה אוטומטית למשתנים חדשים</span>
+  (let-exp (var exp1 body)
+    (let ((val1 (value-of exp1 env)))
+      (value-of body
+        <span class="token-comment">; חובה!! אנו מכניסים לסביבה רק כתובות. לכן עוטפים את הערך ב-newref.</span>
+        (extend-env var (newref val1) env))))
+)
+
+<span class="token-comment">; ==========================================================</span>
+<span class="token-comment">; 4. הקריאה לפונקציה - כאן נוצר ה-Local Scope והעותק העצמאי לפרמטר!</span>
+<span class="token-comment">; ==========================================================</span>
+(define apply-procedure
+  (lambda (proc1 val)
+    (cases proc proc1
+      (procedure (var body saved-env)
+        (value-of body
+          <span class="token-comment">; יצירת תא זיכרון *חדש* עבור הארגומנט במעמד קריאת הפונקציה</span>
+          (extend-env var (newref val) saved-env))))))</code></pre>
+                </div>
+            </div>
+
+
+            <!-- ==========================================
+                 PART 2.4: IMPLICIT - MAMAN
+            =========================================== -->
+            <div id="implicit-maman" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-red-100 text-red-700 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">שפת IMPLICIT-REFS (ממן)</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">פתרון ממן: <span class="text-red-600">העמסת פרוצדורות (Overloading)</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">מטלה זו משדרגת את שפת IMPLICIT-REFS לאחת היכולות החשובות בשפות מודרניות מונחות עצמים (כמו Java ו-C++): <strong>פולימורפיזם מסוג Overloading</strong>. משתנה יחיד יכול להחזיק תחתיו מספר רב של מימושי פרוצדורה. המפרש מבצע <strong>Dynamic Dispatch</strong> (ניתוב דינמי) בזמן ריצה ובוחר את הגרסה המתאימה בהתאם לטיפוס הארגומנט שנשלח אליה בפועל.</p>
+                </header>
+
+                <!-- Q1 Theory & Architecture -->
+                <div class="mb-16">
+                    <h3 class="text-3xl font-bold text-slate-800 mb-6 border-b pb-2 flex items-center gap-3">
+                        <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-xl shadow-md">1</span>
+                        השינוי הארכיטקטוני
+                    </h3>
+                    
+                    <p class="text-lg text-slate-700 mb-6 leading-relaxed">
+                        בשפת IMPLICIT-REFS הרגילה, פרוצדורה נשמרת בזיכרון כרשומה פשוטה <code>(procedure var body env)</code>. במטלה זו, אנו משנים את אופי הפרוצדורה כך שתהפוך למכולה (Container) המחזיקה רשימה של מקרים. כל מקרה מייצג גרסה שונה של הפרוצדורה עבור סוג פרמטר שונה (<code>int</code>, <code>bool</code> או <code>func</code>).
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-codebg text-white p-6 rounded-xl shadow-lg border border-slate-700">
+                            <h4 class="font-bold text-lg text-blue-400 mb-3 border-b border-slate-600 pb-2">שלב א': תחביר השפה (lang.scm)</h4>
+                            <p class="text-sm text-slate-300 mb-4">מוסיפים טיפוס חוקים חדש ומעדכנים את הגדרת הפרוצדורה וההעמסה:</p>
+                            <pre class="text-xs font-mono !bg-transparent !p-0 !m-0 !shadow-none"><code><span class="token-comment">; 1. הגדרת טיפוסים (Type) חדשים בדקדוק</span>
+(type ("int") int-type)
+(type ("bool") bool-type)
+(type ("func") func-type)
+
+<span class="token-comment">; 2. פרוצדורה כעת דורשת ציון טיפוס לפרמטר</span>
+(expression 
+  ("proc" "(" type identifier ")" expression) 
+  proc-exp)
+
+<span class="token-comment">; 3. פעולת ה-Overload הדורסת או מוסיפה גרסה</span>
+(expression 
+  ("overload" identifier "with" "(" type identifier ")" expression) 
+  overload-exp)</code></pre>
+                        </div>
+                        
+                        <div class="bg-codebg text-white p-6 rounded-xl shadow-lg border border-slate-700">
+                            <h4 class="font-bold text-lg text-purple-400 mb-3 border-b border-slate-600 pb-2">שלב ב': מבנה הנתונים (data-structures)</h4>
+                            <p class="text-sm text-slate-300 mb-4">הפרוצדורה מיוצגת כעת כ-<code>overloaded-proc</code> המכיל רשימה של רשימות. כל מקרה מורכב מטיפוס, משתנה, גוף, וסביבה נשמרת (Lexical Scope).</p>
+                            <pre class="text-xs font-mono !bg-transparent !p-0 !m-0 !shadow-none"><code>(define-datatype proc proc?
+  <span class="text-purple-400 font-bold">(overloaded-proc</span>
+    <span class="text-purple-400 font-bold">(cases list?)))</span> <span class="token-comment">; רשימה של (type var body env)</span>
+
+<span class="token-comment">; תמיכה בהדפסה נקייה לקונסולה (expval->printable)</span>
+(define expval->printable
+  (lambda (val)
+    (cases expval val
+      (proc-val (p)
+        (cases proc p
+          (overloaded-proc (cases-list)
+            (list 'overloaded-proc 
+                  (map (lambda (c) 
+                         (list (cadr c) '... 
+                               (env->list (cadddr c)))) 
+                       cases-list)))))
+      (else val))))</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 Interp implementation -->
+                <div class="mb-16">
+                    <h3 class="text-3xl font-bold text-slate-800 mb-6 border-b pb-2 flex items-center gap-3">
+                        <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-xl shadow-md">2</span>
+                        מנוע הביצוע (interp.scm) וניתוב בזמן ריצה
+                    </h3>
+                    
+                    <p class="text-lg text-slate-700 mb-6 leading-relaxed">
+                        כיצד מתבצע הקסם? פעולת ה-<code>overload</code> שולפת את הכתובת של המשתנה בסביבה הלקסיקלית הנוכחית, ופונה ישירות אל ה-Store כדי לעדכן את רשימת המקרים. בזמן הפעלת הפרוצדורה ב-<code>call-exp</code>, אנו מנתחים את הטיפוס בזמן ריצה (Runtime Type) של הארגומנט, ומחפשים ברשימה את הגרסה התואמת.
+                    </p>
+
+                    <div class="tip-box">
+                        <h4 class="font-bold text-lg text-amber-800 mb-2">💡 ניהול הזיכרון בעת Overload</h4>
+                        <p class="text-sm text-slate-700">כיוון שאנו בשפת IMPLICIT-REFS, המשתנה המכיל את הפרוצדורה קיים ככתובת בזיכרון. פעולת ה-Overload עושה פעולת <strong>Side-Effect</strong> קלאסית: שולפת בעזרת <code>deref</code>, מוסיפה את הגרסה לרשימה הפנימית, ושומרת בחזרה בעזרת <code>setref!</code>. הגרסה החדשה שומרת את סביבתה הלקסיקלית המעודכנת (env) ללא קשר לגרסאות האחרות!</p>
+                    </div>
+
+                    <div class="bg-slate-800 text-white p-6 rounded-xl shadow-lg border-l-4 border-l-green-500 mb-8">
+                        <h4 class="font-bold text-lg text-green-400 mb-3">מנגנון הדיספאץ' (Dynamic Dispatch) הפנימי</h4>
+                        <pre class="text-xs font-mono !bg-transparent !p-0 !m-0 !shadow-none"><code><span class="token-comment">; 1. מחלץ את הטיפוס (type-rep) מערך בזמן ריצה (expval)</span>
+(define get-arg-type
+  (lambda (val)
+    (cases expval val
+      (num-val (num) (int-type))
+      (bool-val (bool) (bool-type))
+      (proc-val (proc1) (func-type))
+      (else (eopl:error 'get-arg-type "Unsupported...")))))
+
+<span class="token-comment">; 2. חיפוש התאמה (Type Matching) ברשימת הגרסאות של הפרוצדורה</span>
+(define apply-procedure
+  (lambda (proc1 arg)
+    (cases proc proc1
+      (overloaded-proc (cases-list)
+        (let* ((arg-type (get-arg-type arg))
+               (matching-case (find-case cases-list arg-type)))
+          (if matching-case
+              (let ((typ (car matching-case))
+                    (var (cadr matching-case))
+                    (body (caddr matching-case))
+                    (saved-env (cadddr matching-case)))
+                <span class="token-comment">; הרצת הגרסה המתאימה תוך שמירה על עקרון IMPLICIT-REFS</span>
+                <span class="token-comment">; יוצרים תא זיכרון חדש עבור הפרמטר!</span>
+                (value-of body (extend-env var (newref arg) saved-env)))
+              (eopl:error 'apply-procedure 
+                 "No procedure found with ~s argument" arg-type)))))))</code></pre>
+                    </div>
+                </div>
+
+                <!-- Q3 Trace -->
+                <div class="mb-10">
+                    <h3 class="text-3xl font-bold text-slate-800 mb-6 border-b pb-2 flex items-center gap-3">
+                        <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-xl shadow-md">3</span>
+                        מעקב ריצה (Trace) - דוגמה מסכמת
+                    </h3>
+                    
+                    <p class="text-lg text-slate-700 mb-6 leading-relaxed">
+                        בחינת דוגמת ההרצה מתוך המטלה המדגימה החלפה, עדכון ודריסה של גרסאות הפרוצדורה <code>p</code>.
+                    </p>
+
+                    <div class="deep-dive">
+                        <pre class="bg-white border p-4 rounded text-sm text-slate-800 font-mono mb-4"><code>let sum = 0
+in let p = proc (int a) -(a,10)
+   in begin
+        set sum = -(sum, -(0, (p 100)));                    <span class="token-comment">% 1. הוספת ערך מ-p(int)</span>
+        overload p with (bool b) if b then 700 else 1000;   <span class="token-comment">% 2. יצירת גרסה בוליאנית</span>
+        set sum = -(sum, -(0, (p zero?(5))));               <span class="token-comment">% 3. הוספת ערך מ-p(bool)</span>
+        overload p with (int r) -(r,300);                   <span class="token-comment">% 4. דריסת הגרסה המספרית הקיימת!</span>
+        set sum = -(sum, -(0, (p 100)));                    <span class="token-comment">% 5. הוספת ערך מ-p(int) המעודכן</span>
+        overload p with (func f) (f 30);                    <span class="token-comment">% 6. יצירת גרסה המקבלת פרוצדורה</span>
+        set sum = -(sum, -(0, (p proc (int w) -(w,50))));   <span class="token-comment">% 7. הוספת ערך מ-p(func)</span>
+        sum
+      end</code></pre>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white rounded-lg overflow-hidden shadow-sm border border-slate-200">
+                                <thead class="bg-slate-100 text-slate-700">
+                                    <tr>
+                                        <th class="py-3 px-4 text-right font-bold border-b">שלב</th>
+                                        <th class="py-3 px-4 text-right font-bold border-b">פעולה (קריאה / השמה)</th>
+                                        <th class="py-3 px-4 text-right font-bold border-b">ניתוב (Dispatch)</th>
+                                        <th class="py-3 px-4 text-right font-bold border-b">חישוב</th>
+                                        <th class="py-3 px-4 text-right font-bold border-b text-red-600">ערך ה-sum</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm text-slate-600 divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="py-3 px-4 font-bold text-slate-800">1</td>
+                                        <td class="py-3 px-4 font-mono"><code>(p 100)</code></td>
+                                        <td class="py-3 px-4">גרסת <code>int</code> (הראשונה)</td>
+                                        <td class="py-3 px-4" dir="ltr"><code>100 - 10 = 90</code></td>
+                                        <td class="py-3 px-4 font-bold text-red-600">0 + 90 = 90</td>
+                                    </tr>
+                                    <tr class="bg-slate-50">
+                                        <td class="py-3 px-4 font-bold text-slate-800">2 & 3</td>
+                                        <td class="py-3 px-4 font-mono"><code>(p zero?(5))</code><br><span class="text-xs text-slate-400">ארגומנט מוערך ל-#f</span></td>
+                                        <td class="py-3 px-4">גרסת <code>bool</code> (חדשה)</td>
+                                        <td class="py-3 px-4" dir="ltr"><code>if #f then 700 else 1000 = 1000</code></td>
+                                        <td class="py-3 px-4 font-bold text-red-600">90 + 1000 = 1090</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-4 font-bold text-slate-800">4 & 5</td>
+                                        <td class="py-3 px-4 font-mono"><code>(p 100)</code></td>
+                                        <td class="py-3 px-4">גרסת <code>int</code> <strong>(מעודכנת)</strong></td>
+                                        <td class="py-3 px-4" dir="ltr"><code>100 - 300 = -200</code></td>
+                                        <td class="py-3 px-4 font-bold text-red-600">1090 + (-200) = 890</td>
+                                    </tr>
+                                    <tr class="bg-slate-50">
+                                        <td class="py-3 px-4 font-bold text-slate-800">6 & 7</td>
+                                        <td class="py-3 px-4 font-mono"><code>(p proc(w)...)</code></td>
+                                        <td class="py-3 px-4">גרסת <code>func</code></td>
+                                        <td class="py-3 px-4" dir="ltr"><code>f(30) -> 30 - 50 = -20</code></td>
+                                        <td class="py-3 px-4 font-bold text-red-600">890 + (-20) = 870</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="mt-4 text-center text-xl font-bold text-slate-800">תוצאה סופית: <span class="text-red-600">870</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 3.1: MUTABLE-PAIRS FILES
+            =========================================== -->
+            <div id="mutable-files" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-purple-100 text-purple-700 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">שפת MUTABLE-PAIRS</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">זוגות משתנים: <span class="text-purple-600">הקבצים שיוצרים אותה</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">עד כה השתמשנו במשתנים "פשוטים". בפרק זה השפה מורחבת לתמיכה ב<strong>מבני נתונים מתקדמים (Mutable Pairs)</strong>, בדומה לרשימות בסיסיות או אובייקטים. זה מאפשר בניית נתונים המקושרים זה לזה באמצעות מצביעים.</p>
+                </header>
+
+                <div class="flex flex-col md:flex-row gap-6 mb-10">
+                    <!-- קבצים -->
+                    <div class="w-full md:w-1/3 space-y-3">
+                        <div class="bg-purple-50 border-r-4 border-purple-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-purple-800 font-mono text-sm mb-1">pairval1.scm / pairval2.scm</h4>
+                            <p class="text-xs text-slate-700">מכילים את המימושים בפועל לאיך שומרים שני ערכים תחת "ישות" אחת בזיכרון.</p>
+                        </div>
+                        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-blue-800 font-mono text-sm mb-1">lang.scm</h4>
+                            <p class="text-xs text-slate-700">נוספו הפקודות החשובות: <code>newpair</code>, <code>left</code>, <code>right</code>, <code>setleft</code>, <code>setright</code>.</p>
+                        </div>
+                        <div class="bg-green-50 border-r-4 border-green-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-green-800 font-mono text-sm mb-1">interp.scm</h4>
+                            <p class="text-xs text-slate-700">מעביר את הפקודות מה-AST אל הפונקציות המוגדרות בקבצי המימוש (`setleft` וכו').</p>
+                        </div>
+                    </div>
+
+                    <!-- Store Explain -->
+                    <div class="w-full md:w-2/3 bg-slate-50 border border-slate-200 p-6 rounded-xl">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2">קובץ התצורה <code class="text-purple-600 bg-purple-100 px-1 rounded">pairvals.scm</code></h3>
+                        <p class="text-sm text-slate-700 mb-4">בספר EOPL מוצגים <strong>שני מימושים חלופיים לחלוטין</strong> של זוגות, שניהם חיים באותה תיקייה תחת הקבצים <code>pairval1.scm</code> ו-<code>pairval2.scm</code>. הקובץ השלישי הוא פשוט מתג (Switch) שמאפשר להחליף ביניהם בקלות לפני ההרצה.</p>
+                        <pre class="!p-4 !text-xs !my-0 !bg-white !text-slate-800 border"><code>(module pairvals (lib "eopl.ss" "eopl")
+  
+  <span class="token-comment">;; כדי לשנות מימוש, מגיבים/מסירים את ההערות:</span>
+  
+  <span class="token-comment">;; (require "pairval1.scm")</span>
+  <span class="token-comment">;; (provide (all-from "pairval1.scm"))</span>
+
+  (require "pairval2.scm")
+  (provide (all-from "pairval2.scm"))
+)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 3.2: MUTABLE-PAIRS CONCEPT
+            =========================================== -->
+            <div id="mutable-concept" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-purple-100 text-purple-700 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">שפת MUTABLE-PAIRS</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">מבנה זוגות משתנים: <span class="text-purple-600">רשימות מקושרות</span></h2>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+                    <div class="grammar-box !my-0">
+                        <h3 class="text-xl font-bold mb-4 border-b pb-2 text-blue-800">5 הפקודות החדשות (כמו ב-LISP)</h3>
+                        <code class="text-sm">
+Expression ::= pair ( Expression , Expression )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;newpair-exp (exp1 exp2)<br><br>
+Expression ::= left ( Expression )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;left-exp (exp1)<br><br>
+Expression ::= right ( Expression )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;right-exp (exp1)<br><br>
+Expression ::= setleft ( Expression , Expression )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;setleft-exp (exp1 exp2)<br><br>
+Expression ::= setright ( Expression , Expression )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;setright-exp (exp1 exp2)
+                        </code>
+                    </div>
+
+                    <div class="concept-box border-l-4 border-l-purple-500 !my-0">
+                        <h3 class="text-xl font-bold text-purple-800 mb-3 border-b border-purple-200 pb-2">מדוע זוגות הם כה קריטיים?</h3>
+                        <p class="text-sm text-slate-700 mb-3">בעזרת האובייקט הפשוט <code>pair</code> ניתן לבנות עולמות שלמים:</p>
+                        <ul class="list-disc list-inside space-y-3 text-slate-700">
+                            <li><strong>רשימות מקושרות:</strong> אם ה-<code>right</code> של הזוג מצביע לזוג נוסף, יצרנו רשימה ארוכה שניתנת לשינוי.</li>
+                            <li><strong>עצים וגרפים:</strong> אם זוג מצביע לעוד שני זוגות, יש לנו עץ בינארי שבו נוכל לקפוץ מצומת לצומת ולשנות ערכים בזמן ריצה בעזרת <code>setleft</code> / <code>setright</code>.</li>
+                        </ul>
+                        <p class="text-sm text-slate-700 mt-3 font-bold">הערך <code>mutpair-val</code> התווסף ל-<code>expval</code>, כך שכל זוג יכול להיות שמור בתוך משתנה בסביבה או להיות פלט של פונקציה.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 3.3: MUTABLE-PAIRS INTERP
+            =========================================== -->
+            <div id="mutable-interp" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-purple-100 text-purple-700 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">שפת MUTABLE-PAIRS</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">המפרש: <span class="text-purple-600">שני מימושים שונים</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">היופי בספר הוא הדגמת שתי ארכיטקטורות שונות לגמרי לשמירת הזוגות בזיכרון, בלי שהמתכנת (הלקוח של השפה) ישים לב לשינוי!</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-200 shadow-sm">
+                        <h3 class="text-xl font-bold text-indigo-800 mb-3 border-b border-indigo-200 pb-2">גישה 1 (<code>pairval1.scm</code>)<br><span class="text-sm text-indigo-600">מבנה נתונים מפורש עם שני מצביעים</span></h3>
+                        <p class="text-sm text-slate-700 mb-4">גישה "גבוהה": הטיפוס <code>mutpair</code> עצמו הוא עטיפה (Record) המכילה בדיוק שתי כתובות זיכרון נפרדות.</p>
+                        <pre class="!bg-white !text-slate-800 border !text-xs !p-3"><code><span class="token-comment">;; מבנה הנתונים: זוג המכיל שתי כתובות פנימיות</span>
+(define-datatype mutpair mutpair? 
+  (a-pair (left-loc reference?) (right-loc reference?)))
+
+<span class="token-comment">;; יצירת הזוג עושה 2 קריאות ל-newref</span>
+(define make-pair
+  (lambda (val1 val2)
+    (a-pair (newref val1) (newref val2))))
+
+<span class="token-comment">;; קריאה לצד ימין - שולפים את הכתובת הימנית וקוראים לה</span>
+(define right
+  (lambda (p)
+    (cases mutpair p
+      (a-pair (l-loc r-loc) (deref r-loc)))))</code></pre>
+                        <p class="text-xs text-slate-600 mt-2 font-bold">היתרון: בטוח מאוד לשימוש (Type-safe).</p>
+                    </div>
+
+                    <div class="bg-rose-50 p-6 rounded-xl border border-rose-200 shadow-sm">
+                        <h3 class="text-xl font-bold text-rose-800 mb-3 border-b border-rose-200 pb-2">גישה 2 (<code>pairval2.scm</code>)<br><span class="text-sm text-rose-600">מתכנת C - תאים עוקבים ברצף (Arrays)</span></h3>
+                        <p class="text-sm text-slate-700 mb-4">גישה מתקדמת יותר הדורשת ש-<code>newref</code> יקצה זיכרון בסדר עולה ברצף. זוג הוא בסך הכל מצביע יחיד <code>p</code>. צד ימין הוא אוטומטית <code>p + 1</code>!</p>
+                        <pre class="!bg-white !text-slate-800 border !text-xs !p-3"><code><span class="token-comment">;; הזוג הוא רק כתובת המספר הבסיסי ב-Store</span>
+(define mutpair? reference?)
+
+<span class="token-comment">;; יוצרים שני תאים, אבל מחזירים רק את הראשון!</span>
+(define make-pair
+  (lambda (val1 val2)
+    (let ((ref1 (newref val1)))
+      (let ((ref2 (newref val2)))
+        ref1)))) <span class="token-comment">; אנו מסתמכים על כך ש-ref2 הוא ref1+1</span>
+
+<span class="token-comment">;; צד ימין? פשוט מבקשים את הערך בכתובת p+1!</span>
+(define right
+  (lambda (p)
+    (deref (+ 1 p))))</code></pre>
+                        <p class="text-xs text-slate-600 mt-2 font-bold">היתרון: חיסכון עצום בזיכרון, פחות אובייקטים.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 4.1: PARAM FILES
+            =========================================== -->
+            <div id="param-files" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-teal-100 text-teal-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">חלק 4: העברת פרמטרים</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">שיטות לקריאה: <span class="text-teal-600">הקבצים שיוצרים אותה</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">שאלות תיאורטיות על העברת פרמטרים הן ודאיות בכל מבחן. בפרקים אלו השפה משנה את החוקים הבסיסיים של כיצד ארגומנטים נארזים ונשלחים לפונקציות. נסקור אילו קבצים ספגו את עיקר המהפכה עבור <code>call-by-reference</code> ו-<code>call-by-need</code>.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-teal-50 p-6 rounded-xl border border-teal-200">
+                        <h3 class="text-xl font-bold text-teal-800 mb-3 border-b pb-2">קובץ המהפכה: <code class="text-teal-600">interp.scm</code></h3>
+                        <p class="text-sm text-slate-700 mb-4">עד עכשיו, פונקציית העזר <code>apply-procedure</code> קיבלה את הפונקציה ואת <strong>הערך המחושב (ExpVal)</strong> של הארגומנט. כעת, אנו מוסיפים פונקציה מתווכת חדשה: <code>value-of-operand</code>!</p>
+                        <p class="text-sm text-slate-700 mb-4">כאשר מבצעים קריאה לפונקציה בעזרת <code>call-exp (rator rand)</code>, במקום לעשות סתם <code>(value-of rand)</code> אנו שולחים את הארגומנט אל המתווך. המתווך יכול להחליט:</p>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-slate-700 font-bold ml-4">
+                            <li>לייצר עותק של הזיכרון (CBV)</li>
+                            <li>למסור את הכתובת הקיימת (CBR)</li>
+                            <li>לארוז את העץ בקופסה לעתיד ללא חישוב (CBN / Lazy)</li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-fuchsia-50 border-r-4 border-fuchsia-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-fuchsia-800 font-mono text-sm mb-1">data-structures.scm (עצלנות בלבד)</h4>
+                            <p class="text-xs text-slate-700">בשפת <code>call-by-need</code> מתווסף מבנה נתונים בשם <code>thunk</code>, שתפקידו לכלוא בתוכו <code>expression?</code> (עץ שלא חושב עדיין) יחד עם ה-<code>environment?</code> שלו, עד לרגע שבו נזדקק לו.</p>
+                        </div>
+                        <div class="bg-slate-50 border-r-4 border-slate-500 p-4 rounded shadow-sm">
+                            <h4 class="font-bold text-slate-800 font-mono text-sm mb-1">environments.scm / store.scm</h4>
+                            <p class="text-xs text-slate-700">ללא שינוי, ממשיכים לעבוד באותו מודל Reference של IMPLICIT-REFS שבו כל משתנה בסביבה מצביע לתא ב-Store.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 4.2: PARAM CBV
+            =========================================== -->
+            <div id="param-cbv" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-teal-100 text-teal-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">העברת פרמטרים</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">Call by <span class="text-teal-600">Value</span> (לפי ערך)</h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">השיטה המוכרת משפות IMPLICIT-REFS, Java או Python. הארגומנט מחושב עד הסוף לפני הקריאה לפונקציה, והפונקציה מקבלת תא זיכרון (Reference) חדש לגמרי שהוא בסך הכל "עותק מקומי".</p>
+                </header>
+
+                <div class="concept-box border-l-4 border-l-teal-500 !my-0 mb-8">
+                    <h3 class="text-2xl font-bold mb-4 text-teal-800">הסבר המנגנון: Copy / Newref</h3>
+                    <p class="mb-4 text-slate-700">ב-CBV, פונקציית ההפעלה עושה את הפעולה: <code>(extend-env var (newref val) saved-env)</code>. בגלל ה-<code>newref</code> הזה, המשתנה <code>var</code> בתוך הפונקציה מוגן. אם נעשה עליו <code>set</code>, הוא ידרוס אך ורק את התא הזיכרון החדש שנוצר, ולא ישפיע על משתנים מחוץ לפונקציה.</p>
+                </div>
+
+                <div class="bg-slate-50 p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2">מבחן יבש (Trace Test)</h3>
+                    <pre class="!bg-white !text-slate-800 border border-slate-300"><code>let x = 10
+in let f = proc (y) 
+             begin 
+               set y = 20;  <span class="token-comment">% משנים את הפרמטר הפנימי</span>
+               y 
+             end
+   in begin
+        (f x); <span class="token-comment">% קריאה לפונקציה עם המשתנה x</span>
+        x      <span class="token-comment">% מה יהיה הערך של x כאן?</span>
+      end</code></pre>
+                    <p class="text-slate-700 font-bold mt-4 mb-2 text-teal-700">תשובה: התוצאה היא 10.</p>
+                    <p class="text-slate-700">כאשר העברנו את <code>x</code> (שיושב בתא 0), המערכת קראה את ה-10 שבתא 0 ויצרה תא חדש (תא 1) עבור <code>y</code> והכניסה לתוכו 10. ההשמה <code>set y = 20</code> דרסה רק את תא 1! תא 0 של x נשאר 10.</p>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 4.3: PARAM CBR
+            =========================================== -->
+            <div id="param-cbr" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-teal-100 text-teal-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">העברת פרמטרים</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">Call by <span class="text-teal-600">Reference</span> (לפי הפניה)</h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">שיטה המוכרת מ-C++ (בעזרת `&`) המעניקה לפונקציה גישה "כירורגית" ומסוכנת לתאי הזיכרון המקוריים של המשתנים שנשלחו אליה. המטרה: לייצר מנגנון של Alias (כינוי נוסף לאותו תא).</p>
+                </header>
+
+                <div class="bg-codebg text-white p-6 rounded-xl overflow-x-auto shadow-lg mb-10">
+                    <h4 class="font-bold text-lg text-highlight mb-3">מתווך הארגומנטים: <code>value-of-operand</code></h4>
+                    <pre class="!bg-transparent !p-0 !m-0 !shadow-none !border-none"><code><span class="token-comment">;; במקום לעשות סתם value-of שמחשב את הערך, המתווך בודק:</span>
+(define value-of-operand
+  (lambda (exp env)
+    (cases expression exp
+      
+      <span class="token-comment">;; אם הארגומנט ששלחו לי הוא משתנה נקי (כמו 'x')</span>
+      (var-exp (var) 
+        <span class="token-comment">;; אל תעשה deref! פשוט תעביר את הכתובת של 'x' ישירות!</span>
+        (apply-env env var)) 
+        
+      <span class="token-comment">;; אם זה ביטוי מתמטי (כמו '+ 1 2' או סתם '5')</span>
+      (else
+        <span class="token-comment">;; תחשב כרגיל, ותיצור עבורו newref משלו כ-Fallback</span>
+        (newref (value-of exp env))))))
+
+<span class="token-comment">;; בפונקציית ההפעלה - אין יותר newref! הפרמטר מקבל את הכתובת הגולמית:</span>
+(define apply-procedure
+  (lambda (proc1 val)
+    ...
+    (extend-env var val saved-env)))</code></pre>
+                </div>
+
+                <div class="bg-slate-50 p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2">מבחן יבש (Trace Test)</h3>
+                    <p class="text-slate-700 mb-4">ניקח את אותו הקוד מ-CBV:</p>
+                    <pre class="!bg-white !text-slate-800 border border-slate-300"><code>let x = 10
+in let f = proc (y) 
+             begin set y = 20; y end
+   in begin (f x); x end</code></pre>
+                    <p class="text-slate-700 font-bold mt-4 mb-2 text-rose-700">תשובה: התוצאה היא 20!</p>
+                    <p class="text-slate-700">כשהעברנו את <code>x</code> (נניח שתא 0), המתווך <code>value-of-operand</code> תפס את זה, ובגלל שזה <code>var-exp</code>, הוא החזיר לפונקציה את המספר 0 (הכתובת המקורית). הפרמטר <code>y</code> נקשר לתא 0. הפעולה <code>set y = 20</code> דרסה את תא 0, ולכן <code>x</code> החיצוני השתנה!</p>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART 4.4: PARAM LAZY
+            =========================================== -->
+            <div id="param-lazy" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-teal-100 text-teal-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">העברת פרמטרים</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">Call by <span class="text-teal-600">Name / Need</span> (עצלנות)</h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">משפחת ה-<strong>Lazy Evaluation (הערכה עצלנית)</strong> המוכרת מ-Haskell. למה לחשב ארגומנט מורכב ולבזבז זמן אם הפונקציה בסוף בכלל לא משתמשת בו? במקום תוצאה מחושבת, אנו מעבירים הבטחה: <strong>Thunk</strong>.</p>
+                </header>
+
+                <div class="bg-codebg text-white p-6 rounded-xl overflow-x-auto shadow-lg mb-10">
+                    <h4 class="font-bold text-lg text-highlight mb-3">יצירת ה-Thunk והשליפה (Deref) החכמה</h4>
+                    <pre class="!bg-transparent !p-0 !m-0 !shadow-none !border-none"><code><span class="token-comment">;; המתווך: במקום לחשב, נארוז בעטיפת Thunk ונשמור ב-Store!</span>
+(define value-of-operand
+  (lambda (exp env)
+    (cases expression exp
+      (var-exp (var) (apply-env env var)) <span class="token-comment">; מעביר Reference (כמו CBR)</span>
+      (else (newref (a-thunk exp env)))))) <span class="token-comment">; Thunk! לא מריץ value-of!!</span>
+
+<span class="token-comment">;; פריקת ה-Thunk מתרחשת אך ורק כששולפים משתנה:</span>
+(var-exp (var) 
+  (let* ((ref1 (apply-env env var))
+         (w (deref ref1))) <span class="token-comment">; הבאנו את תוכן התא</span>
+    (if (expval? w)
+      w <span class="token-comment">; זה מספר רגיל, תחזיר אותו</span>
+      (let ((v1 (value-of-thunk w))) <span class="token-comment">; זה Thunk! הרץ אותו עכשיו!</span>
+        (begin
+          (setref! ref1 v1) <span class="token-comment">; Call-by-Need: שומרים את התוצאה למען העתיד!</span>
+          v1)))))</code></pre>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="concept-box border-l-4 border-l-blue-500 !my-0">
+                        <h3 class="text-xl font-bold text-blue-800 mb-3 border-b border-blue-200 pb-2">ההבדל בין Name ל-Need</h3>
+                        <p class="text-sm text-slate-700 mb-3"><strong>Call by Name:</strong> ללא Memoization. בכל פעם שהקוד קורא ל-<code>var-exp</code>, הוא מריץ את ה-Thunk מחדש. זה עלול לחשב המון פעמים את אותה מתמטיקה כבדה.</p>
+                        <p class="text-sm text-slate-700 font-bold bg-white p-2 rounded">בשביל Name, פשוט מוחקים את שורת ה-<code>(setref! ref1 v1)</code> מהקוד.</p>
+                        <p class="text-sm text-slate-700 mt-3"><strong>Call by Need:</strong> משתמש ב-Memoization. הרצה אחת, והתוצאה נשמרת ב-Store ודורסת את ה-Thunk! בפעמים הבאות נקבל מספר מיד. זוהי ההתנהגות בפועל בקוד שראינו.</p>
+                    </div>
+
+                    <div class="thought-box !my-0">
+                        <h4 class="font-bold text-xl mb-3 text-fuchsia-800">למה עצלנות ו-Side Effects שונאים זה את זה?</h4>
+                        <p class="text-slate-700 mb-2">תארו לכם שהארגומנט שלנו הוא פונקציה שעושה <code>print</code> או מעלה Counter פנימי ב-1, והפרמטר הוא <code>y</code>.</p>
+                        <ul class="list-disc list-inside space-y-1 text-slate-700 text-sm mt-2">
+                            <li>ב-CBV: ה-Counter יעלה בדיוק פעם אחת (כשקוראים לפונקציה).</li>
+                            <li>ב-CBN (Name): ה-Counter יעלה כל פעם שכותבים <code>y</code> בפונקציה! (תוצאה משוגעת).</li>
+                            <li>ב-CBN (Need): ה-Counter יעלה פעם אחת מתישהו בזמן ריצת הפונקציה (מתי שמשתמשים ב-y בפעם הראשונה).</li>
+                        </ul>
+                        <p class="text-slate-700 mt-2 text-sm font-bold">החוסר יכולת לחזות מתי ומי יריץ את ההדפסה הוא הסיבה ששפות פונקציונליות עצלניות כגון Haskell אוסרות על תופעות לוואי לחלוטין!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-nav'));
+            
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('btn-' + tabId).classList.add('active-nav');
+            
+            document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

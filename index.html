@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סיכום הקורס שפות תכנות</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        calmBg: '#f8fafc',
+                        cardBg: '#ffffff',
+                        textMain: '#334155',
+                        textMuted: '#64748b',
+                        accentSoft: '#38bdf8', /* sky 400 */
+                        accentStrong: '#0284c7', /* sky 600 */
+                        accentHover: '#e0f2fe' /* sky 100 */
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f4f7fb;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+
+<body class="text-textMain font-sans min-h-screen">
+    <!-- Header -->
+    <header class="bg-cardBg/90 backdrop-blur-md border-b border-slate-200 shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-8">
+            <h1
+                class="text-4xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-l from-accentStrong to-accentSoft drop-shadow-sm">
+                שפות תכנות
+            </h1>
+            <p class="text-center text-textMuted mt-3 text-lg font-medium">הסיכום המלא לקורס שפות תכנות, בתוספת הסברים
+                דוגמאות והכנה למבחן </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <!-- Volume 1 -->
+            <a href="1.html"
+                class="group block bg-cardBg border border-slate-200 rounded-3xl p-8 hover:border-accentSoft transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
+                <div class="flex items-center justify-between mb-4">
+                    <span
+                        class="text-5xl text-slate-200 font-light group-hover:text-accentSoft transition-colors">01</span>
+                    <span class="bg-slate-100 text-sm px-4 py-1.5 rounded-full text-slate-600 font-medium">ממנים 11
+                        ו12</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-accentStrong transition-colors">
+                    יסודות וכלים</h2>
+                <p class="text-textMuted leading-relaxed"> מבוא לשפות תכנות, שפת scheme וסביבת הפיתוח racket</p>
+            </a>
+
+            <!-- Volume 2 -->
+            <a href="2.html"
+                class="group block bg-cardBg border border-slate-200 rounded-3xl p-8 hover:border-accentSoft transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
+                <div class="flex items-center justify-between mb-4">
+                    <span
+                        class="text-5xl text-slate-200 font-light group-hover:text-accentSoft transition-colors">02</span>
+                    <span class="bg-slate-100 text-sm px-4 py-1.5 rounded-full text-slate-600 font-medium">ממנים 13
+                        ו14</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-accentStrong transition-colors">
+                    התפתחות השפות</h2>
+                <p class="text-textMuted leading-relaxed">שפת LET (ויהי), שפת PROG (וישגור), שפת LETREC (וייסוג)</p>
+            </a>
+
+            <!-- Volume 3 -->
+            <a href="3.html"
+                class="group block bg-cardBg border border-slate-200 rounded-3xl p-8 hover:border-accentSoft transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
+                <div class="flex items-center justify-between mb-4">
+                    <span
+                        class="text-5xl text-slate-200 font-light group-hover:text-accentSoft transition-colors">03</span>
+                    <span class="bg-slate-100 text-sm px-4 py-1.5 rounded-full text-slate-600 font-medium">ממן 15</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-accentStrong transition-colors">ניהול
+                    זיכרון ומצב</h2>
+                <p class="text-textMuted leading-relaxed">שפת EXPLICIT (ויפנה), שפת IMPLICIT-REFS (וירמוז), שפת
+                    MUTABLE-PAIRS (ויבגוד) והעברת פרמטרים</p>
+            </a>
+
+            <!-- Volume 4 -->
+            <a href="4.html"
+                class="group block bg-cardBg border border-slate-200 rounded-3xl p-8 hover:border-accentSoft transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
+                <div class="flex items-center justify-between mb-4">
+                    <span
+                        class="text-5xl text-slate-200 font-light group-hover:text-accentSoft transition-colors">04</span>
+                    <span class="bg-slate-100 text-sm px-4 py-1.5 rounded-full text-slate-600 font-medium">ממן 16</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-accentStrong transition-colors">
+                    נושאים מתקדמים וטיפוסים</h2>
+                <p class="text-textMuted leading-relaxed">טיפוסים, אלגוריתם הסקת טיפוסים, שפת CHECKED (ויבדוק) ושפת
+                    INFERRED (ויקיש)</p>
+            </a>
+
+        </div>
+
+        <div class="mt-8">
+            <!-- Test Prep -->
+            <a href="5.html"
+                class="group block bg-gradient-to-r from-sky-50 to-white border border-sky-200 rounded-3xl p-8 hover:border-sky-400 transition-all duration-300 hover:shadow-xl hover:shadow-sky-100 hover:-translate-y-1">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-4xl text-sky-200 font-light group-hover:text-sky-400 transition-colors">05</span>
+                    <span class="bg-sky-100 text-sm px-4 py-1.5 rounded-full text-sky-700 font-medium">סיכום
+                        והכנה</span>
+                </div>
+                <h2 class="text-2xl font-bold text-sky-900 mb-3 group-hover:text-accentStrong transition-colors">הכנה
+                    לבחינה</h2>
+                <p class="text-sky-700/90 leading-relaxed text-lg">הכנה לבחינה- מבנה הבחינה, אלגוריתמים לפיתרון בעיות
+                    ומבחנים פתורים מסודרים לפי נושאים \ בחינות</p>
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-8 py-10">
+        <div class="container mx-auto px-4 text-center text-slate-400">
+            <p>
+                ©נבנה על ידי יאיר קורצמן, למידה מהנה ובהצלחה!
+                האתר נבנה בעזרת בינה מלאכותית ולכן יתכנו (וכנראה יש) טעויות, אשמח לעדכון אם מצאתם על מנת שאוכל לתקן.
+                כמו כן פתרון
+                הממנים מובא בתור דוגמאות ועזרה בלבד ואין להעתיק ישירות
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>

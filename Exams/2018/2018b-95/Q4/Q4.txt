@@ -1,0 +1,3 @@
+"let p=(proc (w:?) -(w,7) 9)
+    in
+     if zero?(p) then p else (proc (y:?) -(y,7) 20)"
