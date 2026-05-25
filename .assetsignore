@@ -1,9 +1,8 @@
-```text
-   # 1. נתק את הגישה לכל הקבצים והתיקיות כברירת מחדל
-   *
-   
-   # 2. החרג את התיקיות הנסתרות כדי שלא יסרקו (כמו ה-git שהכשיל אותך)
-   .git/
-   
-   # 3. תן אישור חריג (שלילה) אך ורק לקבצי HTML
-   !*.html
+# Ignore everything by default
+*
+
+# Exclude hidden directories (e.g. .git)
+.git/
+
+# Allow only HTML files
+!*.html
