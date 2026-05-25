@@ -1,0 +1,19 @@
+```json
+   {
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "programming-languages",
+    "compatibility_date": "2026-05-25",
+    "observability": {
+        "enabled": true
+    },
+    "assets": {
+        "directory": ".",
+        "exclude": [
+            "**/.git/**",
+            "**/.*",
+            "**/*.git*",
+            // חוסם את כל הקבצים שאינם HTML משורש התיקייה ומתיקיות משנה
+            "**/!(*.html)"
+        ]
+    }
+}
