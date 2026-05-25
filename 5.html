@@ -218,30 +218,38 @@
         aside {
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
+
         .sidebar-collapsed aside {
             width: 0 !important;
             min-width: 0 !important;
             opacity: 0 !important;
             pointer-events: none !important;
         }
+
         #sidebar-toggle-btn {
             transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
         }
+
         /* When sidebar is open: button floats to the left of the sidebar (RTL right side) */
         body:not(.sidebar-collapsed) #sidebar-toggle-btn {
-            right: 21rem; /* 20rem (w-80) + 1rem (spacing) */
+            right: 21rem;
+            /* 20rem (w-80) + 1rem (spacing) */
         }
+
         body.sidebar-collapsed #sidebar-toggle-btn {
             right: 1rem;
         }
-        
+
         /* Premium navigation buttons styling */
-        .nav-btn-prev, .nav-btn-next {
+        .nav-btn-prev,
+        .nav-btn-next {
             transition: all 0.2s ease-in-out;
         }
+
         .nav-btn-prev:hover {
             transform: translateX(2px);
         }
+
         .nav-btn-next:hover {
             transform: translateX(-2px);
         }
@@ -257,15 +265,17 @@
             <h1 class="text-3xl font-black text-white tracking-tight leading-tight">Mastering<br><span
                     class="text-red-500">Exams V2</span></h1>
             <p class="text-xs text-slate-400 mt-2">הכנה לבחינה, מבנה הבחינה אלגוריתמים ובחינות עבר</p>
-        
+
             <div class="mt-4">
-                <a href="index.html" class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700/60 transition-colors">
+                <a href="index.html"
+                    class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700/60 transition-colors">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 12l9-9m-9 9l9 9" />
                     </svg>
                     חזרה לדף הבית
                 </a>
-            </div></div>
+            </div>
+        </div>
 
         <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
 
@@ -573,74 +583,6 @@
                         <p class="text-slate-600">החליפו כל קריאה למשתנה (למשל בתוך `+ (x, y)`) בערך האמיתי שלו מהסביבה.
                             תמיד חפשו בסביבה הפנימית ביותר, ואם אין, עקבו אחר החץ למעלה עד שתמצאו (Shadowing).</p>
                     </div>
-                    </div>
-                </div>
-
-                <!-- Lexical Scope Trace Player -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-12 animate-fade-in">
-                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span>מריץ מעקב סביבות לקסיקלי (Trace Player)</span>
-                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
-                    </h4>
-                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-                        עקבו אחר שלבי הרצת הקוד צעד-אחר-צעד, וראו כיצד סביבות הזיכרון והקלוז'רים (Closures) נבנים ומצביעים אחד לשני:
-                    </p>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                        <!-- Left: Code & Controls -->
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
-                            <div>
-                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-2">קוד המקור:</h5>
-                                <div class="bg-slate-900 text-slate-200 p-4 rounded-lg font-mono text-xs leading-relaxed" dir="ltr">
-                                    <div id="trace-code-0">let x = 10</div>
-                                    <div id="trace-code-1">in let f = proc (y) -(x, y)</div>
-                                    <div id="trace-code-2">&nbsp;&nbsp;&nbsp;in let x = 20</div>
-                                    <div id="trace-code-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in (f 5)</div>
-                                </div>
-                                
-                                <div class="flex gap-2 mt-4">
-                                    <button onclick="stepTrace(-1)" id="btn-trace-prev" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer" disabled>
-                                        ➔ קודם
-                                    </button>
-                                    <button onclick="stepTrace(1)" id="btn-trace-next" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
-                                        הבא ➔
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div id="trace-explain" class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[140px] flex items-center justify-center text-center leading-relaxed">
-                                לחצו על "הבא" כדי להתחיל במעקב ההרצה.
-                            </div>
-                        </div>
-
-                        <!-- Right: Environments Chain Dynamic Display -->
-                        <div class="lg:col-span-2 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center gap-2" dir="ltr">
-                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider self-end mb-2" dir="rtl">שרשרת הסביבות הפעילה (Active Env Chain):</h5>
-                            <div id="trace-env-container" class="w-full flex flex-col items-center gap-1.5 min-h-[300px]">
-                                <!-- Empty Env initially -->
-                                <div class="w-full max-w-[320px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border border-slate-700 text-center font-mono text-xs">
-                                    (empty-env)
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 class="text-3xl font-bold mb-6 text-slate-800 border-r-4 border-blue-500 pr-4 mt-12">צ'קליסט לשאלות
-                    1 ו-2: מימוש הרחבה</h3>
-
-                <div class="tip-box mb-8">
-                    <h4 class="font-bold text-lg mb-2 text-amber-800">⚠️ נורות אזהרה (Red Flags) במבחן</h4>
-                    <ul class="list-disc list-inside space-y-2 text-slate-700 mt-2">
-                        <li><strong>האם השפה היא Implicit-Refs?</strong> אם כן, ואתם מרחיבים את הסביבה בעזרת
-                            `extend-env`, <strong>אסור</strong> להכניס את הערך ישירות! חובה לעטוף אותו: `(extend-env var
-                            (newref val) env)`.</li>
-                        <li><strong>האם הפקודה היא Side-Effect?</strong> (למשל `while`, `set`, פקודת הדפסה). היא לא
-                            מחזירה חישוב, אלא משנה זיכרון. לכן ה-case שלה חייב בסוף להחזיר `(num-val 27)`.</li>
-                        <li><strong>רשימה או איבר יחיד?</strong> בדקו היטב את הדקדוק: האם יש שם סוגריים מסולסלים וכוכבית
-                            `{}*`? אם כן, מדובר במערך/רשימה בסקים (List-of), ותצטרכו להשתמש ב-`map` או בפונקציית לולאה
-                            כדי להעריך הכל.</li>
-                    </ul>
                 </div>
             </div>
 
@@ -657,7 +599,8 @@
                     </h2>
                     <p class="text-lg text-slate-600"><strong>שפת הבסיס:</strong> PROC. בשאלה זו התבקשנו לממש לולאת
                         <code>foreach</code> דינמית שמסננת את איברי רשימת הקלט על פי טיפוס נבחר (מספר, בוליאני, או
-                        פרוצדורה) ומריצה עליהם את גוף הלולאה, תוך החזרת רשימה מחושבת של התוצאות.</p>
+                        פרוצדורה) ומריצה עליהם את גוף הלולאה, תוך החזרת רשימה מחושבת של התוצאות.
+                    </p>
                 </header>
 
                 <h3 class="text-2xl font-bold mb-4">1. הדקדוק שניתן בשאלה</h3>
@@ -672,7 +615,8 @@
                     <ol class="list-decimal list-inside space-y-2 text-slate-700">
                         <li><strong>מבנה נתונים של רשימה:</strong> הלולאה צריכה להחזיר ערך מטיפוס רשימה של ערכי מפרש.
                             נצטרך להגדיר Variant חדש ב-<code>expval</code> בשם <code>list-val</code> המכיל רשימה של
-                            <code>expval</code>.</li>
+                            <code>expval</code>.
+                        </li>
                         <li><strong>לוגיקת הסינון:</strong> בניגוד ללולאות foreach רגילות שפשוט רצות על כל האיברים, כאן
                             יש לנו טיפוס מסנן (<code>int</code>, <code>bool</code>, או <code>func</code>). עלינו להעריך
                             את כל הביטויים ברשימה, לסנן רק את אלה שמתאימים לטיפוס שנבחר, ורק עליהם להריץ את הגוף.</li>
@@ -879,19 +823,22 @@ zero?( ((proc(x) -(x, 5)) -(y, 25)) )</code></pre>
                             מעקב סביבות (PROC)
                         </h3>
                         <p class="text-slate-600 mb-4">עלינו לקבוע מה יהיה ערך ההחזרה של התוכנית בעת הרצה בשפת
-                            <code>PROC</code>. נפרק את התהליך שלב אחר שלב:</p>
+                            <code>PROC</code>. נפרק את התהליך שלב אחר שלב:
+                        </p>
 
                         <div class="space-y-4">
                             <div class="bg-slate-50 p-4 rounded-lg">
                                 <h4 class="font-bold text-slate-700">שלב א': הערכת הגדרת המשתנה y</h4>
                                 <p class="text-slate-600 text-sm">הביטוי <code>let y = 30</code> מייצר סביבה חדשה
-                                    <code>E0</code> המצביעה לסביבה הריקה, ובה <code>y = 30</code>.</p>
+                                    <code>E0</code> המצביעה לסביבה הריקה, ובה <code>y = 30</code>.
+                                </p>
                             </div>
                             <div class="bg-slate-50 p-4 rounded-lg">
                                 <h4 class="font-bold text-slate-700">שלב ב': הערכת הארגומנט של הפונקציה</h4>
                                 <p class="text-slate-600 text-sm">הארגומנט הוא הביטוי <code>-(y, 25)</code>. אנו מעריכים
                                     אותו בסביבה <code>E0</code>. הערך של <code>y</code> הוא 30, לכן הביטוי מחזיר
-                                    <code>30 - 25 = 5</code> (כלומר <code>(num-val 5)</code>).</p>
+                                    <code>30 - 25 = 5</code> (כלומר <code>(num-val 5)</code>).
+                                </p>
                             </div>
                             <div class="bg-slate-50 p-4 rounded-lg">
                                 <h4 class="font-bold text-slate-700">שלב ג': הגדרת הפרוצדורה והפעלתה</h4>
@@ -899,14 +846,16 @@ zero?( ((proc(x) -(x, 5)) -(y, 25)) )</code></pre>
                                     המכיל את שם המשתנה <code>x</code>, את הגוף <code>-(x, 5)</code>, ואת סביבת ההגדרה
                                     שלו <code>E0</code>.
                                     כעת מבוצעת הפעלה של ה-Closure עם הארגומנט שחושב (5). לשם כך נפתחת סביבה חדשה
-                                    <code>E1</code> המצביעה ל-<code>E0</code> (סביבת ההגדרה) ובה <code>x = 5</code>.</p>
+                                    <code>E1</code> המצביעה ל-<code>E0</code> (סביבת ההגדרה) ובה <code>x = 5</code>.
+                                </p>
                             </div>
                             <div class="bg-slate-50 p-4 rounded-lg">
                                 <h4 class="font-bold text-slate-700">שלב ד': הערכת גוף הפונקציה ותוצאת zero?</h4>
                                 <p class="text-slate-600 text-sm">גוף הפונקציה <code>-(x, 5)</code> מוערך בסביבה
                                     <code>E1</code> ונותן <code>5 - 5 = 0</code>.
                                     התוצאה 0 מועברת לפונקציה המובנית <code>zero?</code> אשר בודקת האם הערך שקיבלה הוא 0
-                                    ומחזירה <code>(bool-val #t)</code> (אמת).</p>
+                                    ומחזירה <code>(bool-val #t)</code> (אמת).
+                                </p>
                             </div>
                         </div>
 
@@ -944,15 +893,18 @@ zero?( ((proc(x) -(x, 5)) -(y, 25)) )</code></pre>
                                 <ul class="list-disc list-inside text-slate-600 text-sm space-y-1">
                                     <li>מההשמה <code>y = 30</code>: <br><code>(1) t_y = int</code></li>
                                     <li>מהפעולה <code>-(x, 5)</code>: <br><code>(2) t_x = int</code>,
-                                        <code>(3) t_body = int</code></li>
+                                        <code>(3) t_body = int</code>
+                                    </li>
                                     <li>מהגדרת הפרוצדורה: <br><code>(4) t_proc = t_x 
 ightarrow t_body</code></li>
                                     <li>מהפעולה <code>-(y, 25)</code>: <br><code>(5) t_y = int</code>,
-                                        <code>(6) t_arg = int</code></li>
+                                        <code>(6) t_arg = int</code>
+                                    </li>
                                     <li>מביטוי הפעלת הפרוצדורה: <br><code>(7) t_proc = t_arg 
 ightarrow t_app</code></li>
                                     <li>מהפעלת <code>zero?(app)</code>: <br><code>(8) t_app = int</code>,
-                                        <code>(9) t_result = bool</code></li>
+                                        <code>(9) t_result = bool</code>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="bg-slate-50 p-4 rounded-lg">
@@ -1030,38 +982,47 @@ ightarrow t_app</code><br><br>
                             <code>expval</code></strong>. אם ביקשו מכם להוסיף לולאה (כמו <code>while</code> או
                         <code>foreach</code>) או פקודת השמה (כמו <code>set</code>), הפקודות הללו לא באמת מחשבות מספר, הן
                         נועדו רק ליצור תופעות לוואי בזיכרון. לכן, בסיום הלולאה או ההשמה, <strong>חובה תמיד להחזיר ערך
-                            פיקטיבי</strong> כמו <code>(num-val 27)</code> כדי שהמפרש יחזיר משהו חוקי ולא יקרוס.</p>
+                            פיקטיבי</strong> כמו <code>(num-val 27)</code> כדי שהמפרש יחזיר משהו חוקי ולא יקרוס.
+                    </p>
                 </div>
 
                 <!-- 5-Step Language Extension Recipe Checklist -->
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-10">
                     <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
                         <span>סימולטור 5 השלבים להרחבת שפה במבחן</span>
-                        <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-normal">הנחיות אינטראקטיביות</span>
+                        <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-normal">הנחיות
+                            אינטראקטיביות</span>
                     </h4>
                     <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-                        לחצו על כל אחד מהשלבים הבאים כדי לקבל את תוכנית העבודה המלאה שלו, כולל דוגמת קוד Scheme/Racket ותבנית פתרון מוכנה לשימוש במבחן.
+                        לחצו על כל אחד מהשלבים הבאים כדי לקבל את תוכנית העבודה המלאה שלו, כולל דוגמת קוד Scheme/Racket
+                        ותבנית פתרון מוכנה לשימוש במבחן.
                     </p>
 
                     <div class="flex flex-col md:flex-row gap-4">
                         <div class="md:w-1/3 flex flex-col gap-2">
-                            <button onclick="showRecipeStep(1)" id="btn-recipe-1" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-blue-200 bg-blue-600 text-white shadow-sm cursor-pointer">
+                            <button onclick="showRecipeStep(1)" id="btn-recipe-1"
+                                class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-blue-200 bg-blue-600 text-white shadow-sm cursor-pointer">
                                 שלב 1: lang.scm (הדקדוק)
                             </button>
-                            <button onclick="showRecipeStep(2)" id="btn-recipe-2" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
+                            <button onclick="showRecipeStep(2)" id="btn-recipe-2"
+                                class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
                                 שלב 2: data-structures.scm (טיפוסים)
                             </button>
-                            <button onclick="showRecipeStep(3)" id="btn-recipe-3" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
+                            <button onclick="showRecipeStep(3)" id="btn-recipe-3"
+                                class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
                                 שלב 3: environments.scm (סביבות)
                             </button>
-                            <button onclick="showRecipeStep(4)" id="btn-recipe-4" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
+                            <button onclick="showRecipeStep(4)" id="btn-recipe-4"
+                                class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
                                 שלב 4: interp.scm (סמנטיקה)
                             </button>
-                            <button onclick="showRecipeStep(5)" id="btn-recipe-5" class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
+                            <button onclick="showRecipeStep(5)" id="btn-recipe-5"
+                                class="w-full text-right px-4 py-2.5 rounded-lg text-xs font-bold transition-all border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer">
                                 שלב 5: בדיקת קצה וערך דאמי
                             </button>
                         </div>
-                        <div class="md:w-2/3 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between min-h-[220px]">
+                        <div
+                            class="md:w-2/3 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between min-h-[220px]">
                             <div id="recipe-content-box" class="text-xs text-slate-600 leading-relaxed">
                                 <!-- Rendered dynamically -->
                             </div>
@@ -1098,7 +1059,8 @@ ightarrow t_app</code><br><br>
                     <ol class="list-decimal list-inside space-y-2 text-slate-700">
                         <li><strong>מבני נתונים:</strong> Tuple הוא אוסף של ביטויים שמחושבים לערכים. לכן נצטרך להוסיף
                             קופסה חדשה ב-<code>expval</code> שתכיל רשימה של <code>expval</code>-ים. נוסיף גם חולץ
-                            <code>expval-&gt;tuple</code>.</li>
+                            <code>expval-&gt;tuple</code>.
+                        </li>
                         <li><strong>הערכת Tuple (tuple-exp):</strong> צריך לרוץ על רשימת הביטויים (ה-AST Nodes) בעזרת
                             <code>map</code>, להעריך כל אחד מהם בסביבה הנוכחית, ולארוז את התוצאות בקופסת ה-Tuple החדשה.
                         </li>
@@ -1286,7 +1248,8 @@ ightarrow t_app</code><br><br>
                         <li><strong>איך נריץ איטרציה ב-Scheme?</strong> נכתוב פונקציית לולאה רקורסיבית (בעזרת
                             <code>letrec</code> בתוך המפרש) שעוברת על רשימת הביטויים <code>exps</code>. בכל איטרציה ניקח
                             ביטוי, נחשב אותו, <strong>ניצור סביבה מורחבת (extend-env)</strong> שמקשרת את הערך
-                            ל-<code>var</code>, ונריץ בה את ה-<code>body</code>.</li>
+                            ל-<code>var</code>, ונריץ בה את ה-<code>body</code>.
+                        </li>
                     </ol>
                 </div>
 
@@ -1328,7 +1291,8 @@ ightarrow t_app</code><br><br>
                     <p class="text-lg text-slate-600"><strong>שפת הבסיס:</strong> IMPLICIT-REFS. מימוש מבנה
                         <code>switch</code>. מחשבים ערך מטרה, מעבירים אותו למשתנה, ואז בודקים מול רשימה של תנאים
                         (cases). המקרה הראשון שמתקיים - מריצים את הגוף שלו ועוצרים. המוקש בשאלה זו הוא ההקצאה האוטומטית
-                        שנדרשת בשפת IMPLICIT-REFS.</p>
+                        שנדרשת בשפת IMPLICIT-REFS.
+                    </p>
                 </header>
 
                 <h3 class="text-2xl font-bold mb-4">1. הדקדוק שניתן בשאלה</h3>
@@ -1346,7 +1310,8 @@ ightarrow t_app</code><br><br>
                             לתת את הערך ל-<code>identifier</code>, חובה לעטוף אותו ב-<code>newref</code>.</li>
                         <li><strong>מנוע הבדיקה:</strong> נכתוב פונקציה רקורסיבית בתוך Racket שמקבלת את רשימות התנאים
                             והגופים. היא מייצרת סביבה, מעריכה את התנאי, אם <code>true</code> היא מחזירה את הגוף. אם
-                            <code>false</code> היא קוראת לעצמה עם ה-<code>cdr</code> של הרשימות.</li>
+                            <code>false</code> היא קוראת לעצמה עם ה-<code>cdr</code> של הרשימות.
+                        </li>
                     </ol>
                 </div>
 
@@ -1410,7 +1375,8 @@ ightarrow t_app</code><br><br>
                         את זה - התנאי נבדק רק פעם אחת, והלולאה תרוץ לנצח או לא תרוץ כלל!</p>
                     <p class="text-slate-700 font-bold">הפתרון: חובה להעריך את ה-<code>cond-exp</code>
                         <strong>בתוך</strong> הלולאה הרקורסיבית, כדי שבכל איטרציה המפרש יקרא מחדש מהזיכרון האם התנאי
-                        השתנה (למשל אם הגוף עשה <code>set x = x - 1</code>).</p>
+                        השתנה (למשל אם הגוף עשה <code>set x = x - 1</code>).
+                    </p>
                 </div>
 
                 <h3 class="text-2xl font-bold mb-4 mt-8">2. הפתרון המלא - Racket</h3>
@@ -1558,23 +1524,28 @@ ightarrow t_app</code><br><br>
                                      (extend-env (car remaining-vars) val current-env)))))))
       <span class="token-comment">; הפעלה מתוך הסביבה ההתחלתית</span>
       <span class="token-keyword">(evaluate-seq</span> vars exps env))))</code></pre>
-                
+
                 <!-- Let vs Let* Simulator -->
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-10">
                     <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
                         <span>סימולטור השוואתי: let רגיל (מקבילי) מול let* (סדרתי)</span>
-                        <span class="text-xs bg-sky-100 text-sky-700 px-2 py-0.5 rounded font-normal">הדמיה אינטראקטיבית</span>
+                        <span class="text-xs bg-sky-100 text-sky-700 px-2 py-0.5 rounded font-normal">הדמיה
+                            אינטראקטיבית</span>
                     </h4>
                     <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-                        ראו כיצד מנוע ההרצה מעריך את משתני ההשמה עבור הקוד הבא, וכיצד השילוב בין המשתנים משתנה לפי סוג ההשמה: <br>
-                        <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs" dir="ltr">let x = 1 in let/let* x = 4, y = +(x, 2) in +(x, y)</code>
+                        ראו כיצד מנוע ההרצה מעריך את משתני ההשמה עבור הקוד הבא, וכיצד השילוב בין המשתנים משתנה לפי סוג
+                        ההשמה: <br>
+                        <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs"
+                            dir="ltr">let x = 1 in let/let* x = 4, y = +(x, 2) in +(x, y)</code>
                     </p>
 
                     <div class="flex gap-2 mb-6">
-                        <button onclick="toggleLetMode('let')" id="btn-let-mode-let" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-sky-600 text-white shadow-sm cursor-pointer">
+                        <button onclick="toggleLetMode('let')" id="btn-let-mode-let"
+                            class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-sky-600 text-white shadow-sm cursor-pointer">
                             let רגיל (השמה מקבילית)
                         </button>
-                        <button onclick="toggleLetMode('letstar')" id="btn-let-mode-letstar" class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+                        <button onclick="toggleLetMode('letstar')" id="btn-let-mode-letstar"
+                            class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
                             let* (השמה סדרתית)
                         </button>
                     </div>
@@ -1584,23 +1555,29 @@ ightarrow t_app</code><br><br>
                             <div>
                                 <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">בקרה:</h5>
                                 <div class="flex gap-2 mb-4">
-                                    <button onclick="stepLetSim()" id="btn-let-step" class="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+                                    <button onclick="stepLetSim()" id="btn-let-step"
+                                        class="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
                                         בצע צעד (Step)
                                     </button>
-                                    <button onclick="resetLetSim()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-lg text-xs transition-colors cursor-pointer">
+                                    <button onclick="resetLetSim()"
+                                        class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-lg text-xs transition-colors cursor-pointer">
                                         איפוס
                                     </button>
                                 </div>
                             </div>
-                            
-                            <div id="let-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[120px] flex items-center justify-center text-center leading-relaxed">
+
+                            <div id="let-explain-text"
+                                class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[120px] flex items-center justify-center text-center leading-relaxed">
                                 לחצו על "בצע צעד" כדי לראות את שלבי הרצת הקוד ומעקב הסביבות.
                             </div>
                         </div>
 
-                        <div class="lg:col-span-2 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center">
-                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider self-end mb-3">שרשרת הסביבות הלקסיקליות:</h5>
-                            <div id="let-env-view" class="w-full flex flex-col items-center gap-2 min-h-[180px]" dir="ltr">
+                        <div
+                            class="lg:col-span-2 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center">
+                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider self-end mb-3">שרשרת
+                                הסביבות הלקסיקליות:</h5>
+                            <div id="let-env-view" class="w-full flex flex-col items-center gap-2 min-h-[180px]"
+                                dir="ltr">
                                 <!-- Rendered dynamically -->
                             </div>
                         </div>
@@ -1619,7 +1596,8 @@ ightarrow t_app</code><br><br>
                     <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-4">החלפת כתובות זיכרון (Swap)</h2>
                     <p class="text-lg text-slate-600"><strong>שפת הבסיס:</strong> IMPLICIT-REFS. הוספת פקודה
                         <code>swap x, y</code> שלוקחת שני משתנים שמייצגים כתובות זיכרון, ומחליפה את התוכן של הכתובות
-                        ב-Store מבלי לשנות את הסביבה שלהם. שאלה הבוחנת הבנה עמוקה של עבודה עם Reference מול Value.</p>
+                        ב-Store מבלי לשנות את הסביבה שלהם. שאלה הבוחנת הבנה עמוקה של עבודה עם Reference מול Value.
+                    </p>
                 </header>
 
                 <h3 class="text-2xl font-bold mb-4">1. הדקדוק </h3>
@@ -1632,11 +1610,13 @@ ightarrow t_app</code><br><br>
                     <h3 class="text-xl font-bold mb-2 text-fuchsia-800">🧠 דרך מחשבתית: אל תעריך את המשתנים!</h3>
                     <p class="text-slate-700 mb-2"><strong>המוקש:</strong> אם נפעיל <code>value-of</code> על
                         <code>var1</code>, נקבל אוטומטית (דרך ה-Dereferencing השקוף) את המספר שמסתתר בפנים (למשל 5). אי
-                        אפשר לעשות Swap על המספר 5!</p>
+                        אפשר לעשות Swap על המספר 5!
+                    </p>
                     <p class="text-slate-700"><strong>הפתרון:</strong> עלינו לגשת לסביבה ישירות בעזרת
                         <code>apply-env</code> כדי לקבל את <strong>כתובות הזיכרון (References)</strong> שאליהם מצביעים x
                         ו-y ב-Store. לאחר מכן נקרא פיזית את הערכים באמצעות <code>deref</code>, ולבסוף נכתוב אותם בהצלבה
-                        חזרה לזיכרון בעזרת <code>setref!</code>.</p>
+                        חזרה לזיכרון בעזרת <code>setref!</code>.
+                    </p>
                 </div>
 
                 <h3 class="text-2xl font-bold mb-4 mt-8">2. הפתרון המלא - Racket</h3>
@@ -1873,7 +1853,8 @@ ightarrow t_app</code><br><br>
                     <li><strong>let Colors = enum{...}</strong> → <code>(enum-val '(Red Green Blue))</code> נשמר בסביבה
                         כ-Colors</li>
                     <li><strong>let c = &lt;Colors.Green&gt;</strong> → enum-elmt-exp: Colors הוא enum-val, Green קיים →
-                        <code>(identifier-val 'Green)</code> נשמר כ-c</li>
+                        <code>(identifier-val 'Green)</code> נשמר כ-c
+                    </li>
                     <li><strong>match [Colors::c]</strong> →
                         <ul class="list-disc list-inside mr-4 mt-1 space-y-1 text-sm">
                             <li>enum-ids = (Red Green Blue)</li>
@@ -1973,16 +1954,19 @@ ightarrow t_app</code><br><br>
             <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 mb-8">
                 <p class="font-bold text-slate-700 mb-3">מצב התחלתי: w1=100, w2=300, w3=500</p>
                 <p class="font-bold text-slate-600 mb-2">הפרוצדורות: p=<code>proc(x)-(a,1)</code>,
-                    <code>proc(x)-(b,2)</code>, <code>proc(x)-(c,3)</code>, <code>proc(x)-(d,4)</code></p>
+                    <code>proc(x)-(b,2)</code>, <code>proc(x)-(c,3)</code>, <code>proc(x)-(d,4)</code>
+                </p>
                 <p class="text-sm text-slate-500 mb-4">(כל פרוצדורה מחסרת מה-w המתאים את המספר — למשל
-                    <code>proc(x)-(a,1)</code> כשנקראת עם x=N מחזירה a-1=100-1=99)</p>
+                    <code>proc(x)-(a,1)</code> כשנקראת עם x=N מחזירה a-1=100-1=99)
+                </p>
 
                 <div class="space-y-4">
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <p class="font-bold text-blue-800">🔁 איטרציה 1: p = proc(x)-(a,1) [a=100]</p>
                         <ul class="text-sm space-y-1 text-slate-700 mt-2">
                             <li>Guard 1 (skip): <code>zero?((p 2))</code> = <code>zero?(100-1)</code> =
-                                <code>zero?(99)</code> = false → ממשיכים</li>
+                                <code>zero?(99)</code> = false → ממשיכים
+                            </li>
                             <li>Guard 2 (break): <code>zero?((p 12))</code> = <code>zero?(88)</code> = false → ממשיכים
                             </li>
                             <li>Guard 3 (skip): <code>zero?((p 200))</code> = <code>zero?(-100)</code> = false → ממשיכים
@@ -1994,21 +1978,24 @@ ightarrow t_app</code><br><br>
                         </ul>
                         <p class="text-sm text-orange-700 mt-2">⚠️ שים לב: <code>(p w1)</code> =
                             <code>proc(x)-(a,1)</code> מוחל על <code>w1=100</code> כלומר: <code>-(a,1)</code> כשa=100 →
-                            <strong>99</strong>. אז w3=99.</p>
+                            <strong>99</strong>. אז w3=99.
+                        </p>
                     </div>
 
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                         <p class="font-bold text-yellow-800">🔁 איטרציה 2: p = proc(x)-(b,2) [b=300]</p>
                         <ul class="text-sm space-y-1 text-slate-700 mt-2">
                             <li>Guard 1 (skip): <code>zero?((p 2))</code> = <code>zero?(300-2)</code> =
-                                <code>zero?(298)</code> = false → ממשיכים</li>
+                                <code>zero?(298)</code> = false → ממשיכים
+                            </li>
                             <li>Guard 2 (break): <code>zero?((p 12))</code> = <code>zero?(288)</code> = false → ממשיכים
                             </li>
                             <li>Guard 3 (skip): <code>zero?((p 200))</code> = <code>zero?(100)</code> = false → ממשיכים
                             </li>
                             <li>Body: <code>zero?((p 1))</code> = <code>zero?(299)</code> = false →
                                 <code>zero?((p 3))</code> = <code>zero?(297)</code> = false → set w3=(p w1) =
-                                <code>-(b,2)</code> עם w1=100 = <code>100-2=98</code></li>
+                                <code>-(b,2)</code> עם w1=100 = <code>100-2=98</code>
+                            </li>
                         </ul>
                         <p class="text-sm text-slate-600 mt-1">⚠️ <strong>w3 = 98</strong> (w1=100 עדיין)</p>
                     </div>
@@ -2024,7 +2011,8 @@ ightarrow t_app</code><br><br>
                             <li>Guard 3 (skip): <code>zero?((p 200))</code> → false</li>
                             <li>Body: <code>zero?((p 1))</code> = false → <code>zero?((p 3))</code> =
                                 <code>zero?(95)</code> = false → set w3 = (p w1) = <code>-(c,3)</code> עם w1=100 =
-                                <code>100-3=97</code></li>
+                                <code>100-3=97</code>
+                            </li>
                         </ul>
                         <p class="text-sm text-slate-600 mt-1">w3 = 97</p>
                     </div>
@@ -2033,7 +2021,8 @@ ightarrow t_app</code><br><br>
                         <p class="font-bold text-red-800">🔁 איטרציה 4: p = proc(x)-(d,4) [d=4]</p>
                         <ul class="text-sm space-y-1 text-slate-700 mt-2">
                             <li>Guard 1 (skip): <code>zero?((p 2))</code> → p=proc(x)-(d,4), (p 2) = 4-4 = 0 →
-                                <strong>zero? = TRUE → SKIP!</strong></li>
+                                <strong>zero? = TRUE → SKIP!</strong>
+                            </li>
                             <li>ה-skip מדלג לאיטרציה הבאה — אבל אין יותר איטרציות!</li>
                         </ul>
                     </div>
@@ -2048,7 +2037,8 @@ ightarrow t_app</code><br><br>
                             התשובה היא <code>(num-val 6993)</code>.</p>
                         <p class="text-sm text-slate-600 mt-2">הבה נחשב שוב: w2 הוא <strong>פרוצדורה</strong> לפי ריצה 3
                             כי set w2=p! p=proc(x)-(c,3). אז (w2 w3) = (proc(x)-(c,3) 97) = c-3 כשc=97 →
-                            <strong>97-3=94</strong>? עדיין לא 6993...</p>
+                            <strong>97-3=94</strong>? עדיין לא 6993...
+                        </p>
                         <p class="text-sm text-emerald-700 font-bold mt-2">📌 לפי המבחן התשובה היא 6993 = 7000 - 7 =
                             97*... בואו נבדוק את ה-w2: w2=300 לא השתנה. (w2 w3) שגיאה. אם w2 הפרוצדורה שהיתה c, אז (w2
                             w3)= -(c,3) כשx=w3... ={w3}-3. אבל w3 השתנה לאורך הדרך.</p>
@@ -2287,6 +2277,355 @@ in zero? (-( (p a), a) )
             </div>
         </div>
 
+
+        <!-- Exam 2025B Moed A2 - Q1 -->
+        <div id="exam-2025b-a2-q1" class="tab-content">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <span
+                        class="bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full text-sm font-semibold mb-3 inline-block">מועד
+                        2025ב א2</span>
+                    <h2 class="text-3xl font-bold text-slate-800">שאלה 1: Reflection וטיפוסים בזמן ריצה</h2>
+                </div>
+            </div>
+
+            <div class="deep-dive">
+                <h3 class="text-xl font-bold text-slate-800 mb-4">מה השאלה דורשת?</h3>
+                <p class="text-slate-600 mb-4">
+                    השאלה מבקשת להוסיף לשפה (שפת PROC) יכולת בסיסית של <strong
+                        class="text-indigo-600">Reflection</strong>.
+                    <br>
+                    המשמעות היא שהתוכנית יכולה לתחקר בזמן ריצה (Runtime) רכיבים של עצמה, ובפרט - לקבל מידע על הטיפוס של
+                    משתנה נתון ולבצע פעולות בהתאם.
+                </p>
+                <div class="grammar-box">
+                    Expression ::= get-type (identifier)
+                    Expression ::= isBool? (Expression)
+                    Expression ::= isNum? (Expression)
+                    Expression ::= isProc? (Expression)
+                </div>
+                <ul class="list-disc list-inside text-slate-600 space-y-2">
+                    <li><code>get-type-exp(id)</code>: מקבל מזהה של משתנה ומחזיר <code>expval</code> מסוג חדש המתאר את
+                        הטיפוס שלו.</li>
+                    <li><code>isBool?-exp(ex)</code>, <code>isNum?-exp(ex)</code>, <code>isProc?-exp(ex)</code>: מקבלים
+                        ביטוי (שבד"כ יהיה מסוג get-type) ומחזירים ערך בוליאני האם הוא מתאים לטיפוס שנבדק.</li>
+                </ul>
+            </div>
+
+            <div class="concept-box">
+                <h3 class="text-xl font-bold text-slate-800 mb-4">שלבי הפתרון</h3>
+                <ol class="list-decimal list-inside text-slate-700 space-y-4">
+                    <li>
+                        <strong>הוספת ערך מוחזר חדש ל-expval:</strong>
+                        מכיוון ש-<code>get-type</code> מחזיר "תשובה המייצגת טיפוס", אנחנו צריכים להוסיף סוג חדש של ערך
+                        ב-<code>expval</code>.
+                        <pre><code class="language-scheme">
+(define-datatype expval expval?
+  (num-val (value number?))
+  (bool-val (boolean boolean?))
+  (proc-val (proc proc?))
+  <span class="token-comment">; תוספת חדשה עבור Reflection:</span>
+  <span class="token-function">(type-val (t symbol?))</span>) <span class="token-comment">; השתמשנו בסמל ('num, 'bool, 'proc) כדי לייצג טיפוס</span>
+                            </code></pre>
+                    </li>
+                    <li>
+                        <strong>שינוי ב-expression:</strong>
+                        נוסיף את 4 הביטויים החדשים לדקדוק באמצעות <code>define-datatype expression</code>.
+                    </li>
+                    <li>
+                        <strong>מימוש ב-value-of:</strong>
+                        <p class="mt-2 text-sm text-slate-600">עבור <code>get-type</code>, נשלוף את הערך מהסביבה ונשתמש
+                            ב-<code>cases</code> כדי לגלות מאיזה סוג הוא ב-Racket, ואז נחזיר <code>type-val</code>
+                            מתאים.</p>
+                        <pre><code class="language-scheme">
+(get-type-exp (id)
+  (let ((val (apply-env env id)))
+    (cases expval val
+      (num-val (num) (type-val 'num))
+      (bool-val (bool) (type-val 'bool))
+      (proc-val (proc) (type-val 'proc))
+      (type-val (t) (type-val 'type))))) <span class="token-comment">; למקרה שנעשה get-type על type-val בעצמו</span>
+                            </code></pre>
+                        <p class="mt-2 text-sm text-slate-600">עבור פונקציות הבדיקה (כמו <code>isNum?</code>), נעריך את
+                            הביטוי הפנימי, נוודא שקיבלנו <code>type-val</code> ונבדוק את הסמל.</p>
+                        <pre><code class="language-scheme">
+(isNum?-exp (ex)
+  (let ((val (value-of ex env)))
+    (cases expval val
+      (type-val (t)
+        (if (eqv? t 'num)
+            (bool-val #t)
+            (bool-val #f)))
+      (else (eopl:error 'value-of "Expected type-val")))))
+                            </code></pre>
+                        <p class="mt-1 text-sm text-slate-500 italic">* הערה: המימוש זהה עבור isBool? ו-isProc?, רק עם
+                            החלפת הסמל הנבדק ל-'bool או 'proc.</p>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="tip-box">
+                <h4 class="font-bold text-amber-800 mb-2">💡 טיפ לזיהוי שאלות Reflection</h4>
+                <p class="text-amber-900 text-sm">
+                    כאשר מבקשים מכם לתשאל את הטיפוס של משתנה <strong>בזמן ריצה</strong> (ולא בזמן Type Checking מוקדם),
+                    זה אומר שתצטרכו לשנות את <code>expval</code> כדי לאפשר לשפה לשאת מידע על טיפוסים כערך מן המניין
+                    (First-class citizen). תמיד התחילו בלהבין כיצד "הערך החדש" הזה ייראה בזיכרון של המפרש.
+                </p>
+            </div>
+        </div>
+
+        <!-- Exam 2025B Moed A2 - Q2 -->
+        <div id="exam-2025b-a2-q2" class="tab-content">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <span
+                        class="bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full text-sm font-semibold mb-3 inline-block">מועד
+                        2025ב א2</span>
+                    <h2 class="text-3xl font-bold text-slate-800">שאלה 2: העמסת פונקציות (Overloading)</h2>
+                </div>
+            </div>
+
+            <div class="deep-dive">
+                <h3 class="text-xl font-bold text-slate-800 mb-4">תיאור השאלה</h3>
+                <p class="text-slate-600 mb-4">
+                    בשפה המקורית המבוססת על IMPLICIT-REFS, כאשר מגדירים פונקציה תחת אותו שם פעמיים, ההגדרה השנייה דורסת
+                    את הראשונה (Shadowing).
+                    בשאלה זו נתבקשנו לממש מנגנון <strong>Overloading</strong> (העמסת פונקציות) - היכולת לשמור מספר
+                    גרסאות של אותה פונקציה, כך שיופעלו לפי טיפוס הפרמטר שנשלח אליהן.
+                </p>
+                <div class="grammar-box">
+                    Expression ::= proc (type identifier) Expression
+                    [proc-exp (typ var body)]
+
+                    type ::= int | bool | func
+                    [int-type ()] [bool-type ()] [func-type ()]
+
+                    Expression ::= overload identifier with (type identifier) Expression
+                    [overload-exp (p-name typ var body)]
+                </div>
+                <ul class="list-disc list-inside text-slate-600 space-y-2 mt-4 text-sm">
+                    <li><code>proc-exp</code>: כעת כולל טיפוס לפמרטר.</li>
+                    <li><code>overload-exp</code>: מוסיף גרסה חדשה לפונקציה קיימת. אם מנסים להעמיס פונקציה על משתנה
+                        שאינו פונקציה, או על פונקציה שכבר יש לה את אותו הטיפוס, תיזרק שגיאה.</li>
+                </ul>
+            </div>
+
+            <div class="concept-box">
+                <h3 class="text-xl font-bold text-slate-800 mb-4">פתרון: עקרונות המימוש</h3>
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+                        <h4 class="font-bold text-blue-600 mb-2">1. שינוי ייצוג הפרוצדורה (proc-val)</h4>
+                        <p class="text-sm text-slate-600">
+                            במקום שהפרוצדורה תשמור רשימה של משתנה וגוף יחידים, הפרוצדורה צריכה לנהל <strong>רשימה של
+                                חתימות</strong>.
+                            כל חתימה תכיל: סוג טיפוס, שם משתנה וגוף.
+                        </p>
+                        <pre><code class="language-scheme">
+(define-datatype proc proc?
+  (procedure
+    (signatures (list-of signature?)) <span class="token-comment">; רשימה של חתימות במקום var ו-body יחידים</span>
+    (saved-env environment?)))
+
+<span class="token-comment">; מבנה עזר לחתימה:</span>
+(define (signature? x)
+  (and (pair? x) (type? (car x)) (symbol? (cadr x)) (expression? (caddr x))))
+                            </code></pre>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+                        <h4 class="font-bold text-blue-600 mb-2">2. הערכת proc-exp והעמסה (overload-exp)</h4>
+                        <p class="text-sm text-slate-600">
+                            כאשר אנחנו יוצרים <code>proc</code> ראשוני, ניצור רשימה עם חתימה אחת.
+                        </p>
+                        <pre><code class="language-scheme">
+(proc-exp (typ var body)
+  (proc-val (procedure (list (list typ var body)) env)))
+                            </code></pre>
+                        <p class="text-sm text-slate-600 mt-2">
+                            כאשר אנחנו נתקלים ב-<code>overload-exp</code>, נשלוף את הפונקציה הקיימת (מה-Reference),
+                            נבדוק אם היא פרוצדורה, נוודא שאין חתימה קיימת עם אותו <code>typ</code>, ונוסיף את החתימה
+                            החדשה. <strong>מכיוון שזו שפת IMPLICIT-REFS, נעדכן את ה-Reference במקום!</strong>
+                        </p>
+                        <pre><code class="language-scheme">
+(overload-exp (p-name typ var body)
+  (let* ((ref (apply-env env p-name))
+         (val (deref ref)))
+    (if (proc-val? val)
+        (let* ((pr (expval->proc val))
+               (sigs (cases proc pr (procedure (s e) s))))
+          <span class="token-comment">; נבדוק האם הטיפוס כבר קיים</span>
+          (if (has-type? sigs typ)
+              (eopl:error 'overload "Type already exists for this procedure")
+              <span class="token-comment">; נעדכן את הרפרנס עם הפרוצדורה החדשה שמכילה את החתימה הנוספת</span>
+              (setref! ref 
+                       (proc-val (procedure (cons (list typ var body) sigs) 
+                                          (cases proc pr (procedure (s e) e)))))))
+        (eopl:error 'overload "Not a procedure"))))
+                            </code></pre>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+                        <h4 class="font-bold text-blue-600 mb-2">3. קריאה לפונקציה - apply-procedure</h4>
+                        <p class="text-sm text-slate-600">
+                            בזמן הפעלת הפונקציה (Call), נצטרך לקבל את ה-<code>expval</code> של הארגומנט, <strong>להסיק
+                                את הטיפוס שלו</strong>, לחפש אותו ברשימת החתימות (signatures), ולהריץ את ה-body המתאים.
+                        </p>
+                        <pre><code class="language-scheme">
+(define (apply-procedure pr1 val)
+  (cases proc pr1
+    (procedure (sigs saved-env)
+      (let* ((arg-type (get-val-type val)) <span class="token-comment">; פונקציית עזר לזיהוי הטיפוס של val</span>
+             (matching-sig (find-signature sigs arg-type)))
+        (if matching-sig
+            (let ((var (cadr matching-sig))
+                  (body (caddr matching-sig)))
+              <span class="token-comment">; ב-IMPLICIT-REFS מייצרים רפרנס חדש למשתנה ונכנסים לגוף</span>
+              (value-of body (extend-env var (newref val) saved-env)))
+            (eopl:error 'apply-procedure "No matching signature for argument type"))))))
+                            </code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam 2025B Moed A2 - Q3 -->
+        <div id="exam-2025b-a2-q3" class="tab-content">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <span
+                        class="bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full text-sm font-semibold mb-3 inline-block">מועד
+                        2025ב א2</span>
+                    <h2 class="text-3xl font-bold text-slate-800">שאלה 3: Type Inference ומשוואות טיפוסים</h2>
+                </div>
+            </div>
+
+            <div class="deep-dive">
+                <h3 class="text-xl font-bold text-slate-800 mb-4">מעקב והסקת טיפוסים (INFERRED)</h3>
+                <p class="text-slate-600 mb-4">
+                    בשאלה זו נתונה לנו התוכנית הבאה בשפת INFERRED:
+                </p>
+                <pre><code class="language-scheme">
+let p = proc (a:?) (a 6)
+in
+  (p proc (b:int) zero?(b))
+                    </code></pre>
+                <p class="text-slate-600 mt-4 font-bold">
+                    המשימה: לחלץ את משתני הטיפוס (Type Variables), לבנות משוואות טיפוסים, ולפתור אותן.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold text-indigo-600 mb-4">שלב א': הקצאת משתני טיפוסים</h3>
+                    <div class="overflow-x-auto text-sm text-left" dir="ltr">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-600 border-b">
+                                    <th class="p-2">Expression</th>
+                                    <th class="p-2">Type Variable</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-2 font-mono">p</td>
+                                    <td class="p-2 font-mono font-bold text-indigo-600">t1</td>
+                                </tr>
+                                <tr class="border-b bg-slate-50">
+                                    <td class="p-2 font-mono">a</td>
+                                    <td class="p-2 font-mono font-bold text-indigo-600">t2</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2 font-mono">6</td>
+                                    <td class="p-2 font-mono font-bold text-green-600">int</td>
+                                </tr>
+                                <tr class="border-b bg-slate-50">
+                                    <td class="p-2 font-mono">(a 6)</td>
+                                    <td class="p-2 font-mono font-bold text-indigo-600">t3</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2 font-mono">proc (a:?) (a 6)</td>
+                                    <td class="p-2 font-mono font-bold text-indigo-600">t2 -> t3</td>
+                                </tr>
+                                <tr class="border-b bg-slate-50">
+                                    <td class="p-2 font-mono">b</td>
+                                    <td class="p-2 font-mono font-bold text-green-600">int</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2 font-mono">zero?(b)</td>
+                                    <td class="p-2 font-mono font-bold text-green-600">bool</td>
+                                </tr>
+                                <tr class="border-b bg-slate-50">
+                                    <td class="p-2 font-mono">proc (b:int) zero?(b)</td>
+                                    <td class="p-2 font-mono font-bold text-indigo-600">int -> bool</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-mono">(p proc (b:int) zero?(b))</td>
+                                    <td class="p-2 font-mono font-bold text-indigo-600">t4</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold text-amber-600 mb-4">שלב ב': בניית ופיתרון המשוואות</h3>
+                    <div class="space-y-4 text-sm" dir="ltr">
+                        <div class="p-3 bg-slate-50 rounded border border-slate-100">
+                            <span class="font-bold text-slate-700">Equation 1 (from let):</span><br>
+                            <code class="text-indigo-600 font-bold">t1 = (t2 -> t3)</code>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded border border-slate-100">
+                            <span class="font-bold text-slate-700">Equation 2 (from (a 6)):</span><br>
+                            The procedure <code>a</code> is called with arg <code>6</code> (int) and returns
+                            <code>(a 6)</code> (t3).<br>
+                            <code class="text-indigo-600 font-bold">t2 = (int -> t3)</code>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded border border-slate-100">
+                            <span class="font-bold text-slate-700">Equation 3 (from call to p):</span><br>
+                            <code>p</code> is called with <code>proc(b:int) zero?(b)</code>.<br>
+                            So <code>p</code>'s type (which is <code>t1</code>) must accept <code>(int -> bool)</code>
+                            and return the overall expression type (<code>t4</code>).<br>
+                            <code class="text-indigo-600 font-bold">t1 = ((int -> bool) -> t4)</code>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h4 class="font-bold text-slate-800">Substitution Process:</h4>
+                        <p class="mt-2 text-slate-700">
+                            Equate the two definitions of <code>t1</code>:<br>
+                            <code>(t2 -> t3) = ((int -> bool) -> t4)</code>
+                        </p>
+                        <p class="mt-2 text-slate-700">
+                            From this, we deduce:<br>
+                            <code>t2 = (int -> bool)</code><br>
+                            <code>t3 = t4</code>
+                        </p>
+                        <p class="mt-2 text-slate-700">
+                            But from Equation 2, we know:<br>
+                            <code>t2 = (int -> t3)</code>
+                        </p>
+                        <p class="mt-2 text-slate-700">
+                            Equate the two definitions of <code>t2</code>:<br>
+                            <code>(int -> bool) = (int -> t3)</code>
+                        </p>
+                        <p class="mt-2 text-slate-700 font-bold bg-green-100 p-2 rounded">
+                            Conclusion:<br>
+                            t3 = bool<br>
+                            t4 = bool
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-box mt-6">
+                <h3 class="text-xl font-bold text-slate-800 mb-2">סיכום הטיפוסים</h3>
+                <p class="text-slate-700 mb-2">הטיפוס הכללי של התוכנית הוא <code>t4 = bool</code>.</p>
+                <p class="text-slate-700">הטיפוס של הפרוצדורה <code>p</code> הוא
+                    <code>t1 = (int -> bool) -> bool</code>.
+                </p>
+            </div>
+        </div>
+
     </main>
 
     <script>
@@ -2341,14 +2680,14 @@ in zero? (-( (p a), a) )
 
         function stepTrace(dir) {
             traceStep = Math.max(0, Math.min(5, traceStep + dir));
-            
+
             const prevBtn = document.getElementById('btn-trace-prev');
             const nextBtn = document.getElementById('btn-trace-next');
             const explain = document.getElementById('trace-explain');
             const container = document.getElementById('trace-env-container');
-            
+
             if (!prevBtn || !nextBtn || !explain || !container) return;
-            
+
             prevBtn.disabled = (traceStep === 0);
             if (traceStep === 5) {
                 nextBtn.innerText = "איפוס";
@@ -2357,12 +2696,12 @@ in zero? (-( (p a), a) )
                 nextBtn.innerText = "הבא ➔";
                 nextBtn.className = nextBtn.className.replace('bg-slate-400 hover:bg-slate-500', 'bg-purple-600 hover:bg-purple-700');
             }
-            
+
             for (let i = 0; i < 4; i++) {
                 const line = document.getElementById(`trace-code-${i}`);
                 if (line) line.className = line.className.replace(' bg-purple-950 text-purple-200 px-1 rounded', '');
             }
-            
+
             if (traceStep === 1) {
                 document.getElementById('trace-code-0').className += ' bg-purple-950 text-purple-200 px-1 rounded';
             } else if (traceStep === 2) {
@@ -2372,7 +2711,7 @@ in zero? (-( (p a), a) )
             } else if (traceStep === 4 || traceStep === 5) {
                 document.getElementById('trace-code-3').className += ' bg-purple-950 text-purple-200 px-1 rounded';
             }
-            
+
             if (dir === 1 && traceStep === 0) {
                 // If it was reset
                 prevBtn.disabled = true;
@@ -2380,7 +2719,7 @@ in zero? (-( (p a), a) )
                 nextBtn.className = nextBtn.className.replace('bg-slate-400 hover:bg-slate-500', 'bg-purple-600 hover:bg-purple-700');
             }
 
-            switch(traceStep) {
+            switch (traceStep) {
                 case 0:
                     container.innerHTML = `
                         <div class="w-full max-w-[320px] bg-slate-800 text-slate-400 p-2.5 rounded-xl border border-slate-700 text-center font-mono text-xs shadow-inner">
@@ -2389,7 +2728,7 @@ in zero? (-( (p a), a) )
                     `;
                     explain.innerHTML = 'לחצו על "הבא" כדי להתחיל במעקב ההרצה.';
                     break;
-                    
+
                 case 1:
                     container.innerHTML = `
                         <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-purple-500 shadow-sm transition-all duration-300 flex justify-between items-center">
@@ -2403,7 +2742,7 @@ in zero? (-( (p a), a) )
                     `;
                     explain.innerHTML = `<strong>צעד 1: הגדרת x = 10</strong><br>נוצרת סביבה חדשה <code>E0</code> המרחיבה את <code>empty-env</code> ומכילה את הקישור <code>x = 10</code>.`;
                     break;
-                    
+
                 case 2:
                     container.innerHTML = `
                         <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-purple-500 shadow-sm transition-all duration-300 flex flex-col gap-2">
@@ -2430,7 +2769,7 @@ in zero? (-( (p a), a) )
                     `;
                     explain.innerHTML = `<strong>צעד 2: יצירת הקלוז'ר של f</strong><br>המפרש יוצר את הפונקציה <code>f</code>. הוא אורז אותה בתוך <strong>קלוז'ר</strong> ששומר את סביבת ההגדרה שלו: <strong>E0</strong>. הסביבה הנוכחית מורחבת ל-<code>E1</code> המכילה את <code>f</code>.`;
                     break;
-                    
+
                 case 3:
                     container.innerHTML = `
                         <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-purple-500 shadow-sm transition-all duration-300 flex justify-between items-center">
@@ -2454,7 +2793,7 @@ in zero? (-( (p a), a) )
                     `;
                     explain.innerHTML = `<strong>צעד 3: הגדרת x = 20 נוסף</strong><br>הקוד מבצע <code>let x = 20</code>. נוצרת סביבה <code>E2</code>. כעת יש לנו שני משתנים בשם <code>x</code>. ה-<code>x</code> ב-<code>E2</code> מסתיר (Shadows) את ה-<code>x</code> ב-<code>E0</code> עבור ביטויים פנימיים.`;
                     break;
-                    
+
                 case 4:
                     container.innerHTML = `
                         <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-emerald-500 shadow-md transition-all duration-300 flex justify-between items-center animate-fade-in">
@@ -2473,7 +2812,7 @@ in zero? (-( (p a), a) )
                     `;
                     explain.innerHTML = `<strong>צעד 4: קריאה לפונקציה (f 5)</strong><br>הפונקציה <code>f</code> מופעלת עם <code>y = 5</code>. נוצרת סביבת ההרצה <code>E3</code>.<br><span class="text-red-600 font-bold">שימו לב:</span> האבא של <code>E3</code> הוא <strong>E0</strong> (הסביבה ששמורה בקלוז'ר), <strong>ולא E2</strong> שבו הופעלה הפונקציה! זהו סקופ לקסיקלי.`;
                     break;
-                    
+
                 case 5:
                     container.innerHTML = `
                         <div class="w-full max-w-[320px] bg-white p-3 rounded-xl border-2 border-emerald-500 shadow-md transition-all duration-300 flex justify-between items-center">
@@ -2507,12 +2846,12 @@ in zero? (-( (p a), a) )
                     }
                 }
             }
-            
+
             const box = document.getElementById('recipe-content-box');
             if (!box) return;
-            
+
             let html = '';
-            switch(step) {
+            switch (step) {
                 case 1:
                     html = `
                         <h5 class="font-bold text-slate-800 text-sm mb-2">📋 שלב 1: עדכון הדקדוק ב-lang.scm</h5>
@@ -2590,12 +2929,12 @@ in zero? (-( (p a), a) )
         // --- Let vs Let* Simulator JS Logic ---
         let letMode = 'let';
         let letStep = 0;
-        
+
         function toggleLetMode(mode) {
             letMode = mode;
             const btnLet = document.getElementById('btn-let-mode-let');
             const btnLetStar = document.getElementById('btn-let-mode-letstar');
-            
+
             if (mode === 'let') {
                 btnLet.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-sky-600 text-white shadow-sm cursor-pointer';
                 btnLetStar.className = 'px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer';
@@ -2605,7 +2944,7 @@ in zero? (-( (p a), a) )
             }
             resetLetSim();
         }
-        
+
         function resetLetSim() {
             letStep = 0;
             const explain = document.getElementById('let-explain-text');
@@ -2625,14 +2964,14 @@ in zero? (-( (p a), a) )
                 stepBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         }
-        
+
         function stepLetSim() {
             const explain = document.getElementById('let-explain-text');
             const envView = document.getElementById('let-env-view');
-            
+
             if (!explain || !envView) return;
             letStep++;
-            
+
             if (letStep === 1) {
                 explain.innerHTML = '<strong>שלב 1: let x = 1 (הגדרה ראשונית)</strong><br>הערך 1 נקשר ל-x בסביבה החיצונית. זה יוצר את הסביבה הבסיסית <code>ENV_1</code>.';
                 envView.innerHTML = `
@@ -2734,7 +3073,7 @@ in zero? (-( (p a), a) )
 
             // Initialize Lexical Scope Trace Player
             stepTrace(0);
-            
+
             // Initialize Recipe Checklist and Let Simulator
             showRecipeStep(1);
             resetLetSim();
