@@ -394,7 +394,54 @@
                         מונע דו-משמעות (Ambiguity). המחשב אף פעם לא צריך לתהות לגבי סדר פעולות חשבון (קדימות אופרטורים).
                         הקוד עצמו כבר כתוב בצורה של עץ (AST)!</p>
                 </div>
-            </div>
+            
+                    <!-- Expression vs Statement Comparison -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-indigo-100 text-indigo-700 rounded-lg">📊</span>
+                            <span>טבלת השוואה: ביטויים לעומת פקודות (Expression vs Statement)</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">מאפיין</th>
+                                        <th class="p-3">ביטוי (Expression)</th>
+                                        <th class="p-3">פקודה (Statement)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">תוצאה</td>
+                                        <td class="p-3 text-emerald-600 font-bold">תמיד מחזיר ערך</td>
+                                        <td class="p-3 text-red-600">מבצע פעולה, לא מחזיר ערך</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">הרכבה</td>
+                                        <td class="p-3 text-emerald-600 font-bold">ניתן לקנן ביטויים בתוך ביטויים</td>
+                                        <td class="p-3">שרשור של פקודות בזו אחר זו</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">דוגמה ב-Scheme</td>
+                                        <td class="p-3 font-mono">(+ 1 (* 2 3))</td>
+                                        <td class="p-3 font-mono text-slate-400">— לא קיים ב-Scheme</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">דוגמה ב-Java</td>
+                                        <td class="p-3 font-mono">x + y</td>
+                                        <td class="p-3 font-mono">if (...) { ... }</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">שפות מייצגות</td>
+                                        <td class="p-3">Scheme, ML, Haskell</td>
+                                        <td class="p-3">C, Java, Python</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
             <!-- ==========================================
                  PART 1.2: RACKET BINDINGS
@@ -474,7 +521,48 @@
                      (loop (- n 1))))))
       (loop start)))) <span class="token-comment">; התנעה ראשונית של הלולאה</span></code></pre>
                 </div>
-            </div>
+            
+                    <!-- Comparison Table for racket-bindings -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-blue-100 text-blue-700 rounded-lg">📊</span>
+                            <span>טבלת השוואה: טווחי הכרה של סוגי Let השונים</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">מנגנון</th>
+                                        <th class="p-3">סדר הערכת ביטויים</th>
+                                        <th class="p-3">האם השמות מוכרים בהגדרות השכנות?</th>
+                                        <th class="p-3">שימוש עיקרי</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">let</td>
+                                        <td class="p-3">במקביל (Parallel)</td>
+                                        <td class="p-3 text-red-600">לא, ההערכה מתבצעת בסביבת האב בלבד</td>
+                                        <td class="p-3">קשירת משתנים זמניים שאינם תלויים זה בזה</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">let*</td>
+                                        <td class="p-3">סדרתי (Sequential)</td>
+                                        <td class="p-3 text-emerald-600 font-bold">כן, הגדרה מאוחרת מכירה הגדרות קודמות</td>
+                                        <td class="p-3">שרשור חישובים תלויים זה בזה</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">letrec</td>
+                                        <td class="p-3">רקורסיבי (Recursive)</td>
+                                        <td class="p-3 text-emerald-600 font-bold">כן, כולם מכירים את כולם (כולל פנייה עצמית)</td>
+                                        <td class="p-3">הגדרת פונקציות רקורסיביות מקומיות</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 1.3: RACKET CONTROL FLOW
@@ -540,7 +628,58 @@
       (num-val 27))       <span class="token-comment">; פעולה 2 (הערך שיוחזר מה-if כולו)</span>
     (num-val 0))</code></pre>
                 </div>
-            </div>
+            
+                    <!-- Conditional Evaluation Flowchart SVG -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-blue-100 text-blue-700 rounded-lg">🔄</span>
+                            <span>תרשים זרימה: הערכת ביטוי תנאי if ב-Scheme</span>
+                        </h4>
+                        <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <svg width="100%" height="200" viewBox="0 0 500 200" fill="none" class="max-w-md">
+                                <!-- Start -->
+                                <rect x="180" y="10" width="140" height="35" rx="6" fill="#3b82f6" />
+                                <text x="250" y="31" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">הערכת ביטוי התנאי (pred)</text>
+                                
+                                <!-- Arrow down -->
+                                <path d="M 250,45 L 250,70" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-racket-control)" />
+                                
+                                <!-- Check condition -->
+                                <polygon points="250,70 330,95 250,120 170,95" fill="#8b5cf6" />
+                                <text x="250" y="99" fill="white" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">האם הערך הוא #f?</text>
+                                
+                                <!-- Arrow right: Yes (False) -->
+                                <path d="M 330,95 L 400,95 L 400,130" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrow-red-racket-control)" />
+                                <text x="365" y="87" fill="#ef4444" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">כן (#f)</text>
+                                
+                                <!-- Else branch -->
+                                <rect x="340" y="130" width="120" height="35" rx="6" fill="#ef4444" />
+                                <text x="400" y="151" fill="white" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">הערכת ענף השקר (else-exp)</text>
+                                
+                                <!-- Arrow down: No (True) -->
+                                <path d="M 250,120 L 250,130" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrow-green-racket-control)" />
+                                <text x="280" y="125" fill="#10b981" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">לא (כל ערך אחר)</text>
+                                
+                                <!-- Then branch -->
+                                <rect x="190" y="130" width="120" height="35" rx="6" fill="#10b981" />
+                                <text x="250" y="151" fill="white" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">הערכת ענף האמת (then-exp)</text>
+                                
+                                <defs>
+                                    <marker id="arrow-racket-control" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+                                    </marker>
+                                    <marker id="arrow-green-racket-control" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
+                                    </marker>
+                                    <marker id="arrow-red-racket-control" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+                                    </marker>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 2.1: LISTS & RECURSION
@@ -622,7 +761,66 @@
                         במבחן כשיש לכם <code>tuple-exp(exps)</code> עם רשימת ביטויים שצריך להעריך את כולם בסביבה, אפשר
                         פשוט לכתוב: <br><code>(map (lambda (e) (value-of e env)) exps)</code></p>
                 </div>
-            </div>
+            
+                    <!-- List Operations Comparison Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-cyan-100 text-cyan-700 rounded-lg">📊</span>
+                            <span>טבלת פעולות רשימה: cons, car, cdr ושימושן</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">פעולה</th>
+                                        <th class="p-3">קלט (דוגמה)</th>
+                                        <th class="p-3">פלט</th>
+                                        <th class="p-3">הסבר</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">cons</td>
+                                        <td class="p-3 font-mono">(cons 1 '(2 3))</td>
+                                        <td class="p-3 font-mono text-emerald-600">'(1 2 3)</td>
+                                        <td class="p-3">מוסיף איבר בראש הרשימה</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">car</td>
+                                        <td class="p-3 font-mono">(car '(1 2 3))</td>
+                                        <td class="p-3 font-mono text-blue-600">1</td>
+                                        <td class="p-3">מחזיר את האיבר הראשון ברשימה</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">cdr</td>
+                                        <td class="p-3 font-mono">(cdr '(1 2 3))</td>
+                                        <td class="p-3 font-mono text-purple-600">'(2 3)</td>
+                                        <td class="p-3">מחזיר את שארית הרשימה (ללא הראשון)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">null?</td>
+                                        <td class="p-3 font-mono">(null? '())</td>
+                                        <td class="p-3 font-mono text-emerald-600">#t</td>
+                                        <td class="p-3">בודק אם הרשימה ריקה (תנאי עצירה)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">list</td>
+                                        <td class="p-3 font-mono">(list 1 2 3)</td>
+                                        <td class="p-3 font-mono text-emerald-600">'(1 2 3)</td>
+                                        <td class="p-3">קיצור ל-cons מקונן: (cons 1 (cons 2 (cons 3 '())))</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">cadr</td>
+                                        <td class="p-3 font-mono">(cadr '(1 2 3))</td>
+                                        <td class="p-3 font-mono text-blue-600">2</td>
+                                        <td class="p-3">קיצור ל-(car (cdr ...)) — האיבר השני</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
             <!-- ==========================================
                  PART 2.4: HIGHER ORDER FUNCTIONS (foldr, filter)
@@ -765,10 +963,10 @@
                                 </div>
                             </div>
 
-                            <div id="func-explain"
-                                class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[100px] flex items-center justify-center text-center leading-relaxed">
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 min-h-[100px] flex items-center justify-center">
+                                <div id="func-explain" class="text-xs text-slate-700 text-center leading-relaxed w-full">
                                 לחצו על "בצע צעד" כדי לראות את הפעלת הפונקציה על הרשימה.
-                            </div>
+                            </div></div>
                         </div>
 
                         <div
@@ -864,7 +1062,49 @@
            (map (lambda (subset) (cons (car lst) subset)) rest-ps))))))
 </code></pre>
                 </div>
-            </div>
+            
+                    <!-- Recursion Patterns Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-amber-100 text-amber-700 rounded-lg">📊</span>
+                            <span>טבלת השוואה: רקורסיית זנב לעומת רקורסיה רגילה</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">מאפיין</th>
+                                        <th class="p-3">רקורסיה רגילה</th>
+                                        <th class="p-3">רקורסיית זנב (Tail Recursion)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">ביטוי הזנב</td>
+                                        <td class="p-3 text-red-600">פעולה נוספת אחרי הקריאה הרקורסיבית</td>
+                                        <td class="p-3 text-emerald-600 font-bold">הקריאה הרקורסיבית היא הפעולה האחרונה</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">זיכרון (Stack)</td>
+                                        <td class="p-3 text-red-600">O(n) — כל קריאה תופסת מקום</td>
+                                        <td class="p-3 text-emerald-600 font-bold">O(1) — ממומשת כלולאה</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">צובר (Accumulator)</td>
+                                        <td class="p-3">לא נדרש</td>
+                                        <td class="p-3 font-bold">נדרש — צובר את התוצאה בפרמטר</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">דוגמה: factorial(3)</td>
+                                        <td class="p-3 font-mono">(* 3 (fact 2))</td>
+                                        <td class="p-3 font-mono">(fact-iter 2 3)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
             <!-- ==========================================
                  PART 2.6: MAMAN 12 - POLYNOMIALS ADT
@@ -983,7 +1223,39 @@
                         ולהדפיס ברוגע.
                     </p>
                 </div>
-            </div>
+            
+                    <!-- Polynomial Structural Tree SVG -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-emerald-100 text-emerald-700 rounded-lg">🌲</span>
+                            <span>ייצוג עץ ה-ADT של פולינום: 3x^2 + 5</span>
+                        </h4>
+                        <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <svg width="100%" height="180" viewBox="0 0 400 180" fill="none" class="max-w-xs">
+                                <!-- Root: poly -->
+                                <circle cx="200" cy="30" r="22" fill="#10b981" />
+                                <text x="200" y="33" fill="white" font-size="8" font-weight="bold" text-anchor="middle">poly</text>
+                                
+                                <!-- Line left -->
+                                <path d="M 185,45 L 125,85" stroke="#94a3b8" stroke-width="2" />
+                                
+                                <!-- Line right -->
+                                <path d="M 215,45 L 275,85" stroke="#94a3b8" stroke-width="2" />
+                                
+                                <!-- Left: Term 3x^2 -->
+                                <circle cx="110" cy="100" r="22" fill="#3b82f6" />
+                                <text x="110" y="103" fill="white" font-size="8" font-weight="bold" text-anchor="middle">term</text>
+                                <text x="110" y="140" fill="#64748b" font-size="8" text-anchor="middle" font-family="monospace">coef: 3, deg: 2</text>
+                                
+                                <!-- Right: Term 5 (5x^0) -->
+                                <circle cx="290" cy="100" r="22" fill="#8b5cf6" />
+                                <text x="290" y="103" fill="white" font-size="8" font-weight="bold" text-anchor="middle">term</text>
+                                <text x="290" y="140" fill="#64748b" font-size="8" text-anchor="middle" font-family="monospace">coef: 5, deg: 0</text>
+                            </svg>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 2.2: EOPL DATATYPES
@@ -1066,7 +1338,52 @@
     <span class="token-comment">; השדה יהיה רשימה שמכילה כתובות זיכרון (במקרה של שפת Explicit Refs)</span>
     (refs (list-of reference?))))</code></pre>
                 </div>
-            </div>
+            
+                    <!-- Datatypes Comparison Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-purple-100 text-purple-700 rounded-lg">📊</span>
+                            <span>טבלת ייצוג: טיפוסי נתונים וסעיפיהם ב-define-datatype</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">שם הטיפוס הראשי</th>
+                                        <th class="p-3">שם הקונסטרקטור (Variant)</th>
+                                        <th class="p-3">שדות הנתונים וטיפוסם</th>
+                                        <th class="p-3">תיאור תפקיד</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono" rowspan="2">lc-exp</td>
+                                        <td class="p-3 font-mono text-blue-600">var-exp</td>
+                                        <td class="p-3 font-mono">var symbol?</td>
+                                        <td class="p-3">ייצוג של קריאה למשתנה בודד</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-mono text-blue-600 border-t">lambda-exp</td>
+                                        <td class="p-3 font-mono border-t">bound-var symbol?, body lc-exp?</td>
+                                        <td class="p-3 border-t">הצהרת פונקציה אנונימית (פרוצדורה)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono" rowspan="2">expval</td>
+                                        <td class="p-3 font-mono text-purple-600">num-val</td>
+                                        <td class="p-3 font-mono">val number?</td>
+                                        <td class="p-3">ערך מספרי מוחזר</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-mono text-purple-600 border-t">bool-val</td>
+                                        <td class="p-3 font-mono border-t">val boolean?</td>
+                                        <td class="p-3 border-t">ערך בוליאני מוחזר</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 2.3: CASES (Pattern Matching)
@@ -1174,10 +1491,10 @@
                                 </div>
                             </div>
 
-                            <div id="shape-explain"
-                                class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[100px] flex items-center justify-center text-center leading-relaxed">
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 min-h-[100px] flex items-center justify-center">
+                                <div id="shape-explain" class="text-xs text-slate-700 text-center leading-relaxed w-full">
                                 לחצו על אחד הכפתורים כדי להזין את הערך לפונקציה.
-                            </div>
+                            </div></div>
                         </div>
 
                         <div
@@ -1459,7 +1776,54 @@
                     <p class="font-mono bg-white p-2 rounded border border-amber-200 text-sm">(string-token ("@" letter
                         (arbno letter)) string)</p>
                 </div>
-            </div>
+            
+                    <!-- SLLGEN Lexer Classification Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-rose-100 text-rose-700 rounded-lg">📊</span>
+                            <span>טבלת סיווג טוקנים: מפרט לקסיקלי ב-SLLGEN</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">סוג כלל</th>
+                                        <th class="p-3">פקודת SLLGEN</th>
+                                        <th class="p-3">דוגמה</th>
+                                        <th class="p-3">תוצאה</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">דילוג</td>
+                                        <td class="p-3 font-mono text-red-600">skip</td>
+                                        <td class="p-3 font-mono">whitespace, comment</td>
+                                        <td class="p-3">מושמט לחלוטין — לא מייצר טוקן</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">שם (מזהה)</td>
+                                        <td class="p-3 font-mono text-blue-600">symbol</td>
+                                        <td class="p-3 font-mono">"identifier" letter (letter|digit)*</td>
+                                        <td class="p-3">טוקן מסוג symbol</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">מספר</td>
+                                        <td class="p-3 font-mono text-emerald-600">number</td>
+                                        <td class="p-3 font-mono">"number" digit+</td>
+                                        <td class="p-3">טוקן מסוג number</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">מחרוזת</td>
+                                        <td class="p-3 font-mono text-purple-600">string</td>
+                                        <td class="p-3 font-mono">"string" ...</td>
+                                        <td class="p-3">טוקן מסוג string</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
             <!-- ==========================================
                  PART 3.2: SLLGEN PARSER
@@ -1934,7 +2298,49 @@
     (let ((val (apply-env e x (lambda () #f))))
       (number? val))))</code></pre>
                 </div>
-            </div>
+            
+                    <!-- Representation Comparison Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-amber-100 text-amber-700 rounded-lg">📊</span>
+                            <span>טבלת השוואה: ייצוג סביבות בעזרת מבני נתונים לעומת ייצוג פרוצדורלי</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">מאפיין</th>
+                                        <th class="p-3">ייצוג מבוסס מבני נתונים (Data Structure Representation)</th>
+                                        <th class="p-3">ייצוג פרוצדורלי (Procedural Representation)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">מהות הסביבה</td>
+                                        <td class="p-3 text-blue-600 font-semibold">מבנה נתונים פיזי (רקורסיבי) שנוצר באמצעות define-datatype</td>
+                                        <td class="p-3 text-purple-600 font-semibold">ייצוג התנהגותי כפרוצדורה (פונקציית Lambda) הממתינה לקלט search-var</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">extend-env מימוש</td>
+                                        <td class="p-3 font-mono">מייצר record של extend-env מטיפוס environment</td>
+                                        <td class="p-3 font-mono text-purple-600 font-bold">מחזיר Lambda חדשה המקבלת search-var ומבצעת השוואה</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">apply-env פעולת</td>
+                                        <td class="p-3 text-slate-700">סורק את הרשומה בעזרת cases או match רקורסיבית</td>
+                                        <td class="p-3 text-emerald-600 font-bold">פשוט מפעיל את פונקציית הסביבה על המשתנה: (env search-var)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">מתי מועדף?</td>
+                                        <td class="p-3">כאשר יש צורך בסריקה, הדפסה, דיבאג או שינוי של הסביבה (המבנה שקוף)</td>
+                                        <td class="p-3 font-bold">כאשר רוצים רמת הפשטה מקסימלית, מודולריות או מניעת חשיפת ייצוג פנימי</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
         </div>
     </main>

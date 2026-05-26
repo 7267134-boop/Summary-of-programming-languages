@@ -239,7 +239,49 @@
                         <div class="bg-amber-100 p-4 rounded-lg text-center font-bold">הזיכרון (Store)<br><span class="text-sm text-amber-600">Ref(0) -> 5</span><br><span class="text-xs text-amber-800 mt-1 block">ניתן לדריסה!</span></div>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- Stateful Files Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-blue-100 text-blue-700 rounded-lg">📂</span>
+                            <span>חלוקת הקבצים בשפת EXPLICIT-REFS ותוספת ה-Store</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">שם הקובץ</th>
+                                        <th class="p-3">תפקיד ושינויים ב-EXPLICIT-REFS</th>
+                                        <th class="p-3">מה התווסף?</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-600 font-mono">store.scm (קובץ חדש!)</td>
+                                        <td class="p-3">מנוע הזיכרון הגלובלי (הלוקיישנים). מייצג את ה-Heap הפיזי של התוכנית.</td>
+                                        <td class="p-3 font-mono">empty-store, newref, deref, setref!</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-purple-600 font-mono">data-structures.scm</td>
+                                        <td class="p-3">הוספת טיפוס Reference לייצוג כתובות זיכרון בתוך ExpVal.</td>
+                                        <td class="p-3 font-mono">ref-val(location)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-emerald-600 font-mono">interp.scm</td>
+                                        <td class="p-3">ביטויי מניפולציה ישירה על הזיכרון כחלק מהערכת value-of.</td>
+                                        <td class="p-3 font-mono">newref-exp, deref-exp, setref-exp</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-amber-600 font-mono">environments.scm</td>
+                                        <td class="p-3">הוספת Reference בסביבה (ב-DenVal) במקום ExpVal.</td>
+                                        <td class="p-3 font-mono">var ➔ ref-val(loc)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 1.2: EXPLICIT CONCEPT
@@ -287,7 +329,43 @@ in begin
    end
 <span class="token-comment">% תוצאה: 6</span></code></pre>
                 </div>
-            </div>
+            
+                    <!-- Env vs Store Mapping Schematic -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-yellow-100 text-yellow-700 rounded-lg">🗺️</span>
+                            <span>תרשים מיפוי: ההפרדה בין סביבה (Environment) למאגר הזיכרון (Store)</span>
+                        </h4>
+                        <p class="text-xs text-slate-600 mb-4 font-bold">
+                            בשפות עם זיכרון דינמי (Stateful), המפרש מחלק את קשירת המשתנים לשני שלבים:
+                            הסביבה קושרת <strong>שם</strong> ל-<strong>כתובת (Reference)</strong>, והמאגר (Store) קושר <strong>כתובת</strong> ל-<strong>ערך (ExpVal)</strong>.
+                        </p>
+                        <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <svg width="100%" height="160" viewBox="0 0 540 160" fill="none" class="max-w-lg">
+                                <!-- Environment Frame -->
+                                <rect x="20" y="40" width="160" height="80" rx="8" fill="#3b82f6" />
+                                <text x="100" y="65" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">הסביבה (Environment)</text>
+                                <text x="100" y="90" fill="#dbeafe" font-size="10" font-family="monospace" text-anchor="middle">x ➔ L1 (location 1)</text>
+                                
+                                <!-- Link Arrow -->
+                                <path d="M 180,80 L 300,80" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#arrow-yellow-concept)" />
+                                <text x="240" y="70" fill="#f59e0b" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">מיפוי (deref)</text>
+                                
+                                <!-- Store Frame -->
+                                <rect x="300" y="40" width="200" height="80" rx="8" fill="#10b981" />
+                                <text x="400" y="65" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">מאגר הזיכרון הגלובלי (Store)</text>
+                                <text x="400" y="90" fill="#d1fae5" font-size="10" font-family="monospace" text-anchor="middle">L1 ➔ num-val(42)</text>
+                                
+                                <defs>
+                                    <marker id="arrow-yellow-concept" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" />
+                                    </marker>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 1.3: EXPLICIT INTERP
@@ -332,7 +410,48 @@ in begin
       (value-of-begins exp1 exps)))
 )</code></pre>
                 </div>
-            </div>
+            
+                    <!-- Explicit Refs Interpreter Operations Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-orange-100 text-orange-700 rounded-lg">📊</span>
+                            <span>טבלת פעולות על הפניות (References) ב-EXPLICIT-REFS</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">ביטוי</th>
+                                        <th class="p-3">פעולה על ה-Store</th>
+                                        <th class="p-3">ערך מוחזר</th>
+                                        <th class="p-3">אנלוגיה ב-C</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold font-mono text-blue-600 bg-slate-50/50">newref(val)</td>
+                                        <td class="p-3">מוסיף ערך חדש ל-Store</td>
+                                        <td class="p-3 font-mono text-emerald-600">ref-val(loc)</td>
+                                        <td class="p-3 font-mono">malloc + assign</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold font-mono text-purple-600 bg-slate-50/50">deref(ref)</td>
+                                        <td class="p-3">קוראת ערך מה-Store לפי מיקום</td>
+                                        <td class="p-3 font-mono text-emerald-600">expval</td>
+                                        <td class="p-3 font-mono">*ptr</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold font-mono text-red-600 bg-slate-50/50">setref(ref, val)</td>
+                                        <td class="p-3">משנה ערך קיים ב-Store</td>
+                                        <td class="p-3 font-mono text-emerald-600">23 (ערך דמה)</td>
+                                        <td class="p-3 font-mono">*ptr = val</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
             <!-- ==========================================
                  PART 2.1: IMPLICIT FILES
@@ -381,7 +500,44 @@ in begin
                         </div>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- Implicit Refs Files Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-blue-100 text-blue-700 rounded-lg">📂</span>
+                            <span>חלוקת הקבצים וההבדלים בשפת IMPLICIT-REFS</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">שם הקובץ</th>
+                                        <th class="p-3">מה השתנה מ-EXPLICIT-REFS?</th>
+                                        <th class="p-3">השפעה על המפרש</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-600 font-mono">lang.scm</td>
+                                        <td class="p-3 text-red-600 font-bold">הסרת <code>newref</code>, <code>deref</code>, <code>setref</code> מהתחביר. הוספת ביטוי השמה <code>set</code>.</td>
+                                        <td class="p-3">הקוד נראה נקי וכמו שפה רגילה (ללא מניפולציה מפורשת על פוינטרים).</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-purple-600 font-mono">data-structures.scm</td>
+                                        <td class="p-3">הסביבה (Environment) קושרת כעת מזהה (var) ישירות ל-Reference במקום ל-ExpVal.</td>
+                                        <td class="p-3">החזרת DenVal = Ref(ExpVal) ו-ExpVal = {Number, Boolean, Proc}.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-emerald-600 font-mono">interp.scm</td>
+                                        <td class="p-3 font-bold text-emerald-600">עדכון <code>value-of</code> לקרוא ל-deref אוטומטית בכל var-exp, ופנייה ל-setref! בתוך set-exp.</td>
+                                        <td class="p-3">מנגנון ההשמה והשליפה מתבצע אוטומטית מאחורי הקלעים ("משתנים מרומזים").</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 2.2: IMPLICIT CONCEPT
@@ -445,9 +601,10 @@ in setref(x, 10)</pre>
                                 </div>
                             </div>
 
-                            <div id="sim-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[90px] flex items-center justify-center text-center mt-4 leading-relaxed">
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 min-h-[90px] flex items-center justify-center mt-4">
+                                <div id="sim-explain-text" class="text-xs text-slate-600 text-center leading-relaxed w-full">
                                 לחצו על "בצע צעד" כדי להריץ את השורה הראשונה (הקצאת המשתנה).
-                            </div>
+                            </div></div>
                         </div>
 
                         <!-- Right: Tables (Env and Store) -->
@@ -548,7 +705,49 @@ in begin
           <span class="token-comment">; יצירת תא זיכרון *חדש* עבור הארגומנט במעמד קריאת הפונקציה</span>
           (extend-env var (newref val) saved-env))))))</code></pre>
                 </div>
-            </div>
+            
+                    <!-- Implicit Refs value-of Comparison Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-teal-100 text-teal-700 rounded-lg">📊</span>
+                            <span>טבלת השוואה: שינויים ב-value-of מ-EXPLICIT ל-IMPLICIT REFS</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">ביטוי</th>
+                                        <th class="p-3">EXPLICIT-REFS</th>
+                                        <th class="p-3">IMPLICIT-REFS</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">var-exp</td>
+                                        <td class="p-3 font-mono">apply-env → expval ישירות</td>
+                                        <td class="p-3 font-mono text-emerald-600 font-bold">apply-env → ref → deref → expval</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">let-exp</td>
+                                        <td class="p-3 font-mono">extend-env(var, val)</td>
+                                        <td class="p-3 font-mono text-emerald-600 font-bold">newref(val) → extend-env(var, ref)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50 font-mono">assign (set)</td>
+                                        <td class="p-3 text-slate-400">— לא קיים</td>
+                                        <td class="p-3 font-mono text-emerald-600 font-bold">apply-env → ref → setref(ref, val)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">הסביבה מכילה</td>
+                                        <td class="p-3">ערכים (expval) ישירות</td>
+                                        <td class="p-3 text-emerald-600 font-bold">הפניות (references) — מצביעים לתוך ה-Store</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
 
             <!-- ==========================================
@@ -779,7 +978,44 @@ in let p = proc (int a) -(a,10)
 )</code></pre>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- Mutable Pairs Files Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-purple-100 text-purple-700 rounded-lg">📂</span>
+                            <span>חלוקת הקבצים בשפת MUTABLE-PAIRS (זוגות משתנים)</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">שם הקובץ</th>
+                                        <th class="p-3">מה התווסף ב-MUTABLE-PAIRS?</th>
+                                        <th class="p-3">תפקיד ותלות במאגר (Store)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-600 font-mono">lang.scm</td>
+                                        <td class="p-3">הוספת אופרטורים <code>newpair</code>, <code>left</code>, <code>right</code>, <code>setleft</code>, <code>setright</code>.</td>
+                                        <td class="p-3">הגדרת ביטויים של זוגות משתנים.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-purple-600 font-mono">data-structures.scm</td>
+                                        <td class="p-3">הוספת variant ל-ExpVal בשם <code>mutpair-val</code> המחזיק reference יחיד לכתובת ב-Store.</td>
+                                        <td class="p-3">מידול הזוג בזיכרון (החזקת כתובת הבסיס של התא הראשון).</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-emerald-600 font-mono">interp.scm</td>
+                                        <td class="p-3">מימוש פעולות הקצאה ושינוי: <code>newpair</code> מקצה שני תאים עוקבים ב-Store, <code>left</code> ניגש לראשון, <code>right</code> לשני.</td>
+                                        <td class="p-3">מניפולציה על התאים העוקבים ב-Store.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 3.2: MUTABLE-PAIRS CONCEPT
@@ -862,9 +1098,10 @@ Expression ::= setright ( Expression , Expression )<br>
                                 </div>
                             </div>
                             
-                            <div id="pair-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[120px] flex flex-col justify-center items-center text-center leading-relaxed mt-4">
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 min-h-[120px] flex items-center justify-center mt-4">
+                                <div id="pair-explain-text" class="text-xs text-slate-600 text-center leading-relaxed w-full">
                                 <!-- Explanations -->
-                            </div>
+                            </div></div>
                         </div>
 
                         <!-- Box Pointer View Area -->
@@ -929,7 +1166,49 @@ Expression ::= setright ( Expression , Expression )<br>
                         <p class="text-xs text-slate-600 mt-2 font-bold">היתרון: חיסכון עצום בזיכרון, פחות אובייקטים.</p>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- Mutable Pairs Implementation Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-yellow-100 text-yellow-700 rounded-lg">⚖️</span>
+                            <span>השוואת מימושים: Ref-to-Ref (מימוש 1) מול Ref-to-Part (מימוש 2)</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">קריטריון השוואה</th>
+                                        <th class="p-3">מימוש 1: Ref-to-Ref (זוג ככתובת לשתי כתובות)</th>
+                                        <th class="p-3">מימוש 2: Ref-to-Part (זוג ככתובת לשני ערכים עוקבים)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">מבנה ה-mutpair-val בזיכרון</td>
+                                        <td class="p-3 font-mono">mutpair-val(Ref(L_left), Ref(L_right))</td>
+                                        <td class="p-3 text-emerald-600 font-bold font-mono">mutpair-val(Ref(L_base))</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">מבנה ב-Store (Heap)</td>
+                                        <td class="p-3">שני תאים נפרדים המוקצים במקומות שונים ב-Store.</td>
+                                        <td class="p-3 text-emerald-600 font-bold">שני תאים המוקצים בצורה רציפה עוקבת: L_base ו- L_base + 1.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">יעילות הקצאה (newpair)</td>
+                                        <td class="p-3">פחות יעיל (דורש שתי קריאות עצמאיות ל-newref).</td>
+                                        <td class="p-3 text-emerald-600 font-bold">יעיל ביותר (הקצאה אחת של בלוק רציף).</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">השמה לתוך זוג (setleft!)</td>
+                                        <td class="p-3">משנה את הערך בתא השמאלי שכתובתו שמורה בזוג.</td>
+                                        <td class="p-3 text-purple-600 font-bold">מעדכנת ישר את התא בכתובת L_base ב-Store.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 4.1: PARAM FILES
@@ -964,7 +1243,44 @@ Expression ::= setright ( Expression , Expression )<br>
                         </div>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- Parameters Files Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-amber-100 text-amber-700 rounded-lg">📂</span>
+                            <span>חלוקת הקבצים בשפות העברת פרמטרים (CBV, CBR, Call-by-Name, Lazy)</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">שם הקובץ</th>
+                                        <th class="p-3">השפעת מודל העברת הפרמטרים</th>
+                                        <th class="p-3">נקודות מרכזיות</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-600 font-mono">lang.scm</td>
+                                        <td class="p-3">ללא שינוי משמעותי מדקדוק PROC.</td>
+                                        <td class="p-3">קריאה לפונקציות נשארת <code>(f x)</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-purple-600 font-mono">data-structures.scm</td>
+                                        <td class="p-3 text-purple-600 font-bold">הוספת Thunk לייצוג ביטויים מושהים ב-Lazy Evaluation.</td>
+                                        <td class="p-3 font-mono">thunk(expression, environment)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-emerald-600 font-mono">interp.scm</td>
+                                        <td class="p-3 text-emerald-600 font-bold">שינוי ב-<code>value-of</code> בתוך call-exp וב-<code>apply-procedure</code>: החלטה מתי להעריך את האופרנד.</td>
+                                        <td class="p-3">ב-CBV מעריכים לפני ההעברה; ב-CBR מעבירים את ה-Reference; ב-Lazy מעבירים Thunk.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 4.2: PARAM CBV
@@ -1031,9 +1347,10 @@ in let f = proc (y)
                                 </div>
                             </div>
                             
-                            <div id="param-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[120px] flex items-center justify-center text-center leading-relaxed">
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 min-h-[120px] flex items-center justify-center">
+                                <div id="param-explain-text" class="text-xs text-slate-600 text-center leading-relaxed w-full">
                                 לחצו על "בצע צעד" כדי לראות את שלבי הרצת הקוד ומעקב הזיכרון.
-                            </div>
+                            </div></div>
                         </div>
 
                         <!-- Env & Store Views -->
@@ -1098,7 +1415,53 @@ in let f = proc (y)
                     <p class="text-slate-700 font-bold mt-4 mb-2 text-rose-700">תשובה: התוצאה היא 20!</p>
                     <p class="text-slate-700">כשהעברנו את <code>x</code> (נניח שתא 0), המתווך <code>value-of-operand</code> תפס את זה, ובגלל שזה <code>var-exp</code>, הוא החזיר לפונקציה את המספר 0 (הכתובת המקורית). הפרמטר <code>y</code> נקשר לתא 0. הפעולה <code>set y = 20</code> דרסה את תא 0, ולכן <code>x</code> החיצוני השתנה!</p>
                 </div>
-            </div>
+            
+                    <!-- CBR Variable Aliasing Diagram -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-red-100 text-red-700 rounded-lg">🔗</span>
+                            <span>תרשים כינויים (Aliasing) בהעברה לפי מצביע Call-by-Reference</span>
+                        </h4>
+                        <p class="text-xs text-slate-600 mb-4 font-bold">
+                            בהעברה לפי מצביע (CBR), המפרש אינו מקצה תא חדש ב-Store עבור פרמטר הפונקציה. במקום זאת, המשתנה הפנימי <code>y</code> מקבל את <strong>אותה הכתובת בדיוק</strong> של המשתנה החיצוני <code>x</code>. כל שינוי ב-<code>y</code> ישנה מיידית את <code>x</code>.
+                        </p>
+                        <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <svg width="100%" height="180" viewBox="0 0 540 180" fill="none" class="max-w-lg">
+                                <!-- Caller Environment -->
+                                <rect x="20" y="30" width="160" height="50" rx="6" fill="#3b82f6" />
+                                <text x="100" y="52" fill="white" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">סביבת הקורא (Caller Env)</text>
+                                <text x="100" y="68" fill="#dbeafe" font-size="9" font-family="monospace" text-anchor="middle">x ➔ L1</text>
+                                
+                                <!-- Callee Environment -->
+                                <rect x="20" y="100" width="160" height="50" rx="6" fill="#8b5cf6" />
+                                <text x="100" y="122" fill="white" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">סביבת הפונקציה (Callee Env)</text>
+                                <text x="100" y="138" fill="#f3e8ff" font-size="9" font-family="monospace" text-anchor="middle">y ➔ L1</text>
+                                
+                                <!-- Arrow Caller to Store -->
+                                <path d="M 180,55 L 320,80" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-blue-param)" />
+                                
+                                <!-- Arrow Callee to Store -->
+                                <path d="M 180,125 L 320,100" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrow-purple-param)" />
+                                <text x="240" y="122" fill="#8b5cf6" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">אותה כתובת (Aliasing)</text>
+                                
+                                <!-- Store Frame -->
+                                <rect x="320" y="55" width="180" height="70" rx="8" fill="#10b981" />
+                                <text x="410" y="80" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">Store (זיכרון משותף)</text>
+                                <text x="410" y="105" fill="#d1fae5" font-size="10" font-family="monospace" text-anchor="middle">L1 ➔ num-val(99)</text>
+                                
+                                <defs>
+                                    <marker id="arrow-blue-param" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+                                    </marker>
+                                    <marker id="arrow-purple-param" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5cf6" />
+                                    </marker>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 4.4: PARAM LAZY
@@ -1150,7 +1513,54 @@ in let f = proc (y)
                         <p class="text-slate-700 mt-2 text-sm font-bold">החוסר יכולת לחזות מתי ומי יריץ את ההדפסה הוא הסיבה ששפות פונקציונליות עצלניות כגון Haskell אוסרות על תופעות לוואי לחלוטין!</p>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- Lazy Evaluation Thunks Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-sky-100 text-sky-700 rounded-lg">📊</span>
+                            <span>טבלת השוואה: Call-by-Need לעומת Call-by-Name</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">מאפיין</th>
+                                        <th class="p-3">Call-by-Name</th>
+                                        <th class="p-3">Call-by-Need</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">הערכת ארגומנט</td>
+                                        <td class="p-3">נדחית עד לשימוש ראשון</td>
+                                        <td class="p-3">נדחית עד לשימוש ראשון</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">שמירת תוצאה</td>
+                                        <td class="p-3 text-red-600">לא — כל גישה מחשבת מחדש</td>
+                                        <td class="p-3 text-emerald-600 font-bold">כן — Memoization, חישוב פעם אחת בלבד</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">ייצוג ה-Thunk</td>
+                                        <td class="p-3 font-mono">a-thunk(exp, env)</td>
+                                        <td class="p-3 font-mono text-emerald-600 font-bold">a-thunk(exp, env) → אחרי הערכה: evaluated(val)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">ביצועים</td>
+                                        <td class="p-3 text-red-600">עלול לחשב ביטויים יקרים פעמים רבות</td>
+                                        <td class="p-3 text-emerald-600 font-bold">חוסך חישוב כפול — יעיל יותר</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">שפה מייצגת</td>
+                                        <td class="p-3">Algol 60</td>
+                                        <td class="p-3 font-bold">Haskell</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
         </div>
     </main>

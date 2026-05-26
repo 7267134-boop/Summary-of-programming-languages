@@ -349,7 +349,48 @@
       (num-val (num) num)
       (else (eopl:error 'expval->num "Expected number!")))))</code></pre>
                 </div>
-            </div>
+            
+                    <!-- Comparison Table for let-intro -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-blue-100 text-blue-700 rounded-lg">📊</span>
+                            <span>טבלת השוואה: שלבי המעבר מקוד המקור לערכי הריצה</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3 font-sans">שלב ייצוג</th>
+                                        <th class="p-3 font-sans">מה הוא מייצג?</th>
+                                        <th class="p-3 font-sans">טיפוס ב-Scheme</th>
+                                        <th class="p-3 font-sans">דוגמה מעשית</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">Concrete / AST</td>
+                                        <td class="p-3">ייצוג של קוד המקור בזיכרון לאחר ניתוח תחבירי (עץ ביטויים).</td>
+                                        <td class="p-3 font-mono">expression?</td>
+                                        <td class="p-3 font-mono text-blue-600">(let-exp 'x (const-exp 5) (var-exp 'x))</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">Expressed Values (ExpVal)</td>
+                                        <td class="p-3">מה שביטויים מחזירים כאשר הם מוערכים (evaluate) ע"י value-of.</td>
+                                        <td class="p-3 font-mono">expval?</td>
+                                        <td class="p-3 font-mono text-purple-600">(num-val 5) או (bool-val #t)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">Denoted Values (DenVal)</td>
+                                        <td class="p-3">הערכים שאנו קושרים למשתנים בתוך הסביבה (Environment).</td>
+                                        <td class="p-3 font-mono">denval?</td>
+                                        <td class="p-3 font-mono text-emerald-600">ב-LET זהה ל-ExpVal: {Number, Boolean}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 1.3: LET - INTERPRETER & MULTI-LET
@@ -403,7 +444,54 @@
       (extend-env* b-vars b-vals env))))</code></pre>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- LET Interpreter Components Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-blue-100 text-blue-700 rounded-lg">📊</span>
+                            <span>טבלת רכיבי אינטרפרטר LET: פונקציות מרכזיות ותפקידיהן</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">רכיב</th>
+                                        <th class="p-3">פונקציה מרכזית</th>
+                                        <th class="p-3">קלט</th>
+                                        <th class="p-3">פלט</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">ממשק</td>
+                                        <td class="p-3 font-mono text-blue-600">run</td>
+                                        <td class="p-3">מחרוזת (קוד מקור)</td>
+                                        <td class="p-3">ערך (expval)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">הערכה</td>
+                                        <td class="p-3 font-mono text-purple-600">value-of</td>
+                                        <td class="p-3">expression + env</td>
+                                        <td class="p-3">expval</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">סביבה</td>
+                                        <td class="p-3 font-mono text-emerald-600">apply-env</td>
+                                        <td class="p-3">env + var</td>
+                                        <td class="p-3">expval (ערך המשתנה)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">חילוץ ערכים</td>
+                                        <td class="p-3 font-mono text-red-600">expval->num / expval->bool</td>
+                                        <td class="p-3">expval</td>
+                                        <td class="p-3">number / boolean</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
                         <!-- ==========================================
                  PART 1.4: LET - MAMAN
@@ -586,7 +674,64 @@
                    (loop (extend-env-multi ids new-vals curr-env))))))))
       (loop init-env))))</code></pre>
                 </div>
-            </div>
+            
+                <!-- Do Loop Execution Flowchart SVG -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="p-1 bg-emerald-100 text-emerald-700 rounded-lg">🔄</span>
+                        <span>תרשים זרימה: מחזור חיים של לולאת do פונקציונלית</span>
+                    </h4>
+                    <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <svg width="100%" height="320" viewBox="0 0 600 320" fill="none" class="max-w-xl">
+                            <!-- Init state -->
+                            <rect x="200" y="10" width="200" height="40" rx="8" fill="#10b981" />
+                            <text x="300" y="34" fill="white" font-size="12" font-weight="bold" text-anchor="middle" font-family="sans-serif">אתחול סדרתי (eval-inits)</text>
+                            
+                            <!-- Arrow down -->
+                            <path d="M 300,50 L 300,80" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-let-maman)" />
+                            
+                            <!-- Condition check -->
+                            <polygon points="300,80 420,110 300,140 180,110" fill="#3b82f6" />
+                            <text x="300" y="114" fill="white" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">בדיקת תנאים (check-conditions)</text>
+                            
+                            <!-- Arrow right: true -->
+                            <path d="M 420,110 L 480,110 L 480,170" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-let-maman)" />
+                            <text x="450" y="102" fill="#10b981" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">אמת (True)</text>
+                            
+                            <!-- Return result -->
+                            <rect x="400" y="170" width="160" height="40" rx="8" fill="#0f172a" />
+                            <text x="480" y="194" fill="white" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">עצירה והחזרת תוצאת התנאי</text>
+                            
+                            <!-- Arrow down: false -->
+                            <path d="M 300,140 L 300,170" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow-let-maman)" />
+                            <text x="315" y="155" fill="#ef4444" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">שקר (False)</text>
+                            
+                            <!-- Eval steps -->
+                            <rect x="200" y="170" width="200" height="40" rx="8" fill="#8b5cf6" />
+                            <text x="300" y="194" fill="white" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">חישוב צעדים במקביל בסביבה נוכחית</text>
+                            
+                            <!-- Arrow down from steps -->
+                            <path d="M 300,210 L 300,240" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-let-maman)" />
+                            
+                            <!-- Extend environment -->
+                            <rect x="180" y="240" width="240" height="40" rx="8" fill="#f59e0b" />
+                            <text x="300" y="264" fill="white" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">הרחבת הסביבה עם extend-env-multi</text>
+                            
+                            <!-- Loop arrow back -->
+                            <path d="M 180,260 L 100,260 L 100,110 L 180,110" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrow-let-maman)" />
+                            <text x="120" y="250" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="sans-serif">קריאה רקורסיבית</text>
+                            
+                            <!-- Markers -->
+                            <defs>
+                                <marker id="arrow-let-maman" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 2.1: PROC - FILES
@@ -623,7 +768,54 @@
                         </ol>
                     </div>
                 </div>
-            </div>
+            
+                <!-- PROC Files Dependency Table -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="p-1 bg-green-100 text-green-700 rounded-lg">📂</span>
+                        <span>מבנה ויחסי גומלין בין קבצי שפת PROC</span>
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                    <th class="p-3">שם הקובץ</th>
+                                    <th class="p-3">מה התווסף/השתנה ב-PROC?</th>
+                                    <th class="p-3">תפקיד בארכיטקטורה</th>
+                                    <th class="p-3">תלויות ישירות</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                <tr>
+                                    <td class="p-3 font-bold text-blue-600 font-mono">lang.scm</td>
+                                    <td class="p-3">נוספו <code>proc-exp</code> ו-<code>call-exp</code></td>
+                                    <td class="p-3">הגדרת הלקסר והדקדוק (הפיכת מחרוזת ל-AST)</td>
+                                    <td class="p-3 text-slate-500">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-purple-600 font-mono">data-structures.scm</td>
+                                    <td class="p-3">הוספת <code>proc-val</code> וטיפוס ה-<code>procedure</code> (ה-Closure)</td>
+                                    <td class="p-3">הגדרת טיפוסי הנתונים בזיכרון (הגדרת המבנה של ה-Closure)</td>
+                                    <td class="p-3 font-mono text-slate-500">environments.scm</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-emerald-600 font-mono">interp.scm</td>
+                                    <td class="p-3">מימוש dynamic lookup, בניית closure, וקריאה ל-<code>apply-procedure</code></td>
+                                    <td class="p-3">מנוע הריצה הראשי המעריך ביטויים ומריץ את הקוד</td>
+                                    <td class="p-3 font-mono text-slate-500">lang.scm, data-structures.scm</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-amber-600 font-mono">environments.scm</td>
+                                    <td class="p-3">ללא שינוי (ממשיך להשתמש בייצוג רשימות מקושרות לזיכרון)</td>
+                                    <td class="p-3">ניהול קשרי המשתנים (משמות לערכים בזיכרון)</td>
+                                    <td class="p-3 text-slate-500">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 2.2: PROC - INTRO
@@ -684,7 +876,54 @@ in
 
 <span class="token-comment">% התוצאה: 9</span></code></pre>
                 </div>
-            </div>
+            
+                <!-- First-Class Citizens Comparison Table -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="p-1 bg-green-100 text-green-700 rounded-lg">👑</span>
+                        <span>השוואה: אזרחים מסוג ראשון (First-Class Citizens) בשפות תכנות</span>
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                    <th class="p-3">תכונה / יכולת</th>
+                                    <th class="p-3">אזרח מסוג ראשון (למשל: מספרים, פונקציות ב-PROC)</th>
+                                    <th class="p-3">אזרח מסוג שני (למשל: פונקציות ב-C)</th>
+                                    <th class="p-3">אזרח מסוג שלישי (למשל: אופרטורים בסיסיים +, -)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900 bg-slate-50/50">שמירה במשתנה</td>
+                                    <td class="p-3 text-emerald-600 font-bold">כן! (למשל <code>let f = proc(x) ...</code>)</td>
+                                    <td class="p-3">רק דרך מצביעים עקיפים (Pointers)</td>
+                                    <td class="p-3 text-red-600">לא! אי אפשר לשמור <code>+</code> ישירות</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900 bg-slate-50/50">העברה כארגומנט לפונקציה</td>
+                                    <td class="p-3 text-emerald-600 font-bold">כן! (Higher-Order Functions)</td>
+                                    <td class="p-3">כן, באמצעות מצביעים</td>
+                                    <td class="p-3 text-red-600">לא!</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900 bg-slate-50/50">החזרה כערך מפונקציה</td>
+                                    <td class="p-3 text-emerald-600 font-bold">כן! (Currying / Factories)</td>
+                                    <td class="p-3 text-red-600">לא! (אי אפשר לייצר פונקציה חדשה דינמית ולהחזיר אותה)</td>
+                                    <td class="p-3 text-red-600">לא!</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900 bg-slate-50/50">ייצוג ב-ExpVal (ערכי מפרש)</td>
+                                    <td class="p-3 font-mono text-purple-700">proc-val(procedure)</td>
+                                    <td class="p-3 text-slate-400">לא מיוצג ישירות ב-ExpVal כמשתנה ריצה</td>
+                                    <td class="p-3 text-slate-400">מיוצג כחלק קשיח בקוד (Hardcoded AST)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 2.3: PROC - CLOSURES & SCOPING
@@ -763,9 +1002,10 @@ in let f = proc (z) -(z, x)  <span class="token-comment">% הפונקציה מש
                                 </div>
                             </div>
                             
-                            <div id="scope-explain-text" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[120px] flex items-center justify-center text-center leading-relaxed">
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 min-h-[120px] flex items-center justify-center">
+                                <div id="scope-explain-text" class="text-xs text-slate-600 text-center leading-relaxed w-full">
                                 לחצו על "בצע צעד" כדי לראות את שלבי הרצת הקוד ומעקב הסביבות.
-                            </div>
+                            </div></div>
                         </div>
 
                         <div class="lg:col-span-2 bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center">
@@ -840,7 +1080,49 @@ in let f = proc (z) -(z, x)  <span class="token-comment">% הפונקציה מש
                         </ul>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- PROC Interpreter Extensions Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-violet-100 text-violet-700 rounded-lg">📊</span>
+                            <span>טבלת השוואה: ההרחבות שנוספו ב-PROC מעבר ל-LET</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">רכיב</th>
+                                        <th class="p-3">ב-LET</th>
+                                        <th class="p-3">ב-PROC (הרחבה)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">ערכים</td>
+                                        <td class="p-3">num-val, bool-val</td>
+                                        <td class="p-3 text-emerald-600 font-bold">+ proc-val (ערך פרוצדורלי)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">ביטויים</td>
+                                        <td class="p-3">const, var, diff, zero?, if, let</td>
+                                        <td class="p-3 text-emerald-600 font-bold">+ proc-exp, call-exp</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">value-of</td>
+                                        <td class="p-3">6 cases</td>
+                                        <td class="p-3 text-emerald-600 font-bold">+ 2 cases: proc → closure, call → apply</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">חדש: Closure</td>
+                                        <td class="p-3 text-slate-400">—</td>
+                                        <td class="p-3 font-bold">(var, body, saved-env) — לוכדת את הסביבה</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
 
             <!-- ==========================================
@@ -1070,7 +1352,75 @@ in let p = proc (w) -(w,a)
                         </ul>
                     </div>
                 </div>
-            </div>
+            
+                <!-- Currying Execution Trace Diagram -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="p-1 bg-green-100 text-green-700 rounded-lg">🧮</span>
+                        <span>תרשים זרימה: מעקב הרצה של Currying ו-Maker (כפל ב-4)</span>
+                    </h4>
+                    <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <svg width="100%" height="240" viewBox="0 0 600 240" fill="none" class="max-w-xl">
+                            <!-- Step 1: Call times4 3 -->
+                            <rect x="20" y="20" width="130" height="40" rx="8" fill="#3b82f6" />
+                            <text x="85" y="44" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">קריאה ל- (times4 3)</text>
+                            
+                            <!-- Arrow to maker -->
+                            <path d="M 150,40 L 180,40" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-proc-maman)" />
+                            
+                            <!-- Evaluates to (M M 3) -->
+                            <rect x="180" y="20" width="160" height="40" rx="8" fill="#8b5cf6" />
+                            <text x="260" y="44" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">הפעלה: ((makemult makemult) 3)</text>
+                            
+                            <!-- Arrow down -->
+                            <path d="M 260,60 L 260,90" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-proc-maman)" />
+                            
+                            <!-- Recursive steps stack -->
+                            <g transform="translate(180, 90)">
+                                <!-- Step x=3 -->
+                                <rect x="0" y="0" width="160" height="30" rx="4" fill="#1e293b" />
+                                <text x="80" y="18" fill="white" font-size="9" font-family="monospace" text-anchor="middle">x=3: -( ((M M) 2) , -4 )</text>
+                                
+                                <!-- Arrow down -->
+                                <path d="M 80,30 L 80,40" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-proc-maman)" />
+                                
+                                <!-- Step x=2 -->
+                                <rect x="0" y="40" width="160" height="30" rx="4" fill="#334155" />
+                                <text x="80" y="58" fill="white" font-size="9" font-family="monospace" text-anchor="middle">x=2: -( ((M M) 1) , -4 )</text>
+                                
+                                <!-- Arrow down -->
+                                <path d="M 80,70 L 80,80" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-proc-maman)" />
+                                
+                                <!-- Step x=1 -->
+                                <rect x="0" y="80" width="160" height="30" rx="4" fill="#475569" />
+                                <text x="80" y="98" fill="white" font-size="9" font-family="monospace" text-anchor="middle">x=1: -( ((M M) 0) , -4 )</text>
+                                
+                                <!-- Arrow down -->
+                                <path d="M 80,110 L 80,120" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-proc-maman)" />
+                                
+                                <!-- Step x=0 -->
+                                <rect x="0" y="120" width="160" height="25" rx="4" fill="#10b981" />
+                                <text x="80" y="136" fill="white" font-size="9" font-family="monospace" text-anchor="middle">x=0: returns 0</text>
+                            </g>
+                            
+                            <!-- Return path -->
+                            <path d="M 340,222 L 390,222 L 390,40 L 420,40" stroke="#10b981" stroke-width="2" stroke-dasharray="3" marker-end="url(#arrow-proc-maman)" />
+                            
+                            <!-- Final result 12 -->
+                            <rect x="420" y="20" width="150" height="40" rx="8" fill="#0f172a" />
+                            <text x="495" y="44" fill="white" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">התוצאה: 12</text>
+                            <text x="495" y="54" fill="#10b981" font-size="8" text-anchor="middle" font-family="sans-serif">-(8, -4)</text>
+                            
+                            <defs>
+                                <marker id="arrow-proc-maman" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 3.1: LETREC - FILES
@@ -1102,7 +1452,54 @@ in let p = proc (w) -(w,a)
                         </ol>
                     </div>
                 </div>
-            </div>
+            
+                <!-- LETREC Files Dependency Table -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="p-1 bg-purple-100 text-purple-700 rounded-lg">📂</span>
+                        <span>חלוקת התפקידים בקבצי שפת LETREC</span>
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                    <th class="p-3">שם הקובץ</th>
+                                    <th class="p-3">מה התווסף/השתנה ב-LETREC?</th>
+                                    <th class="p-3">תפקיד בארכיטקטורה</th>
+                                    <th class="p-3">סוג שינוי נדרש במבחן (הרחבות)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                <tr>
+                                    <td class="p-3 font-bold text-blue-600 font-mono">lang.scm</td>
+                                    <td class="p-3">הוספת דקדוק ה-<code>letrec-exp</code></td>
+                                    <td class="p-3">הגדרת ביטוי רקורסיבי חדש</td>
+                                    <td class="p-3">הוספת משתנים מרובים (Mutual Recursion)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-purple-600 font-mono">data-structures.scm</td>
+                                    <td class="p-3">הוספת <code>extend-env-rec</code> ב-<code>datatype environment</code></td>
+                                    <td class="p-3">רישום "מתכון" הרקורסיה (שם, משתנה וגוף)</td>
+                                    <td class="p-3">שמירת רשימות מקבילות של שמות/משתנים/גופים</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-amber-600 font-mono">environments.scm</td>
+                                    <td class="p-3">הוספת מנגנון ה-JIT ב-<code>apply-env</code> היוצר closure במקום</td>
+                                    <td class="p-3">הלב של הרקורסיה: סגירת המעגל הזיכרוני</td>
+                                    <td class="p-3">חיפוש ברשימות באמצעות אינדקסים (JIT Lookup)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-emerald-600 font-mono">interp.scm</td>
+                                    <td class="p-3">פנייה ל-<code>value-of</code> עם סביבה רקורסיבית מורחבת</td>
+                                    <td class="p-3">הערכת ה-body הראשי של ה-letrec</td>
+                                    <td class="p-3">התאמה לקריאת extend-env-rec החדשה</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 3.2: LETREC - THE PROBLEM
@@ -1138,7 +1535,44 @@ in
                         <li>כאשר הפונקציה תופעל ותנסה לעשות את הקריאה הרקורסיבית <code>(fact -(n,1))</code>, הפונקציה <code>apply-env</code> תחפש את <code>fact</code> בתוך ה-<code>saved-env</code> שלה (מזמן הצילום), לא תמצא אותו, ותזרוק שגיאת Unbound Variable.</li>
                     </ul>
                 </div>
-            </div>
+            
+                <!-- Recursion Paradox Cyclic Diagram -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="p-1 bg-red-100 text-red-700 rounded-lg">🥚</span>
+                        <span>פרדוקס המעגליות: למה let רגיל נכשל ברקורסיה?</span>
+                    </h4>
+                    <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <svg width="100%" height="160" viewBox="0 0 500 160" fill="none" class="max-w-md">
+                            <!-- Closure Box -->
+                            <rect x="20" y="40" width="160" height="80" rx="8" fill="#ef4444" />
+                            <text x="100" y="65" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">הגדרת Closure של fact</text>
+                            <text x="100" y="85" fill="white" font-size="8" text-anchor="middle" font-family="monospace">saved-env: [x=3]</text>
+                            <text x="100" y="105" fill="#fecaca" font-size="7" text-anchor="middle" font-family="sans-serif">(fact לא קיים כאן!)</text>
+                            
+                            <!-- Arrow to Env -->
+                            <path d="M 180,80 L 250,80" stroke="#ef4444" stroke-width="2" stroke-dasharray="3" marker-end="url(#arrow-red-letrec)" />
+                            
+                            <!-- Loop Arrow (Paradox) -->
+                            <path d="M 320,50 C 370,10 430,40 400,80 C 370,120 310,90 320,80" stroke="#ef4444" stroke-width="2" stroke-dasharray="2" />
+                            <text x="390" y="65" fill="#ef4444" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">חיפוש עצמי ב-saved-env</text>
+                            
+                            <!-- Env Box -->
+                            <rect x="250" y="40" width="160" height="80" rx="8" fill="#1e293b" />
+                            <text x="330" y="65" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">סביבת הגוף של fact</text>
+                            <text x="330" y="85" fill="#94a3b8" font-size="8" text-anchor="middle" font-family="monospace">fact -(n,1)</text>
+                            <text x="330" y="105" fill="#ef4444" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">❌ שגיאה: fact לא מוגדר!</text>
+                            
+                            <defs>
+                                <marker id="arrow-red-letrec" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 3.3: LETREC - SOLUTION & MUTUAL RECURSION
@@ -1292,7 +1726,60 @@ in
                     </ol>
                     <p class="mt-4 font-bold text-purple-600 bg-purple-50 p-4 rounded border border-purple-200">לסיכום: LETREC מאפשרת רקורסיה על ידי בניית סביבה שמחכה שישאלו עליה, וכששואלים עליה, היא בונה ומחזירה קלוז'ר המכיל אותה עצמה.</p>
                 </div>
-            </div>
+            
+                <!-- JIT Closure Flowchart -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="p-1 bg-purple-100 text-purple-700 rounded-lg">⚡</span>
+                        <span>תרשים זרימה: יצירת Closure בזמן ריצה (JIT) ב-apply-env</span>
+                    </h4>
+                    <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <svg width="100%" height="260" viewBox="0 0 500 260" fill="none" class="max-w-md">
+                            <!-- Search starts -->
+                            <rect x="180" y="10" width="140" height="35" rx="6" fill="#3b82f6" />
+                            <text x="250" y="31" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="sans-serif">חישוב משתנה ב-apply-env</text>
+                            
+                            <!-- Arrow down -->
+                            <path d="M 250,45 L 250,70" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-letrec-jit)" />
+                            
+                            <!-- Check env type -->
+                            <polygon points="250,70 350,95 250,120 150,95" fill="#8b5cf6" />
+                            <text x="250" y="99" fill="white" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">האם extend-env-rec?</text>
+                            
+                            <!-- Arrow right: No -->
+                            <path d="M 350,95 L 420,95 L 420,130" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-letrec-jit)" />
+                            <text x="385" y="87" fill="#64748b" font-size="9" text-anchor="middle" font-family="sans-serif">לא (רגילה)</text>
+                            
+                            <!-- Standard lookup -->
+                            <rect x="360" y="130" width="120" height="40" rx="6" fill="#475569" />
+                            <text x="420" y="154" fill="white" font-size="9" text-anchor="middle" font-family="sans-serif">חישוב רגיל או רקורסיה הלאה</text>
+                            
+                            <!-- Arrow down: Yes -->
+                            <path d="M 250,120 L 250,145" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-letrec-jit)" />
+                            <text x="265" y="132" fill="#10b981" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">כן</text>
+                            
+                            <!-- Is it the p-name? -->
+                            <polygon points="250,145 350,170 250,195 150,170" fill="#f59e0b" />
+                            <text x="250" y="174" fill="white" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">האם השם מחפש את הפונקציה?</text>
+                            
+                            <!-- Arrow down: Yes -->
+                            <path d="M 250,195 L 250,220" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-letrec-jit)" />
+                            <text x="265" y="207" fill="#10b981" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">כן</text>
+                            
+                            <!-- JIT Closure created -->
+                            <rect x="150" y="220" width="200" height="35" rx="6" fill="#0f172a" />
+                            <text x="250" y="241" fill="white" font-size="9" font-weight="bold" text-anchor="middle" font-family="monospace">proc-val(procedure body env)</text>
+                            
+                            <defs>
+                                <marker id="arrow-letrec-jit" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 4.1: LEXADDR - FILES
@@ -1351,7 +1838,54 @@ in
                         </ol>
                     </div>
                 </div>
-            </div>
+            
+                <!-- LEXADDR Files Dependency Table -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="p-1 bg-red-100 text-red-700 rounded-lg">📂</span>
+                        <span>חלוקת הקבצים בשפת התרגום הסטטי LEXADDR</span>
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                    <th class="p-3">שם הקובץ</th>
+                                    <th class="p-3">מה משתנה ב-LEXADDR?</th>
+                                    <th class="p-3">תפקיד בשלב הסטטי (Compile)</th>
+                                    <th class="p-3">תפקיד בשלב הריצה (Runtime)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                <tr>
+                                    <td class="p-3 font-bold text-blue-600 font-mono">lang.scm</td>
+                                    <td class="p-3">הוספת דקדוק כפול (מילולי ומקומפל)</td>
+                                    <td class="p-3">הלקסר קורא את קוד המקור</td>
+                                    <td class="p-3">הגדרת צמתים מקומפלים כמו <code>nameless-let-exp</code></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-red-600 font-mono">translator.scm</td>
+                                    <td class="p-3">קובץ חדש לחלוטין! מממש <code>translation-of</code></td>
+                                    <td class="p-3 text-red-600 font-bold">מעבר על ה-AST והמרתו ל-Nameless AST בעזרת Senv</td>
+                                    <td class="p-3 text-slate-400">אינו משתתף בריצה</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-purple-600 font-mono">data-structures.scm</td>
+                                    <td class="p-3">הגדרה של <code>nameless-environment</code> (רשימה שטוחה) ופרוצדורה רזה</td>
+                                    <td class="p-3">ניהול הסביבה הסטטית (Senv) שמחזיקה רק רשימת מזהים</td>
+                                    <td class="p-3">החזקת הערכים השטוחים בזיכרון הריצה</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-emerald-600 font-mono">interp.scm</td>
+                                    <td class="p-3">פונקציית <code>value-of</code> מקבלת Nameless AST וסביבה שטוחה</td>
+                                    <td class="p-3 text-slate-400">אינו משתתף</td>
+                                    <td class="p-3 text-emerald-600 font-bold">הערכת ביטויים מהירה ללא השוואות מחרוזות ($O(1)$)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 4.2: LEXICAL ADDRESSES (INTRO)
@@ -1433,9 +1967,10 @@ let x = 3 in let y = 4 in -(x, y)
                                     </div>
                                 </div>
 
-                                <div id="lex-explain-box" class="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 min-h-[60px] flex items-center justify-center text-center mt-4 leading-relaxed">
+                                <div class="bg-white p-3 rounded-lg border border-slate-200 min-h-[60px] flex items-center justify-center mt-4">
+                                    <div id="lex-explain-box" class="text-xs text-slate-600 text-center leading-relaxed w-full">
                                     הציבו את העכבר מעל x או z בקוד משמאל כדי לראות את חישוב הכתובת הלקסיקלית שלו.
-                                </div>
+                                </div></div>
                             </div>
                         </div>
                     </div>
@@ -1536,7 +2071,49 @@ let x = 3 in let y = 4 in -(x, y)
           
       ...)))</code></pre>
                 </div>
-            </div>
+            
+                <!-- Named vs Nameless Variable Lookup Comparison Table -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="p-1 bg-red-100 text-red-700 rounded-lg">⚖️</span>
+                        <span>השוואה: מפרש מילולי (Named) מול מפרש נטול שמות (Nameless)</span>
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                    <th class="p-3">קריטריון</th>
+                                    <th class="p-3">מפרש מילולי (Named Interpreter)</th>
+                                    <th class="p-3">מפרש נטול שמות (Nameless Interpreter)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900 bg-slate-50/50">מבנה הסביבה בזיכרון</td>
+                                    <td class="p-3 font-mono">extend-env(var val saved-env)</td>
+                                    <td class="p-3 text-emerald-600 font-bold font-mono">list-of expval? (רשימה שטוחה)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900 bg-slate-50/50">סיבוכיות שליפת משתנה</td>
+                                    <td class="p-3 text-red-600 font-bold">$O(d)$ - מעבר סדרתי והשוואת מחרוזות מפתח</td>
+                                    <td class="p-3 text-emerald-600 font-bold">$O(1)$ - גישה ישירה ע"י <code>list-ref</code> באינדקס קבוע</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900 bg-slate-50/50">שמירת שמות במשתנים</td>
+                                    <td class="p-3">השמות נשמרים בריצה בתוך הסביבה ובתוך ה-Closure</td>
+                                    <td class="p-3 text-emerald-600 font-bold">השמות נמחקים לחלוטין בתרגום הסטטי</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900 bg-slate-50/50">מתי מחושב מיקום המשתנה?</td>
+                                    <td class="p-3">בזמן הריצה (Dynamic lookup)</td>
+                                    <td class="p-3 text-purple-600 font-bold">מראש בזמן הקומפילציה (Static Translation)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        
+</div>
 
         </div>
     </main>

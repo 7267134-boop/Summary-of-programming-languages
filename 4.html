@@ -250,9 +250,10 @@
                                     </button>
                                 </div>
                             </div>
-                            <div id="pipe-explain-text" class="bg-white p-3 rounded border border-slate-200 text-xs text-slate-600 min-h-[120px] flex items-center justify-center text-center leading-relaxed">
+                            <div class="bg-white p-3 rounded border border-slate-200 min-h-[120px] flex items-center justify-center">
+                                <div id="pipe-explain-text" class="text-xs text-slate-600 text-center leading-relaxed w-full">
                                 לחצו על "בצע שלב" כדי להתחיל את הדמיית צינור העיבוד.
-                            </div>
+                            </div></div>
                         </div>
 
                         <!-- Visual Pipeline Flow -->
@@ -319,7 +320,44 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- Static Checker Files Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-blue-100 text-blue-700 rounded-lg">📂</span>
+                            <span>חלוקת הקבצים ותוספת ה-Checker בשפת CHECKED</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">שם הקובץ</th>
+                                        <th class="p-3">מה התווסף / השתנה בשפת CHECKED?</th>
+                                        <th class="p-3">תפקיד בשלב הסטטי (Type Check)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-600 font-mono">checker.scm (קובץ חדש!)</td>
+                                        <td class="p-3">מימוש פונקציית <code>type-of</code> הבודקת ומאמתת טיפוסים של ביטויים בצורה רקורסיבית.</td>
+                                        <td class="p-3 text-blue-700 font-bold">מנוע אימות הטיפוסים הסטטי (לפני ריצה).</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-purple-600 font-mono">data-structures.scm</td>
+                                        <td class="p-3">הוספת הגדרות לטיפוסי שפה (int, bool, proc) והגדרת <code>type-environment</code> (Tenv).</td>
+                                        <td class="p-3">ייצוג טיפוסים וסביבת טיפוסים בזיכרון.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-600 font-mono">lang.scm</td>
+                                        <td class="p-3">הוספת הגדרות טיפוסים לתחביר (כמו <code>proc(x : int) ...</code>).</td>
+                                        <td class="p-3">הלקסר והפארסר מכריחים הגדרת טיפוסים מפורשת.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 1.2: CHECKED LANGUAGE
@@ -574,7 +612,44 @@ in (fact 5)</code></pre>
                         </p>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- Inferred Files Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-purple-100 text-purple-700 rounded-lg">📂</span>
+                            <span>חלוקת הקבצים בשפת הסקת טיפוסים INFERRED</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">שם הקובץ</th>
+                                        <th class="p-3">מה השתנה מ-CHECKED?</th>
+                                        <th class="p-3">תפקיד בשלב ההסקה (Inference)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-600 font-mono">checker.scm</td>
+                                        <td class="p-3 font-bold text-purple-600">יצירת משתני טיפוס (Type Variables), ייצור מערכת משוואות וקריאה ל-<code>unify</code>.</td>
+                                        <td class="p-3 text-purple-700 font-bold">הסקה ופתרון משוואות הטיפוסים.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-purple-600 font-mono">data-structures.scm</td>
+                                        <td class="p-3">הוספת משתנה טיפוס <code>tvar-type</code> והצבעות אליו (References) במבנה הטיפוסים.</td>
+                                        <td class="p-3">ייצוג הטיפוסים הדינמיים ומשוואותיהם בזיכרון.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-600 font-mono">lang.scm</td>
+                                        <td class="p-3 text-red-600 font-bold font-mono">חזרה לתחביר PROC נקי (ללא הצהרות טיפוסים מפורשות מצד המתכנת!).</td>
+                                        <td class="p-3">קריאת קוד נקי ללא צורך בהצהרות טיפוס מפורשות.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 2.2: INFERRED LANGUAGE
@@ -606,7 +681,49 @@ in (f 10)</code></pre>
                         </ol>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- CHECKED vs INFERRED Syntax Comparison Grid -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-yellow-100 text-yellow-700 rounded-lg">⚖️</span>
+                            <span>השוואת קוד: כתיבה בשפת CHECKED מול שפת INFERRED</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">תכונה</th>
+                                        <th class="p-3">שפת CHECKED (טיפוסים מפורשים)</th>
+                                        <th class="p-3">שפת INFERRED (טיפוסים מוסקים)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">הצהרה על פרמטר פונקציה</td>
+                                        <td class="p-3 font-mono text-xs"><code>proc(x : int) -(x, 1)</code></td>
+                                        <td class="p-3 font-mono text-xs text-emerald-600"><code>proc(x) -(x, 1)</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">הגדרת פונקציית פרינט</td>
+                                        <td class="p-3 font-mono text-xs"><code>proc(f : (int -> bool)) ...</code></td>
+                                        <td class="p-3 font-mono text-xs text-emerald-600"><code>proc(f) ...</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">מתי נבדקים הטיפוסים?</td>
+                                        <td class="p-3">לפני זמן הריצה (Static type check)</td>
+                                        <td class="p-3">לפני זמן הריצה (Static type inference & check)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900 bg-slate-50/50">האם נדרש מאמץ מצד המתכנת?</td>
+                                        <td class="p-3 text-red-600 font-bold">כן, מחייב כתיבת טיפוסים לכל פרמטר</td>
+                                        <td class="p-3 text-emerald-600 font-bold">לא! המחשב מסיק את הטיפוסים בעצמו.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 3.1: ALGORITHM - EQUATIONS
@@ -654,7 +771,59 @@ in (f 10)</code></pre>
                         </div>
                     </div>
                 </div>
-            </div>
+            
+                    <!-- Type Equation Generation Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-amber-100 text-amber-700 rounded-lg">📊</span>
+                            <span>טבלת יצירת משוואות טיפוס לפי סוג ביטוי</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">ביטוי</th>
+                                        <th class="p-3">משוואה שנוצרת</th>
+                                        <th class="p-3">הסבר</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold font-mono text-blue-600 bg-slate-50/50">const-exp(n)</td>
+                                        <td class="p-3 font-mono">t = int</td>
+                                        <td class="p-3">מספר קבוע — טיפוסו תמיד int</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold font-mono text-blue-600 bg-slate-50/50">zero?(exp)</td>
+                                        <td class="p-3 font-mono">t_exp = int, t_result = bool</td>
+                                        <td class="p-3">הקלט חייב להיות int, והתוצאה bool</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold font-mono text-blue-600 bg-slate-50/50">diff-exp(e1, e2)</td>
+                                        <td class="p-3 font-mono">t1 = int, t2 = int, t = int</td>
+                                        <td class="p-3">שני הקלטים והפלט חייבים להיות int</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold font-mono text-blue-600 bg-slate-50/50">if-exp(pred, then, else)</td>
+                                        <td class="p-3 font-mono">t_pred = bool, t_then = t_else = t</td>
+                                        <td class="p-3">התנאי bool, שני הענפים אותו טיפוס</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold font-mono text-purple-600 bg-slate-50/50">proc-exp(var, body)</td>
+                                        <td class="p-3 font-mono">t = t_var → t_body</td>
+                                        <td class="p-3">פונקציה: טיפוס הפרמטר → טיפוס הגוף</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold font-mono text-purple-600 bg-slate-50/50">call-exp(f, arg)</td>
+                                        <td class="p-3 font-mono">t_f = t_arg → t_result</td>
+                                        <td class="p-3">הפונקציה חייבת לקבל את טיפוס הארגומנט</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
             <!-- ==========================================
                  PART 3.2: ALGORITHM - UNIFICATION
@@ -703,9 +872,10 @@ in (f 10)</code></pre>
                                 </div>
                             </div>
                             
-                            <div id="unif-explain" class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[140px] flex items-center justify-center text-center leading-relaxed">
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 min-h-[140px] flex items-center justify-center">
+                                <div id="unif-explain" class="text-xs text-slate-700 text-center leading-relaxed w-full">
                                 לחצו על "צעד הבא" כדי להתחיל לפתור את מערכת המשוואות.
-                            </div>
+                            </div></div>
                         </div>
 
                         <!-- Center: Equations list -->
@@ -788,7 +958,62 @@ in (f 10)</code></pre>
                         <li>מכיוון שלא מצאנו שום קשר ל-int או bool, המשתנים $t_x$ ו-$t_{res}$ נשארים נעלמים עד סוף התוכנית. זה מצב חוקי ונקרא פולימורפיזם (Polymorphism) - הפונקציה הזו יכולה לקבל כל פונקציה וכל משתנה שמתאימים לה.</li>
                     </ul>
                 </div>
-            </div>
+            
+                    <!-- Constraint Generation Timeline SVG -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-red-100 text-red-700 rounded-lg">⏳</span>
+                            <span>ציר זמן: יצירת משוואות עבור הביטוי proc(f) proc(x) (f (f x))</span>
+                        </h4>
+                        <p class="text-xs text-slate-600 mb-4 font-bold">
+                            בעת מעבר המפרש על קוד המקור, מיוצרים משתני טיפוס זמניים לכל ביטוי ומוצבות משוואות המאולצות מתחביר הפעלת הפונקציות:
+                        </p>
+                        <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <svg width="100%" height="200" viewBox="0 0 540 200" fill="none" class="max-w-lg">
+                                <!-- Stage 1 -->
+                                <circle cx="60" cy="50" r="25" fill="#3b82f6" />
+                                <text x="60" y="53" fill="white" font-size="8" font-weight="bold" text-anchor="middle">שלב 1</text>
+                                <text x="60" y="100" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">הכרזה על משתני טיפוס</text>
+                                <text x="60" y="120" fill="#64748b" font-size="7" text-anchor="middle" font-family="monospace">f : t1 , x : t2</text>
+                                
+                                <!-- Line 1-2 -->
+                                <path d="M 85,50 L 175,50" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-algo)" />
+                                
+                                <!-- Stage 2 -->
+                                <circle cx="200" cy="50" r="25" fill="#8b5cf6" />
+                                <text x="200" y="53" fill="white" font-size="8" font-weight="bold" text-anchor="middle">שלב 2</text>
+                                <text x="200" y="100" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">האפליקציה הפנימית (f x)</text>
+                                <text x="200" y="120" fill="#64748b" font-size="7" text-anchor="middle" font-family="monospace">t1 = t2 -> t3</text>
+                                
+                                <!-- Line 2-3 -->
+                                <path d="M 225,50 L 315,50" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-algo)" />
+                                
+                                <!-- Stage 3 -->
+                                <circle cx="340" cy="50" r="25" fill="#f59e0b" />
+                                <text x="340" y="53" fill="white" font-size="8" font-weight="bold" text-anchor="middle">שלב 3</text>
+                                <text x="340" y="100" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">האפליקציה החיצונית (f (f x))</text>
+                                <text x="340" y="120" fill="#64748b" font-size="7" text-anchor="middle" font-family="monospace">t1 = t3 -> t4</text>
+                                
+                                <!-- Line 3-4 -->
+                                <path d="M 365,50 L 455,50" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-algo)" />
+                                
+                                <!-- Stage 4 -->
+                                <circle cx="480" cy="50" r="25" fill="#10b981" />
+                                <text x="480" y="53" fill="white" font-size="8" font-weight="bold" text-anchor="middle">שלב 4</text>
+                                <text x="480" y="100" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">פתרון המערכת (Unification)</text>
+                                <text x="480" y="120" fill="#10b981" font-size="7" text-anchor="middle" font-family="monospace">t1 = t2 -> t2</text>
+                                <text x="480" y="135" fill="#10b981" font-size="7" text-anchor="middle" font-family="monospace">f : t2 -> t2</text>
+                                
+                                <defs>
+                                    <marker id="arrow-algo" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+                                    </marker>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+        
+</div>
 
             <!-- ==========================================
                  PART 3.4: ALGORITHM ERRORS (RECURSION & OCCURS CHECK)
@@ -844,7 +1069,48 @@ in (f 10)</code></pre>
                         אם האלגוריתם לא היה בודק זאת, היינו נכנסים ללולאה אינסופית בנסיון לפתור את הטיפוס. לא ניתן לכתוב ב-INFERRED פונקציה שמקבלת את עצמה ללא מערכת טיפוסים מורכבת יותר (כמו Recursive Types).
                     </p>
                 </div>
-            </div>
+            
+                    <!-- Type Error Classification Table -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="p-1 bg-red-100 text-red-700 rounded-lg">⚠️</span>
+                            <span>טבלת סיווג שגיאות טיפוס: זיהוי ואבחון</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                                        <th class="p-3">סוג שגיאה</th>
+                                        <th class="p-3">דוגמה</th>
+                                        <th class="p-3">משוואה סותרת</th>
+                                        <th class="p-3">הסבר</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    <tr>
+                                        <td class="p-3 font-bold text-red-600 bg-red-50/50">No Occurrence</td>
+                                        <td class="p-3 font-mono">proc(x) (x x)</td>
+                                        <td class="p-3 font-mono">t = t → t₂</td>
+                                        <td class="p-3">משתנה מופיע בצד ימין של ההחלפה שלו עצמו — טיפוס אינסופי</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-red-600 bg-red-50/50">Unification Failure</td>
+                                        <td class="p-3 font-mono">zero?(proc(x) x)</td>
+                                        <td class="p-3 font-mono">int = t₁→t₂</td>
+                                        <td class="p-3">סתירה: ביטוי צריך להיות int אבל הוא פונקציה</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-red-600 bg-red-50/50">Circular Type</td>
+                                        <td class="p-3 font-mono">letrec f(x) = (f f)</td>
+                                        <td class="p-3 font-mono">t = t → ...</td>
+                                        <td class="p-3">הטיפוס מפנה לעצמו באופן מעגלי</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+</div>
 
             <!-- ==========================================
                  PART 3.5: COMPREHENSIVE ALGORITHM TRACE
