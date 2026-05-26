@@ -326,7 +326,13 @@
                             <li><strong>Expressed Value (ExpVal):</strong> איזה סוג של ערכים יכול <em>ביטוי</em> (Expression) להחזיר כתוצאה חישובית?</li>
                             <li><strong>Denoted Value (DenVal):</strong> איזה סוג של ערכים אפשר <em>לשמור בתוך משתנה בסביבה</em> (Binding)?</li>
                         </ul>
-                        <p class="text-sm text-slate-700 bg-white p-3 rounded border border-blue-100 font-bold">בשפת LET: <br> ExpVal = DenVal = {Number, Boolean}.<br>כלומר, ביטוי מחזיר רק מספר או בוליאני, ומשתנה שומר רק מספר או בוליאני.</p>
+                        <p class="text-sm text-slate-700 bg-white p-3 rounded border border-blue-100 font-bold">בשפת LET: <br> ExpVal = DenVal = {Int, Bool}.<br>כלומר, ביטוי מחזיר רק שלם או בוליאני, ומשתנה שומר רק שלם או בוליאני.</p>
+                        <div class="mt-3 bg-indigo-50 border-r-4 border-indigo-500 p-3 rounded-l">
+                            <span class="font-bold text-indigo-950 text-xs block mb-1">💡 הכנה לבאות: למה ההפרדה קיימת?</span>
+                            <p class="text-xs text-slate-700 leading-relaxed">
+                                ההפרדה הזו תהפוך לקריטית בשפות הבאות. למשל, בשפת PROC, פונקציה (Procedure) מצטרפת גם ל-ExpVal (כי ביטוי יכול להחזיר פונקציה) וגם ל-DenVal (כי משתנה יכול לשמור פונקציה).
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -383,7 +389,7 @@
                                         <td class="p-3 font-bold text-slate-900 bg-slate-50/50">Denoted Values (DenVal)</td>
                                         <td class="p-3">הערכים שאנו קושרים למשתנים בתוך הסביבה (Environment).</td>
                                         <td class="p-3 font-mono">denval?</td>
-                                        <td class="p-3 font-mono text-emerald-600">ב-LET זהה ל-ExpVal: {Number, Boolean}</td>
+                                        <td class="p-3 font-mono text-emerald-600">ב-LET זהה ל-ExpVal: {Int, Bool}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -442,6 +448,10 @@
     <span class="token-comment">; הערכת הגוף בתוך סביבה שהורחבה בעזרת כל המשתנים וערכיהם יחדיו</span>
     (value-of body
       (extend-env* b-vars b-vals env))))</code></pre>
+                        <div class="mt-4 bg-indigo-50 border-r-4 border-indigo-500 p-3 rounded-l text-xs text-slate-700 leading-relaxed">
+                            <strong>💡 הערה ארכיטקטונית: Parallel Let מול Sequential Let</strong><br>
+                            השימוש ב-<code>map</code> על רשימת הביטויים (המתבצע מול אותה סביבה נוכחית - <code>env</code>) יוצר התנהגות מקבילית (Parallel). זה אומר שאם נכתוב <code>let x=1 y=x in ...</code>, המשתנה <code>y</code> יקבל את הערך של <code>x</code> מהסביבה החיצונית, ולא את ה-1 שהרגע הגדרנו, כי <code>x=1</code> עדיין לא נכנס לזיכרון. כדי לבנות <code>let*</code> (השמה סדרתית, שבה <code>y</code> היה מקבל 1), היינו חייבים לבצע רקורסיה שמרחיבה את הסביבה אחרי כל משתנה בנפרד.
+                        </div>
                     </div>
                 </div>
             
@@ -593,19 +603,13 @@
                         - אם אין תנאי אמת, המשתנים מקודמים בצעדים (Steps). קידום המשתנים נעשה במקביל <b>על פי ערכם של המשתנים במצב הנוכחי</b>.
                     </div>
 
-                    <div class="concept-box border-l-4 border-l-emerald-500 bg-emerald-50 !mt-0 mb-6">
-                        <h4 class="text-xl font-bold mb-2 text-emerald-800">🎯 הפן הפדגוגי: מנגנון לולאות פונקציונליות</h4>
-                        <p class="text-slate-700">זוהי שאלת הדגל של הקורס! היא מלמדת אותנו את ההבדל הקריטי בין <b>סדרתי</b> (Sequential) ל-<b>מקבילי</b> (Parallel) במפרשים. המשתנים באתחול נוצרים בשרשרת, אבל בקידום (הצעדים) כולם מחושבים יחד לפני העדכון. בנוסף, השאלה מדגימה איך לממש "לולאה" שרצה לנצח ללא שום פעולת <code>set!</code> פיזית, אלא אך ורק על ידי <b>קריאה רקורסיבית לסביבה חדשה</b> (Lexical Shadowing) שמסתירה את הערכים הישנים.</p>
-                    </div>
-
-                    <p class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">מעקב זרימה לדוגמת המטלה (Trace)</p>
                     <div class="bg-slate-100 p-5 rounded-lg border border-slate-300 mb-6 ltr text-left">
                         <pre class="!bg-slate-800 !text-slate-200 !m-0 !p-4 !text-sm"><code>do(
-  &lt;a 0 4&gt;
-  &lt;b 7 -(a,2)&gt;
-  &lt;c -(b,1) -(a,b)&gt;
-  [zero? (b) -(a,c)]
-  [zero? (-(c,-2)) -(a,5)]
+  &lt;a 0 -(a,-4)&gt;
+  &lt;b 7 -(b,a)&gt;
+  &lt;c -(b,1) -(c,4)&gt;
+  [zero?(b) -(a,c)]
+  [zero?(-(c,-2)) -(a,5)]
 )</code></pre>
                         <div class="mt-4 rtl text-right">
                             <p class="mb-2"><strong>שלב האתחול (סדרתי):</strong></p>
@@ -619,23 +623,23 @@
                             <ul class="list-disc list-inside text-sm text-slate-700 mb-4 pr-4 space-y-1">
                                 <li>בדיקת תנאים: התנאי הראשון <code>zero?(7)</code> נכשל. התנאי השני <code>zero?(-(6,-2)) -> zero?(8)</code> נכשל. הלולאה ממשיכה!</li>
                                 <li>חישוב צעדים <b>(במקביל, לפי סביבה נוכחית)</b>:</li>
-                                <li class="pr-4">ל-<code>a</code> נוסיף <code>4</code> ➔ מ-0 ל-4.</li>
-                                <li class="pr-4">ל-<code>b</code> נוסיף <code>-(0,2) = -2</code> ➔ מ-7 ל-5.</li>
-                                <li class="pr-4">ל-<code>c</code> נוסיף <code>-(0,7) = -7</code> ➔ מ-6 ל-1-.</li>
+                                <li class="pr-4">משתנה <code>a</code> מוערך מחדש ומוחלף בערך של <code>-(a, -4)</code> ➔ לכן הופך ל-4.</li>
+                                <li class="pr-4">משתנה <code>b</code> מוערך מחדש ומוחלף בערך של <code>-(b, a)</code> ➔ לכן הופך ל-7.</li>
+                                <li class="pr-4">משתנה <code>c</code> מוערך מחדש ומוחלף בערך של <code>-(c, 4)</code> ➔ לכן הופך ל-2.</li>
                             </ul>
 
-                            <p class="mb-2"><strong>איטרציה 2 (סביבה חדשה: a=4, b=5, c=-1):</strong></p>
+                            <p class="mb-2"><strong>איטרציה 2 (סביבה חדשה: a=4, b=7, c=2):</strong></p>
                             <ul class="list-disc list-inside text-sm text-slate-700 mb-4 pr-4 space-y-1">
-                                <li>בדיקת תנאים: התנאי הראשון <code>zero?(5)</code> נכשל. התנאי השני <code>zero?(-(-1,-2)) -> zero?(1)</code> נכשל. הלולאה ממשיכה.</li>
+                                <li>בדיקת תנאים: התנאי הראשון <code>zero?(7)</code> נכשל. התנאי השני <code>zero?(-(2,-2)) -> zero?(4)</code> נכשל. הלולאה ממשיכה.</li>
                                 <li>חישוב צעדים (במקביל):</li>
-                                <li class="pr-4">ל-<code>a</code> נוסיף <code>4</code> ➔ מ-4 ל-8.</li>
-                                <li class="pr-4">ל-<code>b</code> נוסיף <code>-(4,2) = 2</code> ➔ מ-5 ל-7.</li>
-                                <li class="pr-4">ל-<code>c</code> נוסיף <code>-(4,5) = -1</code> ➔ מ-1- ל-2-.</li>
+                                <li class="pr-4">משתנה <code>a</code> מוערך מחדש ומוחלף בערך של <code>-(a, -4)</code> ➔ לכן הופך ל-8.</li>
+                                <li class="pr-4">משתנה <code>b</code> מוערך מחדש ומוחלף בערך של <code>-(b, a)</code> ➔ לכן הופך ל-3.</li>
+                                <li class="pr-4">משתנה <code>c</code> מוערך מחדש ומוחלף בערך של <code>-(c, 4)</code> ➔ לכן הופך ל-2-.</li>
                             </ul>
 
-                            <p class="mb-2"><strong>איטרציה 3 (סביבה חדשה: a=8, b=7, c=-2):</strong></p>
+                            <p class="mb-2"><strong>איטרציה 3 (סביבה חדשה: a=8, b=3, c=-2):</strong></p>
                             <ul class="list-disc list-inside text-sm text-slate-700 pr-4 space-y-1">
-                                <li>בדיקת תנאים: התנאי הראשון <code>zero?(7)</code> נכשל.</li>
+                                <li>בדיקת תנאים: התנאי הראשון <code>zero?(3)</code> נכשל.</li>
                                 <li>התנאי השני: <code>zero?(-(-2,-2)) -> zero?(0)</code> ➔ <b>אמת!</b></li>
                                 <li>הלולאה נעצרת ומחזירה את תוצאת התנאי השני: <code>-(a,5)</code>, ומכיוון ש-a הוא 8 ➔ <b>מוחזר הערך 3!</b>.</li>
                             </ul>
@@ -669,10 +673,14 @@
            (let ((res (check-conditions bools results curr-env)))
              (if res
                  (car res) <span class="token-comment">; עטפנו את התוצאה ב-list במידה והוחזר #f (כדי להבדיל מכשלון בתנאי)</span>
-                 (let ((new-vals (eval-step-values ids steps curr-env)))
+                 (let ((new-vals (eval-step-values ids steps curr-env))) <span class="token-comment">; הערכת כל הצעדים מול curr-env הנוכחית (מבטיח מקביליות!)</span>
                    <span class="token-comment">; הסתרת הערכים הישנים באמצעות extend-env-multi וריצה מחודשת</span>
                    (loop (extend-env-multi ids new-vals curr-env))))))))
-      (loop init-env))))</code></pre>
+      (loop init-env))))
+                    <div class="mt-4 bg-emerald-50 border-r-4 border-emerald-500 p-4 rounded-l text-sm text-slate-700 leading-relaxed">
+                        <strong>⚠️ הבטחת המקביליות בקוד:</strong> 
+                        בפונקציית העזר <code>eval-step-values</code> (שמוזכרת אך לא ממומשת בקטע הקוד), המפרש מעריך את כל ביטויי הצעדים (Steps) מול ה-<code>curr-env</code> לפני שהוא קורא ל-<code>extend-env-multi</code>. הניתוק הזה – חישוב כל הערכים מראש ורק אז יצירת הסביבה החדשה – הוא מה שמונע ממשתנה אחד להשפיע על חברו באותה איטרציה.
+                    </div></code></pre>
                 </div>
             
                 <!-- Do Loop Execution Flowchart SVG -->
@@ -956,6 +964,13 @@ in let f = proc (z) -(z, x)  <span class="token-comment">% הפונקציה מש
                             <p class="text-sm text-slate-700">הפונקציה מתעלמת מסביבת ההגדרה ובודקת את הסביבה <strong>ברגע ההפעלה</strong>. ברגע ההפעלה (בשורה 4), העדכון האחרון בזיכרון (Call Stack) קבע כי x שווה 4 ולכן זה הערך שיחושב.</p>
                         </div>
                     </div>
+                    
+                    <div class="thought-box mt-6 !mb-0">
+                        <h4 class="font-bold text-lg text-fuchsia-800 mb-2">🤔 נקודה למחשבה: למה לבחור בסקופ לקסיקלי?</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed">
+                            בסקופ דינמי קל יותר לכתוב את המפרש (לא צריך להמציא את מנגנון ה-Closure), אך הוא יוצר באגים מסוכנים של "לכידת משתנים" (Variable Capture). מתכנת שכותב פונקציה לא יכול להבטיח איך היא תתנהג, כי היא תלויה בשמות המשתנים המקריים שיהיו קיימים ברגע הקריאה לה. סקופ לקסיקלי מבטיח שהפונקציה אטומה וצפויה (Modular), למרות שהוא דורש זיכרון עודף לצורך שמירת הסביבה בקלוז'ר.
+                        </p>
+                    </div>
                 </div>
 
                 <div class="concept-box border-l-4 border-l-purple-500 !my-0 mb-10">
@@ -1179,6 +1194,11 @@ in let p = proc (x) -(x,a)
         (value-of body (extend-env var val env))))))</code></pre>
                         </div>
                     </div>
+                    
+                    <div class="mt-4 bg-indigo-50 border-r-4 border-indigo-500 p-3 rounded-l text-xs text-slate-700 leading-relaxed">
+                        <strong>💡 הערה ארכיטקטונית על ניהול הזיכרון בכריכה דינמית:</strong><br>
+                        במימוש שהוצג, טיפוס ה-<code>procedure</code> עדיין מחזיק את <code>saved-env</code> (ואנחנו פשוט בוחרים להתעלם ממנו ב-<code>apply-procedure</code> ולהשתמש ב-<code>env</code> החיצוני). כדי שהמפרש יהיה מושלם ארכיטקטונית, במימוש טהור ויעיל של כריכה דינמית אין שום סיבה לשמור את סביבת ההגדרה. היינו משנים את הקובץ <code>data-structures.scm</code> ומסירים לחלוטין את <code>saved-env</code> מתוך הקלוז'ר של <code>proc-val</code>, מה שהיה חוסך זיכרון רב.
+                    </div>
 
                     <div class="tip-box">
                         <h4 class="font-bold text-lg text-amber-800 mb-2">💡 כוחה של סביבה דינמית: רקורסיה ללא Letrec!</h4>
@@ -1239,6 +1259,10 @@ in let is-even = proc (n) ((is-even-maker is-even-maker) n)
                    else -(((maker maker) -(x,1)) , -4)
 in let times4 = proc (x) ((makemult makemult) x)
    in (times4 3)</code></pre>
+                            <div class="bg-violet-50 border-r-4 border-violet-500 p-3 rounded-l text-xs text-slate-700 leading-relaxed mb-4">
+                                <strong>💡 איך ה-Maker עובד מנטלית?</strong><br>
+                                מכיוון שב-PROC פונקציה לא יכולה לקרוא לעצמה בשמה (השם טרם קיים בזיכרון), אנו מעבירים את הפונקציה כארגומנט לתוך עצמה תחת השם <code>maker</code>. מרגע שפונקציה מתקבלת כפרמטר, היא קיימת כחוק בסביבה הפנימית! הקריאה הרקורסיבית מתבצעת על ידי הפעלת הפרמטר על עצמו: <code>(maker maker)</code>. זהו יישום מעשי של רעיון הנקרא <strong>Y-Combinator</strong>.
+                            </div>
                             <p class="text-sm text-slate-700 font-bold mb-2">מעקב ההרצה מתבצע מהבסיס למעלה:</p>
                             <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-600 font-mono" dir="ltr">
                                 <li>x=0: returns 0</li>
@@ -1276,6 +1300,13 @@ in let f = proc (n) (((sum-maker sum-maker) n) 0)
                     <p class="text-lg text-slate-700 mb-6 leading-relaxed">
                         בדרך כלל, למשתנים בזמן ריצה אין זהות, אלא רק ערך (ExpVal). בפיצ'ר ה-Reflection אנו נותנים לתוכנית יכולת "לשאול" משתנים על הטיפוס שלהם בעזרת פעולת <code>get-type</code>. הפעולה מחזירה סוג חדש של תשובה, שאותה ניתן לבדוק. הדבר מאפשר לפונקציות לשנות את התנהגותן לפי הטיפוס שמוזן להן (Runtime Type Checking).
                     </p>
+                    
+                    <div class="concept-box border-l-4 border-l-purple-500 bg-purple-50/50 mb-6 !mt-0">
+                        <strong class="text-purple-950 block mb-1">שבירת מחסום ההפשטה (Abstraction Barrier):</strong>
+                        <p class="text-sm text-slate-700 leading-relaxed">
+                            רפלקציה שוברת את <strong>"מחסום ההפשטה" (Abstraction Barrier)</strong> של המפרש. במצב רגיל, תוכנית בשפת PROC לא מודעת לקיומם של מבני הנתונים של ה-Interpreter (כמו <code>num-val</code> או <code>bool-val</code> שנכתבו ב-Scheme). מנגנון ה-Reflection מאפשר לתוכנית המקור "להציץ" אל מאחורי הקלעים של מנוע ההרצה שמריץ אותה, ולכן הוא דורש הוספת סוג חדש של תשובה (<code>type-val</code>) שלא מייצג נתון חישובי, אלא מידע על הנתון (Meta-data).
+                        </p>
+                    </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                         <div class="bg-codebg text-white p-4 rounded-xl shadow-lg">
@@ -1613,6 +1644,10 @@ in
                 <div class="deep-dive">
                     <h3 class="text-2xl font-bold mb-4 text-slate-800">הכנה למבחן: רקורסיה הדדית (Mutual Recursion)</h3>
                     <p class="mb-4 text-slate-700">במבחן מבקשים לעיתים לתמוך בהגדרת מספר פונקציות רקורסיביות יחד בבלוק אחד, אשר יכולות לקרוא אחת לשנייה (למשל פונקציית <code>even?</code> הקוראת ל-<code>odd?</code> והפוך). זה מוכר כ-<code>extend-env-rec*</code> או ריבוי הצהרות letrec.</p>
+                    <div class="concept-box border-l-4 border-l-red-500 bg-red-50/50 mb-4 !mt-0 text-sm text-slate-700">
+                        <strong>מדוע זו חובה ארכיטקטונית ולא רק בונוס?</strong><br>
+                        ברקורסיה הדדית (למשל <code>even?</code> ו-<code>odd?</code>), שתי הפונקציות חייבות לחלוק בדיוק את אותה סביבה מורחבת (E1) המכילה את שתיהן. אם היינו משרשרים שתי סביבות רקורסיביות נפרדות (למשל, <code>extend-env-rec</code> אחד מעל השני), הפונקציה העליונה בשרשרת לא הייתה מסוגלת לראות את הפונקציה התחתונה, והקריאות ההדדיות היו נכשלות בגלל בעיית נראות סקופ.
+                    </div>
                     <p class="text-sm text-slate-700 mb-2"><strong>מבנה הסביבה המורחב:</strong> נשתמש ברשימות עוקבות מקבילות (Parallel Lists) במקום במשתנה בודד:</p>
                     <pre class="text-xs"><code>(extend-env-rec*
   (p-names (list-of symbol?))
@@ -1702,7 +1737,7 @@ in
       <span class="token-comment">; הגענו לשכבה מעגלית.</span>
       <span class="token-comment">; נבדוק האם המשתנה שמחפשים הוא הפונקציה שלנו:</span>
       (extend-env-rec (p-name b-var p-body saved-env)
-        (if (eqv? search-sym p-name)
+        (if (eqv? search-var p-name)
             
             <span class="token-comment">; אמת! חיפשו את הפונקציה הזו.</span>
             <span class="token-comment">; ברגע זה בדיוק אנחנו מייצרים את ה-Closure במקום ואורזים אותו!</span>
@@ -1711,7 +1746,7 @@ in
             (proc-val (procedure b-var p-body env))
             
             <span class="token-comment">; שקר. חיפשו משהו אחר, נמשיך הלאה בסביבה השמורה.</span>
-            (apply-env saved-env search-sym))))))</code></pre>
+            (apply-env saved-env search-var))))))</code></pre>
                 </div>
 
                 <div class="deep-dive">
@@ -1725,6 +1760,10 @@ in
                         <li>בתוך הגוף הרקורסיבי, הפונקציה מנסה שוב להפעיל את <code>fact</code>. היא הולכת לסביבה השמורה שלה, ושוב נכנסת ל-<code>apply-env</code>, שמייצר שוב את ה-Closure במקום, וכך הלאה עד לתנאי העצירה!</li>
                     </ol>
                     <p class="mt-4 font-bold text-purple-600 bg-purple-50 p-4 rounded border border-purple-200">לסיכום: LETREC מאפשרת רקורסיה על ידי בניית סביבה שמחכה שישאלו עליה, וכששואלים עליה, היא בונה ומחזירה קלוז'ר המכיל אותה עצמה.</p>
+                    <div class="tip-box border-l-4 border-l-purple-500 bg-purple-50/50 mt-4 text-sm text-slate-700 leading-relaxed">
+                        <strong>🐢 השלכות הביצועים של מנגנון ה-JIT:</strong><br>
+                        שימו לב להשלכות הביצועים של טריק ה-JIT: בכל פעם שהפונקציה <code>fact</code> קוראת לעצמה ברקורסיה, פקודת <code>apply-env</code> פוגשת את ה-<code>extend-env-rec</code> ומייצרת אובייקט Closure (כלומר <code>proc-val</code>) חדש לחלוטין בזיכרון! גישה זו שומרת על טוהר פונקציונלי (הסביבה לא משתנה לעולם – Immutable), אך היא בזבזנית מאוד בזיכרון לעומת שפות אימפרטיביות שמעדכנות מצביע יחיד (Pointers).
+                    </div>
                 </div>
             
                 <!-- JIT Closure Flowchart -->
@@ -1905,6 +1944,13 @@ in
                     </ul>
                 </div>
 
+                <div class="deep-dive !my-6">
+                    <h4 class="font-bold text-slate-800 mb-2">⏱️ העמקה בסיבוכיות: String Comparison מול List Indexing</h4>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        במפרש הרגיל, כדי למצוא משתנה, הפונקציה <code>apply-env</code> נדרשת לבצע השוואת מחרוזות (String Comparison) בכל רמת עומק, פעולה שהיא יקרה חישובית ודורשת זמן של לפחות $O(N)$ כאשר $N$ הוא העומק הלקסיקלי. במפרש נטול השמות, <code>apply-nameless-env</code> משתמש ב-<code>list-ref</code>. למרות שברשימה מקושרת הגישה היא עדיין סדרתית, אנחנו חוסכים לחלוטין את פעולת השוואת המחרוזות, ומתקרבים לאידאל של קוד מכונה הניגש לכתובת מדויקת בזיכרון ב-$O(1)$ (אילו היינו משתמשים במערכים במקום רשימות).
+                    </p>
+                </div>
+
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-10">
                     <h3 class="text-2xl font-bold mb-4 text-slate-800">איך זה עובד? (המרת שמות לכתובות)</h3>
                     <p class="mb-4 text-slate-700">בזמן הקומפילציה אנו מעבירים את ה-AST המקורי דרך מודול שנקרא <code>translator.scm</code>. הוא עובר על הקוד יחד עם סביבה דמה הנקראת הסביבה הסטטית (<code>Senv</code>). הסביבה הסטטית שומרת <strong>רק את שמות המשתנים</strong> (ללא ערכם, שעדיין לא ידוע), ומטרתה לחשב את העומק של כל משתנה.</p>
@@ -1914,8 +1960,8 @@ let x = 3 in let y = 4 in -(x, y)
 
 <span class="token-comment">; לאחר התרגום (AST של שפת Nameless)</span>
 <span class="token-comment">; שימו לב: השמות x ו-y הוסרו מה-let ומאופרציית החיסור לחלוטין!</span>
-(nameless-let-exp 3 
-  (nameless-let-exp 4 
+(nameless-let-exp (const-exp 3) 
+  (nameless-let-exp (const-exp 4) 
     (diff-exp (nameless-var-exp 1) (nameless-var-exp 0))))</code></pre>
                     <p class="text-sm text-slate-600 mt-2">המשתנה הפנימי ביותר <code>y</code> מקבל את האינדקס 0 (האחרון שהוכנס לזיכרון והקרוב ביותר לסקופ), והמשתנה <code>x</code> מקבל את האינדקס 1.</p>
 
@@ -2034,6 +2080,10 @@ let x = 3 in let y = 4 in -(x, y)
   (lambda (nameless-env n)
     (list-ref nameless-env n)))</code></pre>
                     </div>
+                    <div class="bg-amber-50 border-r-4 border-amber-500 p-4 rounded-l text-sm text-slate-700 leading-relaxed mt-4">
+                        <strong>⚠️ סנכרון קריטי בין השלב הסטטי לזמן הריצה:</strong>
+                        ה-<code>Senv</code> וה-<code>nameless-environment</code> חייבים לעבוד בסנכרון מושלם ללא תלות זה בזה. ה-<code>Senv</code> קבע את המיקומים בזמן הקומפילציה (התרגום הסטטי), וה-<code>nameless-environment</code> חייבת להיבנות בדיוק באותו הסדר בזמן הריצה כדי שהאינדקסים יפגעו במטרה. כל סטייה קלה בסדר ההכנסה לסביבה בזמן הריצה (למשל, שינוי סדר ה-extend-nameless-env) תוביל לשליפת ערכים שגויים או שגיאות ריצה מסתוריות.
+                    </div>
 
                     <div class="concept-box border-l-4 border-l-green-500 !my-0">
                         <h3 class="text-xl font-bold text-slate-800 mb-3 border-b border-green-200 pb-2">גם ה-Closure עבר דיאטה</h3>
@@ -2070,6 +2120,13 @@ let x = 3 in let y = 4 in -(x, y)
           (procedure body nameless-env)))
           
       ...)))</code></pre>
+                    <p class="text-slate-700 mt-4 mb-2">3. במפרש נטול השמות, מנוע ההפעלה <code>apply-procedure</code> הופך לפשוט להפליא. מכיוון שאין צורך לחפש שמות, פתיחת הקלוז'ר מסתכמת בדחיפת ערך הארגומנט לראש הרשימה של הסביבה השמורה:</p>
+                    <pre class="!bg-slate-800 !text-slate-200 !mt-0"><code>(define apply-procedure
+  (lambda (proc1 val)
+    (cases proc proc1
+      (procedure (body saved-nameless-env)
+        (value-of body 
+          (extend-nameless-env val saved-nameless-env))))))</code></pre>
                 </div>
             
                 <!-- Named vs Nameless Variable Lookup Comparison Table -->

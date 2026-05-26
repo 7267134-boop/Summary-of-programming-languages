@@ -330,7 +330,10 @@
                     <span>🌍 4.1 סביבות (Environments)</span>
                 </button>
                 <button onclick="showTab('maman12-env')" id="btn-maman12-env" class="nav-btn">
-                    <span>🌍 4.2 ממן 12: ייצוג פרוצדורלי של סביבות</span>
+                    <span>🌍 4.2 סביבות כפרוצדורות והכמסת מידע</span>
+                </button>
+                <button onclick="showTab('lexical-addressing')" id="btn-lexical-addressing" class="nav-btn">
+                    <span>🌍 4.3 כתובות לקסיקליות (Lexical Addressing)</span>
                 </button>
             </div>
         </div>
@@ -498,6 +501,25 @@
 (calc-area 2) <span class="token-comment">; -> 100</span></code></pre>
                     </div>
                 </div>
+
+<div class="concept-box border-l-4 border-l-indigo-500 bg-indigo-50/50 mb-10">
+    <h3 class="text-xl font-bold text-indigo-950 mb-3 flex items-center gap-2">
+        <span>🔒 חשיפת מנגנון הריצה: מהו קלוז'ר (Closure)?</span>
+    </h3>
+    <p class="text-sm text-slate-700 leading-relaxed mb-3">
+        סטודנטים ומתכנתים רבים תוהים: כיצד פונקציה פנימית המוחזרת מפונקציה אחרת מסוגלת לגשת למשתנים של הפונקציה החיצונית, גם לאחר שהפונקציה החיצונית כבר סיימה לרוץ ויצאה ממחסנית הקריאות?
+    </p>
+    <p class="text-sm text-slate-700 leading-relaxed mb-3">
+        התשובה היא <strong>קלוז'ר (Closure - סגור)</strong>. כאשר המפרש מעריך ביטוי <code>lambda</code>, הוא לא רק שומר את קוד הפונקציה. הוא יוצר מבנה נתונים מיוחד בזיכרון המאגד יחד שני דברים:
+    </p>
+    <ul class="list-disc list-inside space-y-1.5 text-sm text-slate-700 pr-4 mb-3">
+        <li><strong>קוד הפונקציה (Code Pointer):</strong> רשימת הפרמטרים והלוגיקה (ה-AST).</li>
+        <li><strong>סביבת יצירה (Birth Environment):</strong> מצביע לסביבת המשתנים שהייתה קיימת <em>בדיוק ברגע שבו נוצרה הלמדא</em>.</li>
+    </ul>
+    <p class="text-sm text-slate-700 leading-relaxed">
+        בכל פעם שהפונקציה תיקרא בעתיד (Apply), המפרש לא ישתמש בסביבה הפעילה באותו רגע, אלא ישלוף את הסביבה שנשמרה בתוך ה-Closure וירחיב אותה. זהו הבסיס ל<strong>טווח הכרה לקסיקלי (Lexical Scoping)</strong> המאפשר הגנה על מרחב השמות.
+    </p>
+</div>
 
                 <div class="thought-box">
                     <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">הבעיה עם פונקציות מקומיות: הכירו את
@@ -1103,6 +1125,19 @@
                             </table>
                         </div>
                     </div>
+
+<div class="concept-box border-l-4 border-l-emerald-500 bg-emerald-50/50 mt-6">
+    <h4 class="text-lg font-bold text-emerald-950 mb-3">🧠 ניהול זיכרון: למה Scheme לא צריכה לולאות While? (מנגנון TCO)</h4>
+    <p class="text-sm text-slate-700 leading-relaxed mb-3">
+        בשפות תכנות אימפרטיביות (כמו Java או C), כל קריאה לפונקציה מייצרת <strong>מסגרת מחסנית (Stack Frame)</strong> חדשה בזיכרון. ברקורסיה עמוקה, זה מוביל במהירות לקריסת המערכת (Stack Overflow). שפות אלו פותרות זאת באמצעות לולאות כגון <code>while</code> או <code>for</code>.
+    </p>
+    <p class="text-sm text-slate-700 leading-relaxed mb-3">
+        ב-Scheme <strong>אין לולאות מובנות</strong>. כדי לאפשר ריצה של תהליכים אינסופיים, המפרש של Scheme מחויב לתמוך ב-<strong>Tail Call Optimization (TCO)</strong>.
+    </p>
+    <p class="text-sm text-slate-700 leading-relaxed">
+        <strong>איך זה עובד?</strong> כאשר המפרש מזהה שהקריאה הרקורסיבית היא הפעולה האחרונה בהחלט (Tail Call) - כלומר, אין לו שום חישוב נוסף לבצע לאחר מכן - הוא <strong>לא מייצר מסגרת מחסנית חדשה</strong>. במקום זאת, הוא דורס וממחזר את מסגרת הזיכרון הנוכחית ומחליף את הפרמטרים. התוצאה: רקורסיית זנב רצה בזיכרון קבוע של $O(1)$ ומספקת ביצועים השקולים ללולאה אימפרטיבית.
+    </p>
+</div>
 
 </div>
 
@@ -1854,9 +1889,7 @@
                         <li><strong>LHS (Left Hand Side):</strong> לאיזה משפחה הכלל הזה שייך (תמיד
                             <code>expression</code> בקורס שלנו).
                         </li>
-                        <li><strong>Terminals (בתוך מרכאות ""):</strong> מילים שמורות בשפה (כמו <code>"if"</code>,
-                            <code>"then"</code>, <code>"-"</code>, <code>","</code>). המתכנת כותב אותן, הפרסר מוודא שהן
-                            קיימות בסדר הנכון, <strong>ואז זורק אותן לפח!</strong> הן לא מגיעות לעץ ה-AST.
+                        <li><strong>Terminals (בתוך מרכאות ""):</strong> אלו מילים שמורות וסימני פיסוק (כמו "if", ",", "-"). תפקידם הוא לשמש כ"פיגומים" שעוזרים לפרסר להבין את מבנה המשפט. אך ברגע שעץ ה-AST נבנה - הפיגומים נזרקים לפח! עץ ה-AST נקרא "מופשט" (Abstract) משום שהוא מתעלם מאיך שהקוד נראה ויזואלית, ושומר אך ורק את המשמעות הסמנטית. לדוגמה, עצם העובדה שהפרסר בחר בצומת מסוג diff-exp, כבר אומרת למפרש שיש כאן פעולת חיסור, ולכן אין צורך לשמור את תו ה-- בזיכרון.
                         </li>
                         <li><strong>Non-Terminals:</strong> מילים ללא מרכאות (כמו <code>expression</code>,
                             <code>identifier</code>, <code>number</code>). אלו ביטויים רקורסיביים שיש לחשב. <strong>אלו
@@ -2068,9 +2101,10 @@
                                     חפש את z (שגיאה)
                                 </button>
                             </div>
-                            <div id="env-lookup-output"
-                                class="bg-white p-4 rounded-lg border border-slate-200 text-xs text-slate-700 min-h-[80px] flex items-center justify-center text-center leading-relaxed">
-                                לחצו על אחד הכפתורים כדי לראות את אלגוריתם החיפוש (apply-env) בפעולה
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 min-h-[80px] flex items-center justify-center">
+                                <div id="env-lookup-output" class="text-xs text-slate-700 text-center leading-relaxed w-full">
+                                    לחצו על אחד הכפתורים כדי לראות את אלגוריתם החיפוש (apply-env) בפעולה
+                                </div>
                             </div>
                         </div>
 
@@ -2162,7 +2196,7 @@
                 <header class="mb-12 border-b pb-6">
                     <div
                         class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
-                        חלק 4.2 (ממן 12 שאלה 2)</div>
+                        חלק 4.2: העמקה ארכיטקטונית - סביבות כפרוצדורות והכמסת מידע</div>
                     <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">ייצוג פרוצדורלי של סביבות: <span
                             class="text-blue-600">תיאוריה ומימוש</span></h2>
                     <p class="text-xl text-slate-600 leading-relaxed">בספר EOPL (עמוד 40) מוצג ייצוג אלטרנטיבי וחשוב
@@ -2172,13 +2206,11 @@
                 </header>
 
                 <div class="concept-box border-l-4 border-l-amber-500 bg-amber-50 !mt-0 mb-10">
-                    <h3 class="text-xl font-bold mb-2 text-amber-800">🎯 הפן הפדגוגי: מה לומדים ולמה?</h3>
+                    <h3 class="text-xl font-bold mb-2 text-amber-800">הפילוסופיה: קופסה שחורה והכמסת מידע (Information Hiding)</h3>
                     <ul class="list-disc list-inside space-y-2 text-slate-700">
-                        <li><strong>למה הוספנו את זה?</strong> סביבה היא מושג הליבה של מפרשים. אנו רוצים להמחיש שאין
-                            חובה לייצג זיכרון כמבנה נתונים פיזי, אלא אפשר לייצגו כפונקציה התנהגותית לכל דבר.</li>
-                        <li><strong>מה לומדים מזה?</strong> עיקרון הדואליות (Dualism) של תכנות פונקציונלי (החלפת מבנה
-                            נתונים בפרוצדורה), הבנת תפקיד ה-Closure בשימור מצב (הסביבה זוכרת את המשתנים בהקשר שבו
-                            נוצרה), ולמידת מודל ה-Continuations לצורך ניהול זרימה ושגיאות.</li>
+                        <li><strong>הבעיה במבני נתונים:</strong> כאשר סביבה מיוצגת כרשימה (Linked List), כל פונקציה במערכת יכולה להדפיס אותה, לחטט בתוכה ולשנות אותה. המבנה חסר הגנה.</li>
+                        <li><strong>הפתרון הפרוצדורלי:</strong> בייצוג זה, הסביבה היא פשוט פונקציה (Lambda) אנונימית שממתינה לקבל שאילתה (שם משתנה). הסביבה הופכת ל"קופסה שחורה" אטומה לחלוטין.</li>
+                        <li><strong>דואליות עצמים (Object Duality):</strong> הגישה הזו מדגימה כיצד בתכנות פונקציונלי, פונקציה יכולה להתנהג בדיוק כמו אובייקט (Object) בתכנות מונחה-עצמים - היא מחזיקה מצב פנימי כמוס (Encapsulated State) שמגיב רק להודעות ספציפיות.</li>
                     </ul>
                 </div>
 
@@ -2340,6 +2372,43 @@
                         </div>
                     </div>
 
+</div>
+
+<!-- ==========================================
+     PART 4.3: LEXICAL ADDRESSING
+=========================================== -->
+<div id="lexical-addressing" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <div class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">חלק 4.3</div>
+        <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">כתובות לקסיקליות: <span class="text-blue-600">הסוף לחיפוש שמות</span></h2>
+        <p class="text-xl text-slate-600 leading-relaxed">
+            בכל המפרשים שבנינו עד כה, חיפוש משתנה דורש השוואת מחרוזות אטית לאורך שרשרת הסביבות (סיבוכיות פולינומית). מפרשים מודרניים פותרים זאת על ידי תרגום הקוד מראש לשיטה הנקראת <strong>כתובות לקסיקליות (Lexical Addressing)</strong>, המאפשרת שליפת נתונים מהזיכרון בסיבוכיות של $O(1)$.
+        </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <h3 class="text-2xl font-bold mb-4 text-slate-800">המעבר מקוד לקואורדינטות</h3>
+            <p class="mb-4 text-slate-700">בזמן ההידור (Compile Time), המערכת סורקת את הקוד ומחליפה כל קריאה למשתנה בזוג מספרים $(Depth, Position)$, הידועים גם כאינדקסי דה-ברון (De Bruijn Indices):</p>
+            <ul class="list-disc list-inside space-y-2 text-slate-700">
+                <li><strong>עומק (Depth):</strong> כמה סביבות אב (בלוקים) צריך לקפוץ החוצה כדי למצוא את המשתנה. $0$ אומר שהמשתנה הוגדר בבלוק הנוכחי.</li>
+                <li><strong>מיקום (Position):</strong> האינדקס של המשתנה בתוך רשימת ההגדרות של אותו הבלוק (מתחיל מ-0).</li>
+            </ul>
+        </div>
+        <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-bold text-highlight mb-3">דוגמת תרגום (Translation Phase):</h3>
+            <pre class="!bg-slate-950 !p-3 !border !border-slate-700"><code><span class="token-comment">; קוד מקור אנושי</span>
+(lambda (x y)
+  (lambda (a)
+    (+ x a)))
+
+<span class="token-comment">; קוד מתורגם למכונה (Nameless AST)</span>
+(nameless-lambda
+  (nameless-lambda
+    (+ (nameless-var 1 0)  <span class="token-comment">; x: עומק 1, אינדקס 0</span>
+       (nameless-var 0 0)))) <span class="token-comment">; a: עומק 0, אינדקס 0</span></code></pre>
+        </div>
+    </div>
 </div>
 
         </div>
