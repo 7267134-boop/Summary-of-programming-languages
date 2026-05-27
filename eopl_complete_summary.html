@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,10 @@
     <!-- ייבוא פונטים קריאים ומודרניים בעברית מגוגל -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Rubik:wght@500;700;900&display=swap"
+        rel="stylesheet">
+
     <!-- הגדרת MathJax לעימוד מתמטי מושלם -->
     <script>
         window.MathJax = {
@@ -25,7 +28,7 @@
         /* הגדרת דף מחברת משובץ עם שוליים */
         body {
             background-color: #fdfbf7;
-            background-image: 
+            background-image:
                 linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
             background-size: 20px 20px;
@@ -37,7 +40,11 @@
             position: relative;
         }
 
-        h1, h2, h3, h4, .font-heading {
+        h1,
+        h2,
+        h3,
+        h4,
+        .font-heading {
             font-family: 'Rubik', sans-serif;
         }
 
@@ -75,17 +82,93 @@
         }
 
         /* כותרות בעט צבעוני מודגש */
-        .title-red { color: #b91c1c; font-weight: 700; font-size: 1.6rem; margin-top: 2.5rem; margin-bottom: 1rem; display: inline-block; border-bottom: 3px solid rgba(185, 28, 28, 0.2); padding-bottom: 2px; }
-        .title-blue { color: #1d4ed8; font-weight: 700; font-size: 1.6rem; margin-top: 2.5rem; margin-bottom: 1rem; display: inline-block; border-bottom: 3px solid rgba(29, 78, 216, 0.2); padding-bottom: 2px; }
-        .title-purple { color: #6d28d9; font-weight: 700; font-size: 1.6rem; margin-top: 2.5rem; margin-bottom: 1rem; display: inline-block; border-bottom: 3px solid rgba(109, 40, 217, 0.2); padding-bottom: 2px; }
-        .title-green { color: #15803d; font-weight: 700; font-size: 1.6rem; margin-top: 2.5rem; margin-bottom: 1rem; display: inline-block; border-bottom: 3px solid rgba(21, 128, 61, 0.2); padding-bottom: 2px; }
-        .title-orange { color: #c2410c; font-weight: 700; font-size: 1.6rem; margin-top: 2.5rem; margin-bottom: 1rem; display: inline-block; border-bottom: 3px solid rgba(194, 65, 12, 0.2); padding-bottom: 2px; }
+        .title-red {
+            color: #b91c1c;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            border-bottom: 3px solid rgba(185, 28, 28, 0.2);
+            padding-bottom: 2px;
+        }
+
+        .title-blue {
+            color: #1d4ed8;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            border-bottom: 3px solid rgba(29, 78, 216, 0.2);
+            padding-bottom: 2px;
+        }
+
+        .title-purple {
+            color: #6d28d9;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            border-bottom: 3px solid rgba(109, 40, 217, 0.2);
+            padding-bottom: 2px;
+        }
+
+        .title-green {
+            color: #15803d;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            border-bottom: 3px solid rgba(21, 128, 61, 0.2);
+            padding-bottom: 2px;
+        }
+
+        .title-orange {
+            color: #c2410c;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            border-bottom: 3px solid rgba(194, 65, 12, 0.2);
+            padding-bottom: 2px;
+        }
 
         /* מרקרים מציאותיים */
-        .marker-yellow { background: linear-gradient(104deg, rgba(253,224,71,0) 0.9%, rgba(253,224,71,0.65) 2.4%, rgba(253,224,71,0.55) 5.8%, rgba(253,224,71,0.35) 93%, rgba(253,224,71,0.75) 96%, rgba(253,224,71,0) 98%); padding: 2px 6px; border-radius: 3px; font-weight: 600; color: #000; }
-        .marker-green { background: linear-gradient(104deg, rgba(134,239,172,0) 0.9%, rgba(134,239,172,0.65) 2.4%, rgba(134,239,172,0.55) 5.8%, rgba(134,239,172,0.25) 93%, rgba(134,239,172,0.75) 96%, rgba(134,239,172,0) 98%); padding: 2px 6px; border-radius: 3px; font-weight: 600; color: #000; }
-        .marker-blue { background: linear-gradient(104deg, rgba(147,197,253,0) 0.9%, rgba(147,197,253,0.65) 2.4%, rgba(147,197,253,0.55) 5.8%, rgba(147,197,253,0.25) 93%, rgba(147,197,253,0.75) 96%, rgba(147,197,253,0) 98%); padding: 2px 6px; border-radius: 3px; font-weight: 600; color: #000; }
-        .marker-red { background: linear-gradient(104deg, rgba(254,202,202,0) 0.9%, rgba(254,202,202,0.65) 2.4%, rgba(254,202,202,0.55) 5.8%, rgba(254,202,202,0.25) 93%, rgba(254,202,202,0.75) 96%, rgba(254,202,202,0) 98%); padding: 2px 6px; border-radius: 3px; font-weight: 600; color: #000; }
+        .marker-yellow {
+            background: linear-gradient(104deg, rgba(253, 224, 71, 0) 0.9%, rgba(253, 224, 71, 0.65) 2.4%, rgba(253, 224, 71, 0.55) 5.8%, rgba(253, 224, 71, 0.35) 93%, rgba(253, 224, 71, 0.75) 96%, rgba(253, 224, 71, 0) 98%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .marker-green {
+            background: linear-gradient(104deg, rgba(134, 239, 172, 0) 0.9%, rgba(134, 239, 172, 0.65) 2.4%, rgba(134, 239, 172, 0.55) 5.8%, rgba(134, 239, 172, 0.25) 93%, rgba(134, 239, 172, 0.75) 96%, rgba(134, 239, 172, 0) 98%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .marker-blue {
+            background: linear-gradient(104deg, rgba(147, 197, 253, 0) 0.9%, rgba(147, 197, 253, 0.65) 2.4%, rgba(147, 197, 253, 0.55) 5.8%, rgba(147, 197, 253, 0.25) 93%, rgba(147, 197, 253, 0.75) 96%, rgba(147, 197, 253, 0) 98%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .marker-red {
+            background: linear-gradient(104deg, rgba(254, 202, 202, 0) 0.9%, rgba(254, 202, 202, 0.65) 2.4%, rgba(254, 202, 202, 0.55) 5.8%, rgba(254, 202, 202, 0.25) 93%, rgba(254, 202, 202, 0.75) 96%, rgba(254, 202, 202, 0) 98%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #000;
+        }
 
         /* קופסאות דמויות ציור ידני */
         .hand-drawn-box {
@@ -129,7 +212,7 @@
             border-radius: 8px;
             direction: ltr;
             text-align: left;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
             overflow-x: auto;
         }
 
@@ -146,6 +229,7 @@
             padding-right: 1.5rem;
             margin-bottom: 0.75rem;
         }
+
         .list-bullet::before {
             content: '■';
             position: absolute;
@@ -160,9 +244,11 @@
             scrollbar-width: thin;
             scrollbar-color: #f59e0b transparent;
         }
+
         .sidebar-nav::-webkit-scrollbar {
             width: 5px;
         }
+
         .sidebar-nav::-webkit-scrollbar-thumb {
             background-color: #f59e0b;
             border-radius: 4px;
@@ -173,91 +259,164 @@
         }
     </style>
 </head>
+
 <body class="bg-amber-50/20">
 
     <!-- מיכל עוטף ענקי לחלוקת מסך -->
     <div class="min-h-screen flex flex-col lg:flex-row">
-        
+
         <!-- שכבת רקע מעומעמת למובייל -->
-        <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-10 transition-opacity duration-300 hidden lg:hidden"></div>
+        <div id="sidebar-backdrop"
+            class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-10 transition-opacity duration-300 hidden lg:hidden">
+        </div>
 
         <!-- סרגל ניווט צידי -->
-        <aside id="sidebar" class="w-80 max-w-[85vw] bg-[#fdfbf7] text-slate-800 fixed right-0 top-0 bottom-0 z-20 flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.05)] border-l border-amber-200/80 transition-transform duration-300 ease-in-out transform translate-x-0">
+        <aside id="sidebar"
+            class="w-80 max-w-[85vw] bg-[#fdfbf7] text-slate-800 fixed right-0 top-0 bottom-0 z-20 flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.05)] border-l border-amber-200/80 transition-transform duration-300 ease-in-out transform translate-x-0">
             <div class="p-5 border-b border-amber-200 bg-[#fbf9f3] relative">
                 <h2 class="text-xl font-bold font-heading text-slate-900">תפריט ניווט מהיר</h2>
                 <p class="text-xs text-slate-500 mt-1">לחץ על סעיף כדי לקפוץ אליו ישירות</p>
                 <!-- כפתור סגירה (מוצג במובייל ובכלל) -->
-                <button id="toggle-sidebar-close" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition" title="הסתר תפריט">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <button id="toggle-sidebar-close"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition"
+                    title="הסתר תפריט">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
-            
+
             <nav class="flex-1 overflow-y-auto p-4 space-y-4 sidebar-nav text-sm">
                 <!-- שער המבוא -->
                 <div>
-                    <h3 class="font-bold text-orange-700 mb-1 border-b border-orange-200/80 pb-1">שער המבוא: יסודות תיאורטיים</h3>
+                    <h3 class="font-bold text-orange-700 mb-1 border-b border-orange-200/80 pb-1">שער המבוא: יסודות
+                        תיאורטיים</h3>
                     <ul class="space-y-1 pr-2">
-                        <li><a href="#sec-1" class="text-slate-700 hover:text-orange-700 hover:bg-orange-50/50 block rounded px-2 py-0.5 transition font-medium">1. הגדרות אינדוקטיביות (BNF)</a></li>
-                        <li><a href="#sec-2" class="text-slate-700 hover:text-orange-700 hover:bg-orange-50/50 block rounded px-2 py-0.5 transition font-medium">2. תכנות מונחה דקדוק (Follow Grammar)</a></li>
-                        <li><a href="#sec-3" class="text-slate-700 hover:text-orange-700 hover:bg-orange-50/50 block rounded px-2 py-0.5 transition font-medium">3. הפשטת נתונים (Data Abstraction)</a></li>
+                        <li><a href="#sec-1"
+                                class="text-slate-700 hover:text-orange-700 hover:bg-orange-50/50 block rounded px-2 py-0.5 transition font-medium">1.
+                                הגדרות אינדוקטיביות (BNF)</a></li>
+                        <li><a href="#sec-2"
+                                class="text-slate-700 hover:text-orange-700 hover:bg-orange-50/50 block rounded px-2 py-0.5 transition font-medium">2.
+                                תכנות מונחה דקדוק (Follow Grammar)</a></li>
+                        <li><a href="#sec-3"
+                                class="text-slate-700 hover:text-orange-700 hover:bg-orange-50/50 block rounded px-2 py-0.5 transition font-medium">3.
+                                הפשטת נתונים (Data Abstraction)</a></li>
                     </ul>
                 </div>
 
                 <!-- חלק א -->
                 <div>
-                    <h3 class="font-bold text-red-700 mb-1 border-b border-red-200/80 pb-1">שער א: יסודות סכמה (Scheme)</h3>
+                    <h3 class="font-bold text-red-700 mb-1 border-b border-red-200/80 pb-1">שער א: יסודות סכמה (Scheme)
+                    </h3>
                     <ul class="space-y-1 pr-2">
-                        <li><a href="#sec-4" class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">4. יסודות השפה (Scheme)</a></li>
-                        <li><a href="#sec-5" class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">5. משתנים וסביבות - משפחת Let</a></li>
-                        <li><a href="#sec-6" class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">6. תנאים ובקרת זרימה</a></li>
-                        <li><a href="#sec-7" class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">7. מבני נתונים (זוגות ורשימות)</a></li>
-                        <li><a href="#sec-8" class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">8. רקורסיות וניהול זיכרון (TCO)</a></li>
-                        <li><a href="#sec-9" class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">9. טיפוסים מופשטים (ADT) ו-Cases</a></li>
+                        <li><a href="#sec-4"
+                                class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">4.
+                                יסודות השפה (Scheme)</a></li>
+                        <li><a href="#sec-5"
+                                class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">5.
+                                משתנים וסביבות - משפחת Let</a></li>
+                        <li><a href="#sec-6"
+                                class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">6.
+                                תנאים ובקרת זרימה</a></li>
+                        <li><a href="#sec-7"
+                                class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">7.
+                                מבני נתונים (זוגות ורשימות)</a></li>
+                        <li><a href="#sec-8"
+                                class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">8.
+                                רקורסיות וניהול זיכרון (TCO)</a></li>
+                        <li><a href="#sec-9"
+                                class="text-slate-700 hover:text-red-700 hover:bg-red-50/50 block rounded px-2 py-0.5 transition font-medium">9.
+                                טיפוסים מופשטים (ADT) ו-Cases</a></li>
                     </ul>
                 </div>
 
                 <!-- חלק ב -->
                 <div>
-                    <h3 class="font-bold text-blue-700 mb-1 border-b border-blue-200/80 pb-1">שער ב: אבולוציית שפות ה-EOPL</h3>
+                    <h3 class="font-bold text-blue-700 mb-1 border-b border-blue-200/80 pb-1">שער ב: אבולוציית שפות
+                        ה-EOPL</h3>
                     <ul class="space-y-1 pr-2">
-                        <li><a href="#sec-10" class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">10. אדריכלות המפרש - מבנה הקבצים</a></li>
-                        <li><a href="#sec-11" class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">11. המנתח התחבירי (Lexer & Parser)</a></li>
-                        <li><a href="#sec-12" class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">12. סביבות לקסיקליות וייצוג פרוצדורלי</a></li>
-                        <li><a href="#sec-13" class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">13. שפת LET</a></li>
-                        <li><a href="#sec-14" class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">14. שפת PROC (First-Class)</a></li>
-                        <li><a href="#sec-15" class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">15. שפת LETREC (סביבות מעגליות)</a></li>
-                        <li><a href="#sec-16" class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">16. המפרש נטול השמות (Nameless)</a></li>
+                        <li><a href="#sec-10"
+                                class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">10.
+                                אדריכלות המפרש - מבנה הקבצים</a></li>
+                        <li><a href="#sec-11"
+                                class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">11.
+                                המנתח התחבירי (Lexer & Parser)</a></li>
+                        <li><a href="#sec-12"
+                                class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">12.
+                                סביבות לקסיקליות וייצוג פרוצדורלי</a></li>
+                        <li><a href="#sec-13"
+                                class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">13.
+                                שפת LET</a></li>
+                        <li><a href="#sec-14"
+                                class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">14.
+                                שפת PROC (First-Class)</a></li>
+                        <li><a href="#sec-15"
+                                class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">15.
+                                שפת LETREC (סביבות מעגליות)</a></li>
+                        <li><a href="#sec-16"
+                                class="text-slate-700 hover:text-blue-700 hover:bg-blue-50/50 block rounded px-2 py-0.5 transition font-medium">16.
+                                המפרש נטול השמות (Nameless)</a></li>
                     </ul>
                 </div>
 
                 <!-- חלק ג -->
                 <div>
-                    <h3 class="font-bold text-purple-700 mb-1 border-b border-purple-200/80 pb-1">שער ג: זיכרון, מוטציות ופרמטרים</h3>
+                    <h3 class="font-bold text-purple-700 mb-1 border-b border-purple-200/80 pb-1">שער ג: זיכרון, מוטציות
+                        ופרמטרים</h3>
                     <ul class="space-y-1 pr-2">
-                        <li><a href="#sec-17" class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">17. המהפך מ"ערך" ל"מצב" (The Store)</a></li>
-                        <li><a href="#sec-18" class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">18. שפת EXPLICIT-REFS (ידני)</a></li>
-                        <li><a href="#sec-19" class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">19. שפת IMPLICIT-REFS (אוטומטי)</a></li>
-                        <li><a href="#sec-20" class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">20. זוגות משתנים (MUTABLE-PAIRS)</a></li>
-                        <li><a href="#sec-21" class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">21. מנגנוני העברת פרמטרים</a></li>
-                        <li><a href="#sec-22" class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">22. ★ טבלת השוואה מסכמת (חשוב!)</a></li>
-                        <li><a href="#sec-23" class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">23. ★ מדריך: הוספת תכונות לשפה</a></li>
+                        <li><a href="#sec-17"
+                                class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">17.
+                                המהפך מ"ערך" ל"מצב" (The Store)</a></li>
+                        <li><a href="#sec-18"
+                                class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">18.
+                                שפת EXPLICIT-REFS (ידני)</a></li>
+                        <li><a href="#sec-19"
+                                class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">19.
+                                שפת IMPLICIT-REFS (אוטומטי)</a></li>
+                        <li><a href="#sec-20"
+                                class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">20.
+                                זוגות משתנים (MUTABLE-PAIRS)</a></li>
+                        <li><a href="#sec-21"
+                                class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">21.
+                                מנגנוני העברת פרמטרים</a></li>
+                        <li><a href="#sec-22"
+                                class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">22.
+                                ★ טבלת השוואה מסכמת (חשוב!)</a></li>
+                        <li><a href="#sec-23"
+                                class="text-slate-700 hover:text-purple-700 hover:bg-purple-50/50 block rounded px-2 py-0.5 transition font-medium">23.
+                                ★ מדריך: הוספת תכונות לשפה</a></li>
                     </ul>
                 </div>
 
                 <!-- חלק ד -->
                 <div>
-                    <h3 class="font-bold text-emerald-700 mb-1 border-b border-emerald-200/80 pb-1">שער ד: מערכות טיפוסים (Types)</h3>
+                    <h3 class="font-bold text-emerald-700 mb-1 border-b border-emerald-200/80 pb-1">שער ד: מערכות
+                        טיפוסים (Types)</h3>
                     <ul class="space-y-1 pr-2">
-                        <li><a href="#sec-24" class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">24. מבוא: Static vs Dynamic</a></li>
-                        <li><a href="#sec-25" class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">25. שפת CHECKED (טיפוסים מפורשים)</a></li>
-                        <li><a href="#sec-26" class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">26. שפת INFERRED (הסקה אוטומטית)</a></li>
-                        <li><a href="#sec-27" class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">27. שלב א': גזירת חוקים ומשוואות</a></li>
-                        <li><a href="#sec-28" class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">28. שלב ב': אלגוריתם Unification</a></li>
-                        <li><a href="#sec-29" class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">29. מקרי קצה ותובנות חשובות</a></li>
+                        <li><a href="#sec-24"
+                                class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">24.
+                                מבוא: Static vs Dynamic</a></li>
+                        <li><a href="#sec-25"
+                                class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">25.
+                                שפת CHECKED (טיפוסים מפורשים)</a></li>
+                        <li><a href="#sec-26"
+                                class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">26.
+                                שפת INFERRED (הסקה אוטומטית)</a></li>
+                        <li><a href="#sec-27"
+                                class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">27.
+                                שלב א': גזירת חוקים ומשוואות</a></li>
+                        <li><a href="#sec-28"
+                                class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">28.
+                                שלב ב': אלגוריתם Unification</a></li>
+                        <li><a href="#sec-29"
+                                class="text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50 block rounded px-2 py-0.5 transition font-medium">29.
+                                מקרי קצה ותובנות חשובות</a></li>
                     </ul>
                 </div>
+
+
             </nav>
 
             <div class="p-4 border-t border-amber-200 bg-[#fbf9f3] text-center text-xs text-slate-500 font-medium">
@@ -266,28 +425,35 @@
         </aside>
 
         <!-- אזור התוכן הראשי (מחברת) -->
-        <main id="main-content" class="flex-1 notebook-container relative transition-all duration-300 ease-in-out lg:mr-80 lg:w-[calc(100%-20rem)]">
+        <main id="main-content"
+            class="flex-1 notebook-container relative transition-all duration-300 ease-in-out lg:mr-80 lg:w-[calc(100%-20rem)]">
 
             <div class="notebook-page min-h-screen">
-                
+
                 <!-- כותרת על -->
                 <div class="text-center mb-16 mt-6">
-                    <span class="text-xs font-bold text-red-600 tracking-widest uppercase block mb-2">כל החומר התיאורטי והמעשי במקום אחד</span>
+                    <span class="text-xs font-bold text-red-600 tracking-widest uppercase block mb-2">סיכום הקורס שפות
+                        תכנות, נכתב ונערך- 2026ב</span>
                     <h1 class="text-4xl md:text-5xl text-slate-900 inline-block relative font-heading font-black">
-                        ספר הסיכומים המקיף: שפות תכנות ומפרשים
-                        <svg class="absolute -bottom-4 left-0 w-full h-4" viewBox="0 0 200 10" preserveAspectRatio="none">
-                            <path d="M0,5 Q100,10 200,2" stroke="#dc2626" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        שפות תכנות ומפרשים
+                        <svg class="absolute -bottom-4 left-0 w-full h-4" viewBox="0 0 200 10"
+                            preserveAspectRatio="none">
+                            <path d="M0,5 Q100,10 200,2" stroke="#dc2626" stroke-width="4" fill="none"
+                                stroke-linecap="round" />
                         </svg>
                     </h1>
-                    <p class="mt-6 text-xl text-slate-600 font-semibold font-heading">ערכת הכנה מקיפה למבחן: תיאוריה, קוד, ארכיטקטורה ומתמטיקה</p>
+                    <p class="mt-6 text-xl text-slate-600 font-semibold font-heading"> הכנה מקיפה למבחן: תיאוריה,
+                        קוד, ארכיטקטורה ומתמטיקה</p>
                 </div>
 
                 <!-- ========================================== -->
                 <!-- שער המבוא -->
                 <!-- ========================================== -->
                 <div class="border-b-4 border-orange-400 pb-4 mb-8">
-                    <h2 class="text-2xl font-black text-orange-800 font-heading">שער המבוא: יסודות תיאורטיים (מתוך פרקים 1-2)</h2>
-                    <p class="text-sm text-slate-600">הבסיס המתמטי והמחשבתי לבניית מפרשים: קבוצות אינדוקטיביות, דקדוק והפשטת נתונים.</p>
+                    <h2 class="text-2xl font-black text-orange-800 font-heading">מבוא: יסודות תיאורטיים (מתוך פרקים
+                        1-2)</h2>
+                    <p class="text-sm text-slate-600">הבסיס המתמטי והמחשבתי לבניית מפרשים: קבוצות אינדוקטיביות, דקדוק
+                        והפשטת נתונים.</p>
                 </div>
 
                 <!-- סעיף 1 -->
@@ -301,16 +467,19 @@
                         <h4 class="font-heading text-lg text-orange-800 mb-2">דוגמאות לדקדוק נפוץ (Grammar)</h4>
                         <div class="space-y-4">
                             <div>
-                                <strong class="text-slate-800">עץ בינארי (Bintree):</strong> יכול להיות עלה (מספר) או צומת פנימי המכיל סימבול ושני תתי-עצים.
+                                <strong class="text-slate-800">עץ בינארי (Bintree):</strong> יכול להיות עלה (מספר) או
+                                צומת פנימי המכיל סימבול ושני תתי-עצים.
                                 <pre><code>Bintree ::= Int | (Symbol Bintree Bintree)</code></pre>
                             </div>
                             <div>
-                                <strong class="text-slate-800">ביטוי למבדה (LcExp):</strong> הבסיס של שפות תכנות. ביטוי יכול להיות משתנה, הגדרת פונקציה (למבדה), או הפעלה של פונקציה (Application).
+                                <strong class="text-slate-800">ביטוי למבדה (LcExp):</strong> הבסיס של שפות תכנות. ביטוי
+                                יכול להיות משתנה, הגדרת פונקציה (למבדה), או הפעלה של פונקציה (Application).
                                 <pre><code>LcExp ::= Identifier
       ::= (lambda (Identifier) LcExp)
       ::= (LcExp LcExp)</code></pre>
                                 <p class="text-sm text-slate-700 mt-2">
-                                    <span class="marker-yellow">מושג חשוב - Bound Variable:</span> במבנה הלמבדה, המזהה (Identifier) המוצהר הופך להיות "קשור" (Bound) לכל מופע שלו בתוך גוף הביטוי.
+                                    <span class="marker-yellow">מושג חשוב - Bound Variable:</span> במבנה הלמבדה, המזהה
+                                    (Identifier) המוצהר הופך להיות "קשור" (Bound) לכל מופע שלו בתוך גוף הביטוי.
                                 </p>
                             </div>
                         </div>
@@ -321,15 +490,18 @@
                 <section id="sec-2" class="mb-12 scroll-mt-6">
                     <h3 class="title-orange">2. תכנות מונחה דקדוק (Follow The Grammar)</h3>
                     <p class="mb-4">
-                        איך כותבים פונקציה שתעבד את מבני הנתונים האינדוקטיביים שהגדרנו (כמו עץ או LcExp)? 
-                        הכלל החשוב ביותר בקורס הוא: <strong class="text-orange-700">המבנה של הפונקציה חייב לחקות את מבנה הדקדוק!</strong>
+                        איך כותבים פונקציה שתעבד את מבני הנתונים האינדוקטיביים שהגדרנו (כמו עץ או LcExp)?
+                        הכלל החשוב ביותר בקורס הוא: <strong class="text-orange-700">המבנה של הפונקציה חייב לחקות את מבנה
+                            הדקדוק!</strong>
                     </p>
                     <div class="bg-orange-50/50 border-r-4 border-orange-500 p-4 mb-4 rounded-l-lg shadow-sm text-sm">
                         <h4 class="font-bold text-orange-900 mb-2">📌 המתכון לעבודה עם דקדוק (The Recipe):</h4>
                         <ol class="list-decimal list-inside space-y-2 text-slate-800">
                             <li>עבור כל Non-Terminal בדקדוק, כתוב פונקציה אחת ויחידה האחראית לטפל בו.</li>
-                            <li>בתוך הפונקציה, השתמש ב-<code>cond</code> כדי ליצור זרוע (אלטרנטיבה) אחת עבור כל כלל גזירה אפשרי של אותו טיפוס.</li>
-                            <li>אם כלל הגזירה מכיל בתוכו מבנה אינדוקטיבי (למשל תת-עץ), בצע קריאה רקורסיבית מתוך אותה זרוע.</li>
+                            <li>בתוך הפונקציה, השתמש ב-<code>cond</code> כדי ליצור זרוע (אלטרנטיבה) אחת עבור כל כלל
+                                גזירה אפשרי של אותו טיפוס.</li>
+                            <li>אם כלל הגזירה מכיל בתוכו מבנה אינדוקטיבי (למשל תת-עץ), בצע קריאה רקורסיבית מתוך אותה
+                                זרוע.</li>
                         </ol>
                     </div>
                 </section>
@@ -338,23 +510,83 @@
                 <section id="sec-3" class="mb-12 scroll-mt-6">
                     <h3 class="title-orange">3. הפשטת נתונים (Data Abstraction)</h3>
                     <p class="mb-4">
-                        הפשטת נתונים היא העיקרון של הפרדה מוחלטת בין **איך משתמשים במידע** (הממשק - Interface) לבין **איך המידע שמור בזיכרון** (המימוש - Implementation).
-                        אם קוד המפרש שלנו יהיה בלתי-תלוי בייצוג (Representation-Independent), נוכל להחליף את המבנה הפנימי מבלי לשבור את הקוד.
+                        הפשטת נתונים היא העיקרון של הפרדה מוחלטת בין **איך משתמשים במידע** (הממשק - Interface) לבין
+                        **איך המידע שמור בזיכרון** (המימוש - Implementation).
+                        אם קוד המפרש שלנו יהיה בלתי-תלוי בייצוג (Representation-Independent), נוכל להחליף את המבנה
+                        הפנימי מבלי לשבור את הקוד.
                     </p>
                     <div class="hand-drawn-box">
                         <h4 class="font-heading text-xl text-orange-800 mb-3">רכיבי הממשק (The Interface)</h4>
                         <ul class="list-disc list-inside space-y-3 text-slate-800 font-semibold pr-4 text-sm">
-                            <li><span class="marker-yellow">בנאים (Constructors):</span> פונקציות שאחראיות לקחת נתונים גולמיים ולארוז אותם לתוך טיפוס הנתונים. (לדוגמה: <code>empty-env</code>, <code>extend-env</code>).</li>
-                            <li><span class="marker-blue">מתבוננים (Observers):</span> פונקציות ששואלות שאלות על המידע מבלי לשנות אותו. נחלקים לשניים:
+                            <li><span class="marker-yellow">בנאים (Constructors):</span> פונקציות שאחראיות לקחת נתונים
+                                גולמיים ולארוז אותם לתוך טיפוס הנתונים. (לדוגמה: <code>empty-env</code>,
+                                <code>extend-env</code>).
+                            </li>
+                            <li><span class="marker-blue">מתבוננים (Observers):</span> פונקציות ששואלות שאלות על המידע
+                                מבלי לשנות אותו. נחלקים לשניים:
                                 <ul class="list-circle list-inside pr-6 mt-1 space-y-1 font-normal text-slate-700">
-                                    <li><strong>מנבאים (Predicates):</strong> מחזירים בוליאני, בודקים "האם הטיפוס הוא מסוג X?". (לדוגמה: <code>is-zero?</code>, <code>lambda-exp?</code>).</li>
-                                    <li><strong>מחלצים (Extractors):</strong> שולפים מידע ספציפי מתוך הטיפוס החוצה. (לדוגמה: <code>lambda-exp->body</code>).</li>
+                                    <li><strong>מנבאים (Predicates):</strong> מחזירים בוליאני, בודקים "האם הטיפוס הוא
+                                        מסוג X?". (לדוגמה: <code>is-zero?</code>, <code>lambda-exp?</code>).</li>
+                                    <li><strong>מחלצים (Extractors):</strong> שולפים מידע ספציפי מתוך הטיפוס החוצה.
+                                        (לדוגמה: <code>lambda-exp->body</code>).</li>
                                 </ul>
                             </li>
                         </ul>
                         <p class="mt-4 text-sm text-slate-700">
-                            * בהמשך (בסעיף 9), נראה איך הכלי <code>define-datatype</code> יוצר עבורנו את כל הבנאים והמנבאים באופן אוטומטי!
+                            * בהמשך (בסעיף 9), נראה איך הכלי <code>define-datatype</code> יוצר עבורנו את כל הבנאים
+                            והמנבאים באופן אוטומטי!
                         </p>
+                    </div>
+
+                    <!-- השוואת "לפני ואחרי" הפשטה מה-PDF -->
+                    <div class="p-5 bg-orange-50/40 border border-orange-200 rounded-lg shadow-sm text-sm my-6">
+                        <h4 class="font-bold text-orange-900 text-lg mb-3">הדגמת "לפני ואחרי" הפשטה: פונקציית
+                            <code>occurs-free?</code>
+                        </h4>
+                        <p class="text-slate-700 mb-4 leading-relaxed">
+                            כאשר אנו כותבים את הפונקציה <code>occurs-free?</code> (הבודקת אם משתנה מופיע כחופשי בביטוי
+                            למבדה), אנו יכולים לעבוד בשתי דרכים:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <strong class="text-red-700 block mb-2">❌ לפני ההפשטה (תלות מלאה בייצוג
+                                    כרשימות):</strong>
+                                <p class="text-xs text-slate-600 mb-2">הקוד מפרק את הרשימה ישירות בעזרת פונקציות כמו
+                                    <code>car</code> ו-<code>cadr</code>. אם נשנה את ייצוג המשתנה או הפונקציה, הקוד
+                                    יישבר!
+                                </p>
+                                <pre class="text-xs"><code>(define occurs-free?
+  (lambda (search-var exp)
+    (cond
+      ((symbol? exp) (eqv? search-var exp))
+      ((eqv? (car exp) 'lambda)
+       (and
+         (not (eqv? search-var (car (cadr exp))))
+         (occurs-free? search-var (caddr exp))))
+      (else
+       (or
+         (occurs-free? search-var (car exp))
+         (occurs-free? search-var (cadr exp)))))))</code></pre>
+                            </div>
+                            <div>
+                                <strong class="text-emerald-700 block mb-2">✅ אחרי ההפשטה (ייצוג מופשט עם
+                                    <code>cases</code>):</strong>
+                                <p class="text-xs text-slate-600 mb-2">הקוד משתמש בממשק מופשט בלבד דרך התאמת תבניות
+                                    (Pattern Matching). הוא אינו מודע לאופן שבו הביטוי מיוצג פיזית בזיכרון.</p>
+                                <pre class="text-xs"><code>(define occurs-free?
+  (lambda (search-var exp)
+    (cases expression exp
+      (var-exp (id) (eqv? search-var id))
+      (lambda-exp (id body)
+        (and
+          (not (eqv? search-var id))
+          (occurs-free? search-var body)))
+      (app-exp (rator rand)
+        (or
+          (occurs-free? search-var rator)
+          (occurs-free? search-var rand))))))</code></pre>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -363,8 +595,10 @@
                 <!-- שער א' -->
                 <!-- ========================================== -->
                 <div class="border-b-4 border-amber-400 pb-4 mb-8 mt-16">
-                    <h2 class="text-2xl font-black text-amber-800 font-heading">שער א: יסודות סכמה (Scheme) והשפה הבסיסית</h2>
-                    <p class="text-sm text-slate-600">יסודות התכנות הפונקציונלי בסכמה, בניית סביבות עבודה וניהול נתונים.</p>
+                    <h2 class="text-2xl font-black text-amber-800 font-heading">שער א: יסודות סכמה (Scheme) והשפה
+                        הבסיסית</h2>
+                    <p class="text-sm text-slate-600">יסודות התכנות הפונקציונלי בסכמה, בניית סביבות עבודה וניהול נתונים.
+                    </p>
                 </div>
 
                 <!-- סעיף 4 (לשעבר 1) -->
@@ -372,13 +606,18 @@
                     <h3 class="title-red">4. יסודות השפה (Scheme)</h3>
                     <div class="space-y-4">
                         <div class="list-bullet">
-                            <span class="marker-yellow">הכל הוא ביטוי (Expression):</span> כל פקודה, תנאי או פעולה מחזירה ערך (חוץ מפקודות השמה והגדרה עולמיות כמו <code>define</code> שנועדו ליצירת קשרים בלבד).
+                            <span class="marker-yellow">הכל הוא ביטוי (Expression):</span> כל פקודה, תנאי או פעולה
+                            מחזירה ערך (חוץ מפקודות השמה והגדרה עולמיות כמו <code>define</code> שנועדו ליצירת קשרים
+                            בלבד).
                         </div>
                         <div class="list-bullet">
-                            <strong>תחביר תחילי (Prefix):</strong> האופרטור תמיד בתוך הסוגריים בהתחלה. למשל: <code>(+ 1 2)</code>. מבנה זה חוסך את הצורך לזכור סדר פעולות חשבון ומקל מאוד על כתיבת המפרש, שכן הסוגר השמאלי תמיד מסמן קריאה לפונקציה.
+                            <strong>תחביר תחילי (Prefix):</strong> האופרטור תמיד בתוך הסוגריים בהתחלה. למשל:
+                            <code>(+ 1 2)</code>. מבנה זה חוסך את הצורך לזכור סדר פעולות חשבון ומקל מאוד על כתיבת המפרש,
+                            שכן הסוגר השמאלי תמיד מסמן קריאה לפונקציה.
                         </div>
                         <div class="list-bullet">
-                            <strong>אין לולאות While/For:</strong> עובדים נטו עם פונקציות רקורסיביות ופונקציות מסדר גבוה (כמו <code>map</code>, <code>fold</code>).
+                            <strong>אין לולאות While/For:</strong> עובדים נטו עם פונקציות רקורסיביות ופונקציות מסדר גבוה
+                            (כמו <code>map</code>, <code>fold</code>).
                         </div>
                     </div>
                 </section>
@@ -387,28 +626,39 @@
                 <section id="sec-5" class="mb-12 scroll-mt-6">
                     <h3 class="title-red">5. משתנים וסביבות - משפחת ה-Let</h3>
                     <p class="mb-4">איך קושרים שמות לערכים בתוך בלוק מקומי? סכמה מציעה שלושה מנגנונים שונים:</p>
-                    
+
                     <div class="hand-drawn-box">
                         <div class="mb-6 border-b border-slate-200 pb-4">
-                            <strong class="text-slate-900 text-xl font-heading">א. <code>let</code> (קשירה מקבילית - Parallel):</strong><br>
-                            <p class="text-sm mb-2 text-slate-700">כל הערכים מחושבים מול הסביבה החיצונית <strong>לפני</strong> ביצוע ההשמה בפועל. המשתנים המוגדרים באותו בלוק אינם מכירים זה את זה.</p>
-<pre><code>(let ((x 5)
+                            <strong class="text-slate-900 text-xl font-heading">א. <code>let</code> (קשירה מקבילית -
+                                Parallel):</strong><br>
+                            <p class="text-sm mb-2 text-slate-700">כל הערכים מחושבים מול הסביבה החיצונית
+                                <strong>לפני</strong> ביצוע ההשמה בפועל. המשתנים המוגדרים באותו בלוק אינם מכירים זה את
+                                זה.
+                            </p>
+                            <pre><code>(let ((x 5)
       (y (+ x 1))) ; תעוף שגיאה! x לא מוכר עדיין בסביבה החיצונית בה y מחושב
   y)</code></pre>
                         </div>
-                        
+
                         <div class="mb-6 border-b border-slate-200 pb-4">
-                            <strong class="text-slate-900 text-xl font-heading">ב. <code>let*</code> (קשירה טורית/סדרתית - Sequential):</strong><br>
-                            <p class="text-sm mb-2 text-slate-700">מתורגם מאחורי הקלעים לסדרה של ביטויי <code>let</code> מקוננים. כל משתנה מכיר את המשתנים שהוגדרו מעליו. כאן ה-<code>(+ x 1)</code> יעבוד מצוין ויחזיר $6$:</p>
-<pre><code>(let* ((x 5)
+                            <strong class="text-slate-900 text-xl font-heading">ב. <code>let*</code> (קשירה טורית/סדרתית
+                                - Sequential):</strong><br>
+                            <p class="text-sm mb-2 text-slate-700">מתורגם מאחורי הקלעים לסדרה של ביטויי <code>let</code>
+                                מקוננים. כל משתנה מכיר את המשתנים שהוגדרו מעליו. כאן ה-<code>(+ x 1)</code> יעבוד מצוין
+                                ויחזיר $6$:</p>
+                            <pre><code>(let* ((x 5)
        (y (+ x 1))) ; יעבוד מעולה!
   y)</code></pre>
                         </div>
 
                         <div>
-                            <strong class="text-slate-900 text-xl font-heading">ג. <code>letrec</code> (קשירה רקורסיבית - Recursive Binding):</strong><br>
-                            <p class="text-sm mb-2 text-slate-700"><span class="marker-green">חובה כדי שפונקציה תוכל לקרוא לעצמה!</span></p>
-                            <p class="text-sm text-slate-700">המפרש מייצר קודם כל "קופסאות ריקות" (תאים לא מאותחלים בזיכרון), לאחר מכן מעריך את פונקציות הלמבדה, ולבסוף מעדכן את המצביעים כדי שהפונקציה תכיר את שמה של עצמה ואת שאר הפונקציות המוגדרות בבלוק במהלך ריצתה.</p>
+                            <strong class="text-slate-900 text-xl font-heading">ג. <code>letrec</code> (קשירה רקורסיבית
+                                - Recursive Binding):</strong><br>
+                            <p class="text-sm mb-2 text-slate-700"><span class="marker-green">חובה כדי שפונקציה תוכל
+                                    לקרוא לעצמה!</span></p>
+                            <p class="text-sm text-slate-700">המפרש מייצר קודם כל "קופסאות ריקות" (תאים לא מאותחלים
+                                בזיכרון), לאחר מכן מעריך את פונקציות הלמבדה, ולבסוף מעדכן את המצביעים כדי שהפונקציה תכיר
+                                את שמה של עצמה ואת שאר הפונקציות המוגדרות בבלוק במהלך ריצתה.</p>
                         </div>
                     </div>
                 </section>
@@ -418,14 +668,20 @@
                     <h3 class="title-red">6. תנאים ובקרת זרימה</h3>
                     <div class="space-y-4">
                         <div class="list-bullet">
-                            <strong>מה נחשב ל-True?</strong> הכל! ב-Scheme, <span class="marker-yellow">כל ערך שאינו במפורש <code>#f</code> נחשב לאמת.</span> מספרים, רשימה ריקה <code>'()</code> - הכל מייצג אמת בבדיקות תנאי.
+                            <strong>מה נחשב ל-True?</strong> הכל! ב-Scheme, <span class="marker-yellow">כל ערך שאינו
+                                במפורש <code>#f</code> נחשב לאמת.</span> מספרים, רשימה ריקה <code>'()</code> - הכל מייצג
+                            אמת בבדיקות תנאי.
                         </div>
                         <div class="list-bullet">
-                            <strong><code>if</code>:</strong> חובה לספק שלושה חלקים - תנאי, ביטוי לביצוע במקרה אמת, וביטוי לביצוע במקרה שקר (Else). אי אפשר לכתוב ביטוי <code>if</code> ללא חלופת שקר בשפת EOPL האקדמית.
+                            <strong><code>if</code>:</strong> חובה לספק שלושה חלקים - תנאי, ביטוי לביצוע במקרה אמת,
+                            וביטוי לביצוע במקרה שקר (Else). אי אפשר לכתוב ביטוי <code>if</code> ללא חלופת שקר בשפת EOPL
+                            האקדמית.
                         </div>
                         <div class="list-bullet">
-                            <strong><code>cond</code> (בדומה ל-Switch-Case):</strong> שרשרת בדיקות תנאי עוקבות. 
-                            <br><em class="text-red-700 font-bold">כלל ברזל חשוב למבחן:</em> יש לבדוק תמיד קודם את הטיפוס לפני שבודקים את הערך הפנימי שלו. למשל, יש לבדוק קודם <code>(number? n)</code> ורק אז לבצע בדיקת גודל כמו <code>(> n 0)</code>.
+                            <strong><code>cond</code> (בדומה ל-Switch-Case):</strong> שרשרת בדיקות תנאי עוקבות.
+                            <br><em class="text-red-700 font-bold">כלל ברזל חשוב למבחן:</em> יש לבדוק תמיד קודם את
+                            הטיפוס לפני שבודקים את הערך הפנימי שלו. למשל, יש לבדוק קודם <code>(number? n)</code> ורק אז
+                            לבצע בדיקת גודל כמו <code>(> n 0)</code>.
                         </div>
                     </div>
                 </section>
@@ -433,17 +689,21 @@
                 <!-- סעיף 7 (לשעבר 4) -->
                 <section id="sec-7" class="mb-12 scroll-mt-6">
                     <h3 class="title-red">7. מבני נתונים (זוגות ורשימות)</h3>
-                    <p class="mb-3">רשימה ב-Scheme בנויה כשרשרת של קופסאות זיכרון (צמתים). הפקודה <code>cons</code> מקצה קופסה כזו בזיכרון:</p>
+                    <p class="mb-3">רשימה ב-Scheme בנויה כשרשרת של קופסאות זיכרון (צמתים). הפקודה <code>cons</code> מקצה
+                        קופסה כזו בזיכרון:</p>
                     <div class="space-y-2">
                         <div class="list-bullet"><code>car</code> - שולף את האיבר השמאלי בקופסה (התוכן / הערך).</div>
-                        <div class="list-bullet"><code>cdr</code> - שולף את האיבר הימני בקופסה (המצביע להמשך הרשימה / הזוג).</div>
+                        <div class="list-bullet"><code>cdr</code> - שולף את האיבר הימני בקופסה (המצביע להמשך הרשימה /
+                            הזוג).</div>
                     </div>
-                    
+
                     <div class="warning-box">
                         <strong class="font-heading text-xl">שים לב להבדל הקריטי בבדיקות טיפוסים!</strong><br>
                         <div class="mt-2 space-y-2 text-sm">
-                            <div>• <code>(pair? x)</code>: בודק <strong>רק</strong> אם האובייקט הוא קופסת זיכרון (זוג). לא מעניין אותו מה יש בפנים וכיצד הזוג מסתיים.</div>
-                            <div>• <code>(list? x)</code>: בודק באופן רקורסיבי שזו שרשרת <strong>תקנית ומאוזנת</strong> של זוגות המסתיימת במפורש ברשימה הריקה <code>'()</code> (Null).</div>
+                            <div>• <code>(pair? x)</code>: בודק <strong>רק</strong> אם האובייקט הוא קופסת זיכרון (זוג).
+                                לא מעניין אותו מה יש בפנים וכיצד הזוג מסתיים.</div>
+                            <div>• <code>(list? x)</code>: בודק באופן רקורסיבי שזו שרשרת <strong>תקנית ומאוזנת</strong>
+                                של זוגות המסתיימת במפורש ברשימה הריקה <code>'()</code> (Null).</div>
                         </div>
                     </div>
                 </section>
@@ -452,13 +712,20 @@
                 <section id="sec-8" class="mb-12 scroll-mt-6">
                     <h3 class="title-red">8. רקורסיות וניהול זיכרון (TCO)</h3>
                     <div class="hand-drawn-box">
-                        <strong class="font-heading text-xl text-red-800">רקורסיה רגילה (Stack-based Recursion):</strong> <br>
-                        <p class="text-sm text-slate-700 mt-1 mb-3">רקורסיה רגילה מנפחת את הזיכרון! המחשב מקצה מסגרת מחסנית חדשה (Stack Frame) עבור כל קריאה, מאחר שהוא חייב "לזכור" לבצע פעולה חישובית כלשהי מיד לאחר שהקריאה הבאה תחזור.</p>
-                        
-                        <span class="marker-yellow text-slate-900 text-xl font-heading">רקורסיית זנב (TCO - Tail Call Optimization):</span> <br>
+                        <strong class="font-heading text-xl text-red-800">רקורסיה רגילה (Stack-based
+                            Recursion):</strong> <br>
+                        <p class="text-sm text-slate-700 mt-1 mb-3">רקורסיה רגילה מנפחת את הזיכרון! המחשב מקצה מסגרת
+                            מחסנית חדשה (Stack Frame) עבור כל קריאה, מאחר שהוא חייב "לזכור" לבצע פעולה חישובית כלשהי מיד
+                            לאחר שהקריאה הבאה תחזור.</p>
+
+                        <span class="marker-yellow text-slate-900 text-xl font-heading">רקורסיית זנב (TCO - Tail Call
+                            Optimization):</span> <br>
                         <div class="mt-2 text-sm text-slate-700 leading-relaxed">
-                            כאן, הקריאה הרקורסיבית היא <strong>הפעולה האחרונה בהחלט (Tail Position)</strong> שמתבצעת בפונקציה.<br>
-                            המהדר מבין שאין צורך לחזור למסגרת הקודמת מאחר שלא נשאר קוד לביצוע בה, ולכן הוא <strong>דורס וממחזר</strong> את אותה מסגרת זיכרון שוב ושוב! (סיבוכיות מקום יורדת ל-$O(1)$). בדרך כלל ניעזר בפרמטר עזר צובר (Accumulator).
+                            כאן, הקריאה הרקורסיבית היא <strong>הפעולה האחרונה בהחלט (Tail Position)</strong> שמתבצעת
+                            בפונקציה.<br>
+                            המהדר מבין שאין צורך לחזור למסגרת הקודמת מאחר שלא נשאר קוד לביצוע בה, ולכן הוא <strong>דורס
+                                וממחזר</strong> את אותה מסגרת זיכרון שוב ושוב! (סיבוכיות מקום יורדת ל-$O(1)$). בדרך כלל
+                            ניעזר בפרמטר עזר צובר (Accumulator).
                         </div>
                     </div>
                 </section>
@@ -468,17 +735,22 @@
                     <h3 class="title-red">9. טיפוסים מופשטים (ADT) ו-Cases</h3>
                     <div class="space-y-4">
                         <div class="list-bullet">
-                            <strong><code>define-datatype</code>:</strong> מאפשר לנו להגדיר טיפוסים מופשטים ומבני נתונים חדשים בצורה בטוחה (Type-Safe). המערכת מוודאת תקינות ויוצרת עבורנו את הבנאים והמנבאים שדיברנו עליהם בשער המבוא.
+                            <strong><code>define-datatype</code>:</strong> מאפשר לנו להגדיר טיפוסים מופשטים ומבני נתונים
+                            חדשים בצורה בטוחה (Type-Safe). המערכת מוודאת תקינות ויוצרת עבורנו את הבנאים והמנבאים שדיברנו
+                            עליהם בשער המבוא.
                         </div>
                         <div class="list-bullet">
-                            <strong><code>cases</code>:</strong> המנגנון המאפשר לשלוף ולחלץ מידע (Extractor מובנה). זהו מנגנון התאמת תבניות שמפרק את האובייקט לפי הבנאי שייצר אותו.
+                            <strong><code>cases</code>:</strong> המנגנון המאפשר לשלוף ולחלץ מידע (Extractor מובנה). זהו
+                            מנגנון התאמת תבניות שמפרק את האובייקט לפי הבנאי שייצר אותו.
                         </div>
-                        
+
                         <div class="warning-box">
                             <strong class="font-heading text-xl">מלכודת מבחנים נפוצה ביותר!</strong><br>
                             <p class="mt-2 text-sm leading-relaxed">
-                                בענף ה-<code>else</code> בתוך פקודת <code>cases</code> - <span class="underline font-bold">אסור לפתוח סוגריים למשתנים!</span><br>
-                                אין לכתוב <code>(else (x y) ...)</code> אלא אך ורק <code>(else ...)</code>, אחרת המפרש לא יתקמפל ויקרוס.
+                                בענף ה-<code>else</code> בתוך פקודת <code>cases</code> - <span
+                                    class="underline font-bold">אסור לפתוח סוגריים למשתנים!</span><br>
+                                אין לכתוב <code>(else (x y) ...)</code> אלא אך ורק <code>(else ...)</code>, אחרת המפרש
+                                לא יתקמפל ויקרוס.
                             </p>
                         </div>
                     </div>
@@ -489,38 +761,64 @@
                 <!-- שער ב' -->
                 <!-- ========================================== -->
                 <div class="border-b-4 border-blue-400 pb-4 mb-8 mt-16">
-                    <h2 class="text-2xl font-black text-blue-800 font-heading">שער ב: אבולוציית שפות ה-EOPL ומבנה המפרשים</h2>
-                    <p class="text-sm text-slate-600">ניתוח ארכיטקטוני של מפרשי LET, PROC, LETREC ושחזור מפרש נטול השמות.</p>
+                    <h2 class="text-2xl font-black text-blue-800 font-heading">שער ב: אבולוציית שפות ה-EOPL ומבנה
+                        המפרשים</h2>
+                    <p class="text-sm text-slate-600">ניתוח ארכיטקטוני של מפרשי LET, PROC, LETREC ושחזור מפרש נטול
+                        השמות.</p>
                 </div>
 
                 <!-- סעיף 10 (חדש מה-PDF) -->
                 <section id="sec-10" class="mb-12 scroll-mt-6">
                     <h3 class="title-blue">10. אדריכלות המפרש - הכרת מבנה הקבצים</h3>
                     <p class="mb-4">
-                        כדי לבנות שפת תכנות (כמו LET), הקוד מחולק למספר קבצים, שלכל אחד מהם תפקיד קריטי במערכת (צינור העיבוד - The Pipeline). הבנה של הקבצים הללו היא המפתח למענה על שאלות במבחן.
+                        כדי לבנות שפת תכנות (כמו LET), הקוד מחולק למספר קבצים, שלכל אחד מהם תפקיד קריטי במערכת (צינור
+                        העיבוד - The Pipeline). הבנה של הקבצים הללו היא המפתח למענה על שאלות במבחן.
                     </p>
-                    
+
                     <div class="space-y-4 text-sm">
                         <div class="p-4 bg-white border-l-4 border-blue-500 shadow-sm rounded">
-                            <strong class="text-blue-800 text-lg font-heading block mb-1">1. קובץ <code>lang.scm</code> (הלקסר והפארסר)</strong>
-                            <p class="text-slate-700">מכיל שני רכיבים: 
-                            <br>א. <code>the-lexical-spec</code> (Lexer) - מגדיר איך הופכים טקסט גולמי (Raw Text) לאסימונים (Tokens) ומתעלם מרווחים/הערות.
-                            <br>ב. <code>the-grammar</code> (Parser) - מגדיר את התחביר עצמו (ה-BNF). כל משפט בשפה נהפך לסוג מסוים של צומת בעץ התחביר (AST).</p>
+                            <strong class="text-blue-800 text-lg font-heading block mb-1">1. קובץ <code>lang.scm</code>
+                                (הלקסר והפארסר)</strong>
+                            <p class="text-slate-700">מכיל שני רכיבים:
+                                <br>א. <code>the-lexical-spec</code> (Lexer) - מגדיר איך הופכים טקסט גולמי (Raw Text)
+                                לאסימונים (Tokens) ומתעלם מרווחים/הערות.
+                                <br>ב. <code>the-grammar</code> (Parser) - מגדיר את התחביר עצמו (ה-BNF). כל משפט בשפה
+                                נהפך לסוג מסוים של צומת בעץ התחביר (AST).
+                            </p>
                         </div>
 
                         <div class="p-4 bg-white border-l-4 border-emerald-500 shadow-sm rounded">
-                            <strong class="text-emerald-800 text-lg font-heading block mb-1">2. קובץ <code>interp.scm</code> (מנוע ההערכה)</strong>
-                            <p class="text-slate-700">הלב של המפרש. מכיל את הפונקציה <code>value-of</code> (הפונקציה הרקורסיבית העיקרית). היא סורקת את ה-AST שנוצר, ועל ידי התאמת תבניות (Pattern Matching) מחשבת את ערכו של כל צומת תוך שימוש במודל הסביבות.</p>
+                            <strong class="text-emerald-800 text-lg font-heading block mb-1">2. קובץ
+                                <code>interp.scm</code> (מנוע ההערכה)</strong>
+                            <p class="text-slate-700">הלב של המפרש. מכיל את הפונקציה <code>value-of</code> (הפונקציה
+                                הרקורסיבית העיקרית). היא סורקת את ה-AST שנוצר, ועל ידי התאמת תבניות (Pattern Matching)
+                                מחשבת את ערכו של כל צומת תוך שימוש במודל הסביבות.</p>
                         </div>
 
                         <div class="p-4 bg-white border-l-4 border-amber-500 shadow-sm rounded">
-                            <strong class="text-amber-800 text-lg font-heading block mb-1">3. קובץ <code>data-structures.scm</code> (הגדרת הטיפוסים)</strong>
-                            <p class="text-slate-700">מגדיר את טיפוסי הנתונים הפנימיים שהמפרש עובד איתם (למשל, שימוש ב-<code>define-datatype</code> להגדרת סביבה או קלוז'ר). חשוב להבחין כאן בין <code>ExpVal</code> (ערך מוחזר - למשל מספרי או בוליאני) לבין מבנה הסביבה.</p>
+                            <strong class="text-amber-800 text-lg font-heading block mb-1">3. קובץ
+                                <code>data-structures.scm</code> (הגדרת הטיפוסים)</strong>
+                            <p class="text-slate-700">מגדיר את טיפוסי הנתונים הפנימיים שהמפרש עובד איתם (למשל, שימוש
+                                ב-<code>define-datatype</code> להגדרת סביבה או קלוז'ר). חשוב להבחין כאן בין
+                                <code>ExpVal</code> (ערך מוחזר - למשל מספרי או בוליאני) לבין מבנה הסביבה.
+                            </p>
                         </div>
 
                         <div class="p-4 bg-white border-l-4 border-purple-500 shadow-sm rounded">
-                            <strong class="text-purple-800 text-lg font-heading block mb-1">4. קובץ <code>environments.scm</code> (ניהול טבלת הסמלים)</strong>
-                            <p class="text-slate-700">מספק את פעולות הממשק לעבודה עם הסביבות: <code>empty-env</code> (יצירת סביבה ריקה), <code>extend-env</code> (הרחבת סביבה קיימת עם משתנה וערך חדשים), והחשוב ביותר: <code>apply-env</code> (חיפוש ושליפת ערך של משתנה מתוך הסביבה).</p>
+                            <strong class="text-purple-800 text-lg font-heading block mb-1">4. קובץ
+                                <code>environments.scm</code> (ניהול טבלת הסמלים)</strong>
+                            <p class="text-slate-700">מספק את פעולות הממשק לעבודה עם הסביבות: <code>empty-env</code>
+                                (יצירת סביבה ריקה), <code>extend-env</code> (הרחבת סביבה קיימת עם משתנה וערך חדשים),
+                                והחשוב ביותר: <code>apply-env</code> (חיפוש ושליפת ערך של משתנה מתוך הסביבה).</p>
+                        </div>
+
+                        <div class="p-4 bg-white border-l-4 border-rose-500 shadow-sm rounded">
+                            <strong class="text-rose-800 text-lg font-heading block mb-1">5. קובץ <code>op.scm</code>
+                                (הרצת המפרש וטסטים)</strong>
+                            <p class="text-slate-700">אחראי על הפעלת המפרש ומתן נקודת כניסה נוחה להרצה. קובץ זה מכיל את
+                                הפונקציה <code>(run "code")</code> המריצה קוד מפרש ומחזירה את תוצאתו, וכן את הפונקציה
+                                <code>(run-all)</code> המריצה את סדרת הבדיקות (טסטים) על המפרש.
+                            </p>
                         </div>
                     </div>
                 </section>
@@ -530,19 +828,27 @@
                     <h3 class="title-blue">11. המנתח התחבירי (Lexer & Parser)</h3>
                     <p class="mb-4">בהמשך לקובץ <code>lang.scm</code> שהכרנו, בואו נבין בדיוק מה הוא עושה.</p>
                     <div class="hand-drawn-box">
-                        <ol class="list-decimal list-inside space-y-4 text-slate-800 font-semibold text-sm leading-relaxed">
+                        <ol
+                            class="list-decimal list-inside space-y-4 text-slate-800 font-semibold text-sm leading-relaxed">
                             <li>
-                                <strong class="font-heading text-base">הלקסר (Scanner):</strong> לוקח את מחרוזת הטקסט הגולמית והופך אותה לזרם של <strong>אסימונים (Tokens)</strong>. במקביל, הוא מסנן וזורק לפח רווחים מיותרים, הערות קוד ומעברי שורה.
+                                <strong class="font-heading text-base">הלקסר (Scanner):</strong> לוקח את מחרוזת הטקסט
+                                הגולמית והופך אותה לזרם של <strong>אסימונים (Tokens)</strong>. במקביל, הוא מסנן וזורק
+                                לפח רווחים מיותרים, הערות קוד ומעברי שורה.
                             </li>
                             <li>
-                                <strong class="font-heading text-base">הפרסר (Parser):</strong> מקבל את רצף האסימונים מהלקסר ובונה מהם <strong>עץ תחביר ממוקד ומופשט (AST - Abstract Syntax Tree)</strong> בהתאם לחוקי הדקדוק הנתונים.
+                                <strong class="font-heading text-base">הפרסר (Parser):</strong> מקבל את רצף האסימונים
+                                מהלקסר ובונה מהם <strong>עץ תחביר ממוקד ומופשט (AST - Abstract Syntax Tree)</strong>
+                                בהתאם לחוקי הדקדוק הנתונים.
                             </li>
                         </ol>
-                        
+
                         <div class="mt-5 border-t-2 border-slate-200 pt-4">
                             <span class="marker-yellow font-heading text-xl">למה AST נקרא עץ "מופשט"?</span><br>
                             <p class="mt-2 text-sm text-slate-700 leading-relaxed">
-                                מכיוון שהפרסר מסנן וזורק את כל תווי העזר הטרמינליים (כגון סוגריים, פסיקים, ומילים שמורות כמו <code>if</code> או אופרטורים). אין צורך לשמור אותם פיזית בעץ - עצם קיומו של צומת מסוג <code>diff-exp</code> בעץ כבר מעיד באופן עצמאי על פעולת חיסור, ללא צורך בשמירת התו <code>-</code> בזיכרון.
+                                מכיוון שהפרסר מסנן וזורק את כל תווי העזר הטרמינליים (כגון סוגריים, פסיקים, ומילים שמורות
+                                כמו <code>if</code> או אופרטורים). אין צורך לשמור אותם פיזית בעץ - עצם קיומו של צומת
+                                מסוג <code>diff-exp</code> בעץ כבר מעיד באופן עצמאי על פעולת חיסור, ללא צורך בשמירת התו
+                                <code>-</code> בזיכרון.
                             </p>
                         </div>
                     </div>
@@ -558,18 +864,37 @@
                     <div class="space-y-4">
                         <div class="list-bullet">
                             <strong class="font-heading">ייצוג פרוצדורלי (Procedural Representation):</strong><br>
-                            <p class="text-sm text-slate-700 mt-1">
-                                בייצוג זה הנתון עצמו הוא הפעולה שנעשית עליו. 
-                                <br>• <code>empty-env</code> יחזיר פונקציית למבדה שכל תפקידה הוא להחזיר שגיאה לכל קלט.
-                                <br>• <code>extend-env</code> יחזיר פונקציית למבדה חדשה: אם המשתנה המבוקש זהה למשתנה שנשמר אצלה, היא תחזיר את הערך שלו. אחרת, היא תפעיל את <code>apply-env</code> על הסביבה הקודמת שהיא זוכרת.
+                            <p class="text-sm text-slate-700 mt-1 mb-3">
+                                בייצוג זה הנתון עצמו הוא הפעולה שנעשית עליו. כלומר, סביבה מיוצגת פיזית כפרוצדורה
+                                (פונקציה) הממתינה לקבל שם של משתנה ומחזירה את ערכו:
                             </p>
+                            <pre class="text-xs"><code>;; הבנאי של סביבה ריקה מחזיר למבדה שמדווחת על שגיאה
+(define empty-env
+  (lambda ()
+    (lambda (search-var)
+      (report-no-binding-found search-var))))
+
+;; הבנאי של סביבה מורחבת מחזיר למבדה שמחליטה האם להחזיר את הערך הנוכחי או להמשיך לחפש
+(define extend-env
+  (lambda (saved-var saved-val saved-env)
+    (lambda (search-var)
+      (if (eqv? search-var saved-var)
+          saved-val
+          (apply-env saved-env search-var)))))
+
+;; שליפת ערך מבוצעת פשוט על ידי הפעלת הסביבה (שהיא פרוצדורה) על שם המשתנה
+(define apply-env
+  (lambda (env search-var)
+    (env search-var)))</code></pre>
                         </div>
-                        
+
                         <div class="bg-blue-50 p-4 rounded text-sm mt-2">
                             <h4 class="font-bold text-blue-900 mb-2">מתכון לייצוג פרוצדורלי:</h4>
                             <ol class="list-decimal list-inside space-y-1 text-slate-700">
-                                <li>זהה ביטויי למבדה בקוד שמחזירים ערכים מהטיפוס. צור עבורם בנאים (Constructors) לפי המשתנים החופשיים בהם.</li>
-                                <li>זהה מקומות בקוד שבהם מופעל ערך מהטיפוס, והחלף אותם בקריאות ל-<code>apply</code> המתאימה. כעת קוד הלקוח יהיה בלתי תלוי לחלוטין בייצוג!</li>
+                                <li>זהה ביטויי למבדה בקוד שמחזירים ערכים מהטיפוס. צור עבורם בנאים (Constructors) לפי
+                                    המשתנים החופשיים בהם.</li>
+                                <li>זהה מקומות בקוד שבהם מופעל ערך מהטיפוס, והחלף אותם בקריאות ל-<code>apply</code>
+                                    המתאימה. כעת קוד הלקוח יהיה בלתי תלוי לחלוטין בייצוג!</li>
                             </ol>
                         </div>
                     </div>
@@ -578,18 +903,20 @@
                 <!-- סעיף 13 (לשעבר 10) -->
                 <section id="sec-13" class="mb-12 scroll-mt-6">
                     <h3 class="title-blue">13. שפת LET</h3>
-                    
+
                     <div class="bg-blue-50/50 border-r-4 border-blue-500 p-4 mb-4 rounded-l-lg shadow-sm text-sm">
                         <h4 class="font-bold text-blue-900 mb-1">📌 תעודת זהות: שפת LET</h4>
                         <ul class="text-slate-700 space-y-1">
-                            <li><strong>המהות והמוטיבציה:</strong> הגדרת משתנים מקומיים קבועים המאפשרים לתת שם לערך חישובי ולמנוע חישובים כפולים.</li>
+                            <li><strong>המהות והמוטיבציה:</strong> הגדרת משתנים מקומיים קבועים המאפשרים לתת שם לערך
+                                חישובי ולמנוע חישובים כפולים.</li>
                             <li><strong>המנגנון המקיים:</strong> סביבה לקסיקלית פשוטה המשמשת כטבלת מיפוי.</li>
                             <li><strong>תוספת תחבירית:</strong> <code>let x = 5 in -(x, 1)</code></li>
                         </ul>
                     </div>
 
                     <p class="mb-4">
-                        שפת LET מהווה את המפרש הבסיסי. השפה אינה תומכת בפונקציות, והמשתנים בה הם קבועים ואינם ניתנים לשינוי (Immutable).
+                        שפת LET מהווה את המפרש הבסיסי. השפה אינה תומכת בפונקציות, והמשתנים בה הם קבועים ואינם ניתנים
+                        לשינוי (Immutable).
                         ראינו את כל הקבצים המרכיבים אותה בסעיף 10.
                     </p>
                 </section>
@@ -597,65 +924,99 @@
                 <!-- סעיף 14 (לשעבר 11) -->
                 <section id="sec-14" class="mb-12 scroll-mt-6">
                     <h3 class="title-blue">14. שפת PROC: פונקציות מסוג ראשון (First-Class)</h3>
-                    
+
                     <div class="bg-blue-50/50 border-r-4 border-blue-500 p-4 mb-4 rounded-l-lg shadow-sm text-sm">
                         <h4 class="font-bold text-blue-900 mb-1">📌 תעודת זהות: שפת PROC</h4>
                         <ul class="text-slate-700 space-y-1">
-                            <li><strong>המהות:</strong> פונקציות הופכות לאזרח מדרגה ראשונה (First-Class). ניתן לשמור פונקציות במשתנים ולהעביר אותן כארגומנטים.</li>
-                            <li><strong>המנגנון המקיים:</strong> ה-<strong>Closure</strong> (סגור) השומר את קוד הפונקציה יחד עם סביבת ההגדרה הלקסיקלית שלה.</li>
-                            <li><strong>תוספת תחבירית:</strong> הגדרה: <code>proc (x) -(x, 1)</code>, הפעלה (Application): <code>(f 5)</code></li>
+                            <li><strong>המהות:</strong> פונקציות הופכות לאזרח מדרגה ראשונה (First-Class). ניתן לשמור
+                                פונקציות במשתנים ולהעביר אותן כארגומנטים.</li>
+                            <li><strong>המנגנון המקיים:</strong> ה-<strong>Closure</strong> (סגור) השומר את קוד הפונקציה
+                                יחד עם סביבת ההגדרה הלקסיקלית שלה.</li>
+                            <li><strong>תוספת תחבירית:</strong> הגדרה: <code>proc (x) -(x, 1)</code>, הפעלה
+                                (Application): <code>(f 5)</code></li>
                         </ul>
                     </div>
 
                     <div class="hand-drawn-box">
                         <h4 class="font-heading text-lg text-blue-800 mb-2">קלוז'ר (Closure) – הלב הפועם של השפה!</h4>
-                        <p class="text-sm text-slate-800 mb-2 font-semibold">כאשר המפרש נתקל בביטוי הגדרת פונקציה (<code>proc-exp</code>), הוא אינו מריץ אותו. הוא מייצר אובייקט מסוג <code>proc-val</code> ששומר בתוכו את קוד הפונקציה <strong>יחד עם צילום מצב של הסביבה שהייתה קיימת ברגע ההגדרה</strong>.</p>
+                        <p class="text-sm text-slate-800 mb-2 font-semibold">כאשר המפרש נתקל בביטוי הגדרת פונקציה
+                            (<code>proc-exp</code>), הוא אינו מריץ אותו. הוא מייצר אובייקט מסוג <code>proc-val</code>
+                            ששומר בתוכו את קוד הפונקציה <strong>יחד עם צילום מצב של הסביבה שהייתה קיימת ברגע
+                                ההגדרה</strong>.</p>
                         <pre><code>(procedure var body saved-env)</code></pre>
-                        
-                        <p class="text-sm text-slate-800 mt-4 font-semibold">בעת הפעלת פונקציה (<code>apply-procedure</code>), גוף הפונקציה מורץ מול סביבת ההגדרה המקורית שצולמה (<code>saved-env</code>), כשהיא מורחבת עם הארגומנט שסופק כקלט. זהו סקופ יציב ולקסיקלי.</p>
+
+                        <p class="text-sm text-slate-800 mt-4 font-semibold">בעת הפעלת פונקציה
+                            (<code>apply-procedure</code>), גוף הפונקציה מורץ מול סביבת ההגדרה המקורית שצולמה
+                            (<code>saved-env</code>), כשהיא מורחבת עם הארגומנט שסופק כקלט. זהו סקופ יציב ולקסיקלי.</p>
                     </div>
                 </section>
 
                 <!-- סעיף 15 (לשעבר 12) -->
                 <section id="sec-15" class="mb-12 scroll-mt-6">
                     <h3 class="title-blue">15. שפת LETREC: סביבות מעגליות ו-JIT</h3>
-                    
+
                     <div class="bg-blue-50/50 border-r-4 border-blue-500 p-4 mb-4 rounded-l-lg shadow-sm text-sm">
                         <h4 class="font-bold text-blue-900 mb-1">📌 תעודת זהות: שפת LETREC</h4>
                         <ul class="text-slate-700 space-y-1">
-                            <li><strong>המהות:</strong> מתן אפשרות לפונקציות לקרוא לעצמן בשמן (רקורסיה), או זו לזו (Mutual Recursion).</li>
-                            <li><strong>המנגנון המקיים:</strong> יצירת קלוז'רים רק ברגע החיפוש בזיכרון (Just-In-Time) והזרקת סביבה מעגלית.</li>
+                            <li><strong>המהות:</strong> מתן אפשרות לפונקציות לקרוא לעצמן בשמן (רקורסיה), או זו לזו
+                                (Mutual Recursion).</li>
+                            <li><strong>המנגנון המקיים:</strong> יצירת קלוז'רים רק ברגע החיפוש בזיכרון (Just-In-Time)
+                                והזרקת סביבה מעגלית.</li>
                             <li><strong>תוספת תחבירית:</strong> <code>letrec p(x) = body in letrec-body</code></li>
                         </ul>
                     </div>
 
                     <div class="hand-drawn-box">
-                        <h4 class="font-heading text-lg text-blue-800 mb-2">הקסם של בניית קלוז'ר בזמן אמת (JIT Closure)</h4>
+                        <h4 class="font-heading text-lg text-blue-800 mb-2">הקסם של בניית קלוז'ר בזמן אמת (JIT Closure)
+                        </h4>
                         <p class="text-sm text-slate-800 mb-3 font-semibold">
-                            הבעיה ב-<code>proc</code> רגיל היא שגוף הפונקציה מוערך מול סביבה שטרם מכילה את שמה. 
-                            הפתרון: הבנאי <code>extend-env-rec</code> אינו יוצר קלוז'רים מראש, אלא רק רושם "מתכון". יצירת הקלוז'ר נדחית לרגע החיפוש בפונקציה <code>apply-env</code>!
-                            כאשר <code>apply-env</code> מוצא התאמה, הוא מרכיב את הקלוז'ר באותו רגע ודוחף פנימה את הסביבה המורחבת עצמה (env), מה שמאפשר מעגליות והיכרות עצמית.
+                            הבעיה ב-<code>proc</code> רגיל היא שגוף הפונקציה מוערך מול סביבה שטרם מכילה את שמה.
+                            הפתרון: הבנאי <code>extend-env-rec</code> אינו יוצר קלוז'רים מראש, אלא רק רושם "מתכון".
+                            יצירת הקלוז'ר נדחית לרגע החיפוש בפונקציה <code>apply-env</code>!
+                            כאשר <code>apply-env</code> מוצא התאמה, הוא מרכיב את הקלוז'ר באותו רגע ודוחף פנימה את הסביבה
+                            המורחבת עצמה (env), מה שמאפשר מעגליות והיכרות עצמית.
                         </p>
+
+                        <h5 class="font-bold text-slate-900 mt-4 mb-2 text-sm">מימוש <code>apply-env</code> עם JIT
+                            ל-LETREC מתוך ה-PDF:</h5>
+                        <pre class="text-xs"><code>(define apply-env
+  (lambda (env search-var)
+    (cases environment env
+      (empty-env ()
+        (report-no-binding-found search-var))
+      (extend-env (saved-var saved-val saved-env)
+        (if (eqv? search-var saved-var)
+            saved-val
+            (apply-env saved-env search-var)))
+      ;; כאן קורה הקסם: ברגע החיפוש, מייצרים קלוז'ר חדש ומחדירים לו את הסביבה המעגלית עצמה
+      (extend-env-rec (p-name b-var p-body saved-env)
+        (if (eqv? search-var p-name)
+            (proc-val (procedure b-var p-body env)) ; env מכילה את פונקציית extend-env-rec
+            (apply-env saved-env search-var))))))</code></pre>
                     </div>
                 </section>
 
                 <!-- סעיף 16 (לשעבר 13) -->
                 <section id="sec-16" class="mb-12 scroll-mt-6">
                     <h3 class="title-blue">16. המפרש נטול השמות (Nameless / LEXADDR)</h3>
-                    
+
                     <div class="bg-blue-50/50 border-r-4 border-blue-500 p-4 mb-4 rounded-l-lg shadow-sm text-sm">
                         <h4 class="font-bold text-blue-900 mb-1">📌 תעודת זהות: שפת LEXADDR</h4>
                         <ul class="text-slate-700 space-y-1">
-                            <li><strong>המהות:</strong> אופטימיזציה של מהירות הריצה. מחיקת הצורך בחיפוש והשוואת מחרוזות טקסט של שמות משתנים ($O(N)$).</li>
-                            <li><strong>המנגנון המקיים:</strong> קומפיילר מקדים הממיר כל שם של משתנה לאינדקס מספרי (כתובת לקסיקלית).</li>
+                            <li><strong>המהות:</strong> אופטימיזציה של מהירות הריצה. מחיקת הצורך בחיפוש והשוואת מחרוזות
+                                טקסט של שמות משתנים ($O(N)$).</li>
+                            <li><strong>המנגנון המקיים:</strong> קומפיילר מקדים הממיר כל שם של משתנה לאינדקס מספרי
+                                (כתובת לקסיקלית).</li>
                         </ul>
                     </div>
 
                     <div class="hand-drawn-box">
                         <h4 class="font-heading text-lg text-blue-800 mb-2">אינדקסי דה-ברון (Depth, Position)</h4>
                         <ul class="list-disc list-inside space-y-3 text-slate-800 text-sm font-semibold pr-4">
-                            <li><strong>עומק לקסיקלי (Depth):</strong> כמה שלבים של סביבות (שכבות בצל) צריך לטפס למעלה כדי למצוא את המשתנה.</li>
-                            <li>בזמן הריצה, הסביבה הופכת לרשימה שטוחה פשוטה. שליפת המשתנה מתבצעת באופן מיידי בזמן של $O(1)$ באמצעות <code>list-ref</code>.</li>
+                            <li><strong>עומק לקסיקלי (Depth):</strong> כמה שלבים של סביבות (שכבות בצל) צריך לטפס למעלה
+                                כדי למצוא את המשתנה.</li>
+                            <li>בזמן הריצה, הסביבה הופכת לרשימה שטוחה פשוטה. שליפת המשתנה מתבצעת באופן מיידי בזמן של
+                                $O(1)$ באמצעות <code>list-ref</code>.</li>
                         </ul>
                     </div>
                 </section>
@@ -665,21 +1026,27 @@
                 <!-- שער ג' -->
                 <!-- ========================================== -->
                 <div class="border-b-4 border-purple-400 pb-4 mb-8 mt-16">
-                    <h2 class="text-2xl font-black text-purple-800 font-heading">שער ג: זיכרון, מוטציות (State) ומנגנוני העברת פרמטרים</h2>
-                    <p class="text-sm text-slate-600">הכנסת מושג ה-Store (הזיכרון הפיזי), ניהול מצביעים והעברת פרמטרים.</p>
+                    <h2 class="text-2xl font-black text-purple-800 font-heading">שער ג: זיכרון, מוטציות (State) ומנגנוני
+                        העברת פרמטרים</h2>
+                    <p class="text-sm text-slate-600">הכנסת מושג ה-Store (הזיכרון הפיזי), ניהול מצביעים והעברת פרמטרים.
+                    </p>
                 </div>
 
                 <!-- סעיף 17 (לשעבר 14) -->
                 <section id="sec-17" class="mb-12 scroll-mt-6">
                     <h3 class="title-purple">17. המהפך מ"ערך" ל"זהות ומצב" (The Store)</h3>
                     <p class="mb-3">
-                        ברגע שאנו מאפשרים שינוי ערכים של משתנים, משתנים מקבלים <span class="marker-yellow">זהות פיזית (Identity)</span> המקושרת לכתובת בזיכרון (Store), והתוכן שלהם מייצג את ה<span class="marker-yellow">מצב (State)</span> שיכול להשתנות.
+                        ברגע שאנו מאפשרים שינוי ערכים של משתנים, משתנים מקבלים <span class="marker-yellow">זהות פיזית
+                            (Identity)</span> המקושרת לכתובת בזיכרון (Store), והתוכן שלהם מייצג את ה<span
+                            class="marker-yellow">מצב (State)</span> שיכול להשתנות.
                     </p>
                     <div class="hand-drawn-box bg-slate-50 text-sm">
                         <ul class="list-disc list-inside space-y-2 text-slate-800 font-semibold pr-4">
-                            <li><strong>Denoted Values ($\text{DenVal}$):</strong> מה שהסביבה שומרת (כעת: מצביעים לכתובות).</li>
+                            <li><strong>Denoted Values ($\text{DenVal}$):</strong> מה שהסביבה שומרת (כעת: מצביעים
+                                לכתובות).</li>
                             <li><strong>Expressed Values ($\text{ExpVal}$):</strong> הערך האמיתי המוחזר מחישוב.</li>
-                            <li>הסביבה קושרת כעת את שם המשתנה אל <strong>כתובת זיכרון</strong> (Reference), בעוד שה-Store קושר את כתובת הזיכרון אל <strong>הערך הפיזי</strong> (Value).</li>
+                            <li>הסביבה קושרת כעת את שם המשתנה אל <strong>כתובת זיכרון</strong> (Reference), בעוד
+                                שה-Store קושר את כתובת הזיכרון אל <strong>הערך הפיזי</strong> (Value).</li>
                         </ul>
                     </div>
                 </section>
@@ -688,15 +1055,24 @@
                 <section id="sec-18" class="mb-12 scroll-mt-6">
                     <h3 class="title-purple">18. שפת EXPLICIT-REFS (ניהול ידני)</h3>
                     <p class="mb-3">
-                        כמו ב-C או C++, המשתמש מנהל זיכרון במפורש. הסביבה מכילה ערכים, אלא אם הקצינו מצביע באמצעות הפקודות המיוחדות:
+                        כמו ב-C או C++, המשתמש מנהל זיכרון במפורש. הסביבה מכילה ערכים, אלא אם הקצינו מצביע באמצעות
+                        הפקודות המיוחדות.
                     </p>
+                    <div class="bg-purple-50/50 border-r-4 border-purple-500 p-3 mb-3 rounded-l-lg shadow-sm text-sm">
+                        <strong>📌 כלל אתחול הזיכרון (Store Initialization):</strong>
+                        <p class="text-slate-700 mt-1">בשפה זו (ובכל שפה המשתמשת ב-Store), פונקציית ההערכה הראשית
+                            <code>value-of-program</code> מחויבת לקרוא קודם כל לפקודה <code>(initialize-store!)</code>
+                            כדי לאפס לחלוטין את הזיכרון הפיזי המשותף לפני הרצת התוכנית.
+                        </p>
+                    </div>
                     <div class="hand-drawn-box !mt-0 text-sm">
                         <h4 class="font-heading text-lg text-purple-800 mb-2">4 הפקודות המפורשות:</h4>
                         <ul class="list-disc list-inside space-y-2 text-slate-800 font-semibold">
                             <li><code>newref(x)</code> - מקצה תא ב-Store ומחזיר את הכתובת.</li>
                             <li><code>deref(loc)</code> - שולף את הערך מהכתובת.</li>
                             <li><code>setref(loc, val)</code> - דורס/מעדכן את הכתובת. (מחזיר ערך דאמי כמו 23).</li>
-                            <li><code>begin ... end</code> - בלוק שמשמש כ"פח אשפה" לערכי הדאמי שמחזירות פקודות ההשמה. הוא מריץ רצף ומחזיר את האחרון.</li>
+                            <li><code>begin ... end</code> - בלוק שמשמש כ"פח אשפה" לערכי הדאמי שמחזירות פקודות ההשמה.
+                                הוא מריץ רצף ומחזיר את האחרון.</li>
                         </ul>
                     </div>
                 </section>
@@ -705,46 +1081,89 @@
                 <section id="sec-19" class="mb-12 scroll-mt-6">
                     <h3 class="title-purple">19. שפת IMPLICIT-REFS (ניהול אוטומטי)</h3>
                     <p class="mb-3">
-                        מודל כמו של פייתון או JavaScript. <span class="marker-yellow font-bold">הסביבה תמיד מכילה אך ורק כתובות (References)!</span> ההקצאה (<code>newref</code>) והשליפה (<code>deref</code>) מתבצעות אוטומטית מאחורי הקלעים.
+                        מודל כמו של פייתון או JavaScript. <span class="marker-yellow font-bold">הסביבה תמיד מכילה אך ורק
+                            כתובות (References)!</span> ההקצאה (<code>newref</code>) והשליפה (<code>deref</code>)
+                        מתבצעות אוטומטית מאחורי הקלעים.
                     </p>
                     <div class="hand-drawn-box text-sm">
                         <h4 class="font-heading text-xl text-purple-800 mb-2">L-value מול R-value</h4>
                         <ul class="list-disc list-inside space-y-3 text-slate-800 font-semibold pr-4">
-                            <li><strong>R-value (קריאה):</strong> המפרש מחפש את המשתנה ומבצע אוטומטית <span class="marker-yellow">deref</span> כדי להביא את הערך.</li>
-                            <li><strong>L-value (השמה - <code>set x = 10</code>):</strong> המפרש פונה לסביבה, מקבל את כתובת הזיכרון, ומבצע <code>setref!</code> ישירות אליה כדי להחליף את הערך.</li>
+                            <li><strong>R-value (קריאה):</strong> המפרש מחפש את המשתנה ומבצע אוטומטית <span
+                                    class="marker-yellow">deref</span> כדי להביא את הערך.</li>
+                            <li><strong>L-value (השמה - <code>set x = 10</code>):</strong> המפרש פונה לסביבה, מקבל את
+                                כתובת הזיכרון, ומבצע <code>setref!</code> ישירות אליה כדי להחליף את הערך.</li>
                         </ul>
+                    </div>
+
+                    <!-- הוספת extend-env-rec* ומגבלות הרקורסיה מה-PDF -->
+                    <div class="bg-purple-50/50 border-r-4 border-purple-500 p-4 rounded-l-lg shadow-sm text-sm mt-4">
+                        <h4 class="font-bold text-purple-900 mb-2">🔄 רקורסיה ב-IMPLICIT-REFS: הבנאי
+                            <code>extend-env-rec*</code>
+                        </h4>
+                        <p class="text-slate-700 leading-relaxed mb-3">
+                            בגלל שהסביבה ב-IMPLICIT-REFS ממפה שמות ישירות לכתובות ב-Store, הרקורסיה ממומשת בצורה שונה
+                            מאשר ב-LETREC הסטנדרטית:
+                            <br>• אנו משתמשים בבנאי סביבה מיוחד: <code>extend-env-rec*</code>.
+                            <br>• בנאי זה מייצר קלוז'רים בצורה דינמית ושומר אותם <strong>פיזית בתוך ה-Store</strong>
+                            באמצעות <code>newref</code>.
+                        </p>
+                        <p class="text-slate-850 font-bold leading-relaxed">
+                            ⚠️ מגבלה קריטית למבחן:
+                            בשל אופי המימוש הזה של הזיכרון והסביבות, שפת IMPLICIT-REFS תומכת ברקורסיה של פונקציות בלבד
+                            (Recursive Functions), אך <span class="marker-red">אינה תומכת ברקורסיה של מבני נתונים</span>
+                            (Recursive Data).
+                        </p>
                     </div>
                 </section>
 
                 <!-- סעיף 20 (לשעבר 17) -->
                 <section id="sec-20" class="mb-12 scroll-mt-6">
                     <h3 class="title-purple">20. זוגות משתנים (MUTABLE-PAIRS)</h3>
-                    <p class="text-sm font-semibold mb-3">אפשרות לייצר זוגות (רשימות) שאיבריהן ניתנים לשינוי באמצעות <code>setleft</code> ו-<code>setright</code>. הערכים בזוג עצמם מיוצגים כהפניות (References).</p>
+                    <p class="text-sm font-semibold mb-3">אפשרות לייצר זוגות (רשימות) שאיבריהן ניתנים לשינוי באמצעות
+                        <code>setleft</code> ו-<code>setright</code>. הערכים בזוג עצמם מיוצגים כהפניות (References).
+                    </p>
                 </section>
 
                 <!-- סעיף 21 (לשעבר 18) -->
                 <section id="sec-21" class="mb-12 scroll-mt-6">
                     <h3 class="title-purple">21. מנגנוני העברת פרמטרים (Parameter Passing)</h3>
                     <p class="mb-3">
-                        כיצד ארגומנט מועבר לפונקציה? המפרש מנתב אותו דרך פונקציה מתווכת: <span class="marker-blue font-mono font-bold">value-of-operand</span>.
+                        כיצד ארגומנט מועבר לפונקציה? המפרש מנתב אותו דרך פונקציה מתווכת: <span
+                            class="marker-blue font-mono font-bold">value-of-operand</span>.
                     </p>
                     <div class="space-y-4 text-sm">
                         <div class="p-4 bg-white border border-slate-200 rounded shadow-sm">
                             <h4 class="font-bold text-teal-800 text-lg mb-1">Call-by-Value (לפי ערך)</h4>
-                            <p class="font-semibold text-slate-700">הארגומנט מחושב לערך סופי, והמתווך מקצה תא זיכרון <strong>חדש לחלוטין</strong>. שינוי בתוך הפונקציה לא משפיע בחוץ (ברירת המחדל בשפות EOPL).</p>
+                            <p class="font-semibold text-slate-700">הארגומנט מחושב לערך סופי, והמתווך מקצה תא זיכרון
+                                <strong>חדש לחלוטין</strong>. שינוי בתוך הפונקציה לא משפיע בחוץ (ברירת המחדל בשפות
+                                EOPL).
+                            </p>
                         </div>
                         <div class="p-4 bg-white border border-red-200 rounded shadow-sm">
                             <h4 class="font-bold text-red-800 text-lg mb-1">Call-by-Reference (לפי מצביע / הפניה)</h4>
-                            <p class="font-semibold text-slate-700">המתווך מעביר לפונקציה את כתובת הזיכרון הקיימת עצמה. נוצר <span class="marker-red font-bold">Aliasing (כינוי מרובה)</span>. שינוי הערך פנימה משנה אותו גם בחוץ.</p>
+                            <p class="font-semibold text-slate-700">המתווך מעביר לפונקציה את כתובת הזיכרון הקיימת עצמה.
+                                נוצר <span class="marker-red font-bold">Aliasing (כינוי מרובה)</span>. שינוי הערך פנימה
+                                משנה אותו גם בחוץ.</p>
                         </div>
-                        <div class="p-4 bg-white border border-blue-200 rounded shadow-sm flex flex-col md:flex-row gap-4">
+                        <div
+                            class="p-4 bg-white border border-blue-200 rounded shadow-sm flex flex-col md:flex-row gap-4">
                             <div class="flex-1">
                                 <h4 class="font-bold text-blue-800 text-lg mb-1">Call-by-Name (עצלנות)</h4>
-                                <p class="font-semibold text-slate-700">החישוב מושהה! מועבר <strong>Thunk</strong> (קופסה עם ה-AST וסביבת ההגדרה). מחושב מחדש בכל פעם שניגשים אליו.</p>
+                                <p class="font-semibold text-slate-700">החישוב מושהה! מועבר <strong>Thunk</strong>
+                                    (קופסה עם ה-AST וסביבת ההגדרה). מחושב מחדש בכל פעם שניגשים אליו.</p>
                             </div>
-                            <div class="flex-1 border-t md:border-t-0 md:border-r border-slate-200 pt-3 md:pt-0 md:pr-4">
+                            <div
+                                class="flex-1 border-t md:border-t-0 md:border-r border-slate-200 pt-3 md:pt-0 md:pr-4">
                                 <h4 class="font-bold text-emerald-800 text-lg mb-1">Call-by-Need (עצלנות חכמה)</h4>
-                                <p class="font-semibold text-slate-700">מחשב בפעם הראשונה שצריך, ואז מבצע <code>setref!</code> כדי לשמור את התוצאה המוצהרת (Memoization) ולחסוך חישובים חוזרים.</p>
+                                <p class="font-semibold text-slate-700 mb-2">מחשב בפעם הראשונה שצריך, ואז שומר את התוצאה
+                                    (Memoization) כדי לחסוך חישובים חוזרים.</p>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    <strong>מנגנון ה-Store:</strong> מימוש עצלנות חכמה מחייב שימוש בזיכרון פיזי משתנה
+                                    (Store). ה-Thunk שמועבר מאוחסן בתוך כתובת ב-Store.
+                                    כאשר מבצעים לו <code>deref</code> ראשון, המפרש מחשב את הערך שלו, ובאמצעות
+                                    <code>setref!</code> דורס את ה-Thunk בזיכרון ומחליף אותו בערך המחושב. בקריאות הבאות,
+                                    שליפת הערך מהכתובת תחזיר מיד את הערך המוכר.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -819,28 +1238,53 @@
                     </div>
                 </section>
 
-                <!-- סעיף 23 (חדש מה-PDF - מדריך הוספת תכונות) -->
+                <!-- סעיף 23 -->
                 <section id="sec-23" class="mb-12 scroll-mt-6">
                     <h3 class="title-purple">23. ★ מדריך פרקטי: איך מוסיפים תכונות לשפה</h3>
                     <p class="mb-4">
-                        שאלות נפוצות במבחן דורשות הוספה של אופרטור (כמו כפל) או סוג נתונים חדש (כמו מחרוזת String). הנה סדר הפעולות (Pipeline) שתמיד צריך לעבוד לפיו:
+                        שאלות נפוצות במבחן דורשות הוספה של אופרטור או סוג נתונים חדש. נראה את סדר הפעולות (Pipeline)
+                        באמצעות דוגמה מעשית מה-PDF: **הוספת טיפוס מחרוזת (String) ופעולת שרשור (Concat).**
                     </p>
-                    
+
                     <div class="hand-drawn-box">
                         <ol class="list-decimal list-inside space-y-4 text-slate-800 text-sm font-semibold pr-4">
                             <li class="border-b border-slate-200 pb-3">
-                                <strong>עדכון הדקדוק (קובץ <code>lang.scm</code>):</strong>
-                                <br>אם יש חוק מילוני חדש (למשל, זיהוי מחרוזת בין מירכאות), נוסיף אותו ל-<code>the-lexical-spec</code>.
-                                <br>חובה להוסיף חוק תחבירי ל-<code>the-grammar</code> שיגדיר את הביטוי החדש (למשל צומת <code>mul-exp</code> לכפל או <code>string-exp</code>).
+                                <strong>עדכון מבני הנתונים (קובץ <code>data-structures.scm</code>):</strong>
+                                <br>עלינו להגדיר את טיפוס הנתונים החדש ב-ExpVal, ולהוסיף לו פונקציית חילוץ (Extractor)
+                                בטוחה:
+                                <pre class="text-xs my-2"><code>;; הוספה תחת הגדרת ה-datatype של expval
+(string-val (val string?))
+
+;; כתיבת פונקציית חילוץ חדשה
+(define expval->str
+  (lambda (val)
+    (cases expval val
+      (string-val (str) str)
+      (else (report-expval-extractor-error 'string val)))))</code></pre>
                             </li>
                             <li class="border-b border-slate-200 pb-3">
-                                <strong>עדכון סוגי הנתונים (קובץ <code>data-structures.scm</code>):</strong>
-                                <br>אם יצרנו טיפוס נתונים חדש שמצטרף לשפה (למשל מחרוזת), נוסיף <code>string-val</code> תחת <code>define-datatype expval</code>.
-                                <br>בנוסף, ניצור פונקציית מחלץ (Extractor) בטוחה, למשל: <code>expval->string</code>.
+                                <strong>עדכון הדקדוק והלקסר (קובץ <code>lang.scm</code>):</strong>
+                                <br>1. נוסיף חוק מילוני ב-<code>the-lexical-spec</code> לזיהוי מחרוזת בין מירכאות
+                                כפולות:
+                                <pre
+                                    class="text-xs my-2"><code>(string (double-quote (arbno (not double-quote)) double-quote) string)</code></pre>
+                                2. נוסיף חוקים תחביריים ל-<code>the-grammar</code> עבור ביטוי מחרוזת ופעולת Concat:
+                                <pre class="text-xs my-2"><code>(expression (string) string-exp)
+(expression ("concat" "(" expression "," expression ")") concat-exp)</code></pre>
                             </li>
                             <li>
                                 <strong>עדכון מנוע הריצה (קובץ <code>interp.scm</code>):</strong>
-                                <br>בתוך פונקציית <code>value-of</code> שרצה על ה-AST, נוסיף זרוע (Clause) חדשה שתדע לטפל בצומת שהוספנו (למשל במקרה של כפל: להעריך את שמאל, להעריך את ימין, ולהחזיר מספר מוכפל).
+                                <br>נוסיף זרועות מתאימות בפונקציית <code>value-of</code> לטיפול בביטויים החדשים:
+                                <pre class="text-xs my-2"><code>;; הערכת ביטוי מחרוזת פשוטה
+(string-exp (str) (string-val str))
+
+;; הערכת פעולת שרשור – מעריכים את שני הקלטים ומשרשרים
+(concat-exp (exp1 exp2)
+  (let ((val1 (value-of exp1 env))
+        (val2 (value-of exp2 env)))
+    (let ((str1 (expval->str val1))
+          (str2 (expval->str val2)))
+      (string-val (string-append str1 str2)))))</code></pre>
                             </li>
                         </ol>
                     </div>
@@ -851,15 +1295,18 @@
                 <!-- שער ד' -->
                 <!-- ========================================== -->
                 <div class="border-b-4 border-emerald-400 pb-4 mb-8 mt-16">
-                    <h2 class="text-2xl font-black text-emerald-800 font-heading">שער ד: מערכות טיפוסים (Type Systems)</h2>
-                    <p class="text-sm text-slate-600">בדיקת טיפוסים סטטית (CHECKED), מנוע הסקת טיפוסים (INFERRED) ואלגוריתם ה-Unification.</p>
+                    <h2 class="text-2xl font-black text-emerald-800 font-heading">שער ד: מערכות טיפוסים (Type Systems)
+                    </h2>
+                    <p class="text-sm text-slate-600">בדיקת טיפוסים סטטית (CHECKED), מנוע הסקת טיפוסים (INFERRED)
+                        ואלגוריתם ה-Unification.</p>
                 </div>
 
                 <!-- סעיף 24 (לשעבר 19) -->
                 <section id="sec-24" class="mb-12 scroll-mt-6">
                     <h3 class="title-green">24. מבוא: Static vs Dynamic Typing</h3>
                     <p class="mb-3">
-                        המטרה במערכות טיפוסים היא לזהות ולתפוס שגיאות <span class="marker-yellow">לפני שהתוכנית מורצת (Compile-time)</span>.
+                        המטרה במערכות טיפוסים היא לזהות ולתפוס שגיאות <span class="marker-yellow">לפני שהתוכנית מורצת
+                            (Compile-time)</span>.
                         סביבת הטיפוסים ($\text{Tenv}$) פועלת בזמן בדיקה סטטית וממפה שמות לטיפוסים מופשטים בלבד.
                     </p>
                 </section>
@@ -868,18 +1315,36 @@
                 <section id="sec-25" class="mb-12 scroll-mt-6">
                     <h3 class="title-green">25. שפת CHECKED (בדיקת טיפוסים מפורשת)</h3>
                     <p class="mb-3">
-                        המתכנת מחויב להצהיר במפורש על הטיפוס (למשל: <code>proc (x : int)</code>). הפונקציה <code>type-of</code> סורקת את ה-AST, מוודאת תקינות ומונעת שגיאות מראש.
-                        <br><strong>הצהרה ברקורסיה:</strong> ב-<code>letrec</code> חובה להצהיר מראש על טיפוס ההחזרה כדי שהקריאה הפנימית הרקורסיבית תוכל להתבצע חוקית מול ה-$\text{Tenv}$.
+                        המתכנת מחויב להצהיר במפורש על הטיפוס (למשל: <code>proc (x : int)</code>). הפונקציה
+                        <code>type-of</code> סורקת את ה-AST, מוודאת תקינות ומונעת שגיאות מראש.
+                        <br><strong>הצהרה ברקורסיה:</strong> ב-<code>letrec</code> חובה להצהיר מראש על טיפוס ההחזרה כדי
+                        שהקריאה הפנימית הרקורסיבית תוכל להתבצע חוקית מול ה-$\text{Tenv}$.
                     </p>
+
+                    <!-- חוקי ה-IF הנוקשים מה-PDF -->
+                    <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-lg shadow-sm text-sm">
+                        <strong class="text-emerald-800 block mb-1">⚠️ חוקי ה-IF הנוקשים בזמן בדיקה סטטית:</strong>
+                        <p class="text-slate-700 leading-relaxed">
+                            המהדר הסטטי אינו יודע (ולא מסוגל לחזות) איזה ענף יתבצע בפועל בזמן ריצה. לכן, נקבע כלל ברזל
+                            נוקשה:
+                            <br><span class="font-bold underline">זרוע ה-then וזרוע ה-else חייבות להיות מאותו הטיפוס
+                                בדיוק</span> (למשל, שתיהן מחזירות <code>int</code>).
+                            <br>אם יש אי-התאמה (ענף אחד מחזיר מספר וענף שני מחזיר בוליאני), המערכת תזרוק שגיאת טיפוסים
+                            (Type Error) בשלב הקימפול/בדיקה, <strong>גם אם בזמן ריצה השגיאה לא הייתה מתרחשת
+                                בפועל</strong> (למשל כשהתנאי הוא תמיד אמת).
+                        </p>
+                    </div>
                 </section>
 
                 <!-- סעיף 26 (לשעבר 21) -->
                 <section id="sec-26" class="mb-12 scroll-mt-6">
                     <h3 class="title-green">26. שפת INFERRED (הסקה אוטומטית של טיפוסים)</h3>
                     <p class="mb-3">
-                        המתכנת משתמש בסימן <code>?</code> במקום טיפוס. המהדר פותר מערכת משוואות בעזרת אילוצים ואלגוריתם Unification.
-                        משתמשים במשתני טיפוס טריים (Gensym, לדוגמה $t_1$). 
-                        כדי לא להעביר רק תוצאה אחת, מחזירים אובייקט <code>an-answer</code> המכיל את הטיפוס + <strong>מילון ההצבות (Substitutions)</strong> כדי להעביר את הידע שנצבר הלאה.
+                        המתכנת משתמש בסימן <code>?</code> במקום טיפוס. המהדר פותר מערכת משוואות בעזרת אילוצים ואלגוריתם
+                        Unification.
+                        משתמשים במשתני טיפוס טריים (Gensym, לדוגמה $t_1$).
+                        כדי לא להעביר רק תוצאה אחת, מחזירים אובייקט <code>an-answer</code> המכיל את הטיפוס +
+                        <strong>מילון ההצבות (Substitutions)</strong> כדי להעביר את הידע שנצבר הלאה.
                     </p>
                 </section>
 
@@ -899,23 +1364,33 @@
                             <tbody class="text-sm font-semibold">
                                 <tr>
                                     <td class="p-3 border border-slate-300 font-mono" dir="ltr">-(E1, E2)</td>
-                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t1 = int, t2 = int, t_res = int</td>
-                                    <td class="p-3 border border-slate-300 text-slate-600">אופרטורים מתמטיים דורשים תמיד קלטים מספריים.</td>
+                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t1 = int, t2
+                                        = int, t_res = int</td>
+                                    <td class="p-3 border border-slate-300 text-slate-600">אופרטורים מתמטיים דורשים תמיד
+                                        קלטים מספריים.</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-3 border border-slate-300 font-mono" dir="ltr">if E1 then E2 else E3</td>
-                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t1 = bool, t2 = t3, t_res = t2</td>
-                                    <td class="p-3 border border-slate-300 text-slate-600">התנאי בוליאני, והזרועות (Then/Else) חייבות להיות זהות.</td>
+                                    <td class="p-3 border border-slate-300 font-mono" dir="ltr">if E1 then E2 else E3
+                                    </td>
+                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t1 = bool,
+                                        t2 = t3, t_res = t2</td>
+                                    <td class="p-3 border border-slate-300 text-slate-600">התנאי בוליאני, והזרועות
+                                        (Then/Else) חייבות להיות זהות.</td>
                                 </tr>
                                 <tr>
                                     <td class="p-3 border border-slate-300 font-mono" dir="ltr">proc (x) Body</td>
-                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t_res = t_x → t_body</td>
-                                    <td class="p-3 border border-slate-300 text-slate-600">מייצר טיפוס פונקציה מהקלט לתוצאה.</td>
+                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t_res = t_x
+                                        → t_body</td>
+                                    <td class="p-3 border border-slate-300 text-slate-600">מייצר טיפוס פונקציה מהקלט
+                                        לתוצאה.</td>
                                 </tr>
                                 <tr class="bg-emerald-50/40">
-                                    <td class="p-3 border border-slate-300 font-mono text-emerald-800" dir="ltr">(Rator Rand)</td>
-                                    <td class="p-3 border border-slate-300 font-mono text-center text-emerald-800" dir="ltr">t_rator = t_rand → t_res</td>
-                                    <td class="p-3 border border-slate-300 text-slate-800"><strong>החוק הקריטי!</strong> טיפוס הפונקציה המופעלת (Rator) חייב להתאים לטיפוס הארגומנט (Rand) ולתוצאה.</td>
+                                    <td class="p-3 border border-slate-300 font-mono text-emerald-800" dir="ltr">(Rator
+                                        Rand)</td>
+                                    <td class="p-3 border border-slate-300 font-mono text-center text-emerald-800"
+                                        dir="ltr">t_rator = t_rand → t_res</td>
+                                    <td class="p-3 border border-slate-300 text-slate-800"><strong>החוק הקריטי!</strong>
+                                        טיפוס הפונקציה המופעלת (Rator) חייב להתאים לטיפוס הארגומנט (Rand) ולתוצאה.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -926,19 +1401,127 @@
                 <section id="sec-28" class="mb-12 scroll-mt-6">
                     <h3 class="title-green">28. שלב ב': אלגוריתם ה-Unification וטבלת ההצבות (Substitutions)</h3>
                     <p class="mb-3">
-                        האלגוריתם פותר משוואות (נניח $L = R$) מתוך רשימת המשוואות. הוא מתחזק טבלת הצבות (Substitutions table), ובכל שלב הוא:
+                        האלגוריתם פותר משוואות (נניח $L = R$) מתוך רשימת המשוואות. הוא מתחזק טבלת הצבות (Substitutions
+                        table), ובכל שלב הוא:
                     </p>
                     <div class="hand-drawn-box text-sm">
                         <ol class="list-decimal list-inside space-y-4 text-slate-800 font-semibold pr-4">
-                            <li><strong>זהות (Identity):</strong> אם $L$ ו-$R$ הם אותו הטיפוס (כמו $\text{int} = \text{int}$) - מתעלמים.</li>
+                            <li><strong>זהות (Identity):</strong> אם $L$ ו-$R$ הם אותו הטיפוס (כמו $\text{int} =
+                                \text{int}$) - מתעלמים.</li>
                             <li class="border-b border-slate-200 pb-3">
-                                <strong>הצבה (Substitution):</strong> אם צד אחד הוא משתנה זמני ($t$), בודקים אם יש צורך לעדכן אילוצים קודמים או עתידיים, ואם כן - מציבים את הערך שלו. חובה לבצע בדיקת הופעה (Occurs Check) לפני!
+                                <strong>הצבה (Substitution):</strong> אם צד אחד הוא משתנה זמני ($t$), בודקים אם יש צורך
+                                לעדכן אילוצים קודמים או עתידיים, ואם כן - מציבים את הערך שלו. חובה לבצע בדיקת הופעה
+                                (Occurs Check) לפני!
                             </li>
                             <li class="border-b border-slate-200 pb-3">
-                                <strong>פירוק (Decomposition):</strong> אם מדובר בשתי פונקציות ($t_1 \rightarrow \text{int} = \text{bool} \rightarrow t_2$), מפרקים לשתי משוואות קטנות: $t_1 = \text{bool}$ ו-$\text{int} = t_2$.
+                                <strong>פירוק (Decomposition):</strong> אם מדובר בשתי פונקציות ($t_1 \rightarrow
+                                \text{int} = \text{bool} \rightarrow t_2$), מפרקים לשתי משוואות קטנות: $t_1 =
+                                \text{bool}$ ו-$\text{int} = t_2$.
                             </li>
-                            <li><strong>שגיאה:</strong> סתירה מהותית כמו $\text{int} = \text{bool}$ זורקת שגיאת התאמה. ממשיכים את טבלת ההצבות עד שאין יותר מה להעביר, ואז מתקבל הטיפוס הסופי.</li>
+                            <li><strong>שגיאה:</strong> סתירה מהותית כמו $\text{int} = \text{bool}$ זורקת שגיאת התאמה.
+                                ממשיכים את טבלת ההצבות עד שאין יותר מה להעביר, ואז מתקבל הטיפוס הסופי.</li>
                         </ol>
+                    </div>
+
+                    <!-- דוגמת הרצה מלאה מה-PDF -->
+                    <div class="p-5 bg-emerald-50/40 border border-emerald-200 rounded-lg shadow-sm text-sm my-6">
+                        <h4 class="font-bold text-emerald-900 text-lg mb-3">דוגמה מעשית מלאה: הרצת אלגוריתם
+                            Substitutions</h4>
+                        <p class="text-slate-700 mb-3 leading-relaxed">
+                            נראה כיצד אלגוריתם ה-Unification פותר ומסיק את הטיפוס עבור הביטוי הבא:
+                            <br><code dir="ltr">let f = proc (x) - (x, 1) in (f 10)</code>
+                        </p>
+
+                        <strong class="text-slate-850 block mb-1">1. גזירת אילוצים (Constraints Generation):</strong>
+                        <ul class="list-disc list-inside space-y-1 text-slate-700 mb-4 pr-2">
+                            <li>עבור <code>proc (x)</code> נניח טיפוס קלט $t_x$ וטיפוס פלט $t_{\text{body}}$.</li>
+                            <li>עבור הגוף <code>-(x, 1)</code> נגזר האילוץ: $t_x = \text{int}$ (כי החיסור מקבל מספרים)
+                                וטיפוס הגוף הוא $\text{int}$.</li>
+                            <li>לכן טיפוס ה-proc הוא $t_{\text{proc}} = t_x \rightarrow \text{int}$.</li>
+                            <li>בשל ה-<code>let</code>, טיפוס המשתנה $f$ (נסמן $t_f$) נקשר לטיפוס ה-proc: $t_f =
+                                t_{\text{proc}}$.</li>
+                            <li>עבור גוף ה-let שהוא הפעלת פונקציה <code>(f 10)</code>: הארגומנט הוא <code>10</code>
+                                (טיפוס `int`), ולכן $t_f = \text{int} \rightarrow t_{\text{let}}$ (כאשר $t_{\text{let}}$
+                                הוא טיפוס הביטוי כולו).</li>
+                        </ul>
+
+                        <strong class="text-slate-850 block mb-2">2. טבלת צעדי ה-Unification ועדכון מילון ההצבות
+                            ($\sigma$):</strong>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-right border-collapse bg-white border border-slate-300">
+                                <thead>
+                                    <tr class="bg-emerald-100 text-emerald-900 font-bold">
+                                        <th class="p-2 border border-slate-300">צעד</th>
+                                        <th class="p-2 border border-slate-300">המשוואה לפתרון</th>
+                                        <th class="p-2 border border-slate-300">הלוגיקה / פעולת האלגוריתם</th>
+                                        <th class="p-2 border border-slate-300 font-mono">מילון ההצבות המצטבר
+                                            (Substitutions)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-slate-700">
+                                    <tr class="border-b border-slate-200">
+                                        <td class="p-2 border border-slate-300 font-bold text-center">1</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">t_x = int</td>
+                                        <td class="p-2 border border-slate-300">הצבה פשוטה – שומרים במילון.</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int]</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-200 bg-slate-50/50">
+                                        <td class="p-2 border border-slate-300 font-bold text-center">2</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">t_proc = t_x → int
+                                        </td>
+                                        <td class="p-2 border border-slate-300">מחילים את ההצבה הקודמת: $t_{\text{proc}}
+                                            = \text{int} \rightarrow \text{int}$. שומרים.</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
+                                            (int → int)]</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-200">
+                                        <td class="p-2 border border-slate-300 font-bold text-center">3</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">t_f = t_proc</td>
+                                        <td class="p-2 border border-slate-300">מחילים הצבות: $t_f = \text{int}
+                                            \rightarrow \text{int}$. שומרים במילון.</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
+                                            (int → int), t_f ↦ (int → int)]</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-200 bg-slate-50/50">
+                                        <td class="p-2 border border-slate-300 font-bold text-center">4</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">t_f = int → t_let
+                                        </td>
+                                        <td class="p-2 border border-slate-300">מחילים הצבות על שני הצדדים: $\text{int}
+                                            \rightarrow \text{int} = \text{int} \rightarrow t_{\text{let}}$.</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
+                                            (int → int), t_f ↦ (int → int)]</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-200">
+                                        <td class="p-2 border border-slate-300 font-bold text-center">5</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">int → int = int →
+                                            t_let</td>
+                                        <td class="p-2 border border-slate-300"><strong>פירוק (Decomposition):</strong>
+                                            יוצר 2 תתי-משוואות.</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
+                                            (int → int), t_f ↦ (int → int)]</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-200 bg-slate-50/50">
+                                        <td class="p-2 border border-slate-300 font-bold text-center">6</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">int = int</td>
+                                        <td class="p-2 border border-slate-300"><strong>זהות (Identity):</strong>
+                                            מתעלמים.</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
+                                            (int → int), t_f ↦ (int → int)]</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-200">
+                                        <td class="p-2 border border-slate-300 font-bold text-center">7</td>
+                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">int = t_let</td>
+                                        <td class="p-2 border border-slate-300">מזהים משתנה: קושרים את $t_{\text{let}}$
+                                            ל-`int`. שומרים במילון.</td>
+                                        <td class="p-2 border border-slate-300 font-mono text-emerald-950" dir="ltr">
+                                            [t_x ↦ int, t_proc ↦ (int → int), t_f ↦ (int → int), t_let ↦ int]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="mt-4 font-bold text-emerald-900">
+                            הסיכום: הערך הסופי שמופק עבור טיפוס התוכנית כולה הוא <code>int</code>!
+                        </p>
                     </div>
                 </section>
 
@@ -951,8 +1534,10 @@
                                 <span>⚠️ למה חייבים לבצע בדיקת הופעה (Occurs Check)?</span>
                             </h4>
                             <p class="font-semibold text-slate-700 mb-2 leading-relaxed">
-                                אם יש פונקציה שמפעילה את עצמה <code>(x x)</code> נקבל משוואה $t_x = t_x \rightarrow t_{\text{res}}$.
-                                ללא בדיקה מקדימה, הצבה עיוורת תוביל ללולאה אינסופית ולקריסה. האלגוריתם בודק שמשתנה לא מופיע בתוך המבנה שמנסים להציב אליו.
+                                אם יש פונקציה שמפעילה את עצמה <code>(x x)</code> נקבל משוואה $t_x = t_x \rightarrow
+                                t_{\text{res}}$.
+                                ללא בדיקה מקדימה, הצבה עיוורת תוביל ללולאה אינסופית ולקריסה. האלגוריתם בודק שמשתנה לא
+                                מופיע בתוך המבנה שמנסים להציב אליו.
                             </p>
                         </div>
 
@@ -961,25 +1546,33 @@
                                 <span>🔒 בעיית הנעילה המונומורפית (Monomorphic Lock-in)</span>
                             </h4>
                             <p class="font-semibold text-slate-700 leading-relaxed">
-                                בשפת INFERRED הבסיסית אין פולימורפיזם אמיתי. ברגע שפונקציית זהות <code>proc(x:?) x</code> (המוסקת כ-$t_x \rightarrow t_x$) מופעלת פעם אחת על מספר, המשתנה $t_x$ <span class="marker-yellow">ננעל על <code>int</code>!</span> לא ניתן להפעילה שוב על טיפוס אחר באותו הקוד.
+                                בשפת INFERRED הבסיסית אין פולימורפיזם אמיתי. ברגע שפונקציית זהות
+                                <code>proc(x:?) x</code> (המוסקת כ-$t_x \rightarrow t_x$) מופעלת פעם אחת על מספר, המשתנה
+                                $t_x$ <span class="marker-yellow">ננעל על <code>int</code>!</span> לא ניתן להפעילה שוב
+                                על טיפוס אחר באותו הקוד.
                             </p>
                         </div>
                     </div>
                 </section>
 
+
                 <!-- סיום חגיגי -->
-                <div class="mt-20 text-center text-slate-500 font-semibold mb-8 border-t-2 border-dashed border-slate-300 pt-12">
+                <div
+                    class="mt-20 text-center text-slate-500 font-semibold mb-8 border-t-2 border-dashed border-slate-300 pt-12">
                     <p class="text-xl text-slate-800 font-heading font-bold mb-2">תם ונשלם סיכום מפרשים מקיף למבחן!</p>
-                    <p class="text-sm">עבור על כל 29 הסעיפים, הבן את קבצי המפרש וטבלת ההשוואה, ובהצלחה ענקית במבחן! 🚀</p>
+                    <p class="text-sm">עבור על כל 29 הסעיפים, הבן את קבצי המפרש וטבלת ההשוואה, ובהצלחה ענקית במבחן! 🚀
+                    </p>
                 </div>
 
             </div>
         </main>
-        
+
     </div>
 
     <!-- כפתור פתיחת תפריט ניווט (מוצג כשהתפריט מוסתר) -->
-    <button id="toggle-sidebar-open" class="fixed right-4 top-4 z-30 bg-[#fdfbf7] text-slate-700 hover:text-amber-700 hover:bg-amber-50 border border-amber-200 shadow-lg rounded-full p-3 transition duration-300 ease-in-out hidden" title="הצג תפריט ניווט">
+    <button id="toggle-sidebar-open"
+        class="fixed right-4 top-4 z-30 bg-[#fdfbf7] text-slate-700 hover:text-amber-700 hover:bg-amber-50 border border-amber-200 shadow-lg rounded-full p-3 transition duration-300 ease-in-out hidden"
+        title="הצג תפריט ניווט">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
@@ -1063,4 +1656,5 @@
     </script>
 
 </body>
+
 </html>
