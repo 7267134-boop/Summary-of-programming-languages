@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סיכום למבחן - שפות תכנות</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ייבוא פונטים קריאים ומודרניים בעברית מגוגל -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /* הגדרת דף מחברת משובץ עם שוליים */
+        body {
+            background-color: #fdfbf7;
+            background-image: 
+                linear-gradient(rgba(148, 163, 184, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.25) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0;
+            /* פונט נקי וקריא מאוד לטקסט הרץ */
+            font-family: 'Assistant', sans-serif;
+            color: #1e293b; /* צבע טקסט כהה וברור */
+            line-height: 1.8;
+            font-size: 1.15rem;
+            position: relative;
+        }
+
+        h1, h2, h3, .font-heading {
+            /* פונט בולט ומעוגל לכותרות */
+            font-family: 'Rubik', sans-serif;
+        }
+
+        /* פס שוליים אדום כמו במחברת אינפי/שורות */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 60px; /* מיקום השוליים בצד ימין (RTL) */
+            bottom: 0;
+            width: 2px;
+            background-color: rgba(220, 38, 38, 0.4);
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 65px;
+            bottom: 0;
+            width: 1px;
+            background-color: rgba(220, 38, 38, 0.2);
+            z-index: -1;
+        }
+
+        /* עיצוב המיכל הראשי */
+        .notebook-page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 80px 60px 40px; /* פדינג שמתחשב בשוליים מימין */
+        }
+
+        /* כותרות בעט אדום/שחור מודגש */
+        .title-red {
+            color: #b91c1c;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            border-bottom: 3px solid rgba(185, 28, 28, 0.2);
+            padding-bottom: 2px;
+        }
+
+        /* מרקר צהוב מציאותי */
+        .marker-yellow {
+            background: linear-gradient(104deg, rgba(253,224,71,0) 0.9%, rgba(253,224,71,0.6) 2.4%, rgba(253,224,71,0.5) 5.8%, rgba(253,224,71,0.3) 93%, rgba(253,224,71,0.7) 96%, rgba(253,224,71,0) 98%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        /* מרקר ירוק מציאותי */
+        .marker-green {
+            background: linear-gradient(104deg, rgba(134,239,172,0) 0.9%, rgba(134,239,172,0.6) 2.4%, rgba(134,239,172,0.5) 5.8%, rgba(134,239,172,0.2) 93%, rgba(134,239,172,0.7) 96%, rgba(134,239,172,0) 98%);
+            padding: 2px 6px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        /* קופסאות דמויות ציור ידני (לנוסחאות והגדרות חשובות) */
+        .hand-drawn-box {
+            border: 2px solid #334155;
+            border-radius: 2px 255px 3px 25px / 255px 5px 225px 3px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.03);
+        }
+
+        /* קופסת הערת שוליים / אזהרה באדום */
+        .warning-box {
+            border: 2px solid #dc2626;
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            background: rgba(254, 226, 226, 0.4);
+            color: #991b1b;
+        }
+
+        /* קוד רקע קריא */
+        code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: #0f172a;
+            font-weight: 700;
+            background-color: rgba(0,0,0,0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        pre {
+            background: rgba(255,255,255,0.8);
+            border-right: 4px solid #94a3b8;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+            direction: ltr;
+            text-align: left;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+        }
+
+        .list-bullet {
+            position: relative;
+            padding-right: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .list-bullet::before {
+            content: '■';
+            position: absolute;
+            right: 0;
+            color: #3b82f6;
+            font-size: 0.8em;
+            top: 0.3em;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="notebook-page">
+
+        <!-- כותרת מחברת -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl text-slate-900 inline-block relative font-heading">
+                סיכום: שפות תכנות ומפרשים
+                <!-- קו ציור תחתון חופשי -->
+                <svg class="absolute -bottom-4 left-0 w-full h-4" viewBox="0 0 200 10" preserveAspectRatio="none">
+                    <path d="M0,5 Q100,10 200,2" stroke="#dc2626" stroke-width="4" fill="none" stroke-linecap="round"/>
+                </svg>
+            </h1>
+            <p class="mt-5 text-xl text-slate-600 font-semibold font-heading">הכנה למבחן: הכללים, המבנים, ואיך זה עובד באמת</p>
+        </div>
+
+        <!-- סעיף 1: מבוא -->
+        <section>
+            <h2 class="title-red">1. יסודות השפה (Scheme)</h2>
+            <div class="list-bullet">
+                <span class="marker-yellow">הכל הוא ביטוי (Expression):</span> כל פקודה, תנאי או פעולה מחזירה ערך (חוץ מפקודות השמה כמו <code>define</code>).
+            </div>
+            <div class="list-bullet">
+                <strong>תחביר תחילי (Prefix):</strong> האופרטור תמיד בתוך הסוגריים בהתחלה. למשל: <code>(+ 1 2)</code>. זה חוסך את הצורך לזכור סדר פעולות חשבון וקל למפרש.
+            </div>
+            <div class="list-bullet">
+                <strong>אין לולאות While/For:</strong> עובדים נטו עם פונקציות רקורסיביות ופונקציות מסדר גבוה (<code>map</code>, <code>fold</code>).
+            </div>
+        </section>
+
+        <!-- סעיף 2: הקצאות -->
+        <section>
+            <h2 class="title-red">2. משתנים וסביבות - משפחת ה-Let</h2>
+            <p class="mb-2">איך קושרים שמות לערכים בתוך בלוק מקומי?</p>
+            
+            <div class="hand-drawn-box">
+                <div class="mb-4 border-b border-slate-200 pb-4">
+                    <strong class="text-slate-900 text-xl font-heading">א. <code>let</code> (קשירה מקבילית):</strong><br>
+                    כל הערכים מחושבים מול הסביבה החיצונית <strong>לפני</strong> ההשמה. המשתנים בפנים לא מכירים אחד את השני.
+<pre><code>(let ((x 5)
+      (y (+ x 1))) ; תעוף שגיאה! x לא מוכר עדיין
+  y)</code></pre>
+                </div>
+                
+                <div class="mb-4 border-b border-slate-200 pb-4">
+                    <strong class="text-slate-900 text-xl font-heading">ב. <code>let*</code> (קשירה טורית/סדרתית):</strong><br>
+                    מתורגם מאחורי הקלעים לסדרה של <code>let</code> מקוננים. כל משתנה מכיר את מי שהוגדר שורה אחת מעליו. כאן ה-<code>(+ x 1)</code> יעבוד מצוין ויחזיר 6.
+                </div>
+
+                <div>
+                    <strong class="text-slate-900 text-xl font-heading">ג. <code>letrec</code> (קשירה רקורסיבית):</strong><br>
+                    <span class="marker-green">חובה כדי שפונקציה תוכל לקרוא לעצמה!</span><br>
+                    איך זה עובד? המפרש קודם מייצר "קופסאות ריקות" לסביבה, אח"כ מעריך את הלמבדות, ולבסוף מעדכן את המצביעים כדי שהפונקציה תכיר את שמה.
+                </div>
+            </div>
+        </section>
+
+        <!-- סעיף 3: תנאים -->
+        <section>
+            <h2 class="title-red">3. תנאים ובקרת זרימה</h2>
+            <div class="list-bullet">
+                <strong>מה נחשב ל-True?</strong> הכל! ב-Scheme, <span class="marker-yellow">כל ערך שאינו במפורש <code>#f</code> הוא אמת.</span> מספרים, רשימה ריקה <code>'()</code> - הכל אמת.
+            </div>
+            <div class="list-bullet">
+                <strong><code>if</code>:</strong> חובה לספק 3 חלקים - תנאי, ביטוי לאמת, וביטוי לשקר (Else). אי אפשר לכתוב <code>if</code> בלי חלופה בשפת EOPL.
+            </div>
+            <div class="list-bullet">
+                <strong><code>cond</code> (Switch-Case):</strong> שרשרת תנאים. 
+                <br><em>הכי חשוב:</em> תמיד בודקים קודם את הטיפוס לפני שבודקים את הערך. למשל, קודם <code>(number? n)</code> ורק אז <code>(> n 0)</code>. אם תהפכו, תקבלו קריסת מערכת!
+            </div>
+        </section>
+
+        <!-- סעיף 4: רשימות -->
+        <section>
+            <h2 class="title-red">4. מבני נתונים (זוגות ורשימות)</h2>
+            <p class="mb-2">רשימה ב-Scheme היא שרשרת של קופסאות. הפקודה <code>cons</code> יוצרת קופסה בזיכרון:</p>
+            <div class="list-bullet">
+                <code>car</code> = מושך את האיבר השמאלי (הערך).
+            </div>
+            <div class="list-bullet">
+                <code>cdr</code> = מושך את האיבר הימני (המצביע להמשך השרשרת).
+            </div>
+            
+            <div class="warning-box">
+                <strong class="font-heading text-xl">שים לב להבדל בבדיקות!</strong><br>
+                <div class="mt-2 space-y-1">
+                    <div>• <code>(pair? x)</code>: בודק <strong>רק</strong> אם זה צומת (קופסה). לא מעניין אותו איך השרשרת מסתיימת.</div>
+                    <div>• <code>(list? x)</code>: בודק שזו שרשרת <strong>תקנית</strong> המסתיימת ב-<code>'()</code> (Null).</div>
+                </div>
+            </div>
+
+            <p class="font-bold mt-4 mb-2">פונקציות מסדר גבוה על רשימות:</p>
+            <div class="list-bullet"><strong><code>map</code>:</strong> עוברת על כל איבר, מפעילה עליו פונקציה, ומחזירה רשימה של התוצאות. יכולה לרוץ על כמה רשימות במקביל!</div>
+            <div class="list-bullet"><strong><code>foldl / foldr</code>:</strong> קיפול (צבירת) רשימה לערך בודד. <code>foldr</code> מקפל מימין לשמאל (שומר על סדר הרשימה המקורי אם בונים מחדש).</div>
+        </section>
+
+        <!-- סעיף 5: רקורסיה -->
+        <section>
+            <h2 class="title-red">5. רקורסיות וניהול זיכרון</h2>
+            <div class="hand-drawn-box">
+                <strong class="font-heading text-xl">רקורסיה רגילה:</strong> <br>
+                מנפחת את הזיכרון! המחשב פותח מסגרת מחסנית (Stack Frame) לכל קריאה, כי הוא חייב "לזכור" לבצע פעולה אחרי שהרקורסיה תחזור (למשל פעולת חיבור או <code>cons</code>).<br><br>
+                
+                <span class="marker-yellow text-slate-900 text-xl font-heading">רקורסיית זנב (TCO - Tail Call Optimization):</span> <br>
+                <div class="mt-2">
+                    הפעולה הרקורסיבית היא <strong>הדבר האחרון בהחלט</strong> שקורה בפונקציה.<br>
+                    המהדר חכם מספיק להבין שאין למה לחזור אחורה, ולכן הוא <strong>דורס וממחזר</strong> את אותה מסגרת זיכרון! 
+                    <br><em>סיבוכיות מקום:</em> יורדת מ- $O(N)$ ל- $O(1)$. 
+                    <br><em>איך מממשים במבחן?</em> מוסיפים משתנה עזר לפונקציה (Accumulator) שצובר את התוצאה בדרך למטה.
+                </div>
+            </div>
+        </section>
+
+        <!-- סעיף 6: ADT -->
+        <section>
+            <h2 class="title-red">6. טיפוסים מופשטים (ADT) ו-Cases</h2>
+            <div class="list-bullet">
+                <strong><code>define-datatype</code>:</strong> מאפשר לנו להגדיר מבני נתונים חדשים (כמו עצים או פולינומים) בצורה בטוחה (Type-Safe). מוודא חוזים בזמן יצירה.
+            </div>
+            <div class="list-bullet">
+                <strong><code>cases</code>:</strong> הדרך ה<strong>יחידה</strong> למשוך מידע מהטיפוס. זה מנגנון Pattern Matching שמפרק את האובייקט לפי הבנאי שלו.
+            </div>
+            <div class="warning-box">
+                <strong class="font-heading text-xl">מלכודת מבחנים קלאסית:</strong><br>
+                <div class="mt-2">
+                    בענף <code>else</code> בתוך <code>cases</code> - <span class="underline font-bold">אסור לפתוח סוגריים למשתנים!</span> <br>
+                    לא כותבים <code>(else (x y) ...)</code> אלא רק <code>(else ...)</code>. אחרת הקוד פשוט יקרוס ולא יתקמפל.
+                </div>
+            </div>
+        </section>
+
+        <!-- סעיף 7: לקסר ופרסר -->
+        <section>
+            <h2 class="title-red">7. המנתח התחבירי (Lexer & Parser)</h2>
+            <div class="hand-drawn-box">
+                <ol class="list-decimal list-inside space-y-3 text-slate-800 font-semibold">
+                    <li><strong class="font-heading">הלקסר (Scanner):</strong> הופך את מחרוזת הטקסט לזרם של <strong>אסימונים (Tokens)</strong>. על הדרך הוא "מעיף לפח" רווחים, הערות ושורות חדשות.</li>
+                    <li><strong class="font-heading">הפרסר (Parser):</strong> מקבל את האסימונים ובונה <strong>עץ תחביר מופשט (AST)</strong> לפי חוקי הדקדוק (EBNF).</li>
+                </ol>
+                <div class="mt-5 border-t-2 border-slate-200 pt-4">
+                    <span class="marker-yellow font-heading text-xl">למה AST "מופשט"?</span><br>
+                    <p class="mt-2">כי הפרסר זורק לפח את כל הטרמינלים (סימני פיסוק, פסיקים, ומילים שמורות כמו <code>if</code> או <code>-</code>). הוא לא שומר אותם בעץ. העובדה שבחרנו לקרוא לצומת בעץ <code>diff-exp</code> כבר מעידה על כך שיש שם פעולת חיסור - אין צורך לשמור את התו עצמו.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- סעיף 8: סביבות עבודה -->
+        <section>
+            <h2 class="title-red">8. סביבות לקסיקליות (Environments)</h2>
+            <div class="list-bullet">
+                סביבה היא טבלה שממפה שמות משתנים לערכים שלהם. היא בנויה כשכבות של "בצל". אם <code>apply-env</code> לא מוצא את המשתנה, הוא פונה ישירות לסביבת האב (<code>saved-env</code>).
+            </div>
+            <div class="list-bullet mt-4">
+                <span class="marker-green font-heading text-xl text-slate-900">הסגור (Closure): לב השפה!</span><br>
+                כשהמפרש נתקל ב-<code>lambda</code>, הוא לא רק שומר את הקוד שלה. הוא יוצר טיפוס <code>proc-val</code> ששומר את הקוד <strong>+ הסביבה שהייתה קיימת באותו רגע</strong> (Lexical Scope). כשיקראו לפונקציה בהמשך, היא תשתמש בסביבה השמורה הזו, וזה המנגנון שמונע התנגשויות שמות.
+            </div>
+            <div class="list-bullet mt-4">
+                <strong class="font-heading">ייצוג סביבות כפרוצדורה:</strong><br>
+                במקום לשמור רשימה גלויה של משתנים, אפשר לשמור סביבה כפונקציה אנונימית המקבלת שם משתנה. הדבר מיישם <span class="marker-yellow">הכמסת מידע (Encapsulation)</span> - זה הופך את הסביבה לקופסה שחורה שמגיבה רק לשאילתות ואי אפשר לחטט בה מבחוץ.
+            </div>
+        </section>
+
+        <!-- סעיף 9: כתובות לקסיקליות -->
+        <section>
+            <h2 class="title-red">9. אופטימיזציה: כתובות לקסיקליות</h2>
+            <p class="mb-3">
+                חיפוש משתנה לפי השם שלו הוא תהליך אטי כי צריך להשוות מחרוזת בכל שכבה מחדש ($O(N)$). שפות מודרניות מפעילות שלב תרגום מוקדם המעלים את השמות לחלוטין.
+            </p>
+            <div class="hand-drawn-box">
+                <div class="text-center mb-4">
+                    כל משתנה מתורגם ל-<span class="marker-yellow font-heading text-xl">אינדקסי דה-ברון: (Depth, Position)</span>
+                </div>
+                <ul class="list-disc list-inside space-y-2 text-slate-800 font-semibold pr-4">
+                    <li><strong>עומק (Depth):</strong> כמה סביבות אב צריך לצאת החוצה (כמה פעמים לקפוץ ב-<code>saved-env</code>).</li>
+                    <li><strong>מיקום (Position):</strong> באיזה אינדקס המשתנה יושב בתוך המערך של אותה שכבה מסוימת.</li>
+                </ul>
+                <div class="mt-4 text-center text-slate-600 border-t-2 border-slate-200 pt-3 font-bold">
+                    התרגום הזה מאפשר למפרש לגשת לזיכרון המשתנים בסיבוכיות של $O(1)$!
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

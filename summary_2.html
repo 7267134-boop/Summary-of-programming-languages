@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סיכום למבחן - שפות תכנות</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fdfbf7;
+            background-image: 
+                linear-gradient(rgba(148, 163, 184, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.25) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0;
+            font-family: 'Assistant', sans-serif;
+            line-height: 1.6;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Rubik', sans-serif;
+        }
+        .hand-drawn-box {
+            background: white;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 4px 4px 0px #94a3b8;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .marker-yellow { background: linear-gradient(104deg, rgba(253,230,138,0) 0.9%, rgba(253,230,138,1) 2.4%, rgba(253,230,138,0.5) 5.8%, rgba(253,230,138,1) 93%, rgba(253,230,138,0.7) 96%, rgba(253,230,138,0) 98%); }
+        .title-red { color: #b91c1c; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; border-bottom: 2px solid #fca5a5; padding-bottom: 0.5rem; }
+        .title-blue { color: #1d4ed8; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; border-bottom: 2px solid #93c5fd; padding-bottom: 0.5rem; }
+        .title-purple { color: #6d28d9; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; border-bottom: 2px solid #c4b5fd; padding-bottom: 0.5rem; }
+        .title-green { color: #15803d; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; border-bottom: 2px solid #86efac; padding-bottom: 0.5rem; }
+        
+        pre { direction: ltr; text-align: left; background-color: #1e293b; color: #f8fafc; padding: 1rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.875rem; overflow-x: auto; margin-top: 0.5rem; }
+        code { font-family: monospace; background-color: rgba(0,0,0,0.05); padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-weight: bold; color: #0f172a;}
+    </style>
+</head>
+<body class="text-slate-800 p-4 md:p-8 max-w-4xl mx-auto">
+
+    <h1 class="text-4xl font-black text-center mb-10 text-slate-900 border-4 border-slate-900 p-4 rounded-xl bg-white shadow-[6px_6px_0px_#cbd5e1] rotate-1 transform-gpu">
+        סיכום מפרשים - EOPL
+    </h1>
+
+    <!-- 
+        ========================================================================
+        כאן תוכל להדביק את הסעיפים 1 עד 9 מהקובץ המקורי שלך (הבסיס של סכמה).
+        ========================================================================
+    -->
+
+    <!-- סעיף 10: שפת LET -->
+    <section id="let-interpreter" class="mt-12">
+        <h2 class="title-blue">10. שפת LET ואדריכלות המפרש</h2>
+        
+        <!-- תעודת זהות לשפה -->
+        <div class="bg-blue-50 border-r-4 border-blue-500 p-4 mb-4 rounded-l-lg shadow-sm">
+            <h3 class="font-bold text-blue-900 mb-2">📌 תעודת זהות: שפת LET</h3>
+            <ul class="text-slate-700 space-y-1">
+                <li><strong>המהות (מה יוצר אותה):</strong> הגדרת משתנים מקומיים. היכולת לתת שם לערך חישובי כדי לחסוך כפילות.</li>
+                <li><strong>המנגנון (מה מקיים אותה):</strong> ה-<strong>Environment</strong> (סביבה). טבלת זיכרון שזוכרת איזה ערך שייך לאיזה שם.</li>
+                <li><strong>התחביר שנוסף:</strong> <code>let x = 5 in -(x, 1)</code></li>
+            </ul>
+        </div>
+
+        <p class="mb-3">
+            שפת LET היא ה"מחשבון" הבסיסי שמניח את יסודות הארכיטקטורה שלנו. היא לא תומכת בפונקציות, אלא רק בהשמות משתנים קבועות (Immutable). 
+        </p>
+        
+        <div class="hand-drawn-box">
+            <h3 class="font-heading text-xl text-blue-800 mb-2">צינור העיבוד (The Pipeline)</h3>
+            <ul class="list-disc list-inside space-y-2 text-slate-800 font-semibold pr-4">
+                <li><span class="marker-yellow">lang.scm (Lexer & Parser):</span> לוקח טקסט אנושי (String) ומתרגם אותו למבנה נתונים מסודר הנקרא עץ תחבירי - <strong>AST</strong>.</li>
+                <li><span class="marker-yellow">data-structures.scm:</span> מגדיר את הערכים. חשוב להבדיל בין <code>ExpVal</code> (סוג התוצאה שביטוי מחזיר) ל-<code>DenVal</code> (סוג הנתון שאפשר לשמור במשתנה). בשפת LET שניהם פשוטים: {Int, Bool}.</li>
+                <li><span class="marker-yellow">interp.scm (value-of):</span> הלב הפועם. רץ על העץ מלמעלה למטה, מחשב תוצאות ומרחיב זיכרון (Environment).</li>
+            </ul>
+        </div>
+
+        <div class="hand-drawn-box bg-slate-50">
+            <h3 class="font-heading text-xl text-slate-800 mb-2">דקויות ארכיטקטוניות: Multi-Let ולולאות</h3>
+            <ul class="list-disc list-inside space-y-3 text-slate-800 pr-4">
+                <li>
+                    <strong>השמה מקבילית מול סדרתית:</strong> כדי לממש <code>let</code> של מספר משתנים במקביל (Parallel), משתמשים ב-<code>map</code> שמעריך את כולם <em>מול אותה סביבה קיימת</em> ואז דוחף את כולם יחד ב-<code>extend-env*</code>. ב-<code>let*</code> סדרתי (Sequential), חייבים להרחיב סביבה <em>אחרי כל משתנה</em> כדי שהמשתנה הבא יכיר אותו.
+                </li>
+                <li>
+                    <strong>טריק ה-Truthiness:</strong> בלולאות ומערכות תנאים מורכבות (כמו לולאת <code>do</code>), תנאי שמחזיר אמת יכול לייצר את הערך <code>#f</code>. כדי שהמפרש לא יתבלבל בין "לא מצאתי תוצאה" לבין "התוצאה היא שקר", עוטפים הצלחות ברשימה <code>(list res)</code> ושולפים בבטחה עם <code>(car res)</code>.
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- סעיף 11: שפת PROC -->
+    <section id="proc-interpreter" class="mt-12">
+        <h2 class="title-green">11. שפת PROC: פונקציות מסוג ראשון (First-Class)</h2>
+        
+        <!-- תעודת זהות לשפה -->
+        <div class="bg-green-50 border-r-4 border-green-500 p-4 mb-4 rounded-l-lg shadow-sm">
+            <h3 class="font-bold text-green-900 mb-2">📌 תעודת זהות: שפת PROC</h3>
+            <ul class="text-slate-700 space-y-1">
+                <li><strong>המהות (מה יוצר אותה):</strong> פונקציות מסוג ראשון. הפונקציה הופכת מ"פקודה" ל"נתון" שניתן לשמור במשתנה או להעביר כארגומנט.</li>
+                <li><strong>המנגנון (מה מקיים אותה):</strong> ה-<strong>Closure</strong> (קלוז'ר). אריזת קוד הפונקציה יחד עם סביבת ההגדרה שלה, כדי שתזכור איפה היא נולדה.</li>
+                <li><strong>התחביר שנוסף:</strong> <code>proc (x) -(x, 1)</code> (הגדרה) ו-<code>(f 5)</code> (הפעלה).</li>
+            </ul>
+        </div>
+
+        <p class="mb-3">
+            הקפיצה האבולוציונית! פונקציות מצטרפות לקבוצת ה-ExpVal וה-DenVal. 
+        </p>
+        
+        <div class="hand-drawn-box">
+            <h3 class="font-heading text-xl text-green-800 mb-2">קלוז'ר (Closure) ומודל הסקופ</h3>
+            <p class="text-slate-800 mb-2 font-semibold">כאשר מפרש פוגש <code>proc-exp</code>, הוא אינו מריץ אותו. הוא פשוט <strong>מצלם</strong> את הסביבה באותו הרגע ואורז אותה יחד עם הקוד למבנה בשם קלוז'ר:</p>
+            <pre>(procedure var body saved-env)</pre>
+            
+            <ul class="list-disc list-inside space-y-2 text-slate-800 mt-4 pr-4">
+                <li><span class="marker-yellow">סקופ לקסיקלי (התקן):</span> בזמן הפעלת הפונקציה (`apply-procedure`), היא נפתחת מול ה-<code>saved-env</code> שצילמה. זה מבטיח שהקוד צפוי וטהור.</li>
+                <li><span class="marker-yellow">סקופ דינמי:</span> הפונקציה מתעלמת מ-`saved-env` ורצה מול סביבת <strong>אתר הקריאה</strong> (ה-env הפעיל ברגע ההפעלה). חוסך זיכרון אך מסוכן בגלל בעיות "לכידת משתנים" לא רצויה.</li>
+            </ul>
+        </div>
+
+        <div class="hand-drawn-box bg-slate-50">
+            <h3 class="font-heading text-xl text-slate-800 mb-2">סימטריה בפארסר ועקיפת מגבלות</h3>
+            <ul class="list-disc list-inside space-y-3 text-slate-800 pr-4">
+                <li>
+                    <strong>רקורסיה ללא letrec (Currying & Maker):</strong> בעזרת Y-Combinator, אנו מעבירים את הפונקציה כארגומנט לתוך עצמה תחת השם <code>maker</code>. הפעלת <code>(maker maker)</code> מאפשרת לה לקרוא לעצמה מבלי שהשם החיצוני שלה קיים בזיכרון.
+                </li>
+                <li>
+                    <strong>כלל ברזל לריבוי ארגומנטים (Multi-arg):</strong> פיתוח פיצ'ר כזה דורש סימטריה מלאה בלקסר! אם ב-<code>proc-exp</code> הגדרנו הפרדה בפסיקים <code>(separated-list identifier ",")</code>, אנו <strong>חייבים</strong> לשמור על פסיקים גם בזמן הקריאה <code>call-exp</code> ע"י שימוש ב-<code>(arbno "," expression)</code>, אחרת המפרש יקרוס תחבירית.
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- סעיף 12: שפת LETREC -->
+    <section id="letrec-interpreter" class="mt-12">
+        <h2 class="title-purple">12. שפת LETREC: סביבות מעגליות ו-JIT</h2>
+        
+        <!-- תעודת זהות לשפה -->
+        <div class="bg-purple-50 border-r-4 border-purple-500 p-4 mb-4 rounded-l-lg shadow-sm">
+            <h3 class="font-bold text-purple-900 mb-2">📌 תעודת זהות: שפת LETREC</h3>
+            <ul class="text-slate-700 space-y-1">
+                <li><strong>המהות (מה יוצר אותה):</strong> רקורסיה. פונקציה מסוגלת לקרוא לעצמה בשמה מתוך הגוף של עצמה, או להכיר פונקציות אחיות (Mutual Recursion).</li>
+                <li><strong>המנגנון (מה מקיים אותה):</strong> הסביבה ה"מבטיחה" (JIT). הקלוז'ר לא נוצר מיד, אלא רק מתי שקוראים לו, ואז הוא מקבל את הסביבה <strong>שלו עצמו</strong> כדי לסגור מעגל אינסופי.</li>
+                <li><strong>התחביר שנוסף:</strong> <code>letrec p(x) = body in letrec-body</code></li>
+            </ul>
+        </div>
+
+        <p class="mb-3">
+            הבעיה ב-<code>let</code> רגיל היא שהגוף מחושב <em>לפני</em> ששם המשתנה הוכנס לזיכרון. לכן, פונקציה רגילה לא יכולה "להכיר" את עצמה.
+        </p>
+        
+        <div class="hand-drawn-box">
+            <h3 class="font-heading text-xl text-purple-800 mb-2">הקסם של הרכבה בזמן אמת (Just-In-Time)</h3>
+            <p class="text-slate-800 mb-3 font-semibold">הפתרון: סביבה מסוג <code>extend-env-rec</code> רק "כותבת מתכון" ולא בונה קלוז'ר מראש. הבנייה מתבצעת בתוך <code>apply-env</code>, ברגע החיפוש:</p>
+            <ul class="list-disc list-inside space-y-2 text-slate-800 pr-4">
+                <li>כשהמפרש מחפש משתנה ויש התאמה מדויקת (<code>eqv? search-var p-name</code>), רק אז הוא מרכיב את הקלוז'ר.</li>
+                <li><strong>הסגירה המעגלית:</strong> הוא נותן לקלוז'ר את הסביבה <strong>הנוכחית</strong> (`env`), אשר כבר מכילה בתוכה את ההגדרה הרקורסיבית של עצמה! כך נמנעים מלולאה אינסופית בזמן ההגדרה.</li>
+            </ul>
+        </div>
+
+        <div class="hand-drawn-box bg-slate-50">
+            <h3 class="font-heading text-xl text-slate-800 mb-2">רקורסיה הדדית (Mutual Recursion)</h3>
+            <p class="text-slate-800 mb-3 font-semibold">כדי שפונקציות יכירו אחת את השנייה (למשל even? ו-odd?), הן חייבות להיות מוגדרות תחת <strong>אותה סביבה מורחבת</strong> של רשימות מקבילות (`extend-env-rec*`).</p>
+            <pre>
+(extend-env-rec* (p-names b-vars p-bodies saved-env)
+  <span class="text-slate-400">; מחפשים באיזה אינדקס יושב שם הפונקציה המבוקש</span>
+  (let ((n (location search-var p-names)))
+    (if n
+        <span class="text-slate-400">; נמצא! שולפים מאותו אינדקס בדיוק ומרכיבים JIT Closure</span>
+        (proc-val (procedure (list-ref b-vars n)
+                             (list-ref p-bodies n)
+                             env))
+        <span class="text-slate-400">; לא נמצא: ממשיכים הלאה בסביבה השמורה</span>
+        (apply-env saved-env search-var))))</pre>
+        </div>
+    </section>
+
+    <!-- סעיף 13: LEXADDR / NAMELESS -->
+    <section id="lexaddr-interpreter" class="mt-12">
+        <h2 class="title-red">13. העמקה: המפרש נטול השמות (Nameless)</h2>
+        
+        <!-- תעודת זהות לשפה -->
+        <div class="bg-red-50 border-r-4 border-red-500 p-4 mb-4 rounded-l-lg shadow-sm">
+            <h3 class="font-bold text-red-900 mb-2">📌 תעודת זהות: שפת LEXADDR</h3>
+            <ul class="text-slate-700 space-y-1">
+                <li><strong>המהות (מה יוצר אותה):</strong> אופטימיזציה למהירות. ביטול הצורך לחפש מחרוזות טקסט (שמות משתנים) בזמן ריצה, מה שגורם לקוד לרוץ מהר הרבה יותר.</li>
+                <li><strong>המנגנון (מה מקיים אותה):</strong> עומק לקסיקלי (De Bruijn Indices). קומפיילר מקדים מתרגם כל שם לאינדקס מספרי (כמה צעדים אחורה בסביבה צריך ללכת), וזמן הריצה משתמש במערך שטוח.</li>
+                <li><strong>התחביר שנוסף:</strong> תלוי יישום, לרוב המתרגם יוצר עץ פנימי חדש (למשל <code>nameless-var-exp</code> במקום <code>var-exp</code>).</li>
+            </ul>
+        </div>
+
+        <p class="mb-3">
+            לאחר שהגדרנו את רעיון ה"עומק" הלקסיקלי, שפת LEXADDR מחלקת את העבודה כדי לחסוך השוואות מחרוזות מילוליות בזיכרון שעולות <span dir="ltr">$O(N)$</span> זמן.
+        </p>
+        
+        <div class="hand-drawn-box">
+            <h3 class="font-heading text-xl text-red-800 mb-2">מעבר מ-String ל-De Bruijn Index</h3>
+            <ul class="list-disc list-inside space-y-3 text-slate-800 font-semibold pr-4">
+                <li>
+                    <strong>זמן התרגום הסטטי (translator.scm):</strong> קומפיילר מקדים הרץ מול סביבת דמה (<code>Senv</code> ששומרת רק שמות). הוא מסלק שמות משתנים לחלוטין וממיר אותם לאינדקס מספרי (מרחק ממוקד ההגדרה). 
+                    <span class="block text-sm font-normal text-slate-600 mt-1">שימו לב: הערכים עצמם (כמו מספרים) לא נמחקים בתרגום וחייבים להישאר עטופים בעץ ה-AST החדש כ-<code>(const-exp)</code>.</span>
+                </li>
+                <li>
+                    <strong>זמן הריצה היעיל (interp.scm):</strong> 
+                    הסביבה (<code>nameless-env</code>) הפכה משרשרת צמתים מסובכת ל<strong>רשימה שטוחה פשוטה</strong>. 
+                    השליפה מתבצעת מידית ב-<span dir="ltr">$O(1)$</span> (מבחינת מבנה הלוגיקה) באמצעות <code>list-ref</code>. 
+                </li>
+                <li>
+                    <strong>הקלוז'ר הרזה:</strong> פונקציה מקומפלת לא שומרת את שם הפרמטר שלה יותר! מנוע ה-<code>apply-procedure</code> פשוט לוקח את הערך ודוחף אותו לראש הרשימה השטוחה בעזרת <code>(cons val saved-env)</code>.
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="mt-16 text-center text-slate-500 font-semibold mb-8 border-t-2 border-dashed border-slate-300 pt-8">
+        בהצלחה במבחן! 🚀
+    </div>
+
+</body>
+</html>

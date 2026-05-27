@@ -1,0 +1,54 @@
+<button onclick="showTab('let-files')" id="btn-let-files" class="nav-btn active-nav">
+                    <span>🏗️ 1.1 הקבצים שיוצרים אותה</span>
+                </button>
+<button onclick="showTab('let-intro')" id="btn-let-intro" class="nav-btn">
+                    <span>📄 1.2 מבוא, דקדוק וערכים (ExpVal)</span>
+                </button>
+<button onclick="showTab('let-error')" id="btn-let-error" class="nav-btn">
+                    <span class="font-bold ml-2">M1</span> שגיאות והמרות טיפוסים (Errors)
+                </button>
+<button onclick="showTab('let-run')" id="btn-let-run" class="nav-btn">
+                    <span class="font-bold ml-2">M2</span> אתחול המפרש (Run setup)
+                </button>
+<button onclick="showTab('let-interpreter')" id="btn-let-interpreter" class="nav-btn">
+                    <span>⚙️ 1.3 המפרש ו-Multi-Let</span>
+                </button>
+<button onclick="showTab('let-maman')" id="btn-let-maman" class="nav-btn">
+                    <span>📝 1.4 ממן: המרות טיפוסים ולולאת do</span>
+                </button>
+<button onclick="showTab('proc-files')" id="btn-proc-files" class="nav-btn">
+                    <span>🏗️ 2.1 הקבצים שיוצרים אותה</span>
+                </button>
+<button onclick="showTab('proc-intro')" id="btn-proc-intro" class="nav-btn">
+                    <span>📦 2.2 פונקציות כאזרחים מסוג ראשון</span>
+                </button>
+<button onclick="showTab('proc-closure')" id="btn-proc-closure" class="nav-btn">
+                    <span>🧠 2.3 קלוז'ר וסקופ לקסיקלי מול דינמי</span>
+                </button>
+<button onclick="showTab('proc-interpreter')" id="btn-proc-interpreter" class="nav-btn">
+                    <span>🚀 2.4 מנוע ההפעלה: apply-procedure</span>
+                </button>
+<button onclick="showTab('proc-maman')" id="btn-proc-maman" class="nav-btn">
+                    <span>📝 2.5 ממן: סביבה דינמית, קארינג ורפלקציה</span>
+                </button>
+<button onclick="showTab('letrec-files')" id="btn-letrec-files" class="nav-btn">
+                    <span>🏗️ 3.1 הקבצים שיוצרים אותה</span>
+                </button>
+<button onclick="showTab('letrec-problem')" id="btn-letrec-problem" class="nav-btn">
+                    <span>❓ 3.2 פרדוקס הרקורסיה (הביצה והתרנגולת)</span>
+                </button>
+<button onclick="showTab('letrec-solution')" id="btn-letrec-solution" class="nav-btn">
+                    <span>🔁 3.3 סביבות מעגליות ורקורסיה הדדית</span>
+                </button>
+<button onclick="showTab('letrec-jit')" id="btn-letrec-jit" class="nav-btn">
+                    <span>✨ 3.4 הקסם: יצירה בזמן אמת (JIT)</span>
+                </button>
+<button onclick="showTab('lexaddr-files')" id="btn-lexaddr-files" class="nav-btn">
+                    <span>🏗️ 4.1 הקבצים שיוצרים אותה</span>
+                </button>
+<button onclick="showTab('lexaddr-intro')" id="btn-lexaddr-intro" class="nav-btn">
+                    <span>🗺️ 4.2 שפת LEXADDR ומערכת התרגום</span>
+                </button>
+<button onclick="showTab('lexaddr-interp')" id="btn-lexaddr-interp" class="nav-btn">
+                    <span>⚡ 4.3 המפרש נטול השמות (Nameless)</span>
+                </button>

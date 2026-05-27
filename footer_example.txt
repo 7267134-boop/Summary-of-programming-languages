@@ -1,0 +1,21 @@
+<div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-2">הרצת שלבים:
+                                </h5>
+                                <div class="flex gap-2 mb-4">
+                                    <button onclick="stepFuncSim()" id="btn-func-step"
+                                        class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+                                        בצע צעד (Step)
+                                    </button>
+                                    <button onclick="resetFuncSim()"
+                                        class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-lg text-xs transition-colors cursor-pointer">
+                                        איפוס
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 min-h-[100px] flex items-center justify-center">
+                                <div id="func-explain" class="text-xs text-slate-700 text-center leading-relaxed w-full">
+                                לחצו על "בצע צעד" כדי לראות את הפעלת הפונקציה על הרשימה.
+                            </div></div>
+                        </div>

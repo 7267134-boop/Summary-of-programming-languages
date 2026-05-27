@@ -122,7 +122,14 @@
                 <button onclick="showTab('let-intro')" id="btn-let-intro" class="nav-btn">
                     <span>📄 1.2 מבוא, דקדוק וערכים (ExpVal)</span>
                 </button>
-                <button onclick="showTab('let-interpreter')" id="btn-let-interpreter" class="nav-btn">
+                
+                <button onclick="showTab('let-error')" id="btn-let-error" class="nav-btn">
+                    <span>⚠️ 1.3 שגיאות והמרות טיפוסים (Errors)</span>
+                </button>
+                <button onclick="showTab('let-run')" id="btn-let-run" class="nav-btn">
+                    <span>🔧 1.4 אתחול המפרש (Run setup)</span>
+                </button>
+<button onclick="showTab('let-interpreter')" id="btn-let-interpreter" class="nav-btn">
                     <span>⚙️ 1.3 המפרש ו-Multi-Let</span>
                 </button>
                 <button onclick="showTab('let-maman')" id="btn-let-maman" class="nav-btn">
@@ -183,9 +190,8 @@
     <!-- Main Content Area -->
     <main class="flex-1 overflow-y-auto scroll-smooth bg-white relative">
         <div class="max-w-5xl mx-auto p-10 lg:p-16 pb-32">
-
             <!-- ==========================================
-                 PART 1.1: EOPL ARCHITECTURE (FILES)
+                 PART: LET-FILES
             =========================================== -->
             <div id="let-files" class="tab-content active">
                 <header class="mb-12 border-b pb-6">
@@ -276,7 +282,7 @@
             </div>
 
             <!-- ==========================================
-                 PART 1.2: LET - INTRO & GRAMMAR
+                 PART: LET-INTRO
             =========================================== -->
             <div id="let-intro" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -381,7 +387,7 @@
                                     </tr>
                                     <tr>
                                         <td class="p-3 font-bold text-slate-900 bg-slate-50/50">Expressed Values (ExpVal)</td>
-                                        <td class="p-3">מה שביטויים מחזירים כאשר הם מוערכים (evaluate) ע"י value-of.</td>
+                                        <td class="p-3">מה שביטויים מחזירים כאשר הם מוערכים (evaluate) על ידי value-of.</td>
                                         <td class="p-3 font-mono">expval?</td>
                                         <td class="p-3 font-mono text-purple-600">(num-val 5) או (bool-val #t)</td>
                                     </tr>
@@ -396,10 +402,251 @@
                         </div>
                     </div>
         
+        <!-- AST Building Workshop Simulator -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 text-slate-700">
+            <h4 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="p-1 bg-blue-100 text-blue-700 rounded-lg">🧩</span>
+                <span>סדנת בניית AST (Drag & Drop / Dropdowns)</span>
+            </h4>
+            <p class="text-xs text-slate-500 mb-4">
+                הרכיבו את עץ הביטויים (AST) המתאים עבור קוד המקור הבא: <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-[13px] font-bold text-blue-600">let x = 5 in -(x, 1)</code>.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <!-- Visual Tree Builder -->
+                <div class="space-y-4">
+                    <span class="font-bold text-xs text-slate-700 block border-b pb-1">עץ הביטויים הנבנה:</span>
+                    
+                    <div class="p-4 border border-blue-200 rounded-xl bg-blue-50/30 font-sans">
+                        <!-- Root Node -->
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="font-bold text-xs text-blue-700">צומת שורש (Root):</span>
+                            <select id="ast-slot-1" onchange="checkAstPuzzle()" class="bg-white border border-slate-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                                <option value="">בחר צומת...</option>
+                                <option value="let-exp">let-exp</option>
+                                <option value="diff-exp">diff-exp</option>
+                                <option value="const-exp">const-exp</option>
+                                <option value="var-exp">var-exp</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Let Sub-tree (Visible when slot 1 is let-exp) -->
+                        <div id="ast-let-sub" class="hidden pl-6 border-r-2 border-blue-200 mr-2 pr-4 space-y-3 mt-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-slate-500 font-mono">var (שם המשתנה):</span>
+                                <select id="ast-slot-2" onchange="checkAstPuzzle()" class="bg-white border border-slate-300 rounded px-2 py-1 text-xs outline-none">
+                                    <option value="">בחר...</option>
+                                    <option value="x">x</option>
+                                    <option value="5">5</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                            
+                            <div class="space-y-1">
+                                <span class="text-xs text-slate-500 font-mono block">exp1 (ביטוי ההשמה):</span>
+                                <select id="ast-slot-3" onchange="checkAstPuzzle()" class="bg-white border border-slate-300 rounded px-2 py-1 text-xs outline-none">
+                                    <option value="">בחר צומת...</option>
+                                    <option value="const-5">const-exp (5)</option>
+                                    <option value="const-1">const-exp (1)</option>
+                                    <option value="var-exp">var-exp (x)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <span class="text-xs text-slate-500 font-mono block">body (גוף ה-let):</span>
+                                <select id="ast-slot-4" onchange="checkAstPuzzle()" class="bg-white border border-slate-300 rounded px-2 py-1 text-xs outline-none">
+                                    <option value="">בחר צומת...</option>
+                                    <option value="let-exp">let-exp</option>
+                                    <option value="diff-exp">diff-exp</option>
+                                    <option value="const-exp">const-exp</option>
+                                    <option value="var-exp">var-exp</option>
+                                </select>
+                                
+                                <!-- Diff Sub-tree (Visible when slot 4 is diff-exp) -->
+                                <div id="ast-diff-sub" class="hidden pl-6 border-r-2 border-purple-200 mr-2 pr-4 space-y-3 mt-3">
+                                    <div>
+                                        <span class="text-xs text-slate-500 font-mono block">exp1 (אופרנד שמאל):</span>
+                                        <select id="ast-slot-5" onchange="checkAstPuzzle()" class="bg-white border border-slate-300 rounded px-2 py-1 text-xs outline-none">
+                                            <option value="">בחר צומת...</option>
+                                            <option value="var-x">var-exp (x)</option>
+                                            <option value="const-5">const-exp (5)</option>
+                                            <option value="const-1">const-exp (1)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs text-slate-500 font-mono block">exp2 (אופרנד ימין):</span>
+                                        <select id="ast-slot-6" onchange="checkAstPuzzle()" class="bg-white border border-slate-300 rounded px-2 py-1 text-xs outline-none">
+                                            <option value="">בחר צומת...</option>
+                                            <option value="var-x">var-exp (x)</option>
+                                            <option value="const-5">const-exp (5)</option>
+                                            <option value="const-1">const-exp (1)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feedback & Output -->
+                <div class="flex flex-col justify-between p-4 bg-slate-900 text-white rounded-xl font-mono text-xs">
+                    <div>
+                        <span class="text-slate-400 font-bold block mb-2">Scheme AST Output:</span>
+                        <div id="ast-output-code" class="text-slate-300 font-bold p-3 bg-black/40 rounded-lg min-h-[60px] flex items-center">
+                            ממתין להרכבת השורש...
+                        </div>
+                    </div>
+                    
+                    <div id="ast-feedback" class="mt-4 p-3 rounded-lg bg-slate-800 text-slate-300 flex items-center gap-2">
+                        <span>💡 בחר את צומת השורש הנכון כדי להתחיל בבנייה.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
 
             <!-- ==========================================
-                 PART 1.3: LET - INTERPRETER & MULTI-LET
+                 PART: LET-ERROR
+            =========================================== -->
+            <div id="let-error" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">מפרש ה-LET</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">טיפול בשגיאות זמן ריצה: <span class="text-red-600">expval->num</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">אחת החובות המרכזיות של כל מפרש היא להבטיח שפעולות מתבצעות רק על טיפוסים חוקיים (Type Checking בזמן ריצה).</p>
+                </header>
+                
+                <h3 class="text-3xl font-bold text-slate-800 mb-6 border-r-4 border-red-500 pr-4">פונקציות חילוץ והגנה (Extractors)</h3>
+                <p class="text-lg text-slate-700 mb-4">
+                    כאשר אנחנו עוטפים ערך רגיל (DenVal) למבנה של <code>ExpVal</code> (למשל, הפיכת 5 ל-<code>num-val(5)</code>), עלינו לפרק אותו חזרה לפני ביצוע פעולה מתמטית כמו חיבור. אם הערך אינו מספר - נרצה להפסיק את הריצה ולזרוק שגיאה מפורשת. הקובץ המטפל בכך הוא לרוב <code>data-structures.scm</code> או סקריפט ייעודי של אובייקטי שגיאה.
+                </p>
+                <div class="bg-[#1e293b] rounded-xl p-6 shadow-xl mb-8">
+                    <pre><code class="language-scheme">;; expval->num : ExpVal -> Int
+;; Extracts the number from a num-val, or reports an error.
+(define expval->num
+  (lambda (v)
+    (cases expval v
+      (num-val (num) num)
+      (else (expval-extractor-error 'num v)))))
+
+(define expval-extractor-error
+  (lambda (variant value)
+    (eopl:error 'expval-extractors 
+                "Looking for a ~s, found ~s" variant value)))</code></pre>
+                </div>
+                <div class="tip-box">
+                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 דגש למבחן (מנגנון Type-Safety דינמי)</h4>
+                    <p class="text-slate-700">בזמן בניית שפה, חובה להשתמש ב-<code>expval->num</code> במקום סתם לחלץ. זה מגן על המפרש מקריסה במקרה של תוכנית כמו: <code>+(5, zero?(0))</code> בה מנסים לחבר מספר עם בוליאני.</p>
+                </div>
+
+        <!-- Debugging Lab Simulator -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 text-slate-700">
+            <h4 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="p-1 bg-red-100 text-red-700 rounded-lg">⚠️</span>
+                <span>מעבדת הדיבאגינג: תפוס את השגיאה (Type Safety)</span>
+            </h4>
+            <p class="text-xs text-slate-500 mb-4">
+                נסו להריץ את ביטוי המקור הבא המבצע חיסור בין מספר לבוליאני: <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-[13px] font-bold text-red-600">let x = 5 in let y = zero?(0) in -(x, y)</code>.
+            </p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Editor & Options -->
+                <div class="bg-slate-900 text-slate-200 p-5 rounded-xl font-mono text-xs space-y-4">
+                    <div>
+                        <span class="text-slate-400 font-bold block mb-2 border-b border-slate-800 pb-1">interp.scm (diff-exp case):</span>
+                        <div class="space-y-1 text-slate-300">
+                            <div>(diff-exp (exp1 exp2)</div>
+                            <div class="pl-4">(let ((val1 (value-of exp1 env))</div>
+                            <div class="pl-8">(val2 (value-of exp2 env)))</div>
+                            <div class="pl-6 flex items-center gap-1.5 flex-wrap my-1.5 font-mono">
+                                <span>(let ((num1</span>
+                                <select id="debug-extractor-1" onchange="runDebugLab()" class="bg-slate-800 border border-slate-700 text-white rounded px-1.5 py-0.5 text-xs outline-none">
+                                    <option value="raw">val1</option>
+                                    <option value="num">(expval->num val1)</option>
+                                    <option value="bool">(expval->bool val1)</option>
+                                </select>
+                                <span>)</span>
+                            </div>
+                            <div class="pl-12 flex items-center gap-1.5 flex-wrap my-1.5 font-mono">
+                                <span>(num2</span>
+                                <select id="debug-extractor-2" onchange="runDebugLab()" class="bg-slate-800 border border-slate-700 text-white rounded px-1.5 py-0.5 text-xs outline-none">
+                                    <option value="raw">val2</option>
+                                    <option value="num">(expval->num val2)</option>
+                                    <option value="bool">(expval->bool val2)</option>
+                                </select>
+                                <span>))</span>
+                            </div>
+                            <div class="pl-8">(num-val (- num1 num2)))))</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center pt-2">
+                        <button onclick="runDebugLab()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded transition-colors cursor-pointer text-[11px]">
+                            הרץ תוכנית (Run)
+                        </button>
+                        <span class="text-[10px] text-slate-400">הפעילו עם חילוצים מתאימים או ללא חילוצים כלל.</span>
+                    </div>
+                </div>
+                
+                <!-- Monitor Screen -->
+                <div id="debug-monitor" class="rounded-xl p-5 font-mono text-xs flex flex-col justify-between min-h-[180px] bg-slate-950 text-emerald-400 border border-slate-800">
+                    <div>
+                        <span class="text-slate-500 font-bold block mb-2">Interpreter Output Console:</span>
+                        <div id="debug-console" class="whitespace-pre-wrap leading-relaxed">
+System idle. Press "Run" to evaluate the program.
+                        </div>
+                    </div>
+                    
+                    <div id="debug-status-badge" class="mt-4 p-2 rounded text-center font-bold bg-slate-900 text-slate-400">
+                        STATUS: IDLE
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+
+            <!-- ==========================================
+                 PART: LET-RUN
+            =========================================== -->
+            <div id="let-run" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">מעטפת המפרש</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">אתחול המפרש: <span class="text-blue-600">run & value-of-program</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">פונקציית <code>value-of</code> תמיד מצפה לקבל AST (העץ המנותח) וסביבה (Environment). אבל איך זה קורה בפועל מהרגע שהזנו טקסט?</p>
+                </header>
+
+                <h3 class="text-3xl font-bold text-slate-800 mb-6 border-r-4 border-blue-500 pr-4">הפונקציה העליונה - run</h3>
+                <p class="text-lg text-slate-700 mb-4">
+                    הפונקציה <code>run</code> משמשת כנקודת הכניסה (Entry point) למפרש כולו. היא מקבלת מחרוזת, מפעילה את הלקסר והפארסר (`scan&parse`) ומוסרת את ה-AST (מסוג Program) ל-<code>value-of-program</code>.
+                </p>
+                <div class="bg-[#1e293b] rounded-xl p-6 shadow-xl mb-8">
+                    <pre><code class="language-scheme">(define run
+  (lambda (string)
+    (value-of-program (scan&parse string))))</code></pre>
+                </div>
+
+                <h3 class="text-3xl font-bold text-slate-800 mb-6 border-r-4 border-emerald-500 pr-4">אתחול הסביבה - value-of-program</h3>
+                <p class="text-lg text-slate-700 mb-4">
+                    תוכנית שלמה (A-Program) מכילה בתוכה ביטוי אחד. התפקיד של <code>value-of-program</code> הוא לחלץ את הביטוי (Exp) מהתוכנית ולקרוא ל-<code>value-of</code>, תוך הזרקת <strong>הסביבה ההתחלתית (Initial Environment)</strong>.
+                </p>
+                <div class="bg-[#1e293b] rounded-xl p-6 shadow-xl mb-8">
+                    <pre><code class="language-scheme">(define value-of-program 
+  (lambda (pgm)
+    (cases program pgm
+      (a-program (exp1)
+        (value-of exp1 (init-env))))))
+
+;; init-env sets up initial bindings like x=10, v=5, i=1
+(define init-env 
+  (lambda ()
+    (extend-env 'i (num-val 1)
+      (extend-env 'v (num-val 5)
+        (extend-env 'x (num-val 10)
+          (empty-env))))))</code></pre>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 PART: LET-INTERPRETER
             =========================================== -->
             <div id="let-interpreter" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -501,10 +748,35 @@
                         </div>
                     </div>
 
+        <!-- Value-of Logic Puzzle Simulator -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 text-slate-700">
+            <h4 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="p-1 bg-purple-100 text-purple-700 rounded-lg">🧩</span>
+                <span>פאזל הלוגיקה של value-of (סידור שורות קוד)</span>
+            </h4>
+            <p class="text-xs text-slate-500 mb-4">
+                סדרו את השורות של פונקציית <code class="font-mono text-blue-600">value-of</code> עבור מקרה ה-<code>let-exp</code> בסדר הנכון בעזרת החצים, ולחצו על "בדוק פתרון".
+            </p>
+            
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div id="val-scrambled-list" class="space-y-2 mb-4">
+                    <!-- Lines will be dynamically generated and rendered here -->
+                </div>
+                
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <button onclick="checkValPuzzle()" class="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer">
+                        בדוק פתרון (Check)
+                    </button>
+                    <div id="val-puzzle-feedback" class="text-xs font-bold text-slate-500">
+                        סדרו את השורות ובדקו את הפתרון.
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
 
-                        <!-- ==========================================
-                 PART 1.4: LET - MAMAN
+            <!-- ==========================================
+                 PART: LET-MAMAN
             =========================================== -->
             <div id="let-maman" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -742,7 +1014,7 @@
 </div>
 
             <!-- ==========================================
-                 PART 2.1: PROC - FILES
+                 PART: PROC-FILES
             =========================================== -->
             <div id="proc-files" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -826,7 +1098,7 @@
 </div>
 
             <!-- ==========================================
-                 PART 2.2: PROC - INTRO
+                 PART: PROC-INTRO
             =========================================== -->
             <div id="proc-intro" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -934,7 +1206,7 @@ in
 </div>
 
             <!-- ==========================================
-                 PART 2.3: PROC - CLOSURES & SCOPING
+                 PART: PROC-CLOSURE
             =========================================== -->
             <div id="proc-closure" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -1034,7 +1306,7 @@ in let f = proc (z) -(z, x)  <span class="token-comment">% הפונקציה מש
             </div>
 
             <!-- ==========================================
-                 PART 2.4: PROC - INTERPRETER & MULTI-ARG
+                 PART: PROC-INTERPRETER
             =========================================== -->
             <div id="proc-interpreter" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -1137,11 +1409,73 @@ in let f = proc (z) -(z, x)  <span class="token-comment">% הפונקציה מש
                         </div>
                     </div>
 
+        <!-- Environment Router Simulator -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 text-slate-700">
+            <h4 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="p-1 bg-green-100 text-green-700 rounded-lg">🔄</span>
+                <span>מנתב הסביבות (Environment Router) - ריבוי פרמטרים</span>
+            </h4>
+            <p class="text-xs text-slate-500 mb-4">
+                השלימו את פונקציית <code class="font-mono text-blue-600">apply-procedure</code> לתמיכה בריבוי משתנים (Multi-Args), כדי ללמוד כיצד ממופות רשימות הערכים לסביבה השמורה.
+            </p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <!-- Code Snippet with Slot -->
+                <div class="bg-slate-900 text-slate-200 p-5 rounded-xl font-mono text-xs">
+                    <span class="text-slate-400 font-bold block mb-2 border-b border-slate-800 pb-1">interp.scm:</span>
+                    <div class="space-y-1 text-slate-300">
+                        <div>(define apply-procedure</div>
+                        <div class="pl-4">(lambda (proc1 vals)</div>
+                        <div class="pl-8">(cases proc proc1</div>
+                        <div class="pl-12">(procedure (vars body saved-env)</div>
+                        <div class="pl-16 flex items-center gap-1.5 flex-wrap my-2 font-mono">
+                            <span>(value-of body</span>
+                            <select id="router-select-slot" onchange="checkRouterPuzzle()" class="bg-slate-800 border border-slate-700 text-white rounded px-2 py-0.5 text-xs outline-none">
+                                <option value="">בחר מימוש...</option>
+                                <option value="single">(extend-env vars vals saved-env)</option>
+                                <option value="correct">(extend-env* vars vals saved-env)</option>
+                                <option value="eval-inside">(extend-env* vars (map (lambda (exp) (value-of exp env)) vals) saved-env)</option>
+                            </select>
+                            <span>)</span>
+                        </div>
+                        <div class="pl-12">))))</div>
+                    </div>
+                </div>
+                
+                <!-- Router Visualization -->
+                <div class="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                    <div>
+                        <span class="font-bold text-xs text-slate-700 block mb-3 border-b pb-1">מפת מיפוי פרמטרים (Environment Map):</span>
+                        <div class="flex flex-col gap-3">
+                            <!-- Variables List -->
+                            <div class="flex items-center justify-between text-xs font-mono p-2 bg-slate-50 border rounded-lg">
+                                <span class="font-bold text-slate-500">vars (רשימת משתנים):</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">'("x" "y" "z")</span>
+                            </div>
+                            <!-- Router Arrow Animation Zone -->
+                            <div class="flex justify-around items-center py-2 relative">
+                                <div id="router-anim-box" class="flex flex-col items-center justify-center w-full min-h-[60px] border border-dashed border-slate-300 rounded bg-slate-50 text-slate-400 text-xs italic">
+                                    בחר מימוש בקוד משמאל כדי להפעיל את הנתב
+                                </div>
+                            </div>
+                            <!-- Values List -->
+                            <div class="flex items-center justify-between text-xs font-mono p-2 bg-slate-50 border rounded-lg">
+                                <span class="font-bold text-slate-500">vals (רשימת ערכים):</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">'(num-val(10) num-val(20) num-val(30))</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="router-feedback" class="mt-4 p-2 rounded text-center text-xs font-bold bg-slate-100 text-slate-600">
+                        ממתין להשלמת הקוד...
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
 
-
             <!-- ==========================================
-                 PART 2.5: PROC - MAMAN
+                 PART: PROC-MAMAN
             =========================================== -->
             <div id="proc-maman" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -1454,7 +1788,7 @@ in let p = proc (w) -(w,a)
 </div>
 
             <!-- ==========================================
-                 PART 3.1: LETREC - FILES
+                 PART: LETREC-FILES
             =========================================== -->
             <div id="letrec-files" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -1533,7 +1867,7 @@ in let p = proc (w) -(w,a)
 </div>
 
             <!-- ==========================================
-                 PART 3.2: LETREC - THE PROBLEM
+                 PART: LETREC-PROBLEM
             =========================================== -->
             <div id="letrec-problem" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -1606,7 +1940,7 @@ in
 </div>
 
             <!-- ==========================================
-                 PART 3.3: LETREC - SOLUTION & MUTUAL RECURSION
+                 PART: LETREC-SOLUTION
             =========================================== -->
             <div id="letrec-solution" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -1713,10 +2047,64 @@ in
                         </div>
                     </div>
                 </div>
+
+        <!-- Mutual Recursion Simulator -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 text-slate-700">
+            <h4 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="p-1 bg-purple-100 text-purple-700 rounded-lg">🔁</span>
+                <span>מכונת הסריקה של הרשימות המקבילות (Mutual Recursion)</span>
+            </h4>
+            <p class="text-xs text-slate-500 mb-4">
+                הדמיה של מנוע הרקורסיה ההדדית של <code>letrec</code>. עקבו אחר מציאת הפונקציה <code class="font-mono text-blue-600">odd?</code> מתוך 3 רשימות מקבילות ברגע ביצוע החיפוש בסביבה: <code class="font-mono text-blue-600">(apply-env env 'odd?)</code>.
+            </p>
+            
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4 font-sans">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Column 1: p-names -->
+                    <div class="bg-white border rounded-xl p-3 shadow-sm">
+                        <span class="font-bold text-xs text-slate-500 block mb-2 border-b pb-1 font-mono">p-names (רשימת השמות):</span>
+                        <div class="space-y-1.5">
+                            <div id="mrec-name-0" class="p-2 border rounded font-mono text-xs text-center transition-colors">0: "even?"</div>
+                            <div id="mrec-name-1" class="p-2 border rounded font-mono text-xs text-center transition-colors">1: "odd?"</div>
+                        </div>
+                    </div>
+                    <!-- Column 2: b-vars -->
+                    <div class="bg-white border rounded-xl p-3 shadow-sm">
+                        <span class="font-bold text-xs text-slate-500 block mb-2 border-b pb-1 font-mono">b-vars (רשימת הפרמטרים):</span>
+                        <div class="space-y-1.5">
+                            <div id="mrec-var-0" class="p-2 border rounded font-mono text-xs text-center transition-colors">0: "x"</div>
+                            <div id="mrec-var-1" class="p-2 border rounded font-mono text-xs text-center transition-colors">1: "x"</div>
+                        </div>
+                    </div>
+                    <!-- Column 3: p-bodies -->
+                    <div class="bg-white border rounded-xl p-3 shadow-sm">
+                        <span class="font-bold text-xs text-slate-500 block mb-2 border-b pb-1 font-mono">p-bodies (גופי הפונקציות):</span>
+                        <div class="space-y-1.5">
+                            <div id="mrec-body-0" class="p-2 border rounded font-mono text-[10px] text-center transition-colors truncate" title="(if (zero? x) true (odd? (- x 1)))">0: (if (zero? x) true...)</div>
+                            <div id="mrec-body-1" class="p-2 border rounded font-mono text-[10px] text-center transition-colors truncate" title="(if (zero? x) false (even? (- x 1)))">1: (if (zero? x) false...)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-900 text-white p-3 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <button id="btn-mrec-step" onclick="stepMrecSim()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-bold transition-colors cursor-pointer">
+                            בצע צעד (Step)
+                        </button>
+                        <button onclick="resetMrecSim()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs font-bold transition-colors cursor-pointer">
+                            איפוס (Reset)
+                        </button>
+                    </div>
+                    <div id="mrec-feedback" class="text-xs text-slate-300 leading-relaxed text-right">
+                        לחצו "בצע צעד" כדי להתחיל את החיפוש הדינמי.
+                    </div>
+                </div>
+            </div>
+        </div>
             </div>
 
             <!-- ==========================================
-                 PART 3.4: LETREC - JIT & APPLY-ENV
+                 PART: LETREC-JIT
             =========================================== -->
             <div id="letrec-jit" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -1818,10 +2206,63 @@ in
                     </div>
                 </div>
         
+        <!-- JIT Puzzle Simulator -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 text-slate-700 font-sans">
+            <h4 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="p-1 bg-purple-100 text-purple-700 rounded-lg">✨</span>
+                <span>השלמת קוד תנאי העצירה - The JIT Puzzle</span>
+            </h4>
+            <p class="text-xs text-slate-500 mb-4">
+                הבדל קריטי במפרש LETREC הוא השימוש בסביבה הנכונה לקלוז'ר מול הסביבה שבה ממשיכים את החיפוש. השלימו את הקוד ולחצו "בדוק פתרון".
+            </p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <!-- Interactive Code Block -->
+                <div class="bg-slate-900 text-slate-200 p-5 rounded-xl font-mono text-xs">
+                    <span class="text-slate-400 font-bold block mb-2 border-b border-slate-800 pb-1">environments.scm (extend-env-rec case):</span>
+                    <div class="space-y-1 text-slate-300">
+                        <div>(extend-env-rec (p-name b-var p-body saved-env)</div>
+                        <div class="pl-4">(if (eqv? search-var p-name)</div>
+                        <div class="pl-8 flex items-center gap-1.5 flex-wrap my-1.5 font-mono">
+                            <span>(proc-val (procedure b-var p-body</span>
+                            <select id="jit-select-slot-1" onchange="runJitPuzzle()" class="bg-slate-800 border border-slate-700 text-white rounded px-1.5 py-0.5 text-xs outline-none">
+                                <option value="">בחר...</option>
+                                <option value="env">env</option>
+                                <option value="saved-env">saved-env</option>
+                            </select>
+                            <span>))</span>
+                        </div>
+                        <div class="pl-8 flex items-center gap-1.5 flex-wrap my-1.5 font-mono">
+                            <span>(apply-env</span>
+                            <select id="jit-select-slot-2" onchange="runJitPuzzle()" class="bg-slate-800 border border-slate-700 text-white rounded px-1.5 py-0.5 text-xs outline-none">
+                                <option value="">בחר...</option>
+                                <option value="env">env</option>
+                                <option value="saved-env">saved-env</option>
+                            </select>
+                            <span>search-var)))</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feedback & Interactive Output Console -->
+                <div class="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                    <div>
+                        <span class="font-bold text-xs text-slate-700 block mb-2 border-b pb-1">פלט הדמיית ההרצה (Simulation Output):</span>
+                        <div id="jit-console" class="text-xs font-mono p-3 bg-slate-950 text-emerald-400 rounded-lg min-h-[80px] whitespace-pre-wrap">
+Select options to test the recursive lookup environment rules.
+                        </div>
+                    </div>
+                    
+                    <div id="jit-feedback-text" class="mt-4 p-2.5 rounded text-center text-xs font-bold bg-slate-100 text-slate-600">
+                        בחר בשתי התיבות כדי להפעיל את הבדיקה.
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
 
             <!-- ==========================================
-                 PART 4.1: LEXADDR - FILES
+                 PART: LEXADDR-FILES
             =========================================== -->
             <div id="lexaddr-files" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -1927,7 +2368,7 @@ in
 </div>
 
             <!-- ==========================================
-                 PART 4.2: LEXICAL ADDRESSES (INTRO)
+                 PART: LEXADDR-INTRO
             =========================================== -->
             <div id="lexaddr-intro" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -2053,7 +2494,7 @@ let x = 3 in let y = 4 in -(x, y)
             </div>
 
             <!-- ==========================================
-                 PART 4.3: LEXADDR - NAMELESS INTERPRETER
+                 PART: LEXADDR-INTERP
             =========================================== -->
             <div id="lexaddr-interp" class="tab-content">
                 <header class="mb-12 border-b pb-6">
@@ -2153,7 +2594,7 @@ let x = 3 in let y = 4 in -(x, y)
                                 <tr>
                                     <td class="p-3 font-bold text-slate-900 bg-slate-50/50">סיבוכיות שליפת משתנה</td>
                                     <td class="p-3 text-red-600 font-bold">$O(d)$ - מעבר סדרתי והשוואת מחרוזות מפתח</td>
-                                    <td class="p-3 text-emerald-600 font-bold">$O(1)$ - גישה ישירה ע"י <code>list-ref</code> באינדקס קבוע</td>
+                                    <td class="p-3 text-emerald-600 font-bold">$O(1)$ - גישה ישירה על ידי <code>list-ref</code> באינדקס קבוע</td>
                                 </tr>
                                 <tr>
                                     <td class="p-3 font-bold text-slate-900 bg-slate-50/50">שמירת שמות במשתנים</td>
@@ -2170,9 +2611,60 @@ let x = 3 in let y = 4 in -(x, y)
                     </div>
                 </div>
         
-</div>
-
+        <!-- Named vs Nameless Execution Race Simulator -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 text-slate-700 font-sans">
+            <h4 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="p-1 bg-red-100 text-red-700 rounded-lg">⚡</span>
+                <span>מרוץ הריצה: מפרש מילולי (Named) מול מפרש נטול שמות (Nameless)</span>
+            </h4>
+            <p class="text-xs text-slate-500 mb-4">
+                השוו את סיבוכיות החיפוש הלקסיקלי. המטרה היא לגשת למשתנה <code class="font-mono text-blue-600">x1</code> המוגדר בעומק של 10 רמות מקוננות של let.
+            </p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-slate-900 text-white p-4 rounded-xl border border-slate-800 font-sans">
+                <!-- Left Screen: Named Interpreter -->
+                <div class="bg-black/30 p-4 rounded-lg border border-slate-800 flex flex-col justify-between min-h-[220px]">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+                            <span class="font-bold text-xs text-blue-400">Named Interpreter (מבוסס שמות)</span>
+                            <span id="race-named-steps" class="font-mono text-[10px] text-slate-400">שלבים: 0</span>
+                        </div>
+                        <div id="race-named-console" class="text-[11px] font-mono whitespace-pre-wrap leading-relaxed min-h-[110px] text-slate-300">
+מוכן להרצה...
+                        </div>
+                    </div>
+                    <div id="race-named-stats" class="text-[10px] text-slate-400 border-t border-slate-800 pt-2 text-left font-mono">
+                        סיבוכיות: O(N) | lookup operations
+                    </div>
+                </div>
+                
+                <!-- Right Screen: Nameless Interpreter -->
+                <div class="bg-black/30 p-4 rounded-lg border border-slate-800 flex flex-col justify-between min-h-[220px]">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+                            <span class="font-bold text-xs text-emerald-400">Nameless Interpreter (נטול שמות)</span>
+                            <span id="race-nameless-steps" class="font-mono text-[10px] text-slate-400">שלבים: 0</span>
+                        </div>
+                        <div id="race-nameless-console" class="text-[11px] font-mono whitespace-pre-wrap leading-relaxed min-h-[110px] text-slate-300">
+מוכן להרצה...
+                        </div>
+                    </div>
+                    <div id="race-nameless-stats" class="text-[10px] text-slate-400 border-t border-slate-800 pt-2 text-left font-mono">
+                        סיבוכיות: O(1) | array lookup index
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 flex justify-between items-center">
+                <button id="btn-race-run" onclick="runRace()" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg text-xs transition-colors cursor-pointer shadow-md">
+                    הרץ מרוץ! (Start Race)
+                </button>
+                <div id="race-winner-banner" class="text-xs font-bold text-slate-500">
+                    לחצו על לחצן ההרצה כדי לראות את ההבדל בביצועים.
+                </div>
+            </div>
         </div>
+</div></div>
     </main>
 
     <script>
@@ -2561,8 +3053,718 @@ let x = 3 in let y = 4 in -(x, y)
                 }
             }
         }
-    </script>
-    <script>
+        // --- Simulator 1: AST Building Workshop JS Logic ---
+        function renderVisualAstTree(slot1, slot2, slot3, slot4, slot5, slot6) {
+            const container = document.getElementById('ast-visual-tree');
+            if (!container) return;
+
+            if (!slot1) {
+                container.innerHTML = `<span class="text-slate-500 italic text-[11px] text-center">התחילו לבחור צמתים כדי לצייר את העץ...</span>`;
+                return;
+            }
+
+            let svgContent = `<svg width="100%" height="160" viewBox="0 0 320 160" fill="none" class="max-w-xs mx-auto transition-all duration-500">`;
+            svgContent += `
+                <defs>
+                    <marker id="arrow-ast" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" />
+                    </marker>
+                </defs>
+            `;
+
+            // Draw root node
+            svgContent += `
+                <g class="transition-all duration-300">
+                    <rect x="110" y="10" width="100" height="24" rx="5" fill="${slot1 === 'let-exp' ? '#1d4ed8' : '#ef4444'}" stroke="#3b82f6" stroke-width="1.5" />
+                    <text x="160" y="25" fill="white" font-size="9" font-weight="bold" text-anchor="middle" font-family="monospace">${slot1}</text>
+                </g>
+            `;
+
+            if (slot1 === 'let-exp') {
+                svgContent += `<line x1="160" y1="34" x2="60" y2="65" stroke="#94a3b8" stroke-width="1.5" />`;
+                svgContent += `<line x1="160" y1="34" x2="160" y2="65" stroke="#94a3b8" stroke-width="1.5" />`;
+                svgContent += `<line x1="160" y1="34" x2="260" y2="65" stroke="#94a3b8" stroke-width="1.5" />`;
+
+                // Child 1: var
+                let varLabel = slot2 ? `x` : '?';
+                svgContent += `
+                    <g>
+                        <rect x="25" y="65" width="70" height="22" rx="4" fill="#3b82f6" fill-opacity="0.2" stroke="#60a5fa" stroke-dasharray="${slot2 ? '' : '3 3'}" stroke-width="1" />
+                        <text x="60" y="79" fill="#93c5fd" font-size="8" text-anchor="middle" font-family="monospace">var: ${varLabel}</text>
+                    </g>
+                `;
+
+                // Child 2: exp1
+                let exp1Label = slot3 ? (slot3 === 'const-5' ? 'const(5)' : (slot3 === 'const-1' ? 'const(1)' : 'var(x)')) : 'exp1: ?';
+                svgContent += `
+                    <g>
+                        <rect x="115" y="65" width="90" height="22" rx="4" fill="${slot3 === 'const-5' ? '#10b981' : (slot3 ? '#ef4444' : '#334155')}" stroke="${slot3 === 'const-5' ? '#34d399' : '#475569'}" stroke-dasharray="${slot3 ? '' : '3 3'}" stroke-width="1" />
+                        <text x="160" y="79" fill="white" font-size="8" text-anchor="middle" font-family="monospace">${exp1Label}</text>
+                    </g>
+                `;
+
+                // Child 3: body
+                let bodyLabel = slot4 ? (slot4 === 'diff-exp' ? 'diff-exp' : slot4) : 'body: ?';
+                svgContent += `
+                    <g>
+                        <rect x="215" y="65" width="90" height="22" rx="4" fill="${slot4 === 'diff-exp' ? '#8b5cf6' : (slot4 ? '#ef4444' : '#334155')}" stroke="${slot4 === 'diff-exp' ? '#a78bfa' : '#475569'}" stroke-dasharray="${slot4 ? '' : '3 3'}" stroke-width="1" />
+                        <text x="260" y="79" fill="white" font-size="8" text-anchor="middle" font-family="monospace">${bodyLabel}</text>
+                    </g>
+                `;
+
+                if (slot4 === 'diff-exp') {
+                    svgContent += `<line x1="260" y1="87" x2="220" y2="120" stroke="#94a3b8" stroke-width="1.5" />`;
+                    svgContent += `<line x1="260" y1="87" x2="300" y2="120" stroke="#94a3b8" stroke-width="1.5" />`;
+
+                    // Left Operand
+                    let leftLabel = slot5 ? (slot5 === 'var-x' ? 'var(x)' : (slot5 === 'const-5' ? 'const(5)' : 'const(1)')) : '?';
+                    svgContent += `
+                        <g>
+                            <rect x="185" y="120" width="70" height="22" rx="4" fill="${slot5 === 'var-x' ? '#10b981' : (slot5 ? '#ef4444' : '#334155')}" stroke="${slot5 === 'var-x' ? '#34d399' : '#475569'}" stroke-dasharray="${slot5 ? '' : '3 3'}" stroke-width="1" />
+                            <text x="220" y="134" fill="white" font-size="8" text-anchor="middle" font-family="monospace">${leftLabel}</text>
+                        </g>
+                    `;
+
+                    // Right Operand
+                    let rightLabel = slot6 ? (slot6 === 'const-1' ? 'const(1)' : (slot6 === 'var-x' ? 'var(x)' : 'const(5)')) : '?';
+                    svgContent += `
+                        <g>
+                            <rect x="265" y="120" width="70" height="22" rx="4" fill="${slot6 === 'const-1' ? '#10b981' : (slot6 ? '#ef4444' : '#334155')}" stroke="${slot6 === 'const-1' ? '#34d399' : '#475569'}" stroke-dasharray="${slot6 ? '' : '3 3'}" stroke-width="1" />
+                            <text x="300" y="134" fill="white" font-size="8" text-anchor="middle" font-family="monospace">${rightLabel}</text>
+                        </g>
+                    `;
+                }
+            }
+
+            const isCorrect = (slot1 === 'let-exp' && slot2 === 'x' && slot3 === 'const-5' && slot4 === 'diff-exp' && slot5 === 'var-x' && slot6 === 'const-1');
+            if (isCorrect) {
+                svgContent += `
+                    <path d="M 160 34 L 160 60" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-ast)">
+                        <animate attributeName="stroke-dashoffset" values="10;0" dur="1s" repeatCount="indefinite" />
+                    </path>
+                    <path d="M 260 87 L 225 115" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-ast)">
+                        <animate attributeName="stroke-dashoffset" values="10;0" dur="1s" repeatCount="indefinite" />
+                    </path>
+                `;
+            }
+
+            svgContent += `</svg>`;
+            container.innerHTML = svgContent;
+        }
+
+        function checkAstPuzzle() {
+            const slot1 = document.getElementById('ast-slot-1').value;
+            const slot2 = document.getElementById('ast-slot-2').value;
+            const slot3 = document.getElementById('ast-slot-3').value;
+            const slot4 = document.getElementById('ast-slot-4').value;
+            const slot5 = document.getElementById('ast-slot-5').value;
+            const slot6 = document.getElementById('ast-slot-6').value;
+            
+            const letSub = document.getElementById('ast-let-sub');
+            const diffSub = document.getElementById('ast-diff-sub');
+            const output = document.getElementById('ast-output-code');
+            const feedback = document.getElementById('ast-feedback');
+            
+            renderVisualAstTree(slot1, slot2, slot3, slot4, slot5, slot6);
+
+            // Toggle visibility of let-exp subtree
+            if (slot1 === 'let-exp') {
+                letSub.classList.remove('hidden');
+            } else {
+                letSub.classList.add('hidden');
+                diffSub.classList.add('hidden');
+                output.textContent = slot1 ? `(${slot1} ...)` : "ממתין להרכבת השורש...";
+                feedback.innerHTML = "💡 צומת השורש let-exp נכון! כעת השלימו את הפרמטרים שלו.";
+                feedback.className = "mt-4 p-3 rounded-lg bg-blue-50 text-blue-700 flex items-center gap-2";
+                if (slot1 && slot1 !== 'let-exp') {
+                    feedback.innerHTML = "❌ שגיאה תחבירית! הביטוי הכולל מתחיל ב-let ולכן השורש חייב להיות let-exp.";
+                    feedback.className = "mt-4 p-3 rounded-lg bg-red-50 text-red-700 flex items-center gap-2";
+                }
+                return;
+            }
+            
+            // Toggle visibility of diff-exp subtree
+            if (slot4 === 'diff-exp') {
+                diffSub.classList.remove('hidden');
+            } else {
+                diffSub.classList.add('hidden');
+            }
+            
+            // Construct AST Representation
+            let varText = slot2 ? `'${slot2}` : "?";
+            let exp1Text = "?";
+            if (slot3 === 'const-5') exp1Text = "(const-exp 5)";
+            else if (slot3 === 'const-1') exp1Text = "(const-exp 1)";
+            else if (slot3 === 'var-exp') exp1Text = "(var-exp 'x)";
+            
+            let bodyText = "?";
+            if (slot4 === 'let-exp') bodyText = "(let-exp ...)";
+            else if (slot4 === 'const-exp') bodyText = "(const-exp ...)";
+            else if (slot4 === 'var-exp') bodyText = "(var-exp ...)";
+            else if (slot4 === 'diff-exp') {
+                let d1 = slot5 === 'var-x' ? "(var-exp 'x)" : (slot5 === 'const-5' ? "(const-exp 5)" : (slot5 === 'const-1' ? "(const-exp 1)" : "?"));
+                let d2 = slot6 === 'var-x' ? "(var-exp 'x)" : (slot6 === 'const-5' ? "(const-exp 5)" : (slot6 === 'const-1' ? "(const-exp 1)" : "?"));
+                bodyText = `(diff-exp ${d1} ${d2})`;
+            }
+            
+            output.textContent = `(let-exp ${varText} ${exp1Text} ${bodyText})`;
+            
+            // Check Correctness
+            const isCorrect = (slot1 === 'let-exp' && slot2 === 'x' && slot3 === 'const-5' && slot4 === 'diff-exp' && slot5 === 'var-x' && slot6 === 'const-1');
+            
+            if (isCorrect) {
+                feedback.innerHTML = "🎉 מעולה! בניתם את ה-AST בצורה נכונה לחלוטין! המפרש יוכל כעת להעריך את הביטוי בהצלחה.";
+                feedback.className = "mt-4 p-3 rounded-lg bg-green-100 text-green-800 flex items-center gap-2 font-bold";
+            } else {
+                feedback.innerHTML = "💡 המשיכו להרכיב את הבלוקים של המשתנה, ערך ההשמה וגוף ה-let.";
+                feedback.className = "mt-4 p-3 rounded-lg bg-slate-800 text-slate-300 flex items-center gap-2";
+                
+                // Specific errors
+                if (slot2 && slot2 !== 'x') {
+                    feedback.innerHTML = "⚠️ שם המשתנה המוגדר הוא x, ולא ערך מספרי.";
+                    feedback.className = "mt-4 p-3 rounded-lg bg-amber-50 text-amber-700 flex items-center gap-2";
+                } else if (slot3 && slot3 !== 'const-5') {
+                    feedback.innerHTML = "⚠️ הביטוי let x = 5 משייך את המספר 5 ל-x, לכן exp1 צריך להיות const-exp (5).";
+                    feedback.className = "mt-4 p-3 rounded-lg bg-amber-50 text-amber-700 flex items-center gap-2";
+                } else if (slot4 && slot4 !== 'diff-exp') {
+                    feedback.innerHTML = "⚠️ גוף ה-let הוא פעולת חיסור -(x, 1), לכן הצומת כאן חייב להיות diff-exp.";
+                    feedback.className = "mt-4 p-3 rounded-lg bg-amber-50 text-amber-700 flex items-center gap-2";
+                } else if (slot4 === 'diff-exp' && slot5 && slot5 !== 'var-x') {
+                    feedback.innerHTML = "⚠️ באופרנד השמאלי של החיסור -(x, 1) אנו ניגשים למשתנה x, לכן עלינו להשתמש ב-var-exp (x).";
+                    feedback.className = "mt-4 p-3 rounded-lg bg-amber-50 text-amber-700 flex items-center gap-2";
+                } else if (slot4 === 'diff-exp' && slot6 && slot6 !== 'const-1') {
+                    feedback.innerHTML = "⚠️ באופרנד הימני של החיסור -(x, 1) אנו מחסירים את הקבוע 1, לכן נשתמש ב-const-exp (1).";
+                    feedback.className = "mt-4 p-3 rounded-lg bg-amber-50 text-amber-700 flex items-center gap-2";
+                }
+            }
+        }
+        
+        // --- Simulator 2: Value-of logic puzzle JS Logic ---
+        let valPuzzleLines = [
+            { id: 1, text: "(let-exp (var exp1 body)", correctIdx: 0, indent: 0 },
+            { id: 2, text: "  (let ((val1 (value-of exp1 env)))", correctIdx: 1, indent: 2 },
+            { id: 3, text: "    (value-of body", correctIdx: 2, indent: 4 },
+            { id: 4, text: "      (extend-env var val1 env))))", correctIdx: 3, indent: 6 }
+        ];
+        
+        function initValPuzzle() {
+            valPuzzleLines.sort(() => Math.random() - 0.5);
+            renderValPuzzle();
+        }
+        
+        function renderValPuzzle() {
+            const list = document.getElementById('val-scrambled-list');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            valPuzzleLines.forEach((line, idx) => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between bg-white border border-slate-200 p-2.5 rounded-lg shadow-sm font-mono text-xs text-right";
+                
+                item.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <button onclick="moveValLine(${idx}, -1)" class="p-1 rounded hover:bg-slate-200 text-slate-500 font-bold transition-colors cursor-pointer" title="הזז למעלה">▲</button>
+                        <button onclick="moveValLine(${idx}, 1)" class="p-1 rounded hover:bg-slate-200 text-slate-500 font-bold transition-colors cursor-pointer" title="הזז למטה">▼</button>
+                    </div>
+                    <div class="flex-1 text-left select-none text-slate-800 font-bold font-mono" style="padding-left: 20px; direction: ltr; white-space: pre;">${line.text}</div>
+                `;
+                list.appendChild(item);
+            });
+        }
+        
+        function moveValLine(idx, dir) {
+            const newIdx = idx + dir;
+            if (newIdx < 0 || newIdx >= valPuzzleLines.length) return;
+            
+            const temp = valPuzzleLines[idx];
+            valPuzzleLines[idx] = valPuzzleLines[newIdx];
+            valPuzzleLines[newIdx] = temp;
+            
+            renderValPuzzle();
+        }
+        
+        function checkValPuzzle() {
+            let correct = true;
+            let idxLet = -1;
+            let idxVal1 = -1;
+            let idxBody = -1;
+            let idxExtend = -1;
+
+            valPuzzleLines.forEach((line, idx) => {
+                if (line.correctIdx !== idx) {
+                    correct = false;
+                }
+                if (line.correctIdx === 0) idxLet = idx;
+                if (line.correctIdx === 1) idxVal1 = idx;
+                if (line.correctIdx === 2) idxBody = idx;
+                if (line.correctIdx === 3) idxExtend = idx;
+            });
+            
+            const feedback = document.getElementById('val-puzzle-feedback');
+            if (correct) {
+                feedback.innerHTML = "🎉 <strong>נכון מאוד! סדר השערוך מדויק:</strong><br>ראשית מפרקים את ה-let-exp, מריצים את exp1, שומרים את התוצאה ב-val1, ורק אז יוצרים סביבה מורחבת ומריצים את הגוף.";
+                feedback.className = "text-xs font-bold text-green-600 bg-green-50 p-2.5 rounded border border-green-200 leading-relaxed";
+            } else {
+                let errMsg = "❌ <strong>הסדר שגוי! זכרו את זרימת המפרש:</strong><br>";
+                if (idxVal1 < idxLet) {
+                    errMsg += "<span class='text-red-700 font-bold'>[Error] Cannot reference 'exp1' or 'env' before destructuring the let-exp AST node!</span>";
+                } else if (idxExtend < idxVal1) {
+                    errMsg += "<span class='text-red-700 font-bold'>[Crash] Variable 'val1' is uninitialized before use in extend-env!</span>";
+                } else if (idxBody < idxExtend) {
+                    errMsg += "<span class='text-red-700 font-bold'>[Crash] Variable 'x' not found in environment during body evaluation! (Missing extend-env scope)</span>";
+                } else {
+                    errMsg += "המבנה התחבירי של סוגריים וסדר השערוך (השמה, הרחבת סביבה, גוף) אינו תואם.";
+                }
+                feedback.innerHTML = errMsg;
+                feedback.className = "text-xs font-bold text-red-600 bg-red-50 p-2.5 rounded border border-red-200 leading-relaxed";
+            }
+        }
+        
+        // --- Simulator 3: Debugging Lab JS Logic ---
+        function runDebugLab() {
+            const ext1 = document.getElementById('debug-extractor-1').value;
+            const ext2 = document.getElementById('debug-extractor-2').value;
+            const consoleBox = document.getElementById('debug-console');
+            const badge = document.getElementById('debug-status-badge');
+            const monitor = document.getElementById('debug-monitor');
+            const memVisual = document.getElementById('debug-memory-visual');
+            
+            consoleBox.innerHTML = "Evaluating program...\n";
+            badge.className = "mt-4 p-2 rounded text-center font-bold bg-amber-500 text-white animate-pulse";
+            badge.textContent = "STATUS: RUNNING";
+            
+            setTimeout(() => {
+                if (ext1 === 'raw' || ext2 === 'raw') {
+                    monitor.className = "rounded-xl p-5 font-mono text-xs flex flex-col justify-between min-h-[180px] bg-red-950 text-red-200 border-2 border-red-500 shadow-lg shadow-red-900/20";
+                    badge.className = "mt-4 p-2 rounded text-center font-bold bg-red-600 text-white";
+                    badge.textContent = "STATUS: CRASHED (HOST ENGINE)";
+                    consoleBox.innerHTML = `[HOST ERROR] Scheme Racket Exception:
+contract violation
+expected: number?
+given: (bool-val #t)
+in math subtraction operation: -
+
+💥 קריסה במפרש השרת!
+מכיוון שלא חילצתם את הערכים מתוך ה-struct של expval, המפרש שלכם ניסה לחסר ישירות את המבנה struct (bool-val #t) מהמבנה struct (num-val 5) במקום לחסר מספרים ממשיים.`;
+                    
+                    memVisual.innerHTML = `
+                        <div class="flex flex-col items-center w-full">
+                            <div class="flex items-center gap-2 justify-center text-[10.5px] w-full" dir="ltr">
+                                <div class="bg-blue-950 border border-blue-500 px-2 py-1 rounded text-blue-300">num-val(5)</div>
+                                <span class="text-red-500 font-bold">─( - )─</span>
+                                <div class="bg-red-950 border border-red-500 px-2 py-1 rounded text-red-300 animate-bounce">bool-val(#t) 💥</div>
+                            </div>
+                            <div class="text-[9.5px] text-red-400 mt-2 text-center">שגיאת טיפוס פיזית: ניסיון לבצע חיסור מתמטי על Struct שלם ולא על מספר טהור!</div>
+                        </div>
+                    `;
+                } else if (ext1 === 'bool' || ext2 === 'bool') {
+                    monitor.className = "rounded-xl p-5 font-mono text-xs flex flex-col justify-between min-h-[180px] bg-red-950 text-red-200 border-2 border-red-500 shadow-lg shadow-red-900/20";
+                    badge.className = "mt-4 p-2 rounded text-center font-bold bg-red-600 text-white";
+                    badge.textContent = "STATUS: RUNTIME ERROR (MANAGED)";
+                    consoleBox.innerHTML = `[EOPL ERROR] expval->bool: Expected boolean, found (num-val 5)
+
+⚠️ שגיאת ריצה מנוהלת!
+הגדרתם חילוץ בוליאני עבור משתנה שהערך שלו הוא מספר (5). ה-extractor זרק שגיאת eopl:error מנוהלת ומנע את קריסת המנוע, אך התוכנית עדיין נכשלה כי החילוץ לא תואם.`;
+
+                    memVisual.innerHTML = `
+                        <div class="flex flex-col items-center gap-2 w-full">
+                            <div class="flex items-center gap-3 justify-center text-[10.5px]" dir="ltr">
+                                <div class="bg-blue-900 border border-blue-400 px-2 py-1 rounded text-blue-100">num-val(5)</div>
+                                <span class="text-slate-400">➔ expval-&gt;bool ➔</span>
+                                <div class="bg-red-950 border border-red-500 px-2 py-1 rounded text-red-300">💥 שגיאת התאמה!</div>
+                            </div>
+                            <div class="text-[9.5px] text-red-400 text-center mt-1">מחלץ הבוליאנים (expval-&gt;bool) מצפה למצוא תגית "bool-val" אך פגש ב-"num-val"!</div>
+                        </div>
+                    `;
+                } else {
+                    monitor.className = "rounded-xl p-5 font-mono text-xs flex flex-col justify-between min-h-[180px] bg-slate-950 text-emerald-400 border border-slate-800";
+                    badge.className = "mt-4 p-2 rounded text-center font-bold bg-green-600 text-white";
+                    badge.textContent = "STATUS: SUCCESS / SAFE RUNTIME ERROR";
+                    consoleBox.innerHTML = `[EOPL ERROR] expval->num: Looking for a number, found bool-val(bool-val #t)
+
+✅ המפרש ניצל מקריסה גולמית!
+שני החילוצים הוגדרו נכון כ-expval->num. כאשר המפרש ניגש לחסר את x=5 ו-y=bool-val(#t), הוא זיהה ש-y הוא בוליאני וזרק שגיאה לקסיקלית נקייה המדווחת ללומד שהוזן טיפוס לא נכון!`;
+
+                    memVisual.innerHTML = `
+                        <div class="flex flex-col items-center gap-3 w-full">
+                            <div class="flex items-center gap-3 justify-center text-[10.5px]" dir="ltr">
+                                <div class="bg-blue-950 border border-blue-500 px-2 py-1 rounded text-blue-300">num-val(5) ➔ 5</div>
+                                <span class="text-slate-400">─( - )─</span>
+                                <div class="bg-emerald-950 border border-emerald-500 px-2 py-1 rounded text-emerald-300">bool-val(#t) ➔ 💥 שגיאת טיפוס!</div>
+                            </div>
+                            <div class="text-[9.5px] text-emerald-400 text-center">שני הערכים חולצו בבטחה. המפרש זיהה ש-y הוא בוליאני וזרק שגיאה מנוהלת ומסודרת ללקוח במקום לקרוס!</div>
+                        </div>
+                    `;
+                }
+            }, 800);
+        }
+        
+        // --- Simulator 4: Environment Router JS Logic ---
+        function checkRouterPuzzle() {
+            const slot = document.getElementById('router-select-slot').value;
+            const animBox = document.getElementById('router-anim-box');
+            const feedback = document.getElementById('router-feedback');
+            
+            if (slot === '') {
+                animBox.innerHTML = "בחר מימוש בקוד משמאל כדי להפעיל את הנתב";
+                feedback.textContent = "ממתין להשלמת הקוד...";
+                feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-slate-100 text-slate-600";
+                return;
+            }
+            
+            if (slot === 'single') {
+                animBox.innerHTML = `
+                    <div class="text-red-500 font-bold text-xs text-center">
+                        ❌ שגיאת טיפוסים במפרש!<br>
+                        הפונקציה extend-env מצפה למשתנה יחיד וערך יחיד.<br>
+                        קלט הנתב: '("x" "y" "z") ו-'(num-val(10) num-val(20) num-val(30))
+                    </div>
+                `;
+                feedback.textContent = "שגיאה: extend-env אינו מיועד לרשימות של ארגומנטים.";
+                feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-100 text-red-700";
+            } else if (slot === 'eval-inside') {
+                animBox.innerHTML = `
+                    <div class="text-red-500 font-bold text-xs text-center">
+                        ❌ שגיאה: כפל ריצות (Double Evaluation)!<br>
+                        הערכים המועברים ל-apply-procedure כבר חושבו קודם לכן על ידי הלקוח.<br>
+                        אין לקרוא שוב ל-value-of בתוך מנוע ההרצה הפיזי של הפונקציה!
+                    </div>
+                `;
+                feedback.textContent = "שגיאה: vals הם כבר ExpVals מוערכים. אין צורך להעריך שוב.";
+                feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-100 text-red-700";
+            } else if (slot === 'correct') {
+                animBox.innerHTML = `
+                    <svg width="100%" height="90" viewBox="0 0 280 90" fill="none" class="max-w-xs mx-auto">
+                        <g>
+                            <rect x="10" y="5" width="40" height="20" rx="4" fill="#3b82f6" fill-opacity="0.2" stroke="#3b82f6" />
+                            <text x="30" y="18" fill="#3b82f6" font-size="10" font-weight="bold" text-anchor="middle" font-family="monospace">x</text>
+                            
+                            <rect x="70" y="5" width="40" height="20" rx="4" fill="#3b82f6" fill-opacity="0.2" stroke="#3b82f6" />
+                            <text x="90" y="18" fill="#3b82f6" font-size="10" font-weight="bold" text-anchor="middle" font-family="monospace">y</text>
+                            
+                            <rect x="130" y="5" width="40" height="20" rx="4" fill="#3b82f6" fill-opacity="0.2" stroke="#3b82f6" />
+                            <text x="150" y="18" fill="#3b82f6" font-size="10" font-weight="bold" text-anchor="middle" font-family="monospace">z</text>
+                        </g>
+
+                        <path d="M 30 25 L 30 55" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-router)" class="animate-pulse" />
+                        <path d="M 90 25 L 90 55" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-router)" class="animate-pulse" />
+                        <path d="M 150 25 L 150 55" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-router)" class="animate-pulse" />
+
+                        <g>
+                            <rect x="10" y="55" width="40" height="20" rx="4" fill="#10b981" fill-opacity="0.2" stroke="#10b981" />
+                            <text x="30" y="68" fill="#10b981" font-size="9" font-weight="bold" text-anchor="middle" font-family="monospace">10</text>
+                            
+                            <rect x="70" y="55" width="40" height="20" rx="4" fill="#10b981" fill-opacity="0.2" stroke="#10b981" />
+                            <text x="90" y="68" fill="#10b981" font-size="9" font-weight="bold" text-anchor="middle" font-family="monospace">20</text>
+                            
+                            <rect x="130" y="55" width="40" height="20" rx="4" fill="#10b981" fill-opacity="0.2" stroke="#10b981" />
+                            <text x="150" y="68" fill="#10b981" font-size="9" font-weight="bold" text-anchor="middle" font-family="monospace">30</text>
+                        </g>
+
+                        <g>
+                            <rect x="190" y="20" width="80" height="45" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
+                            <text x="230" y="38" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="sans-serif">saved-env</text>
+                            <text x="230" y="52" fill="#64748b" font-size="8" text-anchor="middle" font-family="monospace">(E0)</text>
+                        </g>
+
+                        <path d="M 175 42 L 190 42" stroke="#38bdf8" stroke-width="1.5" marker-end="url(#arrow-router)" />
+                        
+                        <defs>
+                            <marker id="arrow-router" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" />
+                            </marker>
+                        </defs>
+                    </svg>
+                `;
+                feedback.innerHTML = "🎉 מושלם! extend-env* הוא המימוש המדויק לקשירת רשימות משתנים וערכים בסביבה חדשה ללא הערכה חוזרת (פעולת זיפ פשוטה).";
+                feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-green-100 text-green-800";
+            }
+        }
+        
+        // --- Simulator 5: Mutual Recursion Parallel Lists Scanner JS Logic ---
+        let mrecStep = 0;
+        
+        function resetMrecSim() {
+            mrecStep = 0;
+            const feedback = document.getElementById('mrec-feedback');
+            feedback.innerHTML = "לחצו \"בצע צעד\" כדי להתחיל את החיפוש הדינמי.";
+            
+            const factory = document.getElementById('mrec-factory-area');
+            if (factory) {
+                factory.innerHTML = `<span class="text-slate-500 italic text-[11px] font-sans">מפעל הרכבת הקלוז'ר: ייווצר כאן לאחר מציאת האינדקס...</span>`;
+            }
+
+            for (let i = 0; i <= 1; i++) {
+                document.getElementById(`mrec-name-${i}`).className = "p-2 border rounded font-mono text-xs text-center transition-colors border-slate-200 bg-white text-slate-800";
+                document.getElementById(`mrec-var-${i}`).className = "p-2 border rounded font-mono text-xs text-center transition-colors border-slate-200 bg-white text-slate-800";
+                document.getElementById(`mrec-body-${i}`).className = "p-2 border rounded font-mono text-[10px] text-center transition-colors border-slate-200 bg-white text-slate-800 truncate";
+            }
+            
+            const btn = document.getElementById('btn-mrec-step');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = "בצע צעד (Step)";
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        function stepMrecSim() {
+            mrecStep++;
+            const feedback = document.getElementById('mrec-feedback');
+            
+            if (mrecStep === 1) {
+                feedback.innerHTML = "🔍 <strong>שלב 1: חיפוש location ברשימת השמות p-names</strong><br>המפרש מריץ פונקציית location כדי לאתר את האינדקס של odd?.<br>בודק אינדקס 0: 'even? -> לא תואם.";
+                document.getElementById('mrec-name-0').className = "p-2 border rounded font-mono text-xs text-center transition-colors border-red-300 bg-red-50 text-red-700 font-bold";
+            } else if (mrecStep === 2) {
+                feedback.innerHTML = "🔍 <strong>שלב 2: מציאת האינדקס ברשימת p-names</strong><br>בודק אינדקס 1: 'odd? -> <strong>תואם!</strong> האינדקס שנמצא הוא 1.";
+                document.getElementById('mrec-name-0').className = "p-2 border rounded font-mono text-xs text-center transition-colors border-slate-200 bg-white text-slate-400";
+                document.getElementById('mrec-name-1').className = "p-2 border rounded font-mono text-xs text-center transition-colors border-green-500 bg-green-50 text-green-800 font-bold animate-bounce";
+            } else if (mrecStep === 3) {
+                feedback.innerHTML = "📦 <strong>שלב 3: שליפת פרמטר וגוף מאינדקס 1</strong><br>שולף את b-var באינדקס 1 (הוא 'x) ואת p-body באינדקס 1 (גוף odd?).";
+                document.getElementById('mrec-var-1').className = "p-2 border rounded font-mono text-xs text-center transition-colors border-blue-500 bg-blue-50 text-blue-800 font-bold";
+                document.getElementById('mrec-body-1').className = "p-2 border rounded font-mono text-[10px] text-center transition-colors border-blue-500 bg-blue-50 text-blue-800 font-bold";
+            } else if (mrecStep === 4) {
+                feedback.innerHTML = "🎨 <strong>שלב 4: הרכבת הקלוז'ר</strong><br>המפרש מרכיב procedure סגורה: <code class='bg-slate-800 px-1 py-0.5 rounded text-[11px] font-mono text-yellow-400'>(procedure 'x body env)</code> עם הפניה לרשימות המקוריות המאפשרת רקורסיה הדדית!";
+                
+                const factory = document.getElementById('mrec-factory-area');
+                if (factory) {
+                    factory.innerHTML = `
+                        <div class="flex flex-col items-center gap-3 w-full">
+                            <div class="text-emerald-400 font-bold text-[10px] uppercase tracking-wider">📦 מפעל הרכבת הקלוז'ר (Closure Assembled!)</div>
+                            <div class="flex items-center gap-4 justify-center w-full">
+                                <div class="border-2 border-emerald-500 bg-emerald-950/80 p-3 rounded-xl shadow-md text-emerald-300 w-64 relative" dir="ltr">
+                                    <div class="font-bold text-center border-b border-emerald-800 pb-1 mb-2 text-xs">proc-val (Procedure Struct)</div>
+                                    <div class="space-y-1 text-[10.5px]">
+                                        <div><span class="text-emerald-500 font-bold">b-var:</span> 'x</div>
+                                        <div class="truncate"><span class="text-emerald-500 font-bold">body:</span> (if (zero? x) false (even? (- x 1)))</div>
+                                        <div class="text-[9px] text-yellow-400 font-bold mt-1">
+                                            saved-env ──┐ (Circular pointer)
+                                            ▲           │
+                                            └───────────┘ (References env E1)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const btn = document.getElementById('btn-mrec-step');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = "הסתיים";
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+        
+        // --- Simulator 6: The JIT Puzzle JS Logic ---
+        function drawJitFlowchart(slot1, slot2) {
+            const chart = document.getElementById('jit-flowchart');
+            if (!chart) return;
+
+            if (!slot1 || !slot2) {
+                chart.innerHTML = `<span class="text-slate-500 italic text-[11px] text-center">השלימו את תפריטי הבחירה משמאל לצפייה בתרשים הזרימה...</span>`;
+                return;
+            }
+
+            let svg = `<svg width="100%" height="110" viewBox="0 0 280 110" fill="none" class="max-w-xs mx-auto">`;
+            svg += `
+                <defs>
+                    <marker id="arrow-jit" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24" />
+                    </marker>
+                </defs>
+            `;
+
+            if (slot1 === 'env' && slot2 === 'env') {
+                svg += `
+                    <circle cx="140" cy="50" r="32" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" />
+                    <text x="140" y="53" fill="#ef4444" font-size="9" font-weight="bold" text-anchor="middle">Stack Overflow!</text>
+                    <text x="140" y="98" fill="#f87171" font-size="8" text-anchor="middle">לולאת חיפוש אינסופית באותו Env</text>
+`;
+            } else if (slot1 === 'saved-env' && slot2 === 'saved-env') {
+                svg += `
+                    <rect x="15" y="25" width="80" height="35" rx="5" fill="#f87171" fill-opacity="0.1" stroke="#ef4444" />
+                    <text x="55" y="46" fill="#f87171" font-size="8" text-anchor="middle" font-weight="bold">closure (saved-env)</text>
+                    
+                    <path d="M 95 42 L 165 42" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-jit)" />
+                    <text x="130" y="34" fill="#f87171" font-size="7" text-anchor="middle">חיפוש חיצוני</text>
+                    
+                    <circle cx="205" cy="42" r="14" stroke="#f87171" stroke-width="1.5" stroke-dasharray="2 2" />
+                    <text x="205" y="45" fill="#ef4444" font-size="8" font-weight="bold" text-anchor="middle">?</text>
+                    <text x="140" y="95" fill="#f87171" font-size="8" text-anchor="middle">הפונקציה מנותקת מה-letrec! (Unbound Variable)</text>
+`;
+            } else if (slot1 === 'env' && slot2 === 'saved-env') {
+                svg += `
+                    <rect x="10" y="25" width="90" height="40" rx="6" fill="#065f46" stroke="#059669" stroke-width="1.5" />
+                    <text x="55" y="44" fill="#a7f3d0" font-size="8" font-weight="bold" text-anchor="middle">extend-env-rec (E1)</text>
+                    <text x="55" y="56" fill="#34d399" font-size="8" text-anchor="middle">even?, odd?</text>
+                    
+                    <path d="M 45 25 C 35 -5, 75 -5, 65 25" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrow-jit)" />
+                    <text x="55" y="8" fill="#fbbf24" font-size="7" font-weight="bold" text-anchor="middle">מעגל רקורסיבי</text>
+                    
+                    <path d="M 100 45 L 160 45" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow-jit)" />
+                    <text x="130" y="38" fill="#34d399" font-size="7" text-anchor="middle">חיפוש חיצוני</text>
+                    
+                    <rect x="170" y="25" width="90" height="40" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
+                    <text x="215" y="48" fill="#94a3b8" font-size="8" text-anchor="middle">saved-env (E0)</text>
+                    
+                    <text x="140" y="98" fill="#34d399" font-size="8" font-weight="bold" text-anchor="middle">✓ רקורסיביות הדדית עובדת ומניעת לולאות!</text>
+`;
+            } else {
+                svg += `
+                    <text x="140" y="55" fill="#fbbf24" font-size="9" text-anchor="middle">שילוב זה אינו תקין. נסו שוב.</text>
+`;
+            }
+
+            svg += `</svg>`;
+            chart.innerHTML = svg;
+        }
+
+        function runJitPuzzle() {
+            const slot1 = document.getElementById('jit-select-slot-1').value;
+            const slot2 = document.getElementById('jit-select-slot-2').value;
+            const consoleBox = document.getElementById('jit-console');
+            const feedback = document.getElementById('jit-feedback-text');
+            
+            drawJitFlowchart(slot1, slot2);
+
+            if (slot1 === '' || slot2 === '') {
+                consoleBox.textContent = "Select options to test the recursive lookup environment rules.";
+                feedback.innerHTML = "בחר בשתי התיבות כדי להפעיל את הבדיקה.";
+                feedback.className = "mt-4 p-2.5 rounded text-center text-xs font-bold bg-slate-100 text-slate-600";
+                return;
+            }
+            
+            if (slot1 === 'saved-env' && slot2 === 'saved-env') {
+                consoleBox.innerHTML = `(apply-env env 'f) -> f found!
+Creating closure procedure with saved-env (E0).
+Inside f: Calling (f) recursively.
+(apply-env E0 'f) -> ❌ Variable 'f not found!
+Program Crashed.`;
+                feedback.innerHTML = "❌ שגיאה! שימוש ב-saved-env בקלוז'ר מונע ממנו להכיר את עצמו, וכאשר יבצע קריאה רקורסיבית המפרש יחפש מחוץ ל-letrec ויכשל.";
+                feedback.className = "mt-4 p-2.5 rounded text-center text-xs font-bold bg-red-100 text-red-700";
+            } else if (slot1 === 'env' && slot2 === 'env') {
+                consoleBox.innerHTML = `(apply-env env 'g) -> not found!
+Continuing search on 'env.
+(apply-env env 'g) -> not found!
+Continuing search on 'env.
+...
+❌ Stack Overflow! Infinite Loop Detected!`;
+                feedback.innerHTML = "❌ שגיאה! אם לא מצאנו את המשתנה ונמשיך לחפש ב-env (הסביבה הרקורסיבית הנוכחית) במקום ב-saved-env (הסביבה שקדמה לה), המפרש יכנס ללולאה אינסופית בחיפוש משתנים חיצוניים.";
+                feedback.className = "mt-4 p-2.5 rounded text-center text-xs font-bold bg-red-100 text-red-700";
+            } else if (slot1 === 'env' && slot2 === 'saved-env') {
+                consoleBox.innerHTML = `(apply-env env 'even?) -> found!
+Creating closure with circular environment 'env'.
+Evaluating body: (odd? (- x 1))
+(apply-env env 'odd?) -> found!
+Creating closure with circular environment 'env'.
+Evaluating body: (even? (- x 1))
+Calculation complete. Result: (bool-val #t)`;
+                feedback.innerHTML = "🎉 מדהים! זוהי בדיוק מהות ה-JIT. סוגרים את המעגל הרקורסיבי על ידי הזרקת env לקלוז'ר, וממשיכים בחיפוש למעלה על ידי קריאה ל-saved-env.";
+                feedback.className = "mt-4 p-2.5 rounded text-center text-xs font-bold bg-green-100 text-green-800";
+            } else {
+                consoleBox.innerHTML = `(apply-env env 'f) -> found!
+Using circular env for closure.
+Recursive calls work.
+But if search-var is not found:
+(apply-env saved-env search-var)
+No loops. But wait, search-var not found in recursion...`;
+                feedback.innerHTML = "⚠️ שילוב זה אינו תקין. נסו שוב.";
+                feedback.className = "mt-4 p-2.5 rounded text-center text-xs font-bold bg-amber-50 text-amber-700";
+            }
+        }
+        
+        // --- Simulator 7: Named vs Nameless Execution Race JS Logic ---
+        let raceInterval = null;
+        
+        function runRace() {
+            const btn = document.getElementById('btn-race-run');
+            const namedConsole = document.getElementById('race-named-console');
+            const namelessConsole = document.getElementById('race-nameless-console');
+            const namedSteps = document.getElementById('race-named-steps');
+            const namelessSteps = document.getElementById('race-nameless-steps');
+            const banner = document.getElementById('race-winner-banner');
+            
+            if (raceInterval) clearInterval(raceInterval);
+            
+            btn.disabled = true;
+            btn.textContent = "במרוץ...";
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            namedConsole.innerHTML = "Starting Named Lookup for x1...\n";
+            namelessConsole.innerHTML = "Starting Nameless Translation (Static Analysis)...\n";
+            namedSteps.textContent = "שלבים: 0";
+            namelessSteps.textContent = "שלבים: 0";
+            banner.innerHTML = "האנליזה הסטטית וההרצה החלו...";
+            banner.className = "text-xs font-bold text-amber-500 animate-pulse";
+            
+            setTimeout(() => {
+                namelessConsole.innerHTML += "➔ translating: x1 ➔ %lexref(0, 9) [DONE]\n";
+                namelessConsole.innerHTML += "➔ Phase B: Executing Nameless code...\n";
+                namelessConsole.innerHTML += "➔ Accessing nameless-env at index 9 immediately...\n";
+                namelessConsole.innerHTML += "➔ Found value 1 in O(1) time!\n";
+                namelessConsole.innerHTML += "🎉 COMPLETED Nameless Runtime!\n";
+                namelessSteps.textContent = "שלבים: 2 (1 compilation, 1 execution)";
+            }, 700);
+            
+            let step = 0;
+            const scopes = [
+                "x10=10", "x9=9", "x8=8", "x7=7", "x6=6",
+                "x5=5", "x4=4", "x3=3", "x2=2", "x1=1"
+            ];
+            
+            raceInterval = setInterval(() => {
+                if (step < scopes.length) {
+                    const currentScope = scopes[step];
+                    const varToCheck = currentScope.split('=')[0];
+                    namedConsole.innerHTML += `Scanning scope: ${currentScope}. Is x1 == ${varToCheck}? No.\n`;
+                    step++;
+                    namedSteps.textContent = `שלבים: ${step}`;
+                } else {
+                    clearInterval(raceInterval);
+                    namedConsole.innerHTML += "➔ Found value of x1: 1!\n";
+                    namedConsole.innerHTML += "🏁 Finished lookup.\n";
+                    
+                    banner.innerHTML = `
+                        <div class="flex flex-col gap-2 p-2 bg-slate-900 border border-slate-800 rounded-lg w-full text-slate-300 font-sans">
+                            <div class="text-xs font-bold text-center text-green-400 mb-1">🏁 תוצאות המרוץ: מד העלות הכוללת (Compilation vs Runtime)</div>
+                            
+                            <div class="space-y-2 text-[10.5px]">
+                                <div class="flex flex-col gap-0.5">
+                                    <div class="flex justify-between font-mono">
+                                        <span>Named (סריקת שמות):</span>
+                                        <span class="font-bold text-red-400">2000ms (0ms compile + 2000ms run)</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                        <div class="bg-red-500 h-full rounded-full" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col gap-0.5">
+                                    <div class="flex justify-between font-mono">
+                                        <span>Nameless (כתובות לקסיקליות):</span>
+                                        <span class="font-bold text-green-400">710ms (700ms compile + 10ms run)</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                        <div class="bg-green-500 h-full rounded-full" style="width: 35.5%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-[9px] text-slate-400 text-center mt-1 leading-relaxed">
+                                💡 <b>הלקח ההנדסי:</b> מפרש Nameless משלם "מחיר מקדים" (Overhead) של אנליזה סטטית ותרגום, אך מרוויח גישה מיידית ב-$O(1)$ בזמן הריצה – מה שחוסך זמן עצום בריצות חוזרות או לולאות!
+                            </div>
+                        </div>
+                    `;
+                    banner.className = "text-xs font-bold text-slate-100 w-full mt-2";
+                    
+                    btn.disabled = false;
+                    btn.textContent = "הרץ מרוץ מחדש";
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }, 200);
+        }
         // Sidebar toggle and Navigation Button Injection Logic
         function toggleSidebar() {
             document.body.classList.toggle('sidebar-collapsed');
@@ -2587,6 +3789,9 @@ let x = 3 in let y = 4 in -(x, y)
             // Initialize Scope Simulator and Architecture Details
             resetScopeSim();
             showArchDetails('input');
+            initValPuzzle();
+            checkAstPuzzle();
+            drawJitFlowchart('', '');
 
             // 1. Create and inject sidebar toggle button
             const toggleBtn = document.createElement('button');

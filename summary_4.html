@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סיכום למבחן - מערכות טיפוסים (Type Systems)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
+    <script>
+        MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        body {
+            background-color: #fdfbf7;
+            background-image: 
+                linear-gradient(rgba(148, 163, 184, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.25) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0;
+            font-family: 'Assistant', sans-serif;
+            line-height: 1.6;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Rubik', sans-serif;
+        }
+        .hand-drawn-box {
+            background: white;
+            border: 2px solid #334155;
+            border-radius: 4px 12px 8px 6px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 3px 4px 0px #94a3b8;
+        }
+        .marker-yellow {
+            background: linear-gradient(104deg, transparent 0%, rgba(253, 224, 71, 0.8) 2%, rgba(253, 224, 71, 0.9) 95%, transparent 100%);
+            padding: 0 0.2rem;
+        }
+        .marker-green {
+            background: linear-gradient(104deg, transparent 0%, rgba(134, 239, 172, 0.8) 2%, rgba(134, 239, 172, 0.9) 95%, transparent 100%);
+            padding: 0 0.2rem;
+        }
+        .marker-blue {
+            background: linear-gradient(104deg, transparent 0%, rgba(147, 197, 253, 0.8) 2%, rgba(147, 197, 253, 0.9) 95%, transparent 100%);
+            padding: 0 0.2rem;
+        }
+        .title-red {
+            color: #b91c1c;
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #fca5a5;
+            padding-bottom: 0.25rem;
+            margin-bottom: 1rem;
+        }
+        .title-blue {
+            color: #1d4ed8;
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #93c5fd;
+            padding-bottom: 0.25rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 text-slate-900">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-black text-slate-800 tracking-tight mb-2">סיכום למבחן: <span class="text-blue-600">מערכות טיפוסים</span></h1>
+            <p class="text-lg text-slate-600 font-semibold">פרק 7 - שפות CHECKED ו-INFERRED</p>
+        </header>
+
+        <!-- סעיף 1: מושגי יסוד -->
+        <section>
+            <h2 class="title-red">1. למה טיפוסים? (Static vs Dynamic Typing)</h2>
+            <p class="mb-3">
+                עד כה בנינו מפרשים (כמו PROC) שתפסו שגיאות טיפוס רק <strong>בזמן ריצה</strong>. המטרה בפרק זה היא לתפוס שגיאות בשלב התרגום (Compile-time) <span class="marker-yellow">לפני שהתוכנית בכלל רצה</span>.
+            </p>
+            <div class="hand-drawn-box">
+                <h3 class="font-heading text-lg text-slate-800 mb-2">ההבדל בין הסביבות</h3>
+                <ul class="list-disc list-inside space-y-2 text-slate-800 font-semibold">
+                    <li><strong>סביבת ריצה (Env):</strong> פועלת ב-<code>value-of</code>. ממפה מזהה ל<span class="marker-green">ערך</span> (למשל: <code dir="ltr">x = num-val(5)</code>).</li>
+                    <li><strong>סביבת טיפוסים (Tenv):</strong> פועלת במנוע ההסקה הסטטי. ממפה מזהה ל<span class="marker-blue">טיפוס</span> (למשל: <code dir="ltr">x = int-type</code>).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- סעיף 2: שפת CHECKED -->
+        <section class="mt-8">
+            <h2 class="title-blue">2. שפת CHECKED (טיפוסים מפורשים)</h2>
+            <p class="mb-3">
+                שפה הדורשת מהמתכנת להצהיר במפורש על כל טיפוס (כמו <code>proc (x : int)</code>). מתבצע <strong>Zero-Cost Abstraction</strong>: אחרי שהקוד עובר אימות טיפוסים, מפרש הריצה מהיר יותר כי הוא מניח שהקוד בטוח לחלוטין ואין בו בדיקות טיפוסים כלל.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="p-4 bg-white border border-slate-300 rounded shadow-sm">
+                    <h4 class="font-bold text-blue-800 mb-2">מנוע הבדיקה (checker.scm)</h4>
+                    <p class="text-sm">הפונקציה <code>type-of</code> סורקת את ה-AST ומחשבת טיפוסים ע"י התאמת חוקים והשוואות באמצעות הפונקציה <code>check-equal-type!</code>.</p>
+                </div>
+                <div class="p-4 bg-white border border-slate-300 rounded shadow-sm">
+                    <h4 class="font-bold text-blue-800 mb-2">הצורך בהצהרות ברקורסיה</h4>
+                    <p class="text-sm">ב-<code>letrec</code> חובה להצהיר מראש על טיפוס ההחזרה. הסיבה: המפרש חייב לרשום את הפונקציה ב-Tenv <span class="underline">לפני</span> שהוא מנתח את הגוף שלה, כדי שהקריאה הרקורסיבית בגוף תהיה חוקית.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- סעיף 3: שפת INFERRED - המכניקה -->
+        <section class="mt-8">
+            <h2 class="title-red">3. שפת INFERRED (הסקה אוטומטית)</h2>
+            <p class="mb-3">
+                שפה חכמה בה המתכנת משתמש ב-<code class="font-bold">?</code> במקום להכריז על טיפוס. המהדר מסיק את הטיפוסים כמו בפתרון מערכת משוואות מתמטיות.
+            </p>
+
+            <div class="hand-drawn-box">
+                <h3 class="font-heading text-lg text-slate-800 mb-2">ארכיטקטורת המפרש:</h3>
+                <ul class="list-disc list-inside space-y-3 text-slate-800 font-semibold pr-4">
+                    <li>
+                        <strong>משתני טיפוס (Gensym):</strong> כל סימן <code>?</code> (או כל תת-ביטוי) מקבל משתנה זמני טרי (כמו $t_1, t_2$).
+                    </li>
+                    <li>
+                        <strong>הפרדת רשויות:</strong> ה-<code>inferrer.scm</code> מכיר תחביר (AST) ואוסף משוואות. ה-<code>unifier.scm</code> חי בעולם של אלגברה נטו ופותר משוואות ללא היכרות עם התחביר.
+                    </li>
+                    <li>
+                        <strong>השחלת מצב (State Threading):</strong> כדי להעביר את הידע שנצבר, המפרש לא מחזיר רק טיפוס, אלא <code>an-answer</code>: אובייקט המכיל את הטיפוס <span class="marker-yellow">ואת מילון ההצבות (Substitutions) המעודכן</span> שעובר לניתוח של הביטוי הבא.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- סעיף 4: יצירת אילוצים -->
+        <section class="mt-8">
+            <h2 class="title-blue">4. שלב א': גזירת חוקים ואיסוף משוואות (Constraints)</h2>
+            <p class="mb-3">
+                ה-Inferrer סורק את העץ מלמטה למעלה (Bottom-Up) ומשליך אילוצים:
+            </p>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-right border-collapse bg-white border border-slate-300">
+                    <thead>
+                        <tr class="bg-blue-50 text-blue-800">
+                            <th class="p-2 border border-slate-300">הביטוי (Expression)</th>
+                            <th class="p-2 border border-slate-300 text-center">משוואה מחייבת</th>
+                            <th class="p-2 border border-slate-300">משמעות ודגשים</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-semibold">
+                        <tr>
+                            <td class="p-2 border border-slate-300 font-mono" dir="ltr">-(E1, E2)</td>
+                            <td class="p-2 border border-slate-300 font-mono text-center" dir="ltr">t1=int, t2=int, t_res=int</td>
+                            <td class="p-2 border border-slate-300 text-slate-600">אופרטור מתמטי דורש ומחזיר מספרים.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 border border-slate-300 font-mono" dir="ltr">if E1 then E2 else E3</td>
+                            <td class="p-2 border border-slate-300 font-mono text-center" dir="ltr">t1=bool, t2=t3, t_res=t2</td>
+                            <td class="p-2 border border-slate-300 text-slate-600">התנאי בוליאני, ושני הענפים חייבים להחזיר אותו טיפוס.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 border border-slate-300 font-mono" dir="ltr">proc (x) Body</td>
+                            <td class="p-2 border border-slate-300 font-mono text-center" dir="ltr">t_res = t_x → t_body</td>
+                            <td class="p-2 border border-slate-300 text-slate-600">בונה טיפוס מורכב (Type Constructor) מסוג פונקציה.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 border border-slate-300 font-mono text-blue-700 bg-blue-50/50" dir="ltr">(Rator Rand)</td>
+                            <td class="p-2 border border-slate-300 font-mono text-center text-blue-700 bg-blue-50/50" dir="ltr">t_rator = t_rand → t_res</td>
+                            <td class="p-2 border border-slate-300 text-slate-800 bg-blue-50/50"><strong>החוק החשוב ביותר!</strong> הטיפוס של הפונקציה מאולץ ע"י הקלט שהיא מקבלת והפלט שהיא מחזירה.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 border border-slate-300 font-mono" dir="ltr">let x = E1 in E2</td>
+                            <td class="p-2 border border-slate-300 font-mono text-center" dir="ltr">t_res = t_E2</td>
+                            <td class="p-2 border border-slate-300 text-slate-600"><span class="marker-yellow">קשירת סביבה:</span> ה-let עצמו לא מייצר משוואה עבור x, אלא מכניס את t_E1 ל-Tenv כדי ש-E2 יכיר אותו.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- סעיף 5: אלגוריתם Unification -->
+        <section class="mt-8">
+            <h2 class="title-red">5. שלב ב': אלגוריתם ה-Unification (אלימינציה)</h2>
+            <p class="mb-3">
+                ה-Unifier מריץ תהליך איטרטיבי על כל משוואה (למשל $L = R$) בעזרת 4 כללים טוריים (Just-In-Time):
+            </p>
+            <div class="hand-drawn-box">
+                <ol class="list-decimal list-inside space-y-4 text-slate-800 font-semibold pr-4">
+                    <li>
+                        <strong>זהות (Identity):</strong> אם $L$ ו-$R$ הם בדיוק אותו טיפוס (למשל $int = int$), <span class="text-green-600">מתעלמים מהמשוואה</span> וממשיכים.
+                    </li>
+                    <li class="border-b border-slate-200 pb-3">
+                        <strong>גילוי משתנה (Substitution):</strong> אם צד אחד הוא משתנה זמני ($t$) והצד השני הוא טיפוס כלשהו: <br>
+                        <span class="marker-yellow text-sm font-bold ml-6">← חובה לבצע Occurs Check! (ראו סעיף הבא)</span><br>
+                        אם הבדיקה עברה, <span class="text-blue-600">מוסיפים לטבלת ההצבות</span>, ומחליפים את ה-$t$ הזה בכל משוואה עתידית שננסה לפתור.
+                    </li>
+                    <li class="border-b border-slate-200 pb-3">
+                        <strong>פירוק פונקציות (Decomposition):</strong> אם יש משוואת חצים (למשל $t_1 \rightarrow int = bool \rightarrow t_2$), מפרקים אותה לשתי משוואות פשוטות יותר: <br>
+                        $t_1 = bool$ (שמאל מול שמאל) <br>
+                        $int = t_2$ (ימין מול ימין).<br>
+                        <span class="text-sm text-slate-500 font-normal">הערה: הפירוק קורה ברצף טורי, קודם ארגומנטים ואז תוצאות.</span>
+                    </li>
+                    <li>
+                        <strong>שגיאת טיפוס (Failure):</strong> אם הגענו לסתירה מהותית ($int = bool$), האלגוריתם נכשל וזורק שגיאת איחוד (Unification Failure).
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- סעיף 6: מקרי קצה -->
+        <section class="mt-8">
+            <h2 class="title-blue">6. מקרי קצה ותובנות חשובות</h2>
+            
+            <div class="space-y-6">
+                <!-- Occurs Check -->
+                <div class="p-5 bg-rose-50 border border-rose-200 rounded-lg shadow-sm">
+                    <h3 class="font-bold text-rose-800 text-lg mb-2 flex items-center gap-2">
+                        <span>⚠️ למה חייבים Occurs Check?</span>
+                    </h3>
+                    <p class="text-sm font-semibold text-slate-700 mb-2">
+                        בדוגמה של פונקציה שמפעילה את עצמה <code>(x x)</code>, נוצרת המשוואה: $t_x = t_x \rightarrow t_{res}$. <br>
+                        אם האלגוריתם היה פשוט מציב את הימין לתוך השמאל ללא בדיקה, היינו מקבלים התפוצצות בזיכרון (Infinite Loop / Stack Overflow):
+                    </p>
+                    <div class="font-mono text-xs bg-white p-2 rounded text-left text-rose-900 border border-rose-100" dir="ltr">
+                        1. (t_x → t_res) → t_res <br>
+                        2. ((t_x → t_res) → t_res) → t_res ... <br>
+                        [CRASH]
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700 mt-2">
+                        מטרת ה-Occurs Check היא לוודא שהמשתנה ($t_x$) לא מופיע בתוך המבנה שמציבים בו. אם הוא שם → זורקים שגיאה מיד!
+                    </p>
+                </div>
+
+                <!-- Monomorphism vs Polymorphism -->
+                <div class="p-5 bg-amber-50 border border-amber-200 rounded-lg shadow-sm">
+                    <h3 class="font-bold text-amber-800 text-lg mb-2 flex items-center gap-2">
+                        <span>🔒 אין פולימורפיזם אמיתי (Monomorphic Lock-in)</span>
+                    </h3>
+                    <p class="text-sm font-semibold text-slate-700">
+                        בשפת INFERRED של פרק 7, גם אם פונקציה כמו ה-Identity Function <code>proc(x:?) x</code> מסיקה משתנה טיפוס חופשי ($t_x \rightarrow t_x$), ברגע שנפעיל אותה בתוכנית על <code>5</code>, המשתנה $t_x$ <span class="marker-yellow">ננעל על <code>int</code> לכל אורך התוכנית!</span> <br>
+                        כל ניסיון להפעיל את אותה הפונקציה לאחר מכן על <code>true</code> יזרוק שגיאת Type Clash. המערכת היא מונומורפית (Monomorphic Inference).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

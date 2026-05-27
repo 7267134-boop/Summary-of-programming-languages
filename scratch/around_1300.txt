@@ -1,0 +1,170 @@
+1251: אוטומטי לחלוטין כדי לחלץ ולמסור את הערך האמיתי.</p>
+1252: </div>
+1253: <div
+1254: class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-red-500 hover:shadow-lg transition-shadow">
+1255: <div class="text-3xl mb-4 text-center">✍️</div>
+1256: <h4 class="font-bold text-lg mb-2 text-center text-slate-800">3. השמה סמויה (Set)</h4>
+1257: <p class="text-sm text-slate-600 text-center">כדי לעדכן משתנה פשוט כותבים
+1258: <code>set x = 10</code>. המפרש מוצא את הכתובת של x בסביבה ומעדכן ישירות ב-Store.</p>
+1259: </div>
+1260: </div>
+1261: 
+1262: <!-- R-value and L-value Key Concept Box -->
+1263: <div class="concept-box border-l-4 border-l-red-500 mt-8 mb-6">
+1264: <h3 class="text-xl font-bold text-red-800 mb-3 border-b border-red-200 pb-2">מושג מפתח: L-value מול R-value במפרש</h3>
+1265: <p class="text-sm text-slate-700 leading-relaxed mb-3">
+1266: כדי להבין כיצד המפרש יודע מתי לקרוא ערך ומתי לשנות אותו (בלי שהמתכנת יציין <code>deref</code> או <code>setref</code> באופן ידני), משתמשים במודל הכללי של <strong>L-value</strong> (Location Value) ו-<strong>R-value</strong> (Read/Right Value):
+1267: </p>
+1268: <ul class="list-disc list-inside space-y-2 text-slate-700 text-sm">
+1269: <li><strong>R-value (ערך קריאה/ימין):</strong> מייצג את התוכן הממשי השמור בכתובת. כאשר משתנה מופיע בצד ימין של השמה או כחלק מביטוי (למשל <code>x + 1</code> או <code>(f x)</code>), המפרש זקוק ל-R-value שלו. לכן, פקודת הערכת המשתנה (<code>var-exp</code>) מבצעת <strong>deref סמוי</strong> אוטומטי על הכתובת שנמצאה בסביבה כדי לחלץ את הערך השמור בתוכה.</li>
+1270: <li><strong>L-value (ערך מיקום/שמאל):</strong> מייצג את הכתובת או המצביע הפיזי בזיכרון (Location). כאשר משתנה מופיע כיעד להשמה (למשל <code>set x = 5</code>), המפרש אינו מעוניין בתוכן הקיים שלו, אלא בכתובת שבה ניתן לכתוב את הערך החדש. לכן, פקודת ההשמה (<code>assign-exp</code>) קוראת ל-<code>apply-env</code> שמחזיר לה את הכתובת בזיכרון (ה-L-value), אך <strong>אינה מבצעת עליה deref</strong>, אלא קוראת ישירות ל-<code>setref!</code> על אותה כתובת.</li>
+1271: </ul>
+1272: </div>
+1273: 
+1274: <!-- Memory Leak and Garbage Collector Warning Box -->
+1275: <div class="thought-box mt-6 mb-6">
+1276: <h3 class="text-xl font-bold text-fuchsia-800 mb-3 border-b border-fuchsia-200 pb-2">⚠️ דליפת זיכרון סמויה (Memory Leak) ולידתו של ה-Garbage Collector</h3>
+1277: <p class="text-sm text-slate-700 leading-relaxed mb-2">
+1278: במעבר ל-<strong>IMPLICIT-REFS</strong>, מתי אנחנו מוחקים מידע מהזיכרון? התשובה המפתיעה היא: <strong>אף פעם!</strong>
+1279: </p>
+1280: <p class="text-sm text-slate-700 leading-relaxed mb-2">
+1281: כאשר אנו נכנסים לבלוק כמו <code>let x = 5</code>, הסביבה גדלה והמפרש מקצה באופן סמוי תא חדש ב-Store. אך ברגע שהבלוק מסתיים, הסביבה (Environment) קטנה בחזרה והמשתנה <code>x</code> נמחק מהטבלה.
+1282: </p>
+1283: <p class="text-sm text-slate-700 leading-relaxed mb-2">
+1284: מה קרה לתא שהוקצה ב-Store? הוא נשאר שם לנצח! מכיוון שאין לנו יותר מצביע אליו בסביבה, הוא הופך ל<strong>אובייקט לא נגיש (Unreachable Object)</strong>.
+1285: </p>
+1286: <p class="text-sm text-slate-700 leading-relaxed">
+1287: מכיוון שהמפרש הלימודי שלנו מניח זיכרון אינסופי, התאים הללו מצטברים (Memory Leak). הבנה זו ממחישה בדיוק מדוע שפות המקצות זיכרון באופן סמוי (כמו Java, Python או JavaScript) חייבות להריץ ברקע מנגנון <strong>Garbage Collector (איסוף זבל)</strong> – מנגנון שסורק את ה-Store, מזהה תאים שאין אליהם שום שרשרת הפניות מהסביבה הפעילה, ומפנה אותם כדי למנוע קריסה של התוכנית מחוסר זיכרון.
+1288: </p>
+1289: </div>
+1290: 
+1291: <!-- Env vs Store Simulator -->
+1292: <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
+1293: <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+1294: <span>סימולטור השוואה: סביבה (Environment) מול זיכרון (Store)</span>
+1295: <span class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded font-normal">הדמיה
+1296: אינטראקטיבית</span>
+1297: </h4>
+1298: <p class="text-sm text-slate-600 mb-6">
+1299: בחר שפה כדי לראות כיצד המשתנה מוקצה ומעודכן בזיכרון. שימו לב להבדל בערכים של ה-Environment (האם
+1300: המשתנה מצביע לערך מפורש של כתובת או למיקום פיזי בזיכרון):
+1301: </p>
+1302: 
+1303: <div class="flex gap-2 mb-6">
+1304: <button onclick="toggleLangSim('explicit')" id="btn-sim-explicit"
+1305: class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-blue-600 text-white shadow-sm cursor-pointer">
+1306: EXPLICIT-REFS (ניהול ידני)
+1307: </button>
+1308: <button onclick="toggleLangSim('implicit')" id="btn-sim-implicit"
+1309: class="px-4 py-2 text-xs font-bold rounded-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">
+1310: IMPLICIT-REFS (ניהול אוטומטי)
+1311: </button>
+1312: </div>
+1313: 
+1314: <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+1315: <!-- Left: Code & Steps -->
+1316: <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+1317: <div>
+1318: <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-2">קוד המקור:
+1319: </h5>
+1320: <pre id="sim-code-preview"
+1321: class="!bg-slate-800 !text-slate-200 !p-3 text-xs font-mono rounded-lg" dir="ltr">let x = newref(5)
+1322: in setref(x, 10)</pre>
+1323: 
+1324: <div class="mt-4">
+1325: <button onclick="stepLangSim()" id="btn-sim-step"
+1326: class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
+1327: בצע צעד (Step)
+1328: </button>
+1329: </div>
+1330: </div>
+1331: 
+1332: <div
+1333: class="bg-white p-3 rounded-lg border border-slate-200 min-h-[90px] flex items-center justify-center mt-4">
+1334: <div id="sim-explain-text"
+1335: class="text-xs text-slate-600 text-center leading-relaxed w-full">
+1336: לחצו על "בצע צעד" כדי להריץ את השורה הראשונה (הקצאת המשתנה).
+1337: </div>
+1338: </div>
+1339: </div>
+1340: 
+1341: <!-- Right: Tables (Env and Store) -->
+1342: <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+1343: <!-- Environment Table -->
+1344: <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+1345: <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">טבלת הסביבה
+1346: (Environment):</h5>
+1347: <div class="overflow-x-auto">
+1348: <table class="w-full text-xs font-mono text-center">
+1349: <thead>
+1350: <tr class="bg-slate-200 text-slate-700 font-sans font-bold">
+1351: <th class="p-2 border border-slate-300">משתנה (Var)</th>
+1352: <th class="p-2 border border-slate-300">ערך בסביבה (Denoted Value)</th>
+1353: </tr>
+1354: </thead>
+1355: <tbody id="sim-env-body">
+1356: <tr class="text-slate-400">
+1357: <td colspan="2" class="p-4 border border-slate-200 italic">סביבה ריקה
+1358: </td>
+1359: </tr>
+1360: </tbody>
+1361: </table>
+1362: </div>
+1363: <p class="text-[10px] text-slate-400 mt-2 leading-relaxed" dir="rtl">* Denoted Values
+1364: מייצג את הערכים השמורים ישירות בסביבה.</p>
+1365: </div>
+1366: 
+1367: <!-- Store Table -->
+1368: <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+1369: <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">טבלת הזיכרון
+1370: (Store):</h5>
+1371: <div class="overflow-x-auto">
+1372: <table class="w-full text-xs font-mono text-center">
+1373: <thead>
+1374: <tr class="bg-slate-200 text-slate-700 font-sans font-bold">
+1375: <th class="p-2 border border-slate-300">כתובת (Ref)</th>
+1376: <th class="p-2 border border-slate-300">ערך בזיכרון (Expressed Value)
+1377: </th>
+1378: </tr>
+1379: </thead>
+1380: <tbody id="sim-store-body">
+1381: <tr class="text-slate-400">
+1382: <td colspan="2" class="p-4 border border-slate-200 italic">זיכרון ריק
+1383: </td>
+1384: </tr>
+1385: </tbody>
+1386: </table>
+1387: </div>
+1388: </div>
+1389: </div>
+1390: </div>
+1391: </div>
+1392: 
+1393: <div class="tip-box">
+1394: <h4 class="font-bold text-lg mb-2 text-amber-800">💡 דוגמת קוד בשפה: כמה זה נראה טבעי!</h4>
+1395: <p class="text-slate-700 mb-2">שימו לב כמה הקוד כעת נקי, ללא שום <code>newref</code> או
+1396: <code>deref</code>.</p>
+1397: <pre class="!bg-white !text-slate-800 border !border-slate-300"><code>let x = 0
+1398: in begin
+1399: set x = 1;
+1400: -(x, -5)
+1401: end
+1402: <span class="token-comment">% תוצאה: 6</span></code></pre>
+1403: </div>
+1404: </div>
+1405: 
+1406: <!-- ==========================================
+1407: PART 2.3: IMPLICIT INTERP
+1408: =========================================== -->
+1409: <div id="implicit-interp" class="tab-content">
+1410: <header class="mb-12 border-b pb-6">
+1411: <div
+1412: class="inline-block px-4 py-1 bg-red-100 text-red-700 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+1413: שפת IMPLICIT-REFS</div>
+1414: <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">המפרש: <span
+1415: class="text-red-600">הקצאה ושליפה סמויה</span></h2>
+1416: <p class="text-xl text-slate-600 leading-relaxed">כך נראה הקסם מאחורי הקלעים בפונקציית
+1417: <code>value-of</code>. מודל זה משמש תשתית ל-90% מהשאלות במבחנים הכוללות שינוי זיכרון.</p>
+1418: </header>
+1419: 
+1420: <div class="bg-codebg text-white p-6 rounded-xl overflow-x-auto shadow-lg mb-10">

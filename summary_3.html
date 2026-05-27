@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סיכום למבחן - ניהול זיכרון ופרמטרים</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        body {
+            background-color: #fdfbf7;
+            background-image: 
+                linear-gradient(rgba(148, 163, 184, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.25) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0;
+            font-family: 'Assistant', sans-serif;
+            line-height: 1.6;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Rubik', sans-serif;
+        }
+        .hand-drawn-box {
+            background-color: white;
+            border: 2px solid #334155;
+            border-radius: 4px 8px 3px 6px;
+            padding: 1.25rem;
+            box-shadow: 3px 4px 0px rgba(51, 65, 85, 0.2);
+            transform: rotate(-0.5deg);
+            margin: 1.5rem 0;
+            transition: transform 0.2s;
+        }
+        .hand-drawn-box:hover {
+            transform: rotate(0deg);
+        }
+        .marker-yellow {
+            background-color: #fef08a;
+            padding: 0 4px;
+            border-radius: 2px;
+        }
+        .marker-blue {
+            background-color: #bae6fd;
+            padding: 0 4px;
+            border-radius: 2px;
+        }
+        .marker-red {
+            background-color: #fecaca;
+            padding: 0 4px;
+            border-radius: 2px;
+        }
+        .title-red { color: #b91c1c; font-weight: 700; font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #fca5a5; padding-bottom: 0.25rem; }
+        .title-blue { color: #1d4ed8; font-weight: 700; font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #93c5fd; padding-bottom: 0.25rem; }
+        .title-green { color: #15803d; font-weight: 700; font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #86efac; padding-bottom: 0.25rem; }
+        .title-purple { color: #6d28d9; font-weight: 700; font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #c4b5fd; padding-bottom: 0.25rem; }
+        code {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+            direction: ltr;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="text-slate-900 pb-20">
+
+    <div class="max-w-4xl mx-auto mt-12 bg-transparent">
+        
+        <!-- כותרת ראשית -->
+        <header class="mb-10 pl-6 border-r-4 border-red-500">
+            <h1 class="text-4xl font-heading font-bold text-slate-900 mb-2">סיכום למבחן: ניהול זיכרון ופרמטרים</h1>
+            <p class="text-lg text-slate-600 font-semibold">פרק 4: EXPLICIT, IMPLICIT, זוגות ועצלנות</p>
+        </header>
+
+        <!-- סעיף 1: המהפך הפילוסופי -->
+        <section>
+            <h2 class="title-red">1. המהפך מ"ערך" ל"זהות ומצב" (The Store)</h2>
+            <p class="mb-3">
+                ברגע שהכנסנו מוטציות (שינויי זיכרון) באמצעות המודול <code>store.scm</code>, משתנים חדלו להיות אמת מתמטית נצחית וקיבלו <span class="marker-yellow">זהות פיזית (Identity)</span> המשויכת למיקום בזיכרון, כאשר התוכן הפנימי הוא ה<span class="marker-yellow">מצב (State)</span> שיכול להשתנות לאורך זמן. 
+            </p>
+            <div class="hand-drawn-box bg-slate-50">
+                <ul class="list-disc list-inside space-y-2 text-slate-800 font-semibold pr-4">
+                    <li><strong>Denoted Values:</strong> מה שיושב בתוך הסביבה (Environment).</li>
+                    <li><strong>Expressed Values:</strong> מה שיוצא מחישוב ביטוי (Expression).</li>
+                    <li>הסביבה קושרת כעת משתנה אל <strong>כתובת</strong> (Reference), וה-Store קושר כתובת ל<strong>ערך</strong> (Value).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- סעיף 2: EXPLICIT-REFS -->
+        <section>
+            <h2 class="title-blue">2. שפת EXPLICIT-REFS (ניהול ידני)</h2>
+            <p class="mb-3">
+                שפה בה המתכנת מנהל את המצביעים באופן ידני, ממש כמו ב-C. משתנה <strong>אינו</strong> כתובת כברירת מחדל, אלא אם כן ביקשנו במפורש.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="hand-drawn-box !mt-0">
+                    <h3 class="font-heading text-lg text-blue-800 mb-2">4 הפקודות המפורשות:</h3>
+                    <ul class="list-disc list-inside space-y-2 text-slate-800 text-sm font-semibold">
+                        <li><code>newref(x)</code> - מקצה תא ב-Store ומחזיר כתובת.</li>
+                        <li><code>deref(loc)</code> - שולף את הערך שבתוך הכתובת.</li>
+                        <li><code>setref(loc, val)</code> - דורס את הערך בתא.</li>
+                        <li><code>begin</code> - מריץ רצף ומחזיר רק את האחרון.</li>
+                    </ul>
+                </div>
+                <div class="hand-drawn-box !mt-0 bg-blue-50/50">
+                    <h3 class="font-heading text-lg text-blue-800 mb-2">ערך הדאמי ופח האשפה</h3>
+                    <p class="text-sm font-semibold leading-relaxed">
+                        <code>setref</code> חייב להחזיר ערך (כי כל Expression חייב). הוא מחזיר ערך דאמי שרירותי (למשל <span class="marker-blue">23</span>). כדי שזה לא יזהם חישובים אריתמטיים, משתמשים ב-<code>begin</code> שמשמש כ"פח אשפה" - הוא מאפשר לאפקט ב-Store לקרות וזורק את ה-23 לפח, ומחזיר רק את הפקודה האחרונה בבלוק.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- סעיף 3: IMPLICIT-REFS -->
+        <section>
+            <h2 class="title-green">3. שפת IMPLICIT-REFS (ניהול אוטומטי)</h2>
+            <p class="mb-3">
+                השפה המודרנית (כמו פייתון או JS). <span class="marker-yellow font-bold">חוק הברזל: הסביבה מכילה תמיד אך ורק כתובות (References)!</span> ההקצאה והשליפה נעשות בסתר.
+            </p>
+            <div class="hand-drawn-box">
+                <h3 class="font-heading text-xl text-green-800 mb-2">מודל ה-L-value מול R-value במפרש</h3>
+                <ul class="list-disc list-inside space-y-3 text-slate-800 font-semibold pr-4">
+                    <li>
+                        <strong>R-value (צד ימין/קריאה):</strong> כאשר המפרש מעריך <code>var-exp</code> הוא זקוק לערך עצמו. לכן הוא יחפש בסביבה ויבצע אוטומטית <span class="marker-yellow">deref סמוי</span> על הכתובת שנמצאה כדי להחזיר את הערך.
+                    </li>
+                    <li>
+                        <strong>L-value (צד שמאל/השמה):</strong> בהשמה <code>set x = 10</code> (במפרש: <code>assign-exp</code>), המפרש <strong>לא</strong> מעוניין בערך. הוא מפעיל <code>apply-env</code> כדי לקבל את הכתובת בזיכרון, ואז פונה ישירות ל-<code>setref!</code> עליה. 
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="p-4 bg-red-50 border-r-4 border-red-500 rounded my-4">
+                <h4 class="font-bold text-red-800 mb-1">⚠️ מלכודת מבחנים: סביבה רקורסיבית ב-IMPLICIT-REFS</h4>
+                <p class="text-sm text-slate-800 font-semibold">
+                    אם נשים את הקצאת ה-<code>newref</code> בתוך <code>apply-env</code> בזמן חיפוש של פונקציה רקורסיבית, המפרש ייצר תא זמני חדש בכל קריאה. ניסיון לבצע השמה (<code>set</code>) לפונקציה ידרוס תא שייזרק מיד! <strong>התיקון:</strong> חובה לבצע את ההקצאה במערך פעם אחת ב-<code>extend-env-rec</code>.
+                </p>
+            </div>
+        </section>
+
+        <!-- סעיף 4: MUTABLE-PAIRS -->
+        <section>
+            <h2 class="title-purple">4. זוגות משתנים (MUTABLE-PAIRS)</h2>
+            <p class="mb-3">
+                הרחבת השפה לתמיכה במבני נתונים (רשימות/עצים) ע"י <code>newpair</code> והוספת הפקודות <code>setleft</code> ו-<code>setright</code> המשנות את מצביעי הזוג.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="hand-drawn-box !mt-0 border-purple-300">
+                    <h3 class="font-heading text-lg text-purple-800 mb-2">גישה 1: pairval1 (בטוחה)</h3>
+                    <p class="text-sm font-semibold mb-2">הזוג הוא אובייקט שמחזיק 2 כתובות נפרדות ל-Store.</p>
+                    <ul class="text-xs list-disc list-inside space-y-1">
+                        <li><code>mutpair-val(Ref(left), Ref(right))</code></li>
+                        <li>דורש 2 הקצאות <code>newref</code> נפרדות לאיברים.</li>
+                        <li>הצד הימני מוגן ונמצא בכתובת עצמאית.</li>
+                    </ul>
+                </div>
+                <div class="hand-drawn-box !mt-0 border-purple-300 bg-purple-50/30">
+                    <h3 class="font-heading text-lg text-purple-800 mb-2">גישה 2: pairval2 (מתכנת C)</h3>
+                    <p class="text-sm font-semibold mb-2">הזוג הוא כתובת בודדת המצביעה לבלוק רציף.</p>
+                    <ul class="text-xs list-disc list-inside space-y-1">
+                        <li><code>mutpair-val(Ref(base))</code></li>
+                        <li>השמאל הוא בכתובת <code>p</code>, הימין <strong>מחושב</strong> כ-<code>p+1</code>!</li>
+                        <li><span class="text-red-700 font-bold">סכנה:</span> יקרוס מיד אם נכניס Garbage Collector שמזיז תאים בזיכרון, כי ההנחה ש-p+1 צמוד אליו פיזית תישבר.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- סעיף 5: העברת פרמטרים -->
+        <section>
+            <h2 class="title-red">5. העברת פרמטרים (Parameter Passing)</h2>
+            <p class="mb-3">
+                במקום לשלוח לפונקציה את הארגומנט בצורה עיוורת, המפרש מנתב אותו דרך פונקציה מתווכת: <span class="marker-blue font-mono font-bold">value-of-operand</span> המכריעה כיצד להקצות לו זיכרון.
+            </p>
+            
+            <div class="space-y-4">
+                <div class="p-4 bg-white border border-slate-200 rounded shadow-sm">
+                    <h3 class="font-bold text-teal-800 text-lg mb-1">Call-by-Value (לפי ערך - ברירת המחדל)</h3>
+                    <p class="text-sm font-semibold text-slate-700">
+                        ה-operand חושב ל-ExpVal, והמתווך מבצע <code>newref</code> ומקצה תא זיכרון <strong>חדש לגמרי</strong> בסביבת הפונקציה. שינויים על הפרמטר פנימה לא דולפים החוצה.
+                    </p>
+                </div>
+                
+                <div class="p-4 bg-white border border-red-200 rounded shadow-sm">
+                    <h3 class="font-bold text-red-800 text-lg mb-1">Call-by-Reference (לפי מצביע / הפניה)</h3>
+                    <p class="text-sm font-semibold text-slate-700">
+                        אם הארגומנט הוא משתנה, המתווך חוטף אותו <strong>ולא עושה לו deref</strong> ולא מקצה תא חדש. הוא שולף את הכתובת הקיימת מהסביבה ומוסר אותה כפי שהיא לפונקציה. נוצר <span class="marker-red font-bold">Aliasing (כינוי מרובה)</span> – שני משתנים (x החיצוני ו-y הפנימי) המצביעים בדיוק לאותו תא ב-Store. מוטציה פנימית משנה את המשתנה החיצוני.
+                    </p>
+                </div>
+
+                <div class="p-4 bg-white border border-blue-200 rounded shadow-sm flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <h3 class="font-bold text-blue-800 text-lg mb-1">Call-by-Name (עצלנות ללא שמירה)</h3>
+                        <p class="text-sm font-semibold text-slate-700">
+                            משהים את החישוב! המתווך מקצה תא זיכרון ובתוכו אורז <strong>Thunk</strong> (קופסה המכילה את עץ התחביר AST ו<span class="underline">הסביבה הלקסיקלית המקורית</span> שלו). כל פעם שמשתמשים במשתנה, פותחים את ה-Thunk ומחשבים הכל מחדש.
+                        </p>
+                    </div>
+                    <div class="flex-1 border-t md:border-t-0 md:border-r border-slate-200 pt-3 md:pt-0 md:pr-4">
+                        <h3 class="font-bold text-emerald-800 text-lg mb-1">Call-by-Need (עצלנות + Memoization)</h3>
+                        <p class="text-sm font-semibold text-slate-700">
+                            מחשבים רק כשצריך, אבל <strong>שומרים את התוצאה</strong>! ברגע ש-var-exp מחלץ את ה-Thunk ומחשב אותו בפעם הראשונה, המפרש פונה לאחור ומבצע <code>setref!</code> על תא ה-Thunk ב-Store כדי לדרוס אותו עם התוצאה הסופית. קריאות עתידיות ישלפו מספר מוכן (חוסך חישובים יקרים).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>
