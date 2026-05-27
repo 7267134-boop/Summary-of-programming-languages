@@ -1,8 +1,0 @@
-# Ignore everything by default
-*
-
-# Exclude hidden directories (e.g. .git)
-.git/
-
-# Allow only HTML files
-!*.html
