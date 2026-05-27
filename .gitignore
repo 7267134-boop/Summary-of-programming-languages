@@ -1,8 +1,25 @@
-**/compiled/
-*.zo
-*.dep
-*.tmp
-~$*
+# Ignore everything by default
+*
 
-.DS_Store
-Thumbs.db
+# Allow the gitignore file itself
+!.gitignore
+
+# Allow directory traversal
+!*/
+
+# Allow HTML files everywhere
+!*.html
+!**/*.html
+
+# Allow the Exams/exam folder and all its contents
+![Ee]xam*/
+![Ee]xam*/**
+
+# Still ignore compile/temp junk everywhere (including within Exams)
+**/compiled/**
+**/*.zo
+**/*.dep
+**/*.tmp
+**/~$*
+**/.DS_Store
+**/Thumbs.db
