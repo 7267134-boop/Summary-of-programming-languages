@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור ביטוי Switch-Exp - 2021ב מועד 57</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .template-box::before {
+            content: "✍️ שבלונה למבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .thought-box {
+            position: relative;
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .thought-box::before {
+            content: "💡 הבנת התהליך האלגוריתמי";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #c084fc;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Animation */
+        .step-transition { transition: all 0.3s ease-out; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-2xl font-black text-white tracking-tight leading-tight">Switch support<br><span class="text-blue-500">IMPLICIT-REFS</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון שאלת מועד 57 2021ב (שפה: יירמוז)</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()" class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge" class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <!-- Code viewer block -->
+            <div id="code-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 0,
+                title: "שלב 0: ניתוח הדרישה ומפת דרכים",
+                filename: "requirements.txt",
+                explanation: `
+                    <p class="mb-4">במבחן זה (מועד 57 2021ב שאלה 2), אנו נדרשים להוסיף לשפת <strong>IMPLICIT-REFS (יירמוז)</strong> ביטוי חדש ומעניין בשם <code>switch-exp</code> המאפשר תבניות והתאמת טיפוסים דינמית בזמן ריצה.</p>
+                    
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6 shadow-sm">
+                        <h4 class="font-bold text-blue-900 text-base mb-2">מבנה הדקדוק החדש:</h4>
+                        <div class="bg-white p-3 rounded border border-blue-100 font-mono text-sm mb-4 ltr text-left">
+Expression ::= switch Expression {<br>
+&nbsp;&nbsp;{Type identifier when (Expression) => Expression}+(,)<br>
+&nbsp;&nbsp;default => Expression<br>
+}<br><br>
+Type ::= number | boolean | function
+                        </div>
+                        <p class="text-sm text-slate-700 leading-relaxed">
+                            הביטוי מחשב תחילה את ערכו של <code>e1</code>. לאחר מכן, הוא סורק את ה-cases. לכל קייס הוא בודק האם הטיפוס של ערך ה-e1 מתאים לטיפוס המוצהר (<code>number</code>, <code>boolean</code>, או <code>function</code>). אם יש התאמה, הוא מרחיב את הסביבה הפעילה עם משתנה זמני, ומעריך את ביטוי ה-<code>when</code>. אם תנאי ה-<code>when</code> מתקיים (מחזיר <code>true</code>), אנו מחזירים את ביטוי הגוף של אותו קייס. אחרת, אנו ממשיכים לבדוק את הקייסים הבאים, ולבסוף מגיעים לקייס הדיפולטיבי (<code>default => Expression</code>).
+                        </p>
+                    </div>
+
+                    <div class="thought-box">
+                        <p class="text-purple-900 font-medium font-semibold mb-2">💡 עקרון הסמנטיקה החשוב ביותר:</p>
+                        <ul class="list-disc list-inside text-sm text-purple-900 space-y-1.5">
+                            <li><strong>סביבת הערכה של ה-when והגוף:</strong> כשקייס מסוים מתאים, אנו מגדירים משתנה מקומי (מזהה ה-identifier של אותו קייס) וכורכים אותו לערך של <code>e1</code>. ההרחבה מתבצעת בסביבה הנוכחית.</li>
+                            <li><strong>שפת IMPLICIT-REFS:</strong> כיוון שזו שפה עם התייחסות עקיפה (Implicit References), כל כריכה בסביבה חייבת להצביע על Reference (תא בזיכרון) חדש שמכיל את הערך. כלומר, עלינו להשתמש ב-<code>newref</code> בעת הרחבת הסביבה!</li>
+                            <li><strong>בידוד סביבות קייסים:</strong> אם תנאי ה-<code>when</code> החזיר <code>false</code>, אנו עוברים לקייס הבא. המעבר לקייס הבא חייב להתבצע עם הסביבה <strong>המקורית</strong> (base-env) ולא עם הסביבה המורחבת של הקייס שנכשל. אם לא נעשה זאת, נלכלך את הסביבה במשתנים לא רלוונטיים (מלכודת קריטית!).</li>
+                        </ul>
+                    </div>
+                `,
+                code: `;; --- מפת הדרכים האלגוריתמית ---
+;; 1. lang.scm: הגדרת חוקי הדקדוק של ה-switch-exp והטיפוסים התואמים.
+;; 2. interp.scm - value-of: הוספת case ל-switch-exp שקורא לפונקציית העזר apply-switch.
+;; 3. interp.scm - matching-types: פונקציית עזר הבודקת התאמת טיפוס runtime של expval ל-Type הסינטקטי.
+;; 4. interp.scm - apply-switch: לולאה רקורסיבית העוברת על הקייסים, יוצרת הפניה (newref) ומנהלת את הסביבה.`
+            },
+            {
+                id: 1,
+                title: "שלב 1: עדכון הדקדוק (lang.scm)",
+                filename: "lang.scm",
+                explanation: `
+                    <p class="mb-4">ה-Parser וה-Scanner צריכים לזהות את אופן ההגדרה והמילים השמורות של ה-switch והטיפוסים שלו.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון קובץ התחביר (lang.scm):</strong> נוסיף את הכלל עבור <code>switch-exp</code> בתוך הגדרת <code>the-grammar</code>. נשתמש ב-<code>separated-list</code> עם פסיק כמפריד. בנוסף, נגדיר סוג נתונים חדש עבור הטיפוסים <code>type</code> שמייצג את המילים השמורות <code>number</code>, <code>boolean</code>, <code>function</code>."
+                        </p>
+                    </div>
+
+                    <p class="text-sm text-slate-600 mt-2">
+                        הערה: הטיפוסים כאן הם חלק מביטוי ה-switch (כלומר, סמנטיקה מזהה של הטיפוס בזמן ריצה) ואין להם שום קשר למערכת הטיפוסים הסטטית של פרק 7.
+                    </p>
+                `,
+                code: `;; בקובץ lang.scm בתוך הגדרת the-grammar:
+
+(expression
+  ("switch" expression "{" 
+     (separated-list type identifier "when" "(" expression ")" "=>" expression ",") 
+     "default" "=>" expression 
+   "}")
+  switch-exp)
+
+(type
+  ("number")
+  number)
+
+(type
+  ("boolean")
+  boolean)
+
+(type
+  ("function")
+  function)`
+            },
+            {
+                id: 2,
+                title: "שלב 2: עדכון מנוע ההערכה (interp.scm - value-of)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">כעת נעדכן את פונקציית ההערכה המרכזית <code>value-of</code> בקובץ המפרש כדי לתפוס את <code>switch-exp</code>.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון value-of (interp.scm):</strong> במידה וקיבלנו <code>switch-exp</code>, נחשב קודם כל את הערך של ביטוי הבסיס <code>e1</code>. לאחר מכן נוודא שרשימת הקייסים אינה ריקה (אם היא ריקה - נשליך שגיאה). במידה והיא תקינה, נקרא לפונקציית העזר <code>apply-switch</code> עם הערך המחושב, רשימות המרכיבים של הקייסים, והסביבה הנוכחית."
+                        </p>
+                    </div>
+                `,
+                code: `;; בקובץ interp.scm בתוך ה-cases של value-of:
+
+(switch-exp (e1 typs ids bools exps defexp)
+  (if (null? typs)
+      (eopl:error 'value-of "switch cases is missing")
+      (apply-switch env (value-of e1 env) typs ids bools exps defexp)))`
+            },
+            {
+                id: 3,
+                title: "שלב 3: בדיקת התאמת הטיפוסים בזמן ריצה (matching-types)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">בזמן ריצה, הערך המחושב של <code>e1</code> מיוצג כ-<code>expval</code>. עלינו להשוות אותו ל-<code>type</code> המוצהר בקוד.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>מימוש פונקציית העזר matching-types:</strong> הפונקציה מקבלת ערך מבוטא <code>exp1</code> ואת הטיפוס התחבירי <code>t</code>. היא בודקת את ה-case של ה-<code>expval</code> (האם הוא <code>num-val</code>, <code>bool-val</code>, <code>proc-val</code>) ומשווה אותו לקייס המתאים של ה-<code>type</code> (<code>number</code>, <code>boolean</code>, <code>function</code>). במידה ויש התאמה מוחזר <code>#t</code>, אחרת <code>#f</code>."
+                        </p>
+                    </div>
+                `,
+                code: `;; פונקציית עזר בקובץ interp.scm:
+
+(define (matching-types exp1 t)
+  (cases expval exp1
+    (num-val (num) 
+      (cases type t 
+        (number () #t) 
+        (else #f)))
+    (bool-val (bool) 
+      (cases type t 
+        (boolean () #t) 
+        (else #f)))
+    (proc-val (proc) 
+      (cases type t 
+        (function () #t) 
+        (else #f)))
+    (else #f)))`
+            },
+            {
+                id: 4,
+                title: "שלב 4: מנגנון הריצה הרקורסיבי (apply-switch)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4 font-semibold text-slate-800">הגענו לליבת האלגוריתם - מעבר רקורסיבי על כל הקייסים של ה-switch-exp:</p>
+                    
+                    <div class="template-box mb-6">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>מימוש apply-switch:</strong> 
+                            1. במידה ורשימת הטיפוסים ריקה, משמע עברנו על כל הקייסים ולא נמצאה התאמה. אנו מעריכים ומחזירים את ביטוי הדיפולט <code>default-exp</code> בסביבה המקורית <code>base-env</code>.
+                            2. לכל קייס, נבדוק תחילה התאמת טיפוס בעזרת <code>matching-types</code>.
+                            3. אם יש התאמה, נרחיב את הסביבה <code>base-env</code> על ידי יצירת תא זיכרון חדש <code>(newref curr-val)</code> עבור המזהה של הקייס הנוכחי. בסביבה החדשה <code>new-env</code> נעריך את תנאי ה-<code>when</code>.
+                            4. במידה והתנאי מחזיר <code>true</code> (בדוק בעזרת <code>expval->bool</code>), נחזיר את הערכת ביטוי הגוף של הקייס בסביבה החדשה.
+                            5. בכל מקרה אחר (אם הטיפוס לא התאים, או שהתנאי החזיר <code>false</code>) - נמשיך רקורסיבית לקייס הבא <strong>תוך שימוש בסביבה המקורית base-env</strong>."
+                        </p>
+                    </div>
+                `,
+                code: `;; פונקציית הסריקה הרקורסיבית בקובץ interp.scm:
+
+(define (apply-switch base-env curr-val types ids bools exps default-exp)
+  (if (null? types)
+      (value-of default-exp base-env)
+      (if (matching-types curr-val (car types))
+          (let ((new-env (extend-env (car ids) (newref curr-val) base-env)))
+            (if (expval->bool (value-of (car bools) new-env))
+                (value-of (car exps) new-env)
+                (apply-switch base-env curr-val (cdr types) (cdr ids) (cdr bools) (cdr exps) default-exp)))
+          (apply-switch base-env curr-val (cdr types) (cdr ids) (cdr bools) (cdr exps) default-exp))))`
+            },
+            {
+                id: 5,
+                title: "שלב 5: מלכודות מבחן ודגשים של אלופים",
+                filename: "champions_tips.txt",
+                explanation: `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-xl text-red-900 shadow-md space-y-4">
+                        <h3 class="font-extrabold text-xl flex items-center text-red-800">
+                            <i class="fa-solid fa-triangle-exclamation ml-3 text-2xl"></i>
+                            מלכודות קריטיות - שאלת switch-exp בשפת IMPLICIT-REFS!
+                        </h3>
+                        <p class="text-sm leading-relaxed">
+                            הנה שלוש המלכודות שבהן רוב הסטודנטים נופלים ומאבדים את רוב הנקודות בשאלה זו:
+                        </p>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 1: שכחת ה-newref בהרחבת הסביבה</strong>
+                                שפת <code>IMPLICIT-REFS</code> היא שפה עם הפניות עקיפות משתמעות. כל תא בסביבה הוא Reference למיקום בזיכרון, ולא הערך ישירות! 
+                                לכן כתיבה כמו <code>(extend-env (car ids) curr-val base-env)</code> היא <strong>שגויה לחלוטין</strong> ותגרור הורדה כבדה של נקודות. יש לכתוב:
+                                <code class="bg-slate-100 text-teal-700 px-1 py-0.5 rounded font-mono text-xs">(extend-env (car ids) (newref curr-val) base-env)</code>.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 2: "זליגת סביבות" (Environment Pollution)</strong>
+                                אם קייס מסוים נכשל בבדיקת ה-<code>when</code> שלו, אנו חייבים להמשיך לקייסים הבאים. 
+                                הסטודנטים נוטים בטעות להעביר את הסביבה המורחבת <code>new-env</code> לקריאה הרקורסיבית הבאה. זה שגוי! המשתנה שמוגדר בקייס הנוכחי הוא <strong>מקומי בלבד</strong> לקייס הזה. המעבר לקייס הבא חייב להתבצע עם <code>base-env</code> המקורית.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 3: החזרת קייס הדיפולט</strong>
+                                במידה וסיימנו את כל רשימת הקייסים ולא נמצאה התאמה, אנו חייבים להעריך את ביטוי ה-default. אל תשכחו לקרוא ל-<code>(value-of default-exp base-env)</code> ולא להחזיר פשוט את <code>default-exp</code> כביטוי לא מוערך!
+                            </div>
+                        </div>
+                    </div>
+                `,
+                code: `;; טיפ זהב לזכור במבחן:
+;; 1. ביישגור (PROC): extend-env מקבל ערך ישיר.
+;; 2. ביירמוז (IMPLICIT-REFS): extend-env מקבל (newref val).
+;; 3. שמרו על הסביבה המקורית נקייה במעבר בין קייסים ב-switch!`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+            
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + currentStep;
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+                
+                if (step.code && step.filename) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    if (window.Prism) {
+                        Prism.highlightElement(codeBlock);
+                    }
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+                
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+                
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { 
+            if (currentStep < steps.length - 1) { 
+                currentStep++; 
+                updateUI(); 
+            } else {
+                alert("כל הכבוד! סיימתם את לימוד שאלת Switch-Exp. מוכנים לחלק המעשי?");
+            }
+        }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

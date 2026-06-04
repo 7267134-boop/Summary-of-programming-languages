@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור - פתרון שאלת מבחן מודרכת</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .code-font {
+            font-family: 'Consolas', monospace;
+        }
+
+        #annotations-svg path,
+        #annotations-svg text,
+        #annotations-svg rect {
+            transition: stroke 0.3s, stroke-width 0.3s, fill 0.3s, opacity 0.3s, font-size 0.3s;
+        }
+
+        #code-container {
+            transition: font-size 0.3s ease, line-height 0.3s ease, padding 0.3s ease;
+        }
+
+        #code-container.shrunk {
+            font-size: 1.15rem !important;
+            line-height: 3.2rem !important;
+            padding: 1.5rem !important;
+        }
+
+        .table-row-enter {
+            animation: fadeInRow 0.5s ease-out forwards;
+        }
+
+        .row-highlight {
+            background-color: #fef9c3 !important;
+            /* yellow-100 */
+            transition: background-color 0.5s ease;
+        }
+
+        @keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+                background-color: #dcfce7;
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                background-color: transparent;
+            }
+        }
+
+        .checkmark {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        @keyframes popIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .dark-scroll::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 h-screen flex overflow-hidden bg-slate-50">
+
+    <!-- Main Content (100% height and width) -->
+    <div class="flex-1 relative overflow-hidden bg-slate-100 flex h-full">
+
+        <!-- ================= EXAM PAPER OVERLAY (Step 0) ================= -->
+        <div id="exam-paper"
+            class="absolute inset-0 bg-slate-100 z-30 flex justify-center p-6 overflow-y-auto transition-all duration-500">
+            <div
+                class="bg-white max-w-4xl w-full p-8 md:p-12 shadow-xl rounded-xl border border-slate-200 relative min-h-fit">
+                <!-- Exam lines visual -->
+                <div class="absolute right-6 top-0 bottom-0 w-px bg-red-400 opacity-20"></div>
+
+                <div class="pr-6 md:pr-10">
+                    <h2 class="text-2xl font-bold mb-4 border-b pb-2 text-slate-900">שאלה - שפת "ויקיש" (INFERRED) </h2>
+                    <p class="mb-3 text-base text-slate-700">להלן נתונה תוכנית בשפת "ויקיש" (INFERRED):</p>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 font-mono text-lg mb-4 text-slate-100 whitespace-pre-wrap break-all"
+                        dir="ltr">(proc (x: ?) x proc (y : ?) -(y,y))</div>
+
+                    <p class="mb-6 text-sm text-slate-500">ברצוננו לקבוע מהו טיפוס התוכנית (אם קיים). לשם כך, עליכם
+                        להשתמש באלגוריתם שנלמד בפרק 7 להקשת הטיפוס.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-700 mb-8">
+                        <div
+                            class="p-5 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-sm transition-shadow">
+                            <h3 class="text-base font-bold text-primary mb-2">סעיף א' <span
+                                    class="text-xs font-normal text-slate-400 font-sans mr-1">(15 נקודות)</span></h3>
+                            <p class="text-xs leading-relaxed text-slate-600">הקצו לביטוי הנתון בשאלה ולתתי הביטויים שלו
+                                משתני-טיפוס (Type Variables) מתאימים, וחברו משוואות מתאימות לביטוי הנתון ולתתי הביטויים
+                                שלו.</p>
+                        </div>
+                        <div
+                            class="p-5 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-sm transition-shadow">
+                            <h3 class="text-base font-bold text-primary mb-2">סעיף ב' <span
+                                    class="text-xs font-normal text-slate-400 font-sans mr-1">(15 נקודות)</span></h3>
+                            <p class="text-xs leading-relaxed text-slate-600">פתרו את המשוואות שהרכבתם בסעיף א' תוך
+                                שימוש ב- substitution ו- unification בדומה למתואר בספר בעמודים 258-252. בסיום פתרון
+                                המשוואות רשמו מהו הטיפוס שאותו הקשתם עבור התוכנית הנתונה.</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="btn-start"
+                            class="px-8 py-3 bg-primary hover:bg-blue-600 text-white text-lg font-bold rounded-lg shadow transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            בואו נפתור את זה במדויק!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= WORKBENCH (Steps 1+) ================= -->
+        <div id="workbench" class="flex-1 flex hidden">
+            <!-- Sidebar (Tutor) -->
+            <div
+                class="w-96 flex-shrink-0 bg-darker text-slate-300 border-l border-slate-800 flex flex-col shadow-lg z-20 relative">
+                <div class="w-full bg-slate-800 h-1.5">
+                    <div id="progress-bar" class="bg-primary h-1.5 transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="flex-1 p-6 overflow-y-auto flex flex-col justify-between">
+                    <div class="flex-shrink-0">
+                        <h2
+                            class="text-lg font-bold text-white mb-3 border-b pb-2 border-slate-800 flex justify-between">
+                            <span id="step-title">כותרת שלב</span>
+                        </h2>
+                        <div id="step-description" class="text-slate-300 leading-relaxed space-y-4 text-[1.02rem]">
+                            <!-- Dynamic text -->
+                        </div>
+                    </div>
+
+                    <!-- Sidebar AST Reference (visible in steps 5+) -->
+                    <div id="sidebar-ast-container"
+                        class="mt-6 hidden bg-slate-900 p-4 rounded-xl border border-slate-800 relative overflow-hidden flex-shrink-0 select-none text-left"
+                        style="font-size: 0.8rem; line-height: 2.2rem; font-family: 'Consolas', monospace; direction: ltr;">
+                        <svg id="annotations-svg-sidebar" class="absolute inset-0 pointer-events-none w-full h-full"
+                            style="z-index: 0;"></svg>
+
+                        <!-- Sidebar Code Lines -->
+                        <div class="code-line relative pl-8 py-0.5 font-mono" style="z-index: 10; color: #cbd5e1;">
+                            <span id="side-t0-start"></span><span>(</span><span
+                                id="side-t1-start"></span><span>proc(</span><span id="side-tx"
+                                class="relative px-0.5 font-bold rounded">x</span><span>:?) x</span><span
+                                id="side-t1-end"></span><span> </span><span
+                                id="side-t2-start"></span><span>proc(</span><span id="side-ty"
+                                class="relative px-0.5 font-bold rounded">y</span><span>:?) </span><span
+                                id="side-t3-start"></span><span>-(y,y)</span><span id="side-t3-end"></span><span
+                                id="side-t2-end"></span><span>)</span><span id="side-t0-end"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-slate-800 bg-slate-950/40 flex justify-between items-center gap-2">
+                    <button id="btn-prev"
+                        class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40">חזור</button>
+                    <span id="step-counter"
+                        class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+                    <button id="btn-next"
+                        class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold">המשך</button>
+                </div>
+            </div>
+
+            <!-- Workspace Panels -->
+            <div id="workspace-scroll"
+                class="flex-1 flex flex-col p-6 gap-8 overflow-y-auto relative bg-slate-50 scroll-smooth">
+
+                <!-- AST View -->
+                <div
+                    class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex-shrink-0 relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">עץ גזירה והקצאת טיפוסים
+                            (AST)</h3>
+                        <span
+                            class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono">app-exp</span>
+                    </div>
+
+                    <div class="relative select-none text-left p-12 border border-slate-100 rounded-xl bg-slate-50/50"
+                        dir="ltr" id="code-container"
+                        style="line-height: 4rem; font-size: 1.45rem; font-family: 'Consolas', monospace;">
+                        <!-- SVG overlay for annotations -->
+                        <svg id="annotations-svg" class="absolute inset-0 pointer-events-none w-full h-full"
+                            style="z-index: 0;"></svg>
+
+                        <!-- Code Lines -->
+                        <div class="code-line relative pl-16 py-1 font-mono" style="z-index: 10;">
+                            <span id="code-t0-start"></span><span>(</span><span
+                                id="code-t1-start"></span><span>proc(</span><span id="code-tx"
+                                class="relative px-1 font-bold rounded">x</span><span>:?) x</span><span
+                                id="code-t1-end"></span><span> </span><span
+                                id="code-t2-start"></span><span>proc(</span><span id="code-ty"
+                                class="relative px-1 font-bold rounded">y</span><span>:?) </span><span
+                                id="code-t3-start"></span><span>-(y,y)</span><span id="code-t3-end"></span><span
+                                id="code-t2-end"></span><span>)</span><span id="code-t0-end"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part A: EQU Table -->
+                <div id="panel-a"
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 hidden flex-col overflow-hidden">
+                    <div class="p-4 border-b border-slate-200 bg-slate-50">
+                        <h3 class="text-sm font-bold text-slate-800">סעיף א': בניית טבלת משוואות</h3>
+                    </div>
+                    <div class="p-0">
+                        <table class="w-full text-left border-collapse" dir="ltr">
+                            <thead class="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th class="p-3 font-semibold text-slate-600 w-2/5 text-xs uppercase tracking-wider">
+                                        Expression</th>
+                                    <th
+                                        class="p-3 font-semibold text-slate-600 w-1/5 text-center border-r border-slate-200 text-xs uppercase tracking-wider">
+                                        Type Variable</th>
+                                    <th
+                                        class="p-3 font-semibold text-slate-600 w-2/5 border-r border-slate-200 text-xs uppercase tracking-wider">
+                                        Equations (AQ)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-a-body" class="code-font text-[14px] bg-white text-slate-800">
+                                <!-- Generated rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Part B: Substitutions Tables -->
+                <div id="panel-b"
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 hidden flex-col mb-10 relative overflow-hidden">
+                    <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-slate-800">סעיף ב': אלגוריתם הצבות ואיחודים</h3>
+                    </div>
+
+                    <!-- Dynamic container for tables -->
+                    <div id="b-content-area"
+                        class="flex flex-row flex-nowrap p-6 gap-2 bg-slate-50 items-stretch justify-start overflow-x-auto"
+                        dir="ltr">
+                        <!-- Tables will be injected here -->
+                    </div>
+
+                    <!-- Final Conclusion Absolute Overlay -->
+                    <div id="final-conclusion"
+                        class="hidden absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white px-8 py-4 border-2 border-green-500 rounded-2xl shadow-xl flex items-center gap-6 z-20">
+                        <div class="text-2xl font-bold text-slate-800" dir="rtl">מסקנה סופית: <span dir="ltr"
+                                class="font-mono text-green-700 ml-2">t0 = int -> int</span></div>
+                        <div class="text-green-500 text-6xl font-black checkmark">✓</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic Engine -->
+    <script>
+        // Data format helpers
+        const t = (sub) => `t<sub style="font-size:0.7em">${sub}</sub>`;
+
+        // Specific formatting functions for the "Open University" style annotations
+        const ann = (v, val, c) => `<span class="inline-block text-center align-top mx-[2px] leading-tight"><span class="block">${v}</span><span class="block text-[8px] font-bold text-${c}-600 leading-none mt-[2px]">(${val})</span></span>`;
+        const m = `<span class="font-bold text-red-600 mr-1 select-none">(*)</span>`;
+
+        // Definition of the Rows for Part A
+        const r0 = { exp: "(proc (x: ?) x proc (y : ?) -(y,y))", tvar: t('0'), equ: `${t('1')} = ${t('2')} &rarr; ${t('0')}`, hl: false };
+        const r1 = { exp: "proc (x: ?) x", tvar: t('1'), equ: `${t('1')} = ${t('x')} &rarr; ${t('x')}`, hl: false };
+        const r2 = { exp: "proc (y : ?) -(y,y)", tvar: t('2'), equ: `${t('2')} = ${t('y')} &rarr; ${t('3')}`, hl: false };
+        const r3 = { exp: "-(y,y)", tvar: t('3'), equ: `1. ${t('y')} = int<br>2. ${t('3')} = int`, hl: false };
+        const rx = { exp: "x", tvar: t('x'), equ: "", hl: false };
+        const ry = { exp: "y", tvar: t('y'), equ: "", hl: false };
+
+        const empty = (r) => ({ ...r, equ: "" });
+        const highlight = (r) => ({ ...r, hl: true });
+
+        const steps = [
+            {
+                title: "סעיף א': נתחום את תתי-הביטויים",
+                text: "נחלץ את המבנה של התוכנית מן החוץ פנימה. נקיף תחילה את כל התוכנית שהיא הפעלת פרוצדורה <code>(proc (x: ?) x proc (y : ?) -(y,y))</code> ונקצה לה את המשתנה <b>t0</b>.<br><br>התיחום יישאר קבוע על המסך כדי שנוכל לראות את החלוקה לאורך כל הפתרון.",
+                ui: { panel: 'ast', activeBox: 'ast-t0' }
+            },
+            {
+                title: "סעיף א': האופרטור (הפרוצדורה הראשונה)",
+                text: "החלק השמאלי של ההפעלה הוא הפרוצדורה המופעלת: <code>proc (x: ?) x</code>. נתחום אותה ונקצה לה את משתנה הטיפוס <b>t1</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t1' }
+            },
+            {
+                title: "סעיף א': האופרנד (הפרוצדורה השנייה)",
+                text: "החלק הימני של ההפעלה הוא הארגומנט המועבר: <code>proc (y : ?) -(y,y)</code>. נתחום אותו ונקצה לו את משתנה הטיפוס <b>t2</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t2' }
+            },
+            {
+                title: "סעיף א': גוף הפרוצדורה השנייה",
+                text: "בתוך הפרוצדורה השנייה (t2), הגוף שלה מבצע פעולת חיסור: <code>-(y,y)</code>. נתחום אותו כ-<b>t3</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t3' }
+            },
+            {
+                title: "סעיף א': משתני הטיפוס של הארגומנטים",
+                text: "לסיום, הפרמטרים <code>x</code> ו-<code>y</code> של הפרוצדורות יתוחמו כ-<b>tx</b> ו-<b>ty</b> בהתאמה.<br><br>כעת המבנה ההיררכי של כל התוכנית ברור לחלוטין ואנו מוכנים לבנות את טבלת המשוואות.",
+                ui: { panel: 'ast', activeBox: 'ast-tx' }
+            },
+            // Phase A: Top-Down Expressions, Bottom-Up Equations
+            {
+                title: "בניית טבלת המשוואות: מלמעלה למטה!",
+                text: "<b>כאן הסוד לפשטות:</b> כשאנו בונים את הטבלה, הרבה יותר אינטואיטיבי לפרוס תחילה את עמודות הביטויים (Expressions) <b>מלמעלה למטה</b> (מ-t0 ועד ty).<br><br>את עמודת המשוואות (Equations) נשאיר ריקה כרגע. שיטה זו מונעת בלבול ושכחת איברים.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), empty(r2), empty(r3), empty(rx), empty(ry)]
+                }
+            },
+            {
+                title: "חילוץ משוואות (AQ) - מלמטה למעלה",
+                text: "כעת, לאחר שהכל פרוס מולנו, נחלץ את המשוואות <b>מלמטה למעלה</b>! נתחיל מ-x ו-y: אין להם אילוצים משלהם, לכן עמודת המשוואות שלהם נותרת ריקה.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), empty(r2), empty(r3), highlight(rx), highlight(ry)]
+                }
+            },
+            {
+                title: "משוואות לביטויי החיסור (t3)",
+                text: "נעלה ל-t3 (הביטוי <code>-(y,y)</code>).<br>1) פעולת החיסור דורשת ששני הארגומנטים יהיו int, ולכן: <b>ty = int</b>.<br>2) תוצאת החיסור היא תמיד מספר שלם, ולכן הביטוי כולו הוא מטיפוס: <b>t3 = int</b>.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), empty(r2), highlight(r3), rx, ry]
+                }
+            },
+            {
+                title: "משוואה לפרוצדורת האופרנד (t2)",
+                text: "נעלה ל-t2 (הביטוי <code>proc (y : ?) -(y,y)</code>).<br>הפרוצדורה מקבלת את ty ומחזירה את t3. לכן נרשום: <b>t2 = ty &rarr; t3</b>.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), highlight(r2), r3, rx, ry]
+                }
+            },
+            {
+                title: "משוואה לפרוצדורת האופרטור (t1)",
+                text: "נעלה ל-t1 (הביטוי <code>proc (x: ?) x</code>).<br>הפרוצדורה מקבלת את tx ומחזירה אותו ישירות, לכן: <b>t1 = tx &rarr; tx</b>.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), highlight(r1), r2, r3, rx, ry]
+                }
+            },
+            {
+                title: "משוואת הפעלת הפונקציה (t0)",
+                text: "לסיום, נעלה ל-t0 (ההפעלה של t1 על t2).<br>t1 מופעל על t2 ומחזיר את t0. לכן, t1 חייב להיות פונקציה מהצורה t2 &rarr; t0. נרשום: <b>t1 = t2 &rarr; t0</b>.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [highlight(r0), r1, r2, r3, rx, ry]
+                }
+            },
+            // Phase B: Method of the Open University
+            {
+                title: "סעיף ב': מצב התחלתי",
+                text: "העתקנו את כל המשוואות לעמודת ה-Equations. עמודת ה-Substitutions ריקה.<br><br>בגישה הדרגתית זו, לא נמחק או נדרוס את המשוואות. במקום זאת, נסמן ב-<span class='text-red-500 font-bold'>(*)</span> את העוגנים (הפרימיטיביים) הברורים - <code>ty = int</code> ו-<code>t3 = int</code> המוכנים להעברה לצד ימין.",
+                ui: { panel: 'panel-b', bTransition: [0] }
+            },
+            {
+                title: "שלב 1: חילחול הפרימיטיביים ל-t2",
+                text: "ty ו-t3 עברו ימינה כ-int. <br><br>אנו מציבים אותם במשוואה של t2 ורושמים את הערכים הקטנים (Annotations) מתחת למופעים שלהם. נסמן כעת את המשוואה t2 בכוכבית, שכן המבנה שלה כעת פתור במלואו כפונקציה: (int &rarr; int).",
+                ui: { panel: 'panel-b', bTransition: [0, 1] }
+            },
+            {
+                title: "שלב 2: איחוד מבני (Structural Unification) עבור t1",
+                text: "t2 עבר ימינה והפך ל-(int &rarr; int).<br><br>אנו מציבים אותו במשוואה הראשונה של t1. כעת נוצר מצב מעניין: יש לנו שתי משוואות מקבילות עבור t1, דבר הדורש מאיתנו לבצע **איחוד מבני (השוואת צורה)**. נסמן את שתיהן בכוכבית לקראת הפירוק המבני.",
+                ui: { panel: 'panel-b', bTransition: [1, 2] }
+            },
+            {
+                title: "שלב 3: פירוק המשוואות וחילחול ל-t0",
+                text: "מתוך השוואת הצורות <code>tx &rarr; tx</code> מול <code>(int &rarr; int) &rarr; t0</code>, האלגוריתם מפרק (גוזר) מיד שתי מסקנות:<br>הצד השמאלי (ארגומנט): <code>tx = int &rarr; int</code>.<br>הצד הימני (החזרה): <code>tx = t0</code>.<br>אנו מסמנים את המשוואות החדשות הללו בכוכביות, וכך רואים ש-t0 מועמד גם הוא להיות (int &rarr; int).",
+                ui: { panel: 'panel-b', bTransition: [2, 3] }
+            },
+            {
+                title: "סיום מוחלט והמסקנה הסופית",
+                text: "המשוואות האחרונות פוענחו ועברו כולן ל-Substitutions. עמודת ה-Equations ריקה ואין סתירות (tx אכן שווה לעצמו, ו-t0 קיבל את ערכו התקין).<br><br>המסקנה הסופית, שהוסקה ללא דילוגים או ניחושים: <b>t0 = int &rarr; int</b>.",
+                ui: { panel: 'panel-b', bTransition: [3, 4], finalConclusion: true }
+            }
+        ];
+
+        // bTables strictly follow the incremental propagation and marking methodology.
+        const bTables = [
+            { // Table 0: Mark Primitives
+                title: "טבלה 1: מצב התחלתי",
+                equ: [
+                    `t<sub>1</sub> = t<sub>2</sub> &rarr; t<sub>0</sub>`,
+                    `t<sub>1</sub> = t<sub>x</sub> &rarr; t<sub>x</sub>`,
+                    `t<sub>2</sub> = t<sub>y</sub> &rarr; t<sub>3</sub>`,
+                    `${m} t<sub>y</sub> = int`,
+                    `${m} t<sub>3</sub> = int`
+                ],
+                sub: []
+            },
+            { // Table 1: Annotate t2
+                title: "טבלה 2: חילחול הפרימיטיביים",
+                equ: [
+                    `t<sub>1</sub> = t<sub>2</sub> &rarr; t<sub>0</sub>`,
+                    `t<sub>1</sub> = t<sub>x</sub> &rarr; t<sub>x</sub>`,
+                    `${m} t<sub>2</sub> = ${ann('t<sub>y</sub>', 'int', 'blue')} &rarr; ${ann('t<sub>3</sub>', 'int', 'blue')}`
+                ],
+                sub: [
+                    `t<sub>y</sub> = int`, `t<sub>3</sub> = int`
+                ]
+            },
+            { // Table 2: Propagate t2, setup Structural Unification for t1
+                title: "טבלה 3: הרכבת t2 וחילחול",
+                equ: [
+                    `${m} t<sub>1</sub> = ${ann('t<sub>2</sub>', 'int&rarr;int', 'pink')} &rarr; t<sub>0</sub>`,
+                    `${m} t<sub>1</sub> = t<sub>x</sub> &rarr; t<sub>x</sub>`
+                ],
+                sub: [
+                    `t<sub>y</sub> = int`, `t<sub>3</sub> = int`, `t<sub>2</sub> = int &rarr; int`
+                ]
+            },
+            { // Table 3: Perform Structural Unification
+                title: "טבלה 4: איחוד ופירוק (SU)",
+                equ: [
+                    `${m} t<sub>x</sub> = ${ann('t<sub>x</sub>', 'int&rarr;int', 'purple')}`,
+                    `${m} t<sub>0</sub> = ${ann('t<sub>x</sub>', 'int&rarr;int', 'green')}`
+                ],
+                sub: [
+                    `t<sub>y</sub> = int`, `t<sub>3</sub> = int`, `t<sub>2</sub> = int &rarr; int`,
+                    `t<sub>1</sub> = (int &rarr; int) &rarr; t<sub>0</sub>`
+                ]
+            },
+            { // Table 4: Final State
+                title: "טבלה 5: מצב סופי",
+                equ: [],
+                sub: [
+                    `t<sub>y</sub> = int`, `t<sub>3</sub> = int`, `t<sub>2</sub> = int &rarr; int`,
+                    `t<sub>1</sub> = (int &rarr; int) &rarr; (int &rarr; int)`, `t<sub>x</sub> = int &rarr; int`,
+                    `<span class='bg-green-100 font-bold px-2 py-1 border-2 border-green-400 rounded shadow-sm text-green-800 block text-center mt-2'>t<sub>0</sub> = int &rarr; int</span>`
+                ]
+            }
+        ];
+
+        let currentStep = -1;
+
+        // Definition of all annotations to be rendered via SVG
+        const annotations = [
+            { id: 't0', type: 'bracket-left', start: 'code-t0-start', end: 'code-t0-end', xOffset: -24, color: '#0ea5e9' },
+            { id: 't1', type: 'bracket-top', start: 'code-t1-start', end: 'code-t1-end', yOffset: -12, labelOffset: -18, color: '#d946ef' },
+            { id: 't2', type: 'bracket-bottom', start: 'code-t2-start', end: 'code-t2-end', yOffset: 6, labelOffset: 16, color: '#d946ef' },
+            { id: 't3', type: 'bracket-top', start: 'code-t3-start', end: 'code-t3-end', yOffset: -6, labelOffset: -12, color: '#f43f5e' },
+            { id: 'tx', type: 'arrow-up', target: 'code-tx', color: '#f43f5e' },
+            { id: 'ty', type: 'arrow-up', target: 'code-ty', color: '#f43f5e' }
+        ];
+
+        function getRelativeRect(el) {
+            const container = document.getElementById('code-container');
+            const containerRect = container.getBoundingClientRect();
+            const rect = el.getBoundingClientRect();
+            return {
+                left: rect.left - containerRect.left + container.scrollLeft,
+                right: rect.right - containerRect.left + container.scrollLeft,
+                top: rect.top - containerRect.top + container.scrollTop,
+                bottom: rect.bottom - containerRect.top + container.scrollTop,
+                width: rect.width,
+                height: rect.height
+            };
+        }
+
+        function drawSVG() {
+            const svg = document.getElementById('annotations-svg');
+            if (!svg) return;
+            svg.innerHTML = ''; // Clear previous drawings
+
+            const stepData = steps[currentStep];
+            const activeBoxId = stepData ? stepData.ui.activeBox : null;
+            const activeId = activeBoxId ? activeBoxId.replace('ast-', '') : null;
+            const isTablePhase = stepData && (stepData.ui.panel === 'panel-a' || stepData.ui.panel === 'panel-b');
+
+            // Find index of the active step annotation to determine "already drawn" annotations
+            const activeIndex = annotations.findIndex(ann => ann.id === activeId);
+
+            annotations.forEach((ann, index) => {
+                const startEl = document.getElementById(ann.start || ann.target);
+                const endEl = document.getElementById(ann.end || ann.target);
+                if (!startEl || !endEl) return;
+
+                // Determine if this annotation is currently active, already passed, or in table phase
+                const isPassed = isTablePhase || (activeIndex === -1) || (index <= activeIndex);
+                if (!isPassed && currentStep !== -1) {
+                    return;
+                }
+
+                const isActive = (activeId === ann.id);
+                const strokeColor = ann.color;
+                const strokeWidth = isActive ? 3 : 1.5;
+                const opacity = isActive ? 1 : 0.45;
+                const textWeight = isActive ? 'bold' : 'normal';
+                const fontSize = isActive ? '14px' : '11px';
+                const textColor = isActive ? ann.color : '#64748b';
+
+                // Yellow highlight background for variables
+                if (ann.type === 'arrow-up') {
+                    const targetEl = document.getElementById(ann.target);
+                    const rect = getRelativeRect(targetEl);
+                    const bgHighlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    bgHighlight.setAttribute('x', rect.left - 2);
+                    bgHighlight.setAttribute('y', rect.top + 2);
+                    bgHighlight.setAttribute('width', rect.width + 4);
+                    bgHighlight.setAttribute('height', rect.height - 4);
+                    bgHighlight.setAttribute('fill', '#fef08a'); // yellow-200
+                    bgHighlight.setAttribute('opacity', isActive ? 0.85 : 0.35);
+                    bgHighlight.setAttribute('rx', '3');
+                    svg.appendChild(bgHighlight);
+                }
+
+                if (ann.type === 'bracket-left') {
+                    const startRect = getRelativeRect(startEl);
+                    const endRect = getRelativeRect(endEl);
+                    const x = startRect.left + ann.xOffset;
+                    const y_top = startRect.top + 3;
+                    const y_bottom = endRect.bottom - 3;
+
+                    // Draw [ path
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x + 8},${y_top} L ${x},${y_top} L ${x},${y_bottom} L ${x + 8},${y_bottom}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    if (isActive) {
+                        path.setAttribute('filter', 'drop-shadow(0px 0px 2px ' + strokeColor + ')');
+                    }
+                    svg.appendChild(path);
+
+                    // Draw label text
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x - 18);
+                    text.setAttribute('y', (y_top + y_bottom) / 2 + 4);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'arrow-up') {
+                    const rect = getRelativeRect(startEl);
+                    const x_center = rect.left + rect.width / 2;
+                    const y_top = rect.top;
+                    const arrowLen = 18;
+                    const y_arrow_top = y_top - arrowLen;
+
+                    // Draw line
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_center},${y_top - 2} L ${x_center},${y_arrow_top}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    svg.appendChild(path);
+
+                    // Draw arrowhead
+                    const head = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    head.setAttribute('d', `M ${x_center - 3.5},${y_arrow_top + 3.5} L ${x_center},${y_arrow_top} L ${x_center + 3.5},${y_arrow_top + 3.5}`);
+                    head.setAttribute('stroke', strokeColor);
+                    head.setAttribute('stroke-width', strokeWidth);
+                    head.setAttribute('fill', 'none');
+                    head.setAttribute('opacity', opacity);
+                    head.setAttribute('stroke-linecap', 'round');
+                    head.setAttribute('stroke-linejoin', 'round');
+                    svg.appendChild(head);
+
+                    // Draw label text
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x_center);
+                    text.setAttribute('y', y_arrow_top - 5);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'bracket-top') {
+                    const startRect = getRelativeRect(startEl);
+                    const endRect = getRelativeRect(endEl);
+                    const x_start = startRect.left + 2;
+                    const x_end = endRect.right - 2;
+                    const y_base = startRect.top;
+                    const y_top = y_base + ann.yOffset;
+
+                    // Draw rounded curve over text
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_start},${y_base - 1} Q ${x_start},${y_top} ${x_start + 6},${y_top} L ${x_end - 6},${y_top} Q ${x_end},${y_top} ${x_end},${y_base - 1}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    if (isActive) {
+                        path.setAttribute('filter', 'drop-shadow(0px 0px 2px ' + strokeColor + ')');
+                    }
+                    svg.appendChild(path);
+
+                    // Draw label text
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', (x_start + x_end) / 2);
+                    text.setAttribute('y', y_base + ann.labelOffset);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'bracket-bottom') {
+                    const startRect = getRelativeRect(startEl);
+                    const endRect = getRelativeRect(endEl);
+                    const x_start = startRect.left + 2;
+                    const x_end = endRect.right - 2;
+                    const y_base = startRect.bottom;
+                    const y_bottom = y_base + ann.yOffset;
+
+                    // Draw rounded curve below text
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_start},${y_base + 1} Q ${x_start},${y_bottom} ${x_start + 6},${y_bottom} L ${x_end - 6},${y_bottom} Q ${x_end},${y_bottom} ${x_end},${y_base + 1}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    if (isActive) {
+                        path.setAttribute('filter', 'drop-shadow(0px 0px 2px ' + strokeColor + ')');
+                    }
+                    svg.appendChild(path);
+
+                    // Draw label text
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', (x_start + x_end) / 2);
+                    text.setAttribute('y', y_base + ann.labelOffset);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+            });
+        }
+
+        function getSidebarRelativeRect(el) {
+            const container = document.getElementById('sidebar-ast-container');
+            const containerRect = container.getBoundingClientRect();
+            const rect = el.getBoundingClientRect();
+            return {
+                left: rect.left - containerRect.left + container.scrollLeft,
+                right: rect.right - containerRect.left + container.scrollLeft,
+                top: rect.top - containerRect.top + container.scrollTop,
+                bottom: rect.bottom - containerRect.top + container.scrollTop,
+                width: rect.width,
+                height: rect.height
+            };
+        }
+
+        function drawSidebarSVG() {
+            const svg = document.getElementById('annotations-svg-sidebar');
+            if (!svg) return;
+            svg.innerHTML = ''; // Clear previous drawings
+
+            const stepData = steps[currentStep];
+            const activeBoxId = stepData ? stepData.ui.activeBox : null;
+            const activeId = activeBoxId ? activeBoxId.replace('ast-', '') : null;
+
+            annotations.forEach((ann) => {
+                // Find matching sidebar elements (with ids side-...)
+                const sideStartId = ann.start ? ann.start.replace('code-', 'side-') : null;
+                const sideTargetId = ann.target ? ann.target.replace('code-', 'side-') : null;
+                const sideEndId = ann.end ? ann.end.replace('code-', 'side-') : null;
+
+                const startEl = document.getElementById(sideStartId || sideTargetId);
+                const endEl = document.getElementById(sideEndId || sideTargetId);
+                if (!startEl || !endEl) return;
+
+                const isActive = (activeId === ann.id);
+                const strokeColor = ann.color;
+                const strokeWidth = isActive ? 2 : 1;
+                const opacity = isActive ? 1 : 0.4;
+                const textColor = isActive ? ann.color : '#94a3b8';
+                const fontSize = '9px';
+                const textWeight = isActive ? 'bold' : 'normal';
+
+                if (ann.type === 'arrow-up') {
+                    const rect = getSidebarRelativeRect(startEl);
+                    const bgHighlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    bgHighlight.setAttribute('x', rect.left - 1.5);
+                    bgHighlight.setAttribute('y', rect.top + 1);
+                    bgHighlight.setAttribute('width', rect.width + 3);
+                    bgHighlight.setAttribute('height', rect.height - 2);
+                    bgHighlight.setAttribute('fill', '#fef08a');
+                    bgHighlight.setAttribute('opacity', 0.4);
+                    bgHighlight.setAttribute('rx', '2');
+                    svg.appendChild(bgHighlight);
+                }
+
+                if (ann.type === 'bracket-left') {
+                    const startRect = getSidebarRelativeRect(startEl);
+                    const endRect = getSidebarRelativeRect(endEl);
+                    const x = startRect.left + (ann.xOffset / 2); // Shrunk scale
+                    const y_top = startRect.top + 2;
+                    const y_bottom = endRect.bottom - 2;
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x + 4},${y_top} L ${x},${y_top} L ${x},${y_bottom} L ${x + 4},${y_bottom}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    svg.appendChild(path);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x - 9);
+                    text.setAttribute('y', (y_top + y_bottom) / 2 + 3);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'arrow-up') {
+                    const rect = getSidebarRelativeRect(startEl);
+                    const x_center = rect.left + rect.width / 2;
+                    const y_top = rect.top;
+                    const arrowLen = 10;
+                    const y_arrow_top = y_top - arrowLen;
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_center},${y_top - 1} L ${x_center},${y_arrow_top}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    svg.appendChild(path);
+
+                    const head = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    head.setAttribute('d', `M ${x_center - 2},${y_arrow_top + 2} L ${x_center},${y_arrow_top} L ${x_center + 2},${y_arrow_top + 2}`);
+                    head.setAttribute('stroke', strokeColor);
+                    head.setAttribute('stroke-width', strokeWidth);
+                    head.setAttribute('fill', 'none');
+                    head.setAttribute('opacity', opacity);
+                    head.setAttribute('stroke-linecap', 'round');
+                    head.setAttribute('stroke-linejoin', 'round');
+                    svg.appendChild(head);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x_center);
+                    text.setAttribute('y', y_arrow_top - 3);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'bracket-top') {
+                    const startRect = getSidebarRelativeRect(startEl);
+                    const endRect = getSidebarRelativeRect(endEl);
+                    const x_start = startRect.left + 1;
+                    const x_end = endRect.right - 1;
+                    const y_base = startRect.top;
+                    const y_top = y_base + (ann.yOffset / 1.5);
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_start},${y_base} Q ${x_start},${y_top} ${x_start + 4},${y_top} L ${x_end - 4},${y_top} Q ${x_end},${y_top} ${x_end},${y_base}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    svg.appendChild(path);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', (x_start + x_end) / 2);
+                    text.setAttribute('y', y_base + (ann.labelOffset / 1.5));
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'bracket-bottom') {
+                    const startRect = getSidebarRelativeRect(startEl);
+                    const endRect = getSidebarRelativeRect(endEl);
+                    const x_start = startRect.left + 1;
+                    const x_end = endRect.right - 1;
+                    const y_base = startRect.bottom;
+                    const y_bottom = y_base + (ann.yOffset / 1.5);
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_start},${y_base} Q ${x_start},${y_bottom} ${x_start + 4},${y_bottom} L ${x_end - 4},${y_bottom} Q ${x_end},${y_bottom} ${x_end},${y_base}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    svg.appendChild(path);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', (x_start + x_end) / 2);
+                    text.setAttribute('y', y_base + (ann.labelOffset / 1.5));
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+            });
+        }
+
+        // Helper to generate a single B-Table HTML
+        function createBTableHTML(tableData) {
+            return `
+                <div class="flex flex-col bg-white border border-slate-200 shadow-sm rounded-xl flex-shrink-0 w-full max-w-[360px] min-w-[270px] overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="bg-slate-50 text-center py-2 font-bold text-slate-700 border-b border-slate-200 text-sm rounded-t-xl">${tableData.title}</div>
+                    <table class="w-full text-[10.5px] code-font border-collapse">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="py-1 px-1.5 border-l border-slate-200 w-[45%] text-slate-500 text-left font-semibold uppercase tracking-wider">Equations</th>
+                                <th class="py-1 px-1.5 w-[55%] text-slate-500 text-left font-semibold uppercase tracking-wider">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="align-top">
+                            <tr>
+                                <td class="py-1 px-1.5 border-l border-slate-200 leading-tight space-y-1.5 bg-white text-slate-800">
+                                    ${tableData.equ.length ? tableData.equ.map(item => `<div>${item}</div>`).join('') : '<span class="text-slate-300 italic text-xs">ריקה</span>'}
+                                </td>
+                                <td class="py-1 px-1.5 leading-relaxed space-y-1 bg-slate-50/30 text-slate-700">
+                                    ${tableData.sub.length ? tableData.sub.map(item => `<div>${item}</div>`).join('') : '<span class="text-slate-300 italic text-xs">ריקה</span>'}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function updateUI() {
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            const examPaper = document.getElementById('exam-paper');
+            const workbench = document.getElementById('workbench');
+
+            if (currentStep === -1) {
+                examPaper.classList.remove('opacity-0', 'pointer-events-none');
+                workbench.classList.add('hidden');
+                return;
+            } else {
+                examPaper.classList.add('opacity-0', 'pointer-events-none');
+                workbench.classList.remove('hidden');
+            }
+
+            const stepData = steps[currentStep];
+
+            // Setup texts
+            document.getElementById('step-title').innerHTML = stepData.title;
+            document.getElementById('step-description').innerHTML = stepData.text;
+            document.getElementById('step-counter').innerText = `${currentStep + 1} / ${steps.length}`;
+
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            btnPrev.disabled = currentStep === 0;
+
+            // Hide main logic panels
+            document.getElementById('panel-a').classList.add('hidden');
+            document.getElementById('panel-b').classList.add('hidden');
+            document.getElementById('final-conclusion').classList.add('hidden');
+
+            // Manage AST visibility (workspace card vs sidebar reference)
+            const codeContainer = document.getElementById('code-container');
+            const astCard = codeContainer ? codeContainer.closest('.bg-white') : null;
+            const sidebarAst = document.getElementById('sidebar-ast-container');
+
+            if (astCard) {
+                if (currentStep >= 5) {
+                    // Hide main AST card in workspace to let the table take full height
+                    astCard.classList.add('hidden');
+                } else {
+                    // Show main AST card in workspace for bounding
+                    astCard.classList.remove('hidden');
+                    codeContainer.classList.remove('shrunk');
+                }
+            }
+
+            if (sidebarAst) {
+                if (currentStep >= 5 && stepData.ui.panel === 'panel-a') {
+                    // Show as reference in the sidebar during Part A table phase
+                    sidebarAst.classList.remove('hidden');
+                } else {
+                    // Hide otherwise
+                    sidebarAst.classList.add('hidden');
+                }
+            }
+
+            // Draw SVG Annotations
+            // Small timeout to allow DOM/layout to stabilize
+            setTimeout(() => {
+                if (currentStep < 5) {
+                    drawSVG();
+                } else if (stepData.ui.panel === 'panel-a') {
+                    drawSidebarSVG();
+                }
+            }, 35);
+
+            // Panel A Rendering
+            if (stepData.ui.panel === 'panel-a') {
+                document.getElementById('panel-a').classList.remove('hidden');
+                document.getElementById('panel-a').classList.add('flex');
+                const tbody = document.getElementById('table-a-body');
+                tbody.innerHTML = '';
+
+                if (stepData.ui.aRows) {
+                    stepData.ui.aRows.forEach((r, i) => {
+                        const tr = document.createElement('tr');
+                        let rowClasses = 'border-b border-slate-100 ';
+                        if (currentStep > 5 && r.hl) rowClasses += 'row-highlight ';
+
+                        tr.className = rowClasses;
+                        tr.innerHTML = `
+                            <td class="py-1.5 px-3 border-l border-slate-100 font-semibold">${r.exp}</td>
+                            <td class="py-1.5 px-3 border-l border-slate-100 font-bold text-center text-primary bg-slate-50/50">${r.tvar}</td>
+                            <td class="py-1.5 px-3 bg-white ${r.equ ? 'text-slate-800' : 'text-slate-300 italic'} font-sans">${r.equ || '-'}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                    const container = document.getElementById('workspace-scroll');
+                    if (currentStep >= 5 && currentStep <= 10) {
+                        setTimeout(() => {
+                            container.scrollTop = container.scrollHeight;
+                        }, 10);
+                    }
+                }
+            }
+
+            // Panel B Rendering (Tables with Arrows)
+            if (stepData.ui.panel === 'panel-b') {
+                document.getElementById('panel-b').classList.remove('hidden');
+                document.getElementById('panel-b').classList.add('flex');
+
+                const bContentArea = document.getElementById('b-content-area');
+                bContentArea.innerHTML = '';
+
+                // Transition array dictates which tables to show
+                const trans = stepData.ui.bTransition;
+
+                trans.forEach((tableIndex, i) => {
+                    // Inject Table
+                    bContentArea.innerHTML += createBTableHTML(bTables[tableIndex]);
+
+                    // Inject Arrow if there is a next table in this transition
+                    if (i < trans.length - 1) {
+                        bContentArea.innerHTML += `
+                            <div class="flex items-center justify-center text-3xl font-black text-slate-300 mx-1 animate-pulse self-center flex-shrink-0">
+                                &rarr;
+                            </div>
+                        `;
+                    }
+                });
+
+                // Auto scroll workspace container down to see new tables
+                setTimeout(() => {
+                    const workspaceScroll = document.getElementById('workspace-scroll');
+                    const bContent = document.getElementById('b-content-area');
+                    workspaceScroll.scrollTop = workspaceScroll.scrollHeight;
+                    bContent.scrollLeft = bContent.scrollWidth; // Auto scroll to newest table
+                }, 50);
+
+                if (stepData.ui.finalConclusion) {
+                    document.getElementById('final-conclusion').classList.remove('hidden');
+                }
+            }
+        }
+
+        // Event Listeners for Navigation and Resize
+        document.getElementById('btn-start').addEventListener('click', () => {
+            currentStep = 0;
+            updateUI();
+        });
+
+        document.getElementById('btn-next').addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateUI();
+            }
+        });
+
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateUI();
+            } else if (currentStep === 0) {
+                currentStep = -1;
+                updateUI();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (currentStep !== -1) {
+                if (currentStep < 5) {
+                    drawSVG();
+                } else if (steps[currentStep] && steps[currentStep].ui.panel === 'panel-a') {
+                    drawSidebarSVG();
+                }
+            }
+        });
+
+        document.fonts.ready.then(() => {
+            if (currentStep !== -1) {
+                if (currentStep < 5) {
+                    drawSVG();
+                } else if (steps[currentStep] && steps[currentStep].ui.panel === 'panel-a') {
+                    drawSidebarSVG();
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>

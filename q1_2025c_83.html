@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שפות תכנות - הוספת ביטוי Foreach</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .template-box::before {
+            content: "✍️ התובנה המרכזית";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .thought-box {
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .dark-scroll::-webkit-scrollbar-track {
+            background: #020617;
+        }
+
+        .dark-scroll::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+
+        /* Animation */
+        .step-transition {
+            transition: all 0.3s ease-out;
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside
+        class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-3xl font-black text-white tracking-tight leading-tight">Mastering<br><span
+                    class="text-blue-500">Foreach</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון מלא ומדויק - מבחן יונגור</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()"
+                class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()"
+                class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge"
+                    class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                    תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <div id="code-container"
+                class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div
+                    class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 1,
+                title: "קריאת השאלה וחילוץ רמזים",
+                filename: "question_analysis.txt",
+                explanation: `
+                    <p>במבחן, אנו נדרשים להוסיף ביטוי חדש לשפה. בואו נקרא את השאלה המקורית ונחלץ ממנה את <strong>מפת הדרכים</strong> המדויקת שלנו.</p>
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4 shadow-sm text-left ltr">
+                        <code class="font-bold text-blue-900 text-sm">
+                        Expression ::= foreach ( Type identifier in [ { Expression }*(;) ] ) do Expression<br><br>
+                        Type ::= int | bool | func
+                        </code>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 mt-8 border-b pb-2">ניתוח מעמיק של דרישות המבחן:</h3>
+                    <ul class="space-y-3">
+                        <li><strong class="text-slate-900">1. תו מפריד (Separator):</strong> יש לנו <code class="bg-slate-100 px-1 rounded text-primary">*(;)</code>. בניגוד לרשימות רגילות המופרדות בפסיק, כאן יש להשתמש ב-<strong>נקודה-פסיק</strong>. לכן נשתמש ב-<code class="bg-slate-100 px-1 rounded text-primary">(separated-list expression ";")</code> בדקדוק.</li>
+                        <li><strong class="text-slate-900">2. סינון תוצאות (Filtering):</strong> הטקסט בשאלה מדגיש שהלולאה מבוצעת "רק על ביטויים שערכם מטיפוס X מתוך כלל הביטויים". המשמעות: אנחנו לא זורקים שגיאה אם יש טיפוס לא מתאים ברשימה, אלא <strong>מדלגים עליו</strong>.</li>
+                        <li><strong class="text-slate-900">3. החזרת רשימה חדשה:</strong> בשורה האחרונה של השאלה נכתב: "ביטוי foreach מחזיר את רשימה (סוג תשובה חדשה בשפה)". זו דרישה מפורשת <strong>להרחיב את מבני הנתונים של השפה</strong> כדי שתוכל להכיל ולהחזיר רשימות!</li>
+                    </ul>
+                `,
+                code: `// --- מפת הדרכים לפתרון המדויק ---
+
+// 1. lang.scm: 
+// הוספת מבנה ה-foreach עם הפרדת נקודה-פסיק (;).
+// והוספת Type.
+
+// 2. data-structures.scm:
+// הרחבת expval כך שיתמוך ב-list-val.
+// הוספת פונקציית חילוץ expval->list.
+
+// 3. interp.scm:
+// מימוש פונקציית value-of.
+// מימוש פונקציות עזר סינון לכל טיפוס.
+// שימוש בתבנית Accumulator כדי לאסוף את התוצאות לתוך list-val.`
+            },
+            {
+                id: 2,
+                title: "עדכון הדקדוק",
+                filename: "lang.scm",
+                explanation: `
+                    <p>נתחיל בעדכון ה-Parser שידע לקרוא את המילים השמורות והסמלים הייחודיים של הלולאה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            שימו לב היטב לשימוש בנקודה-פסיק כתו המפריד עבור ה-<code>separated-list</code>. זהו פרט קטן שבוחנים בודקים בקפידה. כל שאר הסמלים המיוחדים כמו <code>[</code> ו-<code>]</code> חייבים גם הם להופיע כמחרוזות.
+                        </p>
+                    </div>
+                `,
+                code: `;; file: lang.scm (the-grammar)
+
+(define the-grammar
+  '(
+    ;; ... שאר הדקדוק הקיים ...
+
+    ;; הגדרת משפחת הטיפוסים החדשה
+    (type ("int") int-type)
+    (type ("bool") bool-type)
+    (type ("func") func-type)
+
+    ;; הגדרת לולאת ה-foreach
+    (expression 
+      ("foreach" 
+       "(" type identifier "in" 
+       "[" (separated-list expression ";") "]" 
+       ")" 
+       "do" expression)
+      foreach-exp)
+      
+  ))`
+            },
+            {
+                id: 3,
+                title: "הרחבת מבני הנתונים",
+                filename: "data-structures.scm",
+                explanation: `
+                    <p>כיוון שהשאלה דורשת במפורש שהביטוי יחזיר "רשימה (סוג תשובה חדשה בשפה)", אנחנו חייבים ללמד את השפה איך לאחסן רשימה של ערכים מחושבים (expvals).</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            <strong>עדכון מבני הנתונים:</strong> נוסיף את ה-Constructor החדש <code>list-val</code> לתוך <code>expval</code>. במקביל, ניצור פונקציית "חילוץ" (Extractor) בשם <code>expval->list</code> שתפקידה לקחת אובייקט מהשפה (expval) ולשלוף ממנו בחזרה את רשימת ה-Scheme המקורית (כדי שנוכל להוסיף לה איברים בזמן ריצה).
+                        </p>
+                    </div>
+                `,
+                code: `;; file: data-structures.scm
+
+;; הוספת list-val למבנה הנתונים הקיים
+(define-datatype expval expval?
+  (num-val (value number?))
+  (bool-val (boolean boolean?))
+  (proc-val (proc proc?))
+  ;; סוג התשובה החדש!
+  (list-val (lst (list-of expval?))))
+
+;; פונקציית חילוץ - לוקחת expval מסוג רשימה ומחזירה את התוכן הפנימי
+(define expval->list
+  (lambda (v)
+    (cases expval v
+      (list-val (lst) lst)
+      (else (expval-extractor-error 'list v)))))`
+            },
+            {
+                id: 4,
+                title: "הערכה ראשונית וניתוב",
+                filename: "interp.scm",
+                explanation: `
+                    <p>הגענו ללב המערכת, פונקציית <code>value-of</code>. כשמגיע הביטוי שלנו מה-AST, אנחנו צריכים קודם כל לתרגם את רשימת הביטויים (exps) לערכים הממשיים שלהם בסביבה הנוכחית.</p>
+                    <p>השימוש ב-<code>map</code> יחד עם קריאה רקורסיבית ל-<code>value-of</code> מבצע את הפעולה הזו מצוין.</p>
+                    <div class="thought-box">
+                        <p class="text-purple-900 font-medium text-sm">
+                            <i class="fa-solid fa-code-branch mr-2"></i><strong>הזרקת ה"מכל":</strong> לאחר שהערכנו את המערך, אנו בודקים מהו הטיפוס שהמשתמש דרש ב-<code>Type</code>. לכל סוג טיפוס, אנו שולחים לפונקציית טיפול ייעודית (למשל <code>apply-only-num</code>) תוך כדי שאנחנו מעבירים לה רשימה ריקה עטופה ב-<code>(list-val '())</code>. זוהי <strong>תבנית האוגר (Accumulator)</strong> שבתוכה נאסוף את התוצאות!
+                        </p>
+                    </div>
+                `,
+                code: `;; file: interp.scm 
+;; בתוך הפונקציה value-of (cases expression exp ...)
+
+  (foreach-exp (typ id exps body)
+    
+    ;; הערכה מוקדמת: הופכים את עצי התחביר לערכי ריצה
+    (let* ([vals (map (lambda (x) (value-of x env)) exps)])
+      (if (null? exps)
+          (list-val '()) ; אם הרשימה ריקה מראש
+          
+          ;; ניתוב לפי הטיפוס המוצהר
+          (cases type typ
+            (int-type ()
+              ;; שולחים את המידע עם אוגר (accumulator) התחלתי ריק
+              (apply-only-num id vals body env (list-val '())))
+              
+            (bool-type ()
+              (apply-only-bool id vals body env (list-val '())))
+              
+            (func-type ()
+              (apply-only-func id vals body env (list-val '())))))))`
+            },
+            {
+                id: 5,
+                title: "פרדיקטים (זיהוי טיפוסים)",
+                filename: "interp_helpers.scm",
+                explanation: `
+                    <p>כדי שפונקציות הלולאה ידעו האם איבר מסוים מתאים לסינון או לא, אנחנו צריכים לכתוב פונקציות עזר קטנות ("פרדיקטים") שמקבלות <code>expval</code> ומחזירות True/False בהתאם לטיפוס הפנימי שלו.</p>
+                `,
+                code: `;; file: interp.scm (מחוץ לפונקציית value-of)
+
+;; האם הערך הוא מספר?
+(define is-Num-val?
+  (lambda (v)
+    (cases expval v
+      (num-val (n) #t)
+      (else #f))))
+
+;; האם הערך הוא בוליאני?
+(define is-Bool-val?
+  (lambda (v)
+    (cases expval v
+      (bool-val (b) #t)
+      (else #f))))
+
+;; האם הערך הוא פונקציה?
+(define is-Proc-val?
+  (lambda (v)
+    (cases expval v
+      (proc-val (p) #t)
+      (else #f))))`
+            },
+            {
+                id: 6,
+                title: "מנוע הלולאה (הסינון והצבירה)",
+                filename: "interp_helpers.scm",
+                explanation: `
+                    <p>כאן קורה הקסם שמבדיל את הפתרון הזה מפתרונות שגויים. הפונקציה <code>apply-only-num</code> עוברת על הרשימה רקורסיבית, צעד אחר צעד.</p>
+                    <ol class="list-decimal pr-5 space-y-2 mb-4 font-medium text-slate-700">
+                        <li><strong>תנאי העצירה:</strong> אם סיימנו לעבור על האיברים <code>(null? vals)</code> מחזירים את האוגר הסופי <code>lst</code> המכיל את רשימת התוצאות.</li>
+                        <li><strong>הסינון (Match):</strong> אם האיבר הראשון מתאים לטיפוס, אנו <strong>(1)</strong> מעריכים את הגוף בסביבה מורחבת עם המשתנה, <strong>(2)</strong> מחלצים את רשימת התוצאות הקיימת מהאוגר (באמצעות האקסטרטור), <strong>(3)</strong> מוסיפים את התוצאה החדשה לסוף הרשימה בעזרת <code>append</code>, <strong>(4)</strong> שולחים את הרשימה המעודכנת חזרה עטופה ב-<code>list-val</code> אל הקריאה הרקורסיבית להמשך.</li>
+                        <li><strong>הסינון (No Match):</strong> אם האיבר <strong>לא</strong> מתאים לטיפוס (ה-<code>else</code>), אנו פשוט קוראים לעצמנו מחדש עם המשך הרשימה <code>(cdr vals)</code> ומעבירים את האוגר הישן כמו שהוא, בלי להעריך את הגוף! זהו הדילוג המושלם.</li>
+                    </ol>
+                `,
+                code: `;; file: interp.scm (מחוץ לפונקציית value-of)
+
+(define apply-only-num
+  (lambda (id vals body env lst)
+    (cond
+      ;; עצירה: מחזירים את אוגר התוצאות
+      [(null? vals) lst]
+      
+      ;; התאמה: אם הערך הנוכחי הוא מספר
+      [(is-Num-val? (car vals))
+       (let* ([new-env  (extend-env id (car vals) env)]
+              [new-cell (value-of body new-env)]
+              ;; חילוץ רשימת Scheme מתוך ה-expval של האוגר
+              [temp-lst (expval->list lst)]
+              ;; הוספת התוצאה החדשה לרשימה (append מקבל שתי רשימות)
+              [up-list  (append temp-lst (list new-cell))])
+         ;; קריאה רקורסיבית עם הרשימה המעודכנת העטופה ב-list-val
+         (apply-only-num id (cdr vals) body env (list-val up-list)))]
+         
+      ;; חוסר התאמה: מדלגים על האיבר, מעבירים את האוגר הקיים
+      [else (apply-only-num id (cdr vals) body env lst)])))
+      
+;; (הפונקציות apply-only-bool ו-apply-only-func זהות במבנה שלהן
+;; ומשתמשות בפרדיקטים הרלוונטיים עבורן)`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index + 1}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + (currentStep + 1);
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+
+                if (step.code) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    Prism.highlightElement(codeBlock);
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        init();
+    </script>
+</body>
+
+</html>

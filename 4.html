@@ -1232,530 +1232,565 @@ in (f 10)</code></pre>
             <!-- ==========================================
                  PART 3.1: ALGORITHM - EQUATIONS
             =========================================== -->
-            <div id="algo-equations" class="tab-content">
-                <header class="mb-12 border-b pb-6">
-                    <div
-                        class="inline-block px-4 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
-                        אלגוריתם הסקת טיפוסים</div>
-                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">שלב 1: <span
-                            class="text-amber-600">יצירת המשוואות (Constraints)</span></h2>
-                    <p class="text-xl text-slate-600 leading-relaxed">השלב הראשון בהפעלה הוא לקחת את התוכנית, להעניק
-                        שמות (Type Variables) לכל ביטוי, ולהוציא מהקוד את החוקים (המשוואות) שהוא מחייב. כל פעולה מתמטית
-                        או לוגית מפיקה משוואה.</p>
+            
+            <div id="algo-equations" class="tab-content active">
+                <header class="mb-8 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">אלגוריתם הסקת טיפוסים</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">שלב 1: <span class="text-amber-600">יצירת משוואות</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">ננתח צעד-אחר-צעד את יצירת המשוואות (כפי שנדרש בחלק א' של שאלות Q3). נשתמש בחלוקה המלמטה-למעלה (Bottom-Up) תוך החלת החוקים מקרה אחר מקרה (Case-by-Case).</p>
                 </header>
-
+                
+                
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
                     <h3 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-2">חוקי הגזירה (The Rules)</h3>
-                    <p class="mb-4 text-slate-700">בואו נכיר את התבניות. נניח שסימנו ביטוי $E$ במשתנה טיפוס $t_E$. אילו
-                        רמזים נוכל לדלות?</p>
+                    <p class="mb-4 text-slate-700">בואו נכיר את התבניות המרכזיות בגזירת משוואות. נניח שסימנו ביטוי $E$ במשתנה טיפוס $T_{E}$. אילו רמזים נוכל לדלות ממנו?</p>
 
                     <div class="space-y-6">
-                        <div
-                            class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-blue-50 transition-colors">
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-blue-50 transition-colors">
                             <div class="w-1/3 font-bold text-blue-700 text-lg" dir="ltr">-(E1, E2)</div>
                             <div class="w-2/3 text-slate-700">פעולת חיסור דורשת מספרים. לכן נוצרות משוואות אילוץ:
-                                $t_{E1} = int$, וגם $t_{E2} = int$. בנוסף, התוצאה של הפעולה כולה היא $int$. זה נכון לכל
+                                $T_{E1} = int$, וגם $T_{E2} = int$. בנוסף, התוצאה של הפעולה כולה היא $int$. זה נכון לכל
                                 פעולות המתמטיקה (+, *, /).</div>
                         </div>
 
-                        <div
-                            class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-blue-50 transition-colors">
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-blue-50 transition-colors">
                             <div class="w-1/3 font-bold text-blue-700 text-lg" dir="ltr">zero?(E1)</div>
                             <div class="w-2/3 text-slate-700">הפעולה <code>zero?</code> בודקת האם מספר הוא 0. לכן: הקלט
-                                $t_{E1} = int$. התוצאה של הפעולה כולה היא תמיד $bool$.</div>
+                                $T_{E1} = int$. התוצאה של הפעולה כולה היא תמיד $bool$.</div>
                         </div>
 
-                        <div
-                            class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-blue-50 transition-colors">
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-blue-50 transition-colors">
                             <div class="w-1/3 font-bold text-blue-700 text-lg" dir="ltr">if E1 then E2 else E3</div>
-                            <div class="w-2/3 text-slate-700">התנאי חייב להיות בוליאני: $t_{E1} = bool$. שני הבלוקים
-                                חייבים להחזיר אותו דבר בדיוק: $t_{E2} = t_{E3}$. התוצאה של ה-if כולו שווה לאחד מהם:
-                                $t_{if} = t_{E2}$.</div>
+                            <div class="w-2/3 text-slate-700">התנאי חייב להיות בוליאני: $T_{E1} = bool$. שני הבלוקים
+                                חייבים להחזיר אותו דבר בדיוק: $T_{E2} = T_{E3}$. התוצאה של ה-if כולו שווה לאחד מהם:
+                                $T_{if} = T_{E2}$.</div>
                         </div>
 
-                        <div
-                            class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-purple-50 transition-colors">
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-purple-50 transition-colors">
                             <div class="w-1/3 font-bold text-purple-700 text-lg" dir="ltr">proc (x) Body</div>
                             <div class="w-2/3 text-slate-700">יצירת פונקציה. הפונקציה יוצרת מבנה של חץ. הטיפוס של
-                                הפונקציה כולה שווה ל: $t_{proc} = t_x \r\rightarrow t_{Body}$ (פונקציה שמקבלת את טיפוס x
+                                הפונקציה כולה שווה ל: $T_{proc} = T_x \rightarrow T_{Body}$ (פונקציה שמקבלת את טיפוס x
                                 ומחזירה את טיפוס הגוף).</div>
                         </div>
 
-                        <div
-                            class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-emerald-50 transition-colors">
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-emerald-50 transition-colors">
                             <div class="w-1/3 font-bold text-emerald-700 text-lg" dir="ltr">(Rator Rand)</div>
-                            <div class="w-2/3 text-slate-700"><strong>הפעלת פונקציה!</strong> זה החוק המרכזי ביותר
-                                להבנה. אם מפעילים את הפונקציה <code>Rator</code> על הארגומנט <code>Rand</code>, והפעולה
-                                כולה מחזירה תוצאה שנסמן ב-$t_{Res}$, אזי הפונקציה עצמה חייבת להיות מהמבנה: $t_{Rator} =
-                                t_{Rand} \r\rightarrow t_{Res}$.</div>
+                            <div class="w-2/3 text-slate-700"><strong>הפעלת פונקציה!</strong> זה החוק המרכזי ביותר להבנה. אם מפעילים את הפונקציה <code>Rator</code> על הארגומנט <code>Rand</code>, והפעולה כולה מחזירה תוצאה שנסמן ב-$T_{Res}$, אזי הפונקציה עצמה חייבת להיות מהמבנה: $T_{Rator} = T_{Rand} \rightarrow T_{Res}$.</div>
                         </div>
 
-                        <div
-                            class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-amber-50 transition-colors">
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex items-center hover:bg-amber-50 transition-colors">
                             <div class="w-1/3 font-bold text-amber-700 text-lg" dir="ltr">let x = E1 in E2</div>
                             <div class="w-2/3 text-slate-700">
-                                <strong>חוק ה-let וסביבת הטיפוסים (Tenv):</strong> בעולם הטיפוסים הסטטיים, אנחנו לא רק יוצרים משוואה. ה-Inferrer מחשב את הטיפוס של $E_1$ (נקרא לו $t_{E1}$), ואז מרחיב את סביבת הטיפוסים ($Tenv$) כך ש-$x$ ימופה לטיפוס זה (או למשתנה טיפוס חדש), וממשיך לבדוק את הגוף $E_2$ בתוך הסביבה החדשה. התפקיד של ה-$Tenv$ כאן קריטי כדי שהגוף $E_2$ "ידע" מה הטיפוס של $x$. תוצאת ה-let כולו היא תוצאת הגוף: $t_{let} = t_{E2}$.
+                                <strong>חוק ה-let:</strong> הטיפוס של המשתנה x נקבע על ידי הביטוי $E_1$, כלומר $T_{x} = T_{E1}$. תוצאת ה-let כולו היא פשוט התוצאה של גוף ה-let: $T_{let} = T_{E2}$.
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Type Equation Generation Table -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4 text-slate-700">
-                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span class="p-1 bg-amber-100 text-amber-700 rounded-lg">📊</span>
-                        <span>טבלת יצירת משוואות טיפוס לפי סוג ביטוי</span>
-                    </h4>
-                    <div class="overflow-x-auto">
-                        <table
-                            class="w-full text-xs text-right text-slate-700 border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                            <thead>
-                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
-                                    <th class="p-3">ביטוי</th>
-                                    <th class="p-3">משוואה שנוצרת</th>
-                                    <th class="p-3">הסבר</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 bg-white">
-                                <tr>
-                                    <td class="p-3 font-bold font-mono text-blue-600 bg-slate-50/50">const-exp(n)</td>
-                                    <td class="p-3 font-mono">t = int</td>
-                                    <td class="p-3">מספר קבוע — טיפוסו תמיד int</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-3 font-bold font-mono text-blue-600 bg-slate-50/50">zero?(exp)</td>
-                                    <td class="p-3 font-mono">t_exp = int, t_result = bool</td>
-                                    <td class="p-3">הקלט חייב להיות int, והתוצאה bool</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-3 font-bold font-mono text-blue-600 bg-slate-50/50">diff-exp(e1, e2)
-                                    </td>
-                                    <td class="p-3 font-mono">t1 = int, t2 = int, t = int</td>
-                                    <td class="p-3">שני הקלטים והפלט חייבים להיות int</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-3 font-bold font-mono text-blue-600 bg-slate-50/50">if-exp(pred, then,
-                                        else)</td>
-                                    <td class="p-3 font-mono">t_pred = bool, t_then = t_else = t</td>
-                                    <td class="p-3">התנאי bool, שני הענפים אותו טיפוס</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-3 font-bold font-mono text-purple-600 bg-slate-50/50">proc-exp(var,
-                                        body)</td>
-                                    <td class="p-3 font-mono">t = t_var → t_body</td>
-                                    <td class="p-3">פונקציה: טיפוס הפרמטר → טיפוס הגוף</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-3 font-bold font-mono text-purple-600 bg-slate-50/50">call-exp(f, arg)
-                                    </td>
-                                    <td class="p-3 font-mono">t_f = t_arg → t_result</td>
-                                    <td class="p-3">הפונקציה חייבת לקבל את טיפוס הארגומנט</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <div class="bg-slate-800 text-slate-200 p-4 rounded-xl border border-slate-700 shadow-xl mb-8 font-mono text-lg text-center" dir="ltr">let x = 5 in -(x, 3)</div>
 
-                <!-- Widget 5: Interactive AST Equation Extractor -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-8">
-                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span>סדנה: חילוץ משוואות מעץ ה-AST (Interactive AST Equation Extractor)</span>
-                        <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-normal">פעילות אינטראקטיבית</span>
-                    </h4>
-                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-                        בדיקת הטיפוסים הסטטית עובדת מלמטה למעלה (Bottom-Up) על עץ ה-AST של הביטוי <code>zero?(-(x, 5))</code>. לחצו על צמתי העץ לפי הסדר (מלמטה למעלה - מהעלים לשורש) וחלצו את המשוואות המתאימות:
-                    </p>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- AST Diagram -->
-                        <div class="lg:col-span-2 bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col items-center justify-center relative min-h-[260px]">
-                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-4 self-end">עץ ה-AST של zero?(-(x, 5)):</h5>
-                            
-                            <!-- AST HTML Representation -->
-                            <div class="relative w-full max-w-xs h-48 flex flex-col items-center justify-between text-xs font-bold font-mono" dir="ltr">
-                                <!-- Level 1: zero? -->
-                                <button id="ast-eq-zero" onclick="clickAstEqNode('zero')" class="w-20 h-10 rounded-lg bg-slate-100 border-2 border-slate-300 text-slate-400 flex items-center justify-center transition-all cursor-not-allowed" disabled>
-                                    zero?
-                                </button>
-                                
-                                <!-- Level 2: - -->
-                                <button id="ast-eq-diff" onclick="clickAstEqNode('diff')" class="w-16 h-10 rounded-lg bg-slate-100 border-2 border-slate-300 text-slate-400 flex items-center justify-center transition-all cursor-not-allowed" disabled>
-                                    -
-                                </button>
-                                
-                                <!-- Level 3: x and 5 -->
-                                <div class="flex justify-between w-full px-6">
-                                    <button id="ast-eq-x" onclick="clickAstEqNode('x')" class="w-14 h-10 rounded-lg bg-amber-500 border-2 border-amber-600 text-white flex items-center justify-center shadow-md transition-all cursor-pointer">
-                                        x
-                                    </button>
-                                    <button id="ast-eq-5" onclick="clickAstEqNode('5')" class="w-14 h-10 rounded-lg bg-amber-500 border-2 border-amber-600 text-white flex items-center justify-center shadow-md transition-all cursor-pointer">
-                                        5
-                                    </button>
-                                </div>
-
-                                <!-- SVG lines -->
-                                <svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 0;">
-                                    <!-- top to mid -->
-                                    <line x1="50%" y1="36" x2="50%" y2="88" stroke="#cbd5e1" stroke-width="2" />
-                                    <!-- mid to bottom-left -->
-                                    <line x1="50%" y1="120" x2="25%" y2="168" stroke="#cbd5e1" stroke-width="2" />
-                                    <!-- mid to bottom-right -->
-                                    <line x1="50%" y1="120" x2="75%" y2="168" stroke="#cbd5e1" stroke-width="2" />
-                                </svg>
-                            </div>
-                        </div>
-
-                        <!-- Panel for current question & equations list -->
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between" dir="rtl">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-8">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">הדגמת השלבים (Case by Case)</h3>
+                    <ul class="list-none space-y-4 text-slate-700">
+                        <li class="flex gap-4 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                            <span class="text-2xl">⬇️</span>
                             <div>
-                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">משוואות שנאספו:</h5>
-                                <div id="extractor-eqs-list" class="bg-white p-3 rounded-lg border border-slate-200 min-h-[80px] text-xs font-mono space-y-1.5 mb-4 text-left font-bold" dir="ltr">
-                                    <div class="text-slate-400 italic text-center py-4">טרם נאספו משוואות</div>
-                                </div>
-
-                                <!-- Active Question Panel -->
-                                <div id="extractor-question-panel" class="bg-white p-4 rounded-lg border border-slate-200 hidden">
-                                    <h6 id="extractor-q-title" class="font-bold text-xs text-slate-700 mb-2">שאלה:</h6>
-                                    <div id="extractor-q-options" class="space-y-2">
-                                        <!-- Render options here -->
-                                    </div>
-                                </div>
+                                <strong class="text-slate-800">שלב 1 (Top-Down): הקצאת משתנים.</strong>
+                                <p>אנו סורקים את הביטוי מבחוץ פנימה ונותנים לכל תת-ביטוי משתנה ייעודי לפי הסדר: לביטוי כולו ניתן T<sub class="text-[0.6em] font-bold">0</sub>, לגוף ה-let ניתן T<sub class="text-[0.6em] font-bold">1</sub>, לפרמטרים הפנימיים T<sub class="text-[0.6em] font-bold">2</sub> ו-T<sub class="text-[0.6em] font-bold">3</sub>, ולמזהה ניתן T<sub class="text-[0.6em] font-bold">x</sub>.</p>
                             </div>
-
-                            <!-- Controls -->
-                            <div class="mt-4 pt-4 border-t border-slate-200">
-                                <button onclick="resetEqExtractor()" class="w-full py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-lg text-xs transition-colors cursor-pointer">אפס פעילות</button>
+                        </li>
+                        <li class="flex gap-4 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                            <span class="text-2xl">⬆️</span>
+                            <div>
+                                <strong class="text-slate-800">שלב 2 (Bottom-Up): איסוף משוואות למקרים ספציפיים.</strong>
+                                <ul class="list-disc list-inside mt-2 space-y-2 pr-4">
+                                    <li><b class="text-blue-700">מקרה קבוע (Const) - המספר 3:</b> על פי חוק הקבועים הטיפוס שלו הוא int. לכן נרשום: <span dir="ltr" class="font-mono text-red-600">T<sub class="text-[0.6em] font-bold">2</sub> = int</span>.</li>
+                                    <li><b class="text-blue-700">מקרה קבוע (Const) - המספר 5:</b> אותו דבר, טיפוסו int: <span dir="ltr" class="font-mono text-red-600">T<sub class="text-[0.6em] font-bold">3</sub> = int</span>.</li>
+                                    <li><b class="text-purple-700">מקרה חיסור (Diff) - הביטוי -(x,3):</b> חוק החיסור דורש ששני הקלטים וגם הפלט יהיו מספרים. לכן נדרוש: <span dir="ltr" class="font-mono text-red-600">T<sub class="text-[0.6em] font-bold">x</sub> = int, T<sub class="text-[0.6em] font-bold">2</sub> = int, T<sub class="text-[0.6em] font-bold">1</sub> = int</span>.</li>
+                                    <li><b class="text-emerald-700">מקרה השמה (Let) - הביטוי השלם:</b> המשתנה שמוגדר שווה לערכו (<span dir="ltr" class="font-mono text-red-600">T<sub class="text-[0.6em] font-bold">x</sub> = T<sub class="text-[0.6em] font-bold">3</sub></span>), והטיפוס השלם שווה לטיפוס הגוף (<span dir="ltr" class="font-mono text-red-600">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">1</sub></span>).</li>
+                                </ul>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ==========================================
-                 PART 3.2: ALGORITHM - UNIFICATION
-            =========================================== -->
-            <div id="algo-unification" class="tab-content">
-                <header class="mb-12 border-b pb-6">
-                    <div
-                        class="inline-block px-4 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
-                        אלגוריתם הסקת טיפוסים</div>
-                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">שלב 2: <span
-                            class="text-amber-600">פתרון המשוואות (Unification)</span></h2>
-                    <p class="text-xl text-slate-600 leading-relaxed">לאחר שיצרנו את כל המשוואות (רשימת ה-Equations),
-                        אנחנו מתחילים "לנקות" אותן בעזרת טבלה של שתי עמודות: עמודת ה<strong>משוואות (Equations)</strong>
-                        שעוד צריך לפתור, ועמודת ה<strong>הצבות (Substitutions)</strong> שבה אנו שומרים עובדות מוגמרות
-                        שמצאנו.</p>
-                </header>
-
-                <div class="thought-box mb-10">
-                    <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">איך פותרים (אלגוריתם ההצבה)?</h3>
-                    <p class="mb-4 text-slate-700">אנו עוברים על עמודת המשוואות אחת-אחת (מלמעלה למטה) ומפעילים את החוקים
-                        הבאים:</p>
-                    <ul class="list-decimal list-inside space-y-3 text-slate-700 font-bold ml-4">
-                        <li><strong>זהות:</strong> אם הגענו למשוואה כמו $int = int$ או $t_1 = t_1$, פשוט מוחקים אותה.
-                            אין לה משמעות.</li>
-                        <li><strong>גילוי משתנה (Substitution):</strong> אם הגענו למשוואה מהצורה $t_1 = T$ (כאשר $T$ הוא טיפוס כלשהו כמו $int$ או $t_2 \rightarrow bool$). מצאנו עובדה! 
-                            <strong>אך לפני שאנו מציבים אותה ומוסיפים אותה לטבלת ההצבות, אנו מבצעים Occurs Check (בדיקת שייכות) ומוודאים ש-$t_1$ לא מופיע בתוך המבנה של $T$.</strong> רק אם הוא לא מופיע, אנו רשאים לבצע את ההצבה: אנו מעבירים את השוויון לעמודת ההצבות, ועוברים על כל שאר המשוואות שנותרו, ובכל מקום שכתוב $t_1$, מוחקים אותו וכותבים במקומו את $T$.</li>
-                        <li><strong>פירוק פונקציות:</strong> אם הגענו למשוואה המורכבת משני חצים, למשל $t_1 \r\rightarrow
-                            int = bool \r\rightarrow t_2$. כדי שזה יהיה שווה, צד שמאל של החץ חייב להיות שווה לשמאל,
-                            והימני לימני. לכן, מוחקים את המשוואה הזו ומפצלים אותה לשתי משוואות חדשות בתחתית הרשימה: $t_1
-                            = bool$ ו-$int = t_2$.</li>
-                        <li><strong>שגיאת טיפוס (Failure):</strong> אם הגענו למצב של התנגשות מהותית, למשל $int = bool$,
-                            או $int = t_1 \r\rightarrow t_2$, האלגוריתם קורס. המשמעות: יש שגיאת טיפוס בקוד! המפרש פולט
-                            Type Error.</li>
+                        </li>
                     </ul>
                 </div>
 
-                <!-- Unification Solver -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10">
-                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span>פתרון משוואות טיפוסים אינטראקטיבי (Unification Solver)</span>
-                        <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-normal">הדמיה
-                            אינטראקטיבית</span>
-                    </h4>
-                    <p class="text-sm text-slate-600 mb-6">
-                        עקבו אחר אלגוריתם ה-Unification הפותר את משוואות הטיפוסים עבור הקוד הבא: <br>
-                        <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs"
-                            dir="ltr">letrec f(x) = -(x, 1) in f(5)</code>
-                    </p>
+    <!-- Part A Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex-col overflow-hidden mb-8 mt-6">
+        <div class="p-4 border-b border-slate-200 bg-slate-50">
+            <h3 class="text-sm font-bold text-slate-800">טבלת משוואות מסכמת - חלק א'</h3>
+        </div>
+        <div class="p-0 overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[600px]" dir="ltr">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="p-3 font-semibold text-slate-600 w-2/5 text-xs uppercase tracking-wider">Expression</th>
+                        <th class="p-3 font-semibold text-slate-600 w-1/5 text-center border-r border-l border-slate-200 text-xs uppercase tracking-wider">Type Variable</th>
+                        <th class="p-3 font-semibold text-slate-600 w-2/5 border-r border-slate-200 text-xs uppercase tracking-wider">Equations (AQ)</th>
+                    </tr>
+                </thead>
+                <tbody class="font-mono text-[14px] bg-white text-slate-800">
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                        <!-- Left: Controls & Progress -->
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">let x = 5 in -(x, 3)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">0</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">1</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">-(x, 3)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">1</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">x</sub> = int<br>T<sub class="text-[0.6em] font-bold">2</sub> = int<br>T<sub class="text-[0.6em] font-bold">1</sub> = int</td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">x</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">x</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed"></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">3</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">2</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">2</sub> = int</td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">5</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">3</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">x</sub> = T<sub class="text-[0.6em] font-bold">3</sub><br>T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">x</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">x</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed"></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+            </div>
+
+            <div id="algo-unification" class="tab-content">
+                <header class="mb-8 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">אלגוריתם הסקת טיפוסים</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">שלב 2: <span class="text-amber-600">פתרון המשוואות (Unification)</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">כעת נדגים צעד-אחר-צעד את אלגוריתם ה-Unification, כפי שנדרש בחלק ב' של השאלות. תהליך זה מעביר משוואות פשוטות לצד ההצבות, ומפרק משוואות מורכבות בעזרת הפשטות.</p>
+                </header>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-8">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">הדגמת תהליך ההצבות (Case by Case)</h3>
+                    <ul class="list-none space-y-4 text-slate-700">
+                        <li class="flex gap-4 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                            <span class="text-2xl">1️⃣</span>
                             <div>
-                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3" dir="rtl">
-                                    בקרה:</h5>
-                                <div class="flex gap-2 mb-4">
-                                    <button onclick="stepUnification()" id="btn-unif-step"
-                                        class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition-colors cursor-pointer">
-                                        צעד הבא (Step)
-                                    </button>
-                                    <button onclick="resetUnification()"
-                                        class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-lg text-xs transition-colors cursor-pointer">
-                                        איפוס
-                                    </button>
-                                </div>
+                                <strong class="text-slate-800">שלב 1: הצבות בסיסיות (עוגנים ישירים)</strong>
+                                <p>אנו מזהים את כל המשוואות החד-משמעיות ומעבירים אותן ישירות לעמודת ההצבות (Substitutions). למשל: T<sub class="text-[0.6em] font-bold">x</sub> = int, T<sub class="text-[0.6em] font-bold">1</sub> = int, T<sub class="text-[0.6em] font-bold">2</sub> = int. אלה העוגנים שלנו להמשך הפתרון.</p>
                             </div>
+                        </li>
+                        <li class="flex gap-4 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                            <span class="text-2xl">2️⃣</span>
+                            <div>
+                                <strong class="text-slate-800">שלב 2: הצבת משתנים וטיפול בקונפליקטים עקיפים</strong>
+                                <p>ניקח את המשוואה שנותרה T<sub class="text-[0.6em] font-bold">x</sub> = T<sub class="text-[0.6em] font-bold">3</sub> (בטבלה 2). נציב בה את הידע שכבר צברנו מטבלה 1: מכיוון ש-T<sub class="text-[0.6em] font-bold">x</sub> = int, אנו "דורסים" את T<sub class="text-[0.6em] font-bold">x</sub> ומקבלים int = T<sub class="text-[0.6em] font-bold">3</sub>, או בעצם T<sub class="text-[0.6em] font-bold">3</sub> = int. לאחר שסיימנו את כל ההצבות, נגלה ש-T<sub class="text-[0.6em] font-bold">0</sub> = int גם כן.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
-                            <div
-                                class="bg-white p-4 rounded-lg border border-slate-200 min-h-[140px] flex items-center justify-center">
-                                <div id="unif-explain"
-                                    class="text-xs text-slate-700 text-center leading-relaxed w-full">
-                                    לחצו על "צעד הבא" כדי להתחיל לפתור את מערכת המשוואות.
-                                </div>
-                            </div>
-                        </div>
+    <!-- Part B Tables -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex-col mb-10 mt-6 relative overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-slate-800">פריסת ה-Unification המלאה - חלק ב'</h3>
+        </div>
+        <div class="flex flex-row flex-nowrap p-6 gap-6 bg-slate-50 items-stretch justify-start overflow-x-auto" dir="ltr">
 
-                        <!-- Center: Equations list -->
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
-                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3" dir="rtl">רשימת
-                                משוואות (Equations):</h5>
-                            <div id="unif-eqs" class="flex flex-col gap-2 font-mono text-xs" dir="ltr">
-                                <!-- Rendered dynamically -->
-                            </div>
-                        </div>
+            <!-- Table 1 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 1
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
 
-                        <!-- Right: Substitution map -->
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
-                            <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3" dir="rtl">טבלת
-                                הצבות (Substitutions):</h5>
-                            <div id="unif-subs" class="flex flex-col gap-2 font-mono text-xs" dir="ltr">
-                                <!-- Rendered dynamically -->
-                            </div>
-                        </div>
-                    </div>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">1</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">1</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = T<sub class="text-[0.6em] font-bold">3</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- ==========================================
-                 PART 3.3: EXAMPLES SIMPLE (ALGORITHM IN ACTION)
-            =========================================== -->
+            <!-- Table 2 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 2
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"><span class='font-bold border-b-2 border-pink-400'>T<sub class="text-[0.6em] font-bold">x</sub></span> = T<sub class="text-[0.6em] font-bold">3</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">1</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"><span class='font-bold border-b-2 border-pink-400'>T<sub class="text-[0.6em] font-bold">x</sub> = int</span></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = int</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 3 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 3 (סופית)
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">1</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = int</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="mt-4 mb-6 flex justify-center">
+            <div class="bg-white px-8 py-4 border-2 border-green-500 rounded-2xl shadow-xl flex items-center gap-6 z-20">
+                <div class="text-xl font-bold text-slate-800" dir="rtl">מסקנה : <span dir="ltr" class="font-mono text-green-700 ml-2">T<sub class="text-[0.6em] font-bold">0</sub> = int</span></div>
+                <div class="text-green-500 text-4xl font-black">✓</div>
+            </div>
+        </div>
+    </div>
+
+            </div>
+
             <div id="algo-examples" class="tab-content">
                 <header class="mb-12 border-b pb-6">
-                    <div
-                        class="inline-block px-4 py-1 bg-blue-100 text-blue-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
-                        אלגוריתם הסקת טיפוסים</div>
-                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">דוגמאות הפעלה <span
-                            class="text-blue-600">צעד-אחר-צעד</span></h2>
-                    <p class="text-xl text-slate-600 leading-relaxed">נראה כיצד האלגוריתם פועל בצורה שיטתית - החל משלב
-                        גזירת המשוואות (מבפנים החוצה) ועד לפתרונן והסקת הטיפוס הסופי.</p>
+                    <div class="inline-block px-4 py-1 bg-blue-100 text-blue-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">אלגוריתם הסקת טיפוסים</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">דוגמה מורכבת: <span class="text-blue-600">If ופונקציות</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">ננתח ביטוי מסובך יותר הכולל תנאים ופונקציות, במדויק לפי פורמט Q3 המלא. כאן נראה כיצד טיפוסים זורמים מהפונקציה, אל ה-if, ואל התוצאה.</p>
                 </header>
+                <div class="bg-slate-800 text-slate-200 p-4 rounded-xl border border-slate-700 shadow-xl mb-10 font-mono text-lg text-center" dir="ltr">proc(x:?) if zero?(x) then 1 else x</div>
 
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-8">
-                    <h3 class="text-2xl font-bold mb-4 text-slate-800 border-b pb-2">דוגמה 1: היכרות עם let ומתמטיקה
-                    </h3>
-                    <div class="bg-slate-800 text-slate-200 p-4 rounded font-mono text-center mb-6" dir="ltr">
-                        let x = 5 in -(x, 3)
-                    </div>
-                    <p class="text-slate-700 mb-4 font-bold">מעקב אילוצים:</p>
-                    <ul class="list-disc list-inside space-y-2 text-slate-700 mb-6">
-                        <li>נסמן את $x$ ב-$t_x$.</li>
-                        <li>נסמן את הביטוי <code>5</code> ב-$t_1$. מאחר ו-5 הוא מספר, נוצרת משוואה: $t_1 = int$.</li>
-                        <li>חוק ה-let קובע ש-$t_x = t_1$. לכן מסקנה ראשונה: $t_x = int$.</li>
-                        <li>הביטוי הפנימי <code>-(x, 3)</code> מסומן כ-$t_2$. חיסור דורש שמאל=int וימין=int. הערך הימני
-                            3 הוא אכן int. הערך השמאלי הוא $x$, ולכן דרוש $t_x = int$. זה תואם לחלוטין למסקנה שלנו ולכן
-                            <strong>הכל תקין</strong>.</li>
-                        <li>תוצאת החיסור היא int. ולכן $t_2 = int$.</li>
-                        <li>התוכנית כולה מחזירה את תוצאת גוף ה-let. לכן $t_{prog} = int$.</li>
-                    </ul>
+    <!-- Part A Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex-col overflow-hidden mb-8 mt-6">
+        <div class="p-4 border-b border-slate-200 bg-slate-50">
+            <h3 class="text-sm font-bold text-slate-800">חלק א': טבלת משוואות</h3>
+        </div>
+        <div class="p-0 overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[600px]" dir="ltr">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="p-3 font-semibold text-slate-600 w-2/5 text-xs uppercase tracking-wider">Expression</th>
+                        <th class="p-3 font-semibold text-slate-600 w-1/5 text-center border-r border-l border-slate-200 text-xs uppercase tracking-wider">Type Variable</th>
+                        <th class="p-3 font-semibold text-slate-600 w-2/5 border-r border-slate-200 text-xs uppercase tracking-wider">Equations (AQ)</th>
+                    </tr>
+                </thead>
+                <tbody class="font-mono text-[14px] bg-white text-slate-800">
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">proc(x:?) if zero?(x) then 1 else x</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">0</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">x</sub> -> T<sub class="text-[0.6em] font-bold">1</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">if zero?(x) then 1 else x</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">1</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">2</sub> = bool<br>T<sub class="text-[0.6em] font-bold">3</sub> = T<sub class="text-[0.6em] font-bold">4</sub><br>T<sub class="text-[0.6em] font-bold">1</sub> = T<sub class="text-[0.6em] font-bold">3</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">zero?(x)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">2</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">x</sub> = int<br>T<sub class="text-[0.6em] font-bold">2</sub> = bool</td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">x</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">x</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed"></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">1</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">3</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">x</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">4</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">4</sub> = T<sub class="text-[0.6em] font-bold">x</sub></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Part B Tables -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex-col mb-10 mt-6 relative overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-slate-800">חלק ב': טבלאות ה-Unification</h3>
+        </div>
+        <div class="flex flex-row flex-nowrap p-6 gap-6 bg-slate-50 items-stretch justify-start overflow-x-auto" dir="ltr">
+
+            <!-- Table 1 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 1
                 </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
 
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-8">
-                    <h3 class="text-2xl font-bold mb-4 text-slate-800 border-b pb-2">דוגמה 2: זיהוי טיפוס פרמטר בעזרת
-                        תנאי (if)</h3>
-                    <div class="bg-slate-800 text-slate-200 p-4 rounded font-mono text-center mb-6" dir="ltr">
-                        proc (x:?) if zero?(x) then 1 else x
-                    </div>
-                    <p class="text-slate-700 mb-4 font-bold">שלבי הפתרון:</p>
-                    <ol class="list-decimal list-inside space-y-2 text-slate-700 mb-6 ml-4">
-                        <li>נסמן את $x$ כ-$t_x$. הפונקציה עצמה מסומנת ב-$t_{proc} = t_x \r\rightarrow t_{body}$.</li>
-                        <li>נסתכל על התנאי: <code>zero?(x)</code>. הפעולה zero? דורשת שהקלט שלה יהיה מספר. מכאן נוצר
-                            האילוץ החשוב: <strong>$t_x = int$</strong>. (בלי שהצהרנו במפורש, המהדר מסיק ש-x הוא מספר!).
-                        </li>
-                        <li>נסתכל על ה-then: הפלט הוא 1, לכן $t_{then} = int$.</li>
-                        <li>נסתכל על ה-else: הפלט הוא x, לכן $t_{else} = t_x$.</li>
-                        <li>חוק ה-if דורש ששני הענפים יהיו זהים: $t_{then} = t_{else}$. נציב את מה שגילינו: $int = t_x$.
-                            זה תואם בדיוק לסעיף 2.</li>
-                        <li>גוף הפונקציה ($t_{body}$) שווה לטיפוס ה-if שהוא $int$.</li>
-                        <li>הטיפוס הסופי של הפונקציה: $t_{proc} = t_x \r\rightarrow t_{body} = int \r\rightarrow int$.
-                        </li>
-                    </ol>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">x</sub> -> T<sub class="text-[0.6em] font-bold">1</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = bool</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = T<sub class="text-[0.6em] font-bold">4</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">1</sub> = T<sub class="text-[0.6em] font-bold">3</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">4</sub> = T<sub class="text-[0.6em] font-bold">x</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
                 </div>
-
-                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-800 border-b border-blue-200 pb-2">דוגמה 3: פונקציות
-                        מסדר גבוה (Higher Order)</h3>
-                    <div class="bg-slate-800 text-slate-200 p-4 rounded font-mono text-center mb-6" dir="ltr">
-                        proc (f:?) proc (x:?) (f x)
-                    </div>
-                    <p class="text-slate-700 mb-4">בדוגמה זו אין שום רמז "חיצוני" (כמו חיסור או מספר). איך עובדים נטו עם
-                        משוואות ההפעלה?</p>
-                    <ul class="list-disc list-inside space-y-3 text-slate-700 ml-2">
-                        <li>נסמן את הפרמטרים: $f$ כ-$t_f$, ו-$x$ כ-$t_x$.</li>
-                        <li>הביטוי המרכזי הפנימי הוא <code>(f x)</code>. נסמן את תוצאת ההפעלה הזו כ-$t_{res}$.</li>
-                        <li>נפעיל את חוק ה-Call-Exp: אנו מפעילים את f על x והתוצאה היא $t_{res}$. לכן $t_f$ <strong>חייב
-                                להיות פונקציה מ-$t_x$ ל-$t_{res}$</strong>. נוצרת המשוואה: $t_f = t_x \r\rightarrow
-                            t_{res}$.</li>
-                        <li>כעת נבנה את התוכנית בחזרה החוצה. הפונקציה הפנימית `proc(x:?)` מחזירה את ההפעלה. לכן הטיפוס
-                            שלה: $t_{inner} = t_x \r\rightarrow t_{res}$.</li>
-                        <li>הפונקציה החיצונית `proc(f:?)` מחזירה את הפונקציה הפנימית. לכן הטיפוס שלה: $t_{outer} = t_f
-                            \r\rightarrow t_{inner}$.</li>
-                        <li>נציב את הכל פנימה:<br>
-                            $t_{outer} = (t_x \r\rightarrow t_{res}) \r\rightarrow (t_x \r\rightarrow t_{res})$
-                        </li>
-                        <li>מכיוון שלא מצאנו שום קשר ל-int או bool, המשתנים $t_x$ ו-$t_{res}$ נשארים חופשיים (Under-constrained) עד סוף התוכנית. משמעות הדבר היא שכל טיפוס שנציב במקומם יהיה חוקי. 
-                            <strong>אזהרה: בשפת INFERRED הפשוטה של ספר EOPL, זה לא פולימורפיזם אמיתי</strong> (כמו Let-Polymorphism ב-Haskell/OCaml). ההבדל הוא עצום: בפולימורפיזם אמיתי אפשר להשתמש באותה פונקציה גם עם int וגם עם bool באותה תוכנית. ב-INFERRED, ברגע שתפעיל את הפונקציה אי פעם בתוכנית על טיפוס מסוים (למשל int), משתנה הטיפוס שלה "יינעל" על int לכל אורך התוכנית!</li>
-                    </ul>
-                </div>
-
-                <!-- Widget 6: Polymorphism Lock-in Simulator -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-10 mt-8">
-                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span>סימולטור: נעילת טיפוס (Polymorphism Lock-in Simulator)</span>
-                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-normal">פעילות אינטראקטיבית</span>
-                    </h4>
-                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-                        בשפת <code>INFERRED</code> של ספר EOPL, למרות שהטיפוסים מוסקים אוטומטית ויש לנו משתני טיפוס חופשיים, <strong>אין פולימורפיזם אמיתי</strong> (הסקה מונומורפית). ברגע שפונקציה נקראת עם טיפוס מסוים, משתנה הטיפוס שלה "ננעל" עבור כל התוכנית. 
-                        גררו או לחצו על הקריאות כדי להציב אותן בקוד ולראות את אפקט הנעילה:
-                    </p>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Code panel with slots -->
-                        <div class="lg:col-span-2 bg-slate-900 rounded-xl p-6 font-mono text-slate-200 text-left relative" dir="ltr">
-                            <div class="text-xs text-slate-500 mb-3 uppercase tracking-wider border-b border-slate-800 pb-2">קוד המקור:</div>
-                            <div class="text-sm leading-relaxed space-y-2">
-                                <div>let f = proc (x : <span id="lockin-var-type" class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30 font-bold">? (t_x)</span>) x</div>
-                                <div>in <span class="text-purple-400">cons</span>(</div>
-                                <div class="pl-8">
-                                    <span id="lockin-slot-1" ondragover="allowDrop(event)" ondrop="handleLockinDrop(event, 1)" onclick="clickLockinSlot(1)"
-                                          class="inline-block bg-slate-800 border-2 border-dashed border-slate-600 hover:border-slate-400 text-slate-400 px-4 py-2 rounded cursor-pointer transition-all min-w-[80px] text-center font-bold">
-                                        [ קריאה 1 ]
-                                    </span>,
-                                </div>
-                                <div class="pl-8">
-                                    <span id="lockin-slot-2" ondragover="allowDrop(event)" ondrop="handleLockinDrop(event, 2)" onclick="clickLockinSlot(2)"
-                                          class="inline-block bg-slate-800 border-2 border-dashed border-slate-600 hover:border-slate-400 text-slate-400 px-4 py-2 rounded cursor-pointer transition-all min-w-[80px] text-center font-bold">
-                                        [ קריאה 2 ]
-                                    </span>
-                                </div>
-                                <div>)</div>
-                            </div>
-                        </div>
-
-                        <!-- Sidebar with items and lock status -->
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between" dir="rtl">
-                            <div>
-                                <h5 class="font-bold text-xs text-slate-500 uppercase tracking-wider mb-3">קריאות לשיבוץ:</h5>
-                                <div class="space-y-2 mb-4 font-bold" dir="ltr">
-                                    <div id="drag-f5" draggable="true" ondragstart="handleLockinDragStart(event, '(f 5)')" onclick="selectLockinSnippet('(f 5)')"
-                                         class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md cursor-grab active:cursor-grabbing text-xs font-mono font-bold text-blue-600 flex justify-between items-center">
-                                        <span>(f 5)</span>
-                                        <span class="text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-normal">int input</span>
-                                    </div>
-                                    <div id="drag-ftrue" draggable="true" ondragstart="handleLockinDragStart(event, '(f true)')" onclick="selectLockinSnippet('(f true)')"
-                                         class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md cursor-grab active:cursor-grabbing text-xs font-mono font-bold text-emerald-600 flex justify-between items-center">
-                                        <span>(f true)</span>
-                                        <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-normal">bool input</span>
-                                    </div>
-                                </div>
-
-                                <div class="bg-white p-3 rounded-lg border border-slate-200">
-                                    <h5 class="text-xs font-bold text-slate-700 mb-2 border-b pb-1">סטטוס משתנה הטיפוס:</h5>
-                                    <div id="lockin-status-box" class="text-xs font-mono font-bold text-slate-500 text-center py-2 bg-slate-100 rounded">
-                                        t_x = חופשי (Unbound)
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <button onclick="resetLockin()" class="w-full py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-lg text-xs transition-colors cursor-pointer">אפס סימולטור</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Alert / Feedback Area -->
-                    <div id="lockin-feedback" class="mt-4 p-3 rounded-lg text-xs leading-relaxed hidden"></div>
-                </div>
-
-                <!-- Constraint Generation Timeline SVG -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-8 mb-4">
-                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span class="p-1 bg-red-100 text-red-700 rounded-lg">⏳</span>
-                        <span>ציר זמן: יצירת משוואות עבור הביטוי proc(f) proc(x) (f (f x))</span>
-                    </h4>
-                    <p class="text-xs text-slate-600 mb-4 font-bold">
-                        בעת מעבר המפרש על קוד המקור, מיוצרים משתני טיפוס זמניים לכל ביטוי ומוצבות משוואות המאולצות
-                        מתחביר הפעלת הפונקציות:
-                    </p>
-                    <div class="flex justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <svg width="100%" height="200" viewBox="0 0 540 200" fill="none" class="max-w-lg">
-                            <!-- Stage 1 -->
-                            <circle cx="60" cy="50" r="25" fill="#3b82f6" />
-                            <text x="60" y="53" fill="white" font-size="8" font-weight="bold" text-anchor="middle">שלב
-                                1</text>
-                            <text x="60" y="100" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle"
-                                font-family="sans-serif">הכרזה על משתני טיפוס</text>
-                            <text x="60" y="120" fill="#64748b" font-size="7" text-anchor="middle"
-                                font-family="monospace">f : t1 , x : t2</text>
-
-                            <!-- Line 1-2 -->
-                            <path d="M 85,50 L 175,50" stroke="#94a3b8" stroke-width="2"
-                                marker-end="url(#arrow-algo)" />
-
-                            <!-- Stage 2 -->
-                            <circle cx="200" cy="50" r="25" fill="#8b5cf6" />
-                            <text x="200" y="53" fill="white" font-size="8" font-weight="bold" text-anchor="middle">שלב
-                                2</text>
-                            <text x="200" y="100" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle"
-                                font-family="sans-serif">האפליקציה הפנימית (f x)</text>
-                            <text x="200" y="120" fill="#64748b" font-size="7" text-anchor="middle"
-                                font-family="monospace">t1 = t2 -> t3</text>
-
-                            <!-- Line 2-3 -->
-                            <path d="M 225,50 L 315,50" stroke="#94a3b8" stroke-width="2"
-                                marker-end="url(#arrow-algo)" />
-
-                            <!-- Stage 3 -->
-                            <circle cx="340" cy="50" r="25" fill="#f59e0b" />
-                            <text x="340" y="53" fill="white" font-size="8" font-weight="bold" text-anchor="middle">שלב
-                                3</text>
-                            <text x="340" y="100" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle"
-                                font-family="sans-serif">האפליקציה החיצונית (f (f x))</text>
-                            <text x="340" y="120" fill="#64748b" font-size="7" text-anchor="middle"
-                                font-family="monospace">t1 = t3 -> t4</text>
-
-                            <!-- Line 3-4 -->
-                            <path d="M 365,50 L 455,50" stroke="#94a3b8" stroke-width="2"
-                                marker-end="url(#arrow-algo)" />
-
-                            <!-- Stage 4 -->
-                            <circle cx="480" cy="50" r="25" fill="#10b981" />
-                            <text x="480" y="53" fill="white" font-size="8" font-weight="bold" text-anchor="middle">שלב
-                                4</text>
-                            <text x="480" y="100" fill="#1e293b" font-size="8" font-weight="bold" text-anchor="middle"
-                                font-family="sans-serif">פתרון המערכת (Unification)</text>
-                            <text x="480" y="120" fill="#10b981" font-size="7" text-anchor="middle"
-                                font-family="monospace">t1 = t2 -> t2</text>
-                            <text x="480" y="135" fill="#10b981" font-size="7" text-anchor="middle"
-                                font-family="monospace">f : t2 -> t2</text>
-
-                            <defs>
-                                <marker id="arrow-algo" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6"
-                                    markerHeight="6" orient="auto-start-reverse">
-                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
-                                </marker>
-                            </defs>
-                        </svg>
-                    </div>
-                </div>
-
             </div>
 
-            <!-- ==========================================
-                 PART 3.4: ALGORITHM ERRORS (RECURSION & OCCURS CHECK)
-            =========================================== -->
-            <div id="algo-errors" class="tab-content">
+            <!-- Table 2 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 2
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">x</sub> -> T<sub class="text-[0.6em] font-bold">1</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = T<sub class="text-[0.6em] font-bold">4</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">1</sub> = T<sub class="text-[0.6em] font-bold">3</sub></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">4</sub> = int</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 3 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 3 (סופית)
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">1</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">4</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = int -> int</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="mt-4 mb-6 flex justify-center">
+            <div class="bg-white px-8 py-4 border-2 border-green-500 rounded-2xl shadow-xl flex items-center gap-6 z-20">
+                <div class="text-xl font-bold text-slate-800" dir="rtl">מסקנה : <span dir="ltr" class="font-mono text-green-700 ml-2">T<sub class="text-[0.6em] font-bold">0</sub> = int -> int</span></div>
+                <div class="text-green-500 text-4xl font-black">✓</div>
+            </div>
+        </div>
+    </div>
+
+            </div>
+<div id="algo-errors" class="tab-content">
                 <header class="mb-12 border-b pb-6">
                     <div
                         class="inline-block px-4 py-1 bg-red-100 text-red-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
@@ -1772,21 +1807,25 @@ in (f 10)</code></pre>
                     <div class="bg-slate-800 text-slate-200 p-4 rounded font-mono text-center mb-6 text-sm" dir="ltr">
                         letrec ? f(x:?) = if zero?(x) then 0 else -((f -(x,1)), -1) in f
                     </div>
-                    <p class="text-slate-700 mb-4">נשתמש בשיטת חילוץ המשוואות:</p>
+                    <p class="text-slate-700 mb-4 font-bold">חלוקת משתנים (Top-Down):</p>
                     <ol class="list-decimal list-inside space-y-3 text-slate-700 mb-6 ml-4">
-                        <li><strong>הפרמטר וגוף ה-letrec:</strong> נסמן את הטיפוס של פונקציית ה-letrec כ-$t_{res}$ ואת
-                            הפרמטר ב-$t_x$. הטיפוס של הפונקציה f הוא במפורש $t_f = t_x \r\rightarrow t_{res}$.</li>
-                        <li><strong>התנאי:</strong> <code>zero?(x)</code> מסיק ש-$t_x = int$.</li>
-                        <li><strong>בלוק ה-then:</strong> מחזיר 0, לכן הטיפוס של then הוא $int$. מכיוון שתוצאת גוף
-                            הפונקציה חייבת להתאים, נסיק כי $t_{res} = int$. אז עד כה אנו יודעים ש-$f: int \r\rightarrow
-                            int$.</li>
-                        <li><strong>בלוק ה-else:</strong> יש פה חיסור גדול, לכן תוצאתו $int$. (התאמה מושלמת ל-then).
-                        </li>
-                        <li><strong>הקריאה הרקורסיבית:</strong> מבצעים <code>(f -(x,1))</code>. אנו קוראים ל-f עם פרמטר
-                            שהוא חיסור (ולכן הוא int). הטיפוס של f מצפה ל-int. התוצאה של f חוזרת כ-$t_{res}$ שהוא int.
-                            הערך הזה הולך לפעולת החיסור החיצונית שמצפה ל-int. הכל מסתדר בצורה מושלמת!</li>
-                        <li><strong>התוצאה:</strong> התוכנית כולה מחזירה את הפונקציה <code>f</code>, שטיפוסה הוא $int
-                            \r\rightarrow int$.</li>
+                        <li><code>letrec ? f(x:?) = ... in f</code> ➔ $t_0$</li>
+                        <li><code>f</code> (גוף ה-letrec) ➔ $t_1$</li>
+                        <li><code>if zero?(x)...</code> (גוף הפונקציה f) ➔ $t_2$</li>
+                        <li><code>zero?(x)</code> ➔ $t_3$</li>
+                        <li><code>0</code> ➔ $t_4$</li>
+                        <li><code>-((f -(x,1)), -1)</code> ➔ $t_5$</li>
+                        <li>הפרמטר המוגדר <code>x</code> ➔ $t_x$</li>
+                        <li>שם הפונקציה המוגדרת <code>f</code> ➔ $t_f$</li>
+                    </ol>
+                    <p class="text-slate-700 mb-4 font-bold">חילוץ משוואות ופתרון (Bottom-Up):</p>
+                    <ol class="list-decimal list-inside space-y-3 text-slate-700 mb-6 ml-4">
+                        <li><b>קבועים:</b> ברור לנו ש-$t_4 = int$ וכך גם שאר המספרים בביטוי.</li>
+                        <li><b>התנאי ($t_3$):</b> הפעולה <code>zero?(x)</code> דורשת ש-$t_x = int$.</li>
+                        <li><b>בלוק ה-then:</b> מחזיר 0, לכן ענף זה הוא $int$. מכיוון שתוצאת התנאי ($t_2$) חייבת להתאים לשני הענפים, נקבל כי $t_2 = int$.</li>
+                        <li><b>טיפוס הפונקציה ($t_f$):</b> פונקציה תמיד ממפה את הפרמטר לגוף שלה, כלומר $t_f = t_x \r\rightarrow t_2$. נציב את הנתונים ונקבל $t_f = int \r\rightarrow int$.</li>
+                        <li><b>בלוק ה-else ($t_5$):</b> זהו חיסור ולכן תוצאתו היא $int$. זה תואם בדיוק לענף ה-then! בנוסף, הקריאה הרקורסיבית מתבצעת על חיסור (שהוא int), והפונקציה f אכן מצפה ל-int.</li>
+                        <li><b>התוצאה (letrec):</b> התוכנית כולה ($t_0$) מחזירה את גוף ה-letrec שהוא $t_1$. במקרה זה, $t_1$ הוא הפונקציה f. לכן: $t_0 = t_f = int \r\rightarrow int$.</li>
                     </ol>
                 </div>
 
@@ -1800,45 +1839,36 @@ in (f 10)</code></pre>
                     <div class="bg-rose-100 text-rose-900 p-4 rounded font-mono text-center font-bold mb-6" dir="ltr">
                         proc (x:?) (x x)
                     </div>
-                    <p class="text-sm text-slate-700 mb-4 font-bold">מעקב אחר אלגוריתם ה-Unification:</p>
+                    <p class="text-sm text-slate-700 mb-4 font-bold">מעקב באמצעות Top-Down / Bottom-Up:</p>
                     <ul class="list-none space-y-3 text-slate-700">
-                        <li><span class="inline-block w-6 font-bold text-rose-600">1.</span> נסמן את $x$ במשתנה טיפוס
-                            זמני: $t_x$.</li>
-                        <li><span class="inline-block w-6 font-bold text-rose-600">2.</span> הביטוי המרכזי הוא הפעלה:
-                            <code>(Rator Rand)</code> = <code>(x x)</code>. נסמן את תוצאת ההפעלה (הטיפוס שחוזר ממנה)
-                            ב-$t_{res}$.</li>
-                        <li><span class="inline-block w-6 font-bold text-rose-600">3.</span> נפעיל את חוק ההפעלה
-                            (Call-Exp Constraint Rule):<br>
-                            ה-Rator הוא $x$ (מסוג $t_x$).<br>
-                            ה-Rand הוא $x$ (מסוג $t_x$).<br>
-                            משוואת הפעלת פונקציה דורשת: הטיפוס של ה-Rator שווה לחץ בין טיפוס ה-Rand לטיפוס התוצאה. נציב
-                            ונקבל:
-                            <div class="my-4 text-center text-lg font-bold">$$t_x = t_x \r\rightarrow t_{res}$$</div>
+                        <li><span class="inline-block w-6 font-bold text-rose-600">1.</span> <b>חלוקה למשתנים:</b> הפונקציה היא $t_0$, ההפעלה היא $t_1$. משתני ה-Rator וה-Rand הם שניהם $t_x$.</li>
+                        <li><span class="inline-block w-6 font-bold text-rose-600">2.</span> <b>ההפעלה ($t_1$):</b> הפעלת פונקציה מחייבת שטיפוס ה-Rator יהיה חץ בין טיפוס ה-Rand לטיפוס התוצאה. נציב ונקבל:
+                            <div class="my-4 text-center text-lg font-bold">$$t_x = t_x \r\rightarrow t_1$$</div>
                         </li>
-                        <li><span class="inline-block w-6 font-bold text-rose-600">4.</span> ה-Unifier מקבל את המשוואה
+                        <li><span class="inline-block w-6 font-bold text-rose-600">3.</span> ה-Unifier מקבל את המשוואה
                             הזו ומנסה לבצע אלימינציה. הוא בודק במילון (Substitutions) ואז מבצע בדיקת שייכות (Occurs
                             Check):<br>
                             <span class="bg-rose-200 px-2 py-1 rounded font-bold">האם משתנה הטיפוס $t_x$ מופיע בתוך
-                                הביטוי $t_x \r\rightarrow t_{res}$?</span>
+                                הביטוי $t_x \r\rightarrow t_1$?</span>
                         </li>
-                        <li><span class="inline-block w-6 font-bold text-rose-600">5.</span> התשובה היא **כן** ($t_x$
+                        <li><span class="inline-block w-6 font-bold text-rose-600">4.</span> התשובה היא **כן** ($t_x$
                             מופיע ממש בצד שמאל של החץ).</li>
-                        <li><span class="inline-block w-6 font-bold text-rose-600">6.</span> <strong>התרסקות!</strong>
+                        <li><span class="inline-block w-6 font-bold text-rose-600">5.</span> <strong>התרסקות!</strong>
                             ה-Unifier זורק שגיאת <strong>Occurs Check Violation</strong>. הפונקציה אינה ניתנת לטיפוס
                             (Not Typeable) בשפת INFERRED! </li>
                     </ul>
                     <div class="mt-6 text-sm text-slate-700 border-t pt-4 space-y-4">
                         <h4 class="font-bold text-slate-800">מה קורה בזיכרון של המפרש ללא Occurs Check?</h4>
                         <p class="text-slate-600 leading-relaxed">
-                            ללא מנגנון ה-Occurs Check, המפרש ינסה לבצע את ההצבה בלולאה אינסופית. נראה כיצד ההצבה קורית שוב ושוב בזיכרון עבור השוויון $t_x = t_x \rightarrow t_{res}$:
+                            ללא מנגנון ה-Occurs Check, המפרש ינסה לבצע את ההצבה בלולאה אינסופית. נראה כיצד ההצבה קורית שוב ושוב בזיכרון עבור השוויון $t_x = t_x \rightarrow t_1$:
                         </p>
                         <div class="bg-rose-50 p-4 rounded border border-rose-200 font-mono text-xs space-y-2 text-left" dir="ltr">
-                            <div>1. נציב את t_x בתוך t_x → t_res ונקבל:</div>
-                            <div class="font-bold text-rose-700 pl-4">(t_x → t_res) → t_res</div>
+                            <div>1. נציב את t_x בתוך t_x → t_1 ונקבל:</div>
+                            <div class="font-bold text-rose-700 pl-4">(t_x → t_1) → t_1</div>
                             <div class="mt-2">2. נציב שוב את t_x לתוך התוצאה:</div>
-                            <div class="font-bold text-rose-700 pl-4">((t_x → t_res) → t_res) → t_res</div>
+                            <div class="font-bold text-rose-700 pl-4">((t_x → t_1) → t_1) → t_1</div>
                             <div class="mt-2">3. נציב פעם נוספת:</div>
-                            <div class="font-bold text-rose-700 pl-4">(((t_x → t_res) → t_res) → t_res) → t_res</div>
+                            <div class="font-bold text-rose-700 pl-4">(((t_x → t_1) → t_1) → t_1) → t_1</div>
                         </div>
                         <p class="text-slate-600 leading-relaxed">
                             העץ בזיכרון של המפרש ילך ויגדל לאינסוף, עד שהמפרש יתרסק מ-<strong>Stack Overflow</strong>. לכן, ה-Occurs Check קריטי כדי לעצור את התהליך ולמנוע את קריסת המפרש.
@@ -1963,728 +1993,628 @@ in (f 10)</code></pre>
 
             </div>
 
+            
             <!-- ==========================================
                  PART 3.5: COMPREHENSIVE ALGORITHM TRACE
             =========================================== -->
+            
             <div id="algo-comprehensive" class="tab-content">
                 <header class="mb-12 border-b pb-6">
-                    <div
-                        class="inline-block px-4 py-1 bg-fuchsia-100 text-fuchsia-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
-                        אלגוריתם הסקת טיפוסים</div>
-                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">דוגמה מסכמת: <span
-                            class="text-fuchsia-600">הסקה בפונקציות מקוננות</span></h2>
-                    <p class="text-xl text-slate-600 leading-relaxed">נבצע כעת מעקב מלא אחר ה-Inferrer וה-Unifier עבור
-                        תוכנית מורכבת. דוגמה זו מסכמת את כל השלבים - משלב חלוקת המשתנים, דרך בניית 13 המשוואות, ועד
-                        לפתרונן בשיטת האלימינציה וההצבות.</p>
+                    <div class="inline-block px-4 py-1 bg-green-100 text-green-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">אלגוריתם הסקת טיפוסים</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">הרצה מלאה: <span class="text-green-600">Letrec מורכב</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">נבצע מעקב מלא ומושלם (Trace) עבור ביטוי Letrec מורכב בפורמט השלם, משלב הטבלה עד מסקנות היוניפיקציה בעזרת הפשטה ופירוק משוואות הפונקציה.</p>
                 </header>
+                <div class="bg-slate-800 text-slate-200 p-4 rounded-xl border border-slate-700 shadow-xl mb-10 font-mono text-lg text-center" dir="ltr">letrec f(x:?) = -(x,1) in f(5)</div>
 
-                <div class="bg-slate-800 text-slate-200 p-6 rounded-xl border border-slate-700 shadow-xl mb-10 font-mono text-lg text-center"
-                    dir="ltr">
-                    let q = proc (y:?) zero?(-(y,10))<br>
-                    in let p = proc(x: ?) if (x 5) then (q 10) else (q 20)<br>
-                    in (p q)
+    <!-- Part A Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex-col overflow-hidden mb-8 mt-6">
+        <div class="p-4 border-b border-slate-200 bg-slate-50">
+            <h3 class="text-sm font-bold text-slate-800">חלק א': טבלת בניית המשוואות ל-Letrec</h3>
+        </div>
+        <div class="p-0 overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[600px]" dir="ltr">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="p-3 font-semibold text-slate-600 w-2/5 text-xs uppercase tracking-wider">Expression</th>
+                        <th class="p-3 font-semibold text-slate-600 w-1/5 text-center border-r border-l border-slate-200 text-xs uppercase tracking-wider">Type Variable</th>
+                        <th class="p-3 font-semibold text-slate-600 w-2/5 border-r border-slate-200 text-xs uppercase tracking-wider">Equations (AQ)</th>
+                    </tr>
+                </thead>
+                <tbody class="font-mono text-[14px] bg-white text-slate-800">
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">letrec f(x:?) = -(x,1) in f(5)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">0</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">4</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">f(x:?) = -(x,1)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">1</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">f</sub> = T<sub class="text-[0.6em] font-bold">x</sub> -> T<sub class="text-[0.6em] font-bold">2</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">-(x,1)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">2</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">x</sub> = int<br>T<sub class="text-[0.6em] font-bold">3</sub> = int<br>T<sub class="text-[0.6em] font-bold">2</sub> = int</td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">x</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">x</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed"></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">1</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">3</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">f(5)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">4</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">f</sub> = T<sub class="text-[0.6em] font-bold">5</sub> -> T<sub class="text-[0.6em] font-bold">4</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">f</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">f</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed"></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">5</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">5</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">5</sub> = int</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Part B Tables -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex-col mb-10 mt-6 relative overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-slate-800">חלק ב': תהליך ה-Unification</h3>
+        </div>
+        <div class="flex flex-row flex-nowrap p-6 gap-6 bg-slate-50 items-stretch justify-start overflow-x-auto" dir="ltr">
+
+            <!-- Table 1 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 1
                 </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
 
-                <div class="concept-box border-l-4 border-l-blue-500 !my-0 mb-10">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-800">שלב א': איסוף ויצירת משוואות</h3>
-                    <p class="text-slate-700 mb-4">ה-Inferrer סורק את ה-AST ומעניק משתנה $t$ לכל ביטוי:</p>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">4</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
 
-                    <div class="flex justify-end mb-4">
-                        <button onclick="toggleCompTableMode()" id="btn-comp-table-toggle" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold shadow-sm transition-all cursor-pointer">
-                            ✍️ מעבר למצב תרגול אינטראקטיבי
-                        </button>
-                    </div>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">f</sub> = T<sub class="text-[0.6em] font-bold">x</sub> -> T<sub class="text-[0.6em] font-bold">2</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
 
-                    <div id="comp-table-static" class="overflow-x-auto">
-                        <table class="w-full text-right border-collapse bg-white">
-                            <thead>
-                                <tr class="bg-blue-100 text-blue-800 border-b border-blue-200">
-                                    <th class="p-3 font-bold border-l border-blue-200 w-1/5">הביטוי (Expression)</th>
-                                    <th class="p-3 font-bold border-l border-blue-200 w-1/5">משתנה הטיפוס</th>
-                                    <th class="p-3 font-bold border-l border-blue-200 w-1/3">עדכון ושליפה מ-Tenv (סביבת הטיפוסים)</th>
-                                    <th class="p-3 font-bold text-center">המשוואות שנוצרות (Constraints) / הסבר</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm">
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">y</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_y$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>כניסה ל-proc:</strong> מעדכנים את ה-Tenv כך ש-[y ↦ $t_y$]</td>
-                                    <td class="p-3">פרמטר של הפונקציה q</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">-(y, 10)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_1$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת y:</strong> מקבלים $t_y$ מתוך ה-Tenv</td>
-                                    <td class="p-3 font-bold text-red-600">1. $t_y = int$<br>2. $t_1 = int$ <span
-                                            class="text-xs font-normal text-slate-500">(חיסור דורש ומחזיר int)</span>
-                                    </td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">zero?(-(y, 10))</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_2$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30">בדיקה רקורסיבית תחת הסביבה הנוכחית</td>
-                                    <td class="p-3 font-bold text-red-600">3. $t_1 = int$ <span
-                                            class="text-xs font-normal text-slate-500">(קלט חייב להיות int)</span><br>4.
-                                        $t_2 = bool$ <span class="text-xs font-normal text-slate-500">(תוצאת zero? היא
-                                            בוליאנית)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">proc(y:?)...</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_q$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>יציאה מהפונקציה q:</strong> הסרת y מ-Tenv. לתוכנית ההמשך: extend-tenv עם [q ↦ $t_q$]</td>
-                                    <td class="p-3 font-bold text-red-600">5. $t_q = t_y \r\rightarrow t_2$ <span
-                                            class="text-xs font-normal text-slate-500">(פונקציה מהפרמטר לגוף)</span>
-                                    </td>
-                                </tr>
-                                <tr class="border-b border-slate-100 bg-slate-100">
-                                    <td colspan="4" class="p-2 text-center text-slate-500 font-bold">--- עוברים לחלק
-                                        השני של הקוד (בתוך סביבת Let עם q) ---</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">x</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_x$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>כניסה ל-proc:</strong> מעדכנים את Tenv כך ש-[x ↦ $t_x$]</td>
-                                    <td class="p-3">פרמטר של הפונקציה p</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(x 5)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_3$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת x:</strong> מקבלים $t_x$ מתוך Tenv</td>
-                                    <td class="p-3 font-bold text-red-600">6. $t_x = int \r\rightarrow t_3$ <span
-                                            class="text-xs font-normal text-slate-500">(x מופעל כפונקציה על המספר 5,
-                                            ומחזיר את t_3)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(q 10)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_4$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת q:</strong> מקבלים $t_q$ מתוך Tenv</td>
-                                    <td class="p-3 font-bold text-red-600">7. $t_q = int \r\rightarrow t_4$ <span
-                                            class="text-xs font-normal text-slate-500">(q מופעל כפונקציה על 10, ומחזיר
-                                            את t_4)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(q 20)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_5$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת q:</strong> מקבלים $t_q$ מתוך Tenv</td>
-                                    <td class="p-3 font-bold text-red-600">8. $t_q = int \r\rightarrow t_5$ <span
-                                            class="text-xs font-normal text-slate-500">(q מופעל על 20, ומחזיר את
-                                            t_5)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">if (x 5) then...</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_{if}$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30">בדיקת תנאי וענפים בסביבה המורחבת הנוכחית</td>
-                                    <td class="p-3 font-bold text-red-600">9. $t_3 = bool$ <span
-                                            class="text-xs font-normal text-slate-500">(תנאי ה-if חייב להיות
-                                            בוליאני)</span><br>10. $t_4 = t_5$ <span
-                                            class="text-xs font-normal text-slate-500">(שני ענפי ה-if
-                                            זהים)</span><br>11. $t_{if} = t_4$ <span
-                                            class="text-xs font-normal text-slate-500">(תוצאת ה-if)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">proc(x:?)...</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_p$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>יציאה מהפונקציה p:</strong> הסרת x מ-Tenv. לתוכנית ההמשך: extend-tenv עם [p ↦ $t_p$]</td>
-                                    <td class="p-3 font-bold text-red-600">12. $t_p = t_x \r\rightarrow t_{if}$ <span
-                                            class="text-xs font-normal text-slate-500">(הפונקציה p)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(p q)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_{prog}$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת p ו-q:</strong> מקבלים את $t_p$ ו-$t_q$ מה-Tenv הנוכחי</td>
-                                    <td class="p-3 font-bold text-red-600">13. $t_p = t_q \r\rightarrow t_{prog}$ <span
-                                            class="text-xs font-normal text-slate-500">(התוכנית כולה - p מופעלת על
-                                            q)</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    </div> <!-- End of comp-table-static -->
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
 
-                    <!-- Interactive Practice Table (Hidden by default) -->
-                    <div id="comp-table-interactive" class="overflow-x-auto hidden">
-                        <table class="w-full text-right border-collapse bg-white">
-                            <thead>
-                                <tr class="bg-purple-100 text-purple-800 border-b border-purple-200">
-                                    <th class="p-3 font-bold border-l border-purple-200 w-1/5">הביטוי (Expression)</th>
-                                    <th class="p-3 font-bold border-l border-purple-200 w-1/5">משתנה הטיפוס</th>
-                                    <th class="p-3 font-bold border-l border-purple-200 w-1/3">עדכון ושליפה מ-Tenv (סביבת הטיפוסים)</th>
-                                    <th class="p-3 font-bold text-center">המשוואות שנוצרות (Constraints) / הסבר</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm">
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">y</td>
-                                    <td class="p-3 border-l border-slate-100 text-center">
-                                        <select class="comp-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_y">
-                                            <option value="">בחר...</option>
-                                            <option value="t_y">t_y</option>
-                                            <option value="t_1">t_1</option>
-                                            <option value="t_q">t_q</option>
-                                        </select>
-                                    </td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>כניסה ל-proc:</strong> מעדכנים את ה-Tenv כך ש-[y ↦ $t_y$]</td>
-                                    <td class="p-3">פרמטר של הפונקציה q</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">-(y, 10)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_1$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת y:</strong> מקבלים $t_y$ מתוך ה-Tenv</td>
-                                    <td class="p-3 text-center">
-                                        <select class="comp-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_y=int,t_1=int">
-                                            <option value="">בחר...</option>
-                                            <option value="t_y=int,t_1=int">t_y = int , t_1 = int</option>
-                                            <option value="t_y=bool,t_1=int">t_y = bool , t_1 = int</option>
-                                            <option value="t_y=t_1">t_y = t_1</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">zero?(-(y, 10))</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_2$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30">בדיקה רקורסיבית תחת הסביבה הנוכחית</td>
-                                    <td class="p-3 font-bold text-red-600">3. $t_1 = int$ <span class="text-xs font-normal text-slate-500">(קלט חייב להיות int)</span><br>4. $t_2 = bool$ <span class="text-xs font-normal text-slate-500">(תוצאת zero? היא בוליאנית)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">proc(y:?)...</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_q$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30 text-center">
-                                        <select class="comp-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="q->t_q">
-                                            <option value="">בחר...</option>
-                                            <option value="q->t_q">extend-tenv with [q ↦ t_q]</option>
-                                            <option value="y->t_y">extend-tenv with [y ↦ t_y]</option>
-                                            <option value="empty">empty tenv</option>
-                                        </select>
-                                    </td>
-                                    <td class="p-3 font-bold text-red-600">5. $t_q = t_y \rightarrow t_2$ <span class="text-xs font-normal text-slate-500">(פונקציה מהפרמטר לגוף)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 bg-slate-100">
-                                    <td colspan="4" class="p-2 text-center text-slate-500 font-bold">--- עוברים לחלק השני של הקוד (בתוך סביבת Let עם q) ---</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">x</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_x$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>כניסה ל-proc:</strong> מעדכנים את Tenv כך ש-[x ↦ $t_x$]</td>
-                                    <td class="p-3">פרמטר של הפונקציה p</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(x 5)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_3$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת x:</strong> מקבלים $t_x$ מתוך Tenv</td>
-                                    <td class="p-3 text-center">
-                                        <select class="comp-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_x=int->t_3">
-                                            <option value="">בחר...</option>
-                                            <option value="t_x=int->t_3">t_x = int ➔ t_3</option>
-                                            <option value="t_x=t_3">t_x = t_3</option>
-                                            <option value="t_x=int">t_x = int</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(q 10)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_4$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת q:</strong> מקבלים $t_q$ מתוך Tenv</td>
-                                    <td class="p-3 font-bold text-red-600">7. $t_q = int \rightarrow t_4$ <span class="text-xs font-normal text-slate-500">(q מופעל כפונקציה על 10, ומחזיר את t_4)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(q 20)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_5$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת q:</strong> מקבלים $t_q$ מתוך Tenv</td>
-                                    <td class="p-3 font-bold text-red-600">8. $t_q = int \rightarrow t_5$ <span class="text-xs font-normal text-slate-500">(q מופעל על 20, ומחזיר את t_5)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">if (x 5) then...</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_{if}$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30">בדיקת תנאי וענפים בסביבה המורחבת הנוכחית</td>
-                                    <td class="p-3 font-bold text-red-600">9. $t_3 = bool$ <span class="text-xs font-normal text-slate-500">(תנאי ה-if חייב להיות בוליאני)</span><br>10. $t_4 = t_5$ <span class="text-xs font-normal text-slate-500">(שני ענפי ה-if זהים)</span><br>11. $t_{if} = t_4$ <span class="text-xs font-normal text-slate-500">(תוצאת ה-if)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">proc(x:?)...</td>
-                                    <td class="p-3 text-center border-l border-slate-100">
-                                        <select class="comp-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_p">
-                                            <option value="">בחר...</option>
-                                            <option value="t_p">t_p</option>
-                                            <option value="t_x">t_x</option>
-                                            <option value="t_if">t_if</option>
-                                        </select>
-                                    </td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>יציאה מהפונקציה p:</strong> הסרת x מ-Tenv. לתוכנית ההמשך: extend-tenv עם [p ↦ $t_p$]</td>
-                                    <td class="p-3 font-bold text-red-600">12. $t_p = t_x \rightarrow t_{if}$ <span class="text-xs font-normal text-slate-500">(הפונקציה p)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(p q)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">$t_{prog}$</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת p ו-q:</strong> מקבלים את $t_p$ ו-$t_q$ מה-Tenv הנוכחי</td>
-                                    <td class="p-3 text-center">
-                                        <select class="comp-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_p=t_q->t_prog">
-                                            <option value="">בחר...</option>
-                                            <option value="t_p=t_q->t_prog">t_p = t_q ➔ t_{prog}</option>
-                                            <option value="t_p=t_prog">t_p = t_{prog}</option>
-                                            <option value="t_q=t_p">t_q = t_p</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                        <div class="flex justify-between items-center mt-4 p-3 bg-slate-50 rounded-lg">
-                            <button onclick="checkCompPractice()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer">בדוק פתרונות</button>
-                            <div id="comp-practice-feedback" class="text-xs font-bold text-slate-700"></div>
-                        </div>
-                    </div>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
 
-                <div class="bg-green-50 p-8 rounded-2xl shadow-sm border border-green-200 mb-10">
-                    <h3 class="text-2xl font-bold mb-6 text-green-800 border-b border-green-200 pb-2">שלב ב': אלגוריתם
-                        ההצבות (Unification)</h3>
-                    <p class="mb-4 text-slate-700">ה-Unifier מקבל את 13 המשוואות שמצאנו, ומפעיל אלימינציה שלב אחר שלב.
-                        הערכים מחלחלים (Substitute) במורד המשוואות ומעשירים את טבלת ההצבות.</p>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <h4 class="font-bold text-lg text-slate-500 mb-4 underline">המשוואות שעוד נותרו:</h4>
-                            <ul class="space-y-2 font-mono text-slate-600 text-sm" dir="ltr">
-                                <li>1. $t_y = int$</li>
-                                <li>2. $t_1 = int$</li>
-                                <li>3. $t_1 = int$</li>
-                                <li>4. $t_2 = bool$</li>
-                                <li>5. $t_q = t_y \r\rightarrow t_2$</li>
-                                <li>6. $t_x = int \r\rightarrow t_3$</li>
-                                <li>7. $t_q = int \r\rightarrow t_4$</li>
-                                <li>8. $t_q = int \r\rightarrow t_5$</li>
-                                <li>9. $t_3 = bool$</li>
-                                <li>10. $t_4 = t_5$</li>
-                                <li>11. $t_{if} = t_4$</li>
-                                <li>12. $t_p = t_x \r\rightarrow t_{if}$</li>
-                                <li>13. $t_p = t_q \r\rightarrow t_{prog}$</li>
-                            </ul>
-                        </div>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">f</sub> = T<sub class="text-[0.6em] font-bold">5</sub> -> T<sub class="text-[0.6em] font-bold">4</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
 
-                        <div>
-                            <h4 class="font-bold text-lg text-green-700 mb-4 underline">מילון ההצבות (Substitutions)
-                                שמתגבש:</h4>
-                            <ul class="space-y-3 font-mono text-green-900 font-bold" dir="ltr">
-                                <li>$\r\rightarrow t_y = int$ <span
-                                        class="text-xs text-green-600 font-normal ml-2">(ממשוואה 1)</span></li>
-                                <li>$\r\rightarrow t_1 = int$ <span
-                                        class="text-xs text-green-600 font-normal ml-2">(משוואות 2,3 - נמחקות)</span>
-                                </li>
-                                <li>$\r\rightarrow t_2 = bool$ <span
-                                        class="text-xs text-green-600 font-normal ml-2">(ממשוואה 4)</span></li>
-                                <li class="mt-4 border-t border-green-200 pt-2"><span
-                                        class="text-slate-500 text-sm block mb-1">נציב את ty ו-t2 בתוך משוואה 5:</span>
-                                    $\r\rightarrow t_q = int \r\rightarrow bool$
-                                </li>
-                                <li class="mt-4 border-t border-green-200 pt-2"><span
-                                        class="text-slate-500 text-sm block mb-1">נציב את tq החדש בתוך 7 ו-8:</span>
-                                    $int \r\rightarrow bool = int \r\rightarrow t_4 \implies t_4 = bool$<br>
-                                    $int \r\rightarrow bool = int \r\rightarrow t_5 \implies t_5 = bool$<br>
-                                    $\r\rightarrow t_4 = bool, \ t_5 = bool$
-                                </li>
-                                <li class="mt-4 border-t border-green-200 pt-2"><span
-                                        class="text-slate-500 text-sm block mb-1">ממשוואות 9, 11 נובע:</span>
-                                    $\r\rightarrow t_3 = bool$<br>
-                                    $\r\rightarrow t_{if} = bool$ <span class="text-xs text-green-600 font-normal">(כי
-                                        t4 הוא bool)</span>
-                                </li>
-                                <li class="mt-4 border-t border-green-200 pt-2"><span
-                                        class="text-slate-500 text-sm block mb-1">נציב את t3 במשוואה 6:</span>
-                                    $\r\rightarrow t_x = int \r\rightarrow bool$
-                                </li>
-                                <li class="mt-4 border-t border-green-200 pt-2"><span
-                                        class="text-slate-500 text-sm block mb-1">נבנה את משוואה 12 (הפונקציה p) עם tx
-                                        ו-tif:</span>
-                                    $\r\rightarrow t_p = (int \r\rightarrow bool) \r\rightarrow bool$
-                                </li>
-                                <li
-                                    class="mt-6 border-t border-green-400 pt-4 bg-white p-4 rounded-lg shadow-sm transform scale-105 text-xl">
-                                    <span class="text-slate-500 text-sm block mb-1">השלב הסופי! נציב את tp ואת tq
-                                        במשוואה 13:</span>
-                                    $(int \r\rightarrow bool) \r\rightarrow bool = (int \r\rightarrow bool)
-                                    \r\rightarrow t_{prog}$<br>
-                                    <span class="text-red-500 text-2xl mt-2 block">$\implies t_{prog} = bool$ 🎯</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">5</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
 
-                <div class="tip-box">
-                    <h4 class="font-bold text-lg mb-2 text-amber-800">סיכום האלגוריתם</h4>
-                    <p class="text-slate-700">בסיום המעקב, ה-Inferrer מחזיר שהאלגוריתם סיים בהצלחה ללא סתירות, וטיפוס
-                        התוכנית הסופי ($t_{prog}$) הוא <code>bool</code>. אם הוא היה נתקל בסתירה - למשל אם $t_3$ היה
-                        אמור להיות גם $int$ וגם $bool$, האלגוריתם היה עוצר וזורק Type Error.</p>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- ==========================================
-                 PART 3.6: MAMAN SOLUTION (TYPE INFERENCE)
-            =========================================== -->
-            <div id="algo-maman" class="tab-content">
-                <header class="mb-12 border-b pb-6">
-                    <div
-                        class="inline-block px-4 py-1 bg-fuchsia-100 text-fuchsia-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
-                        אלגוריתם הסקת טיפוסים - ממ"ן</div>
-                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">פתרון מטלת סיכום: <span
-                            class="text-fuchsia-600">הסקה עם פונקציות מסדר גבוה</span></h2>
-                    <p class="text-xl text-slate-600 leading-relaxed">במחלקה זו ננתח ונפתור צעד-אחר-צעד את שאלת ההסקה
-                        המרכזית עבור ביטוי המשלב <code>let</code>, פונקציות מסדר גבוה, והעברה של פונקציות כפרמטרים בשפת
-                        <code>INFERRED</code>.</p>
-                </header>
-
-                <div class="bg-slate-800 text-slate-200 p-6 rounded-xl border border-slate-700 shadow-xl mb-10 font-mono text-lg text-center"
-                    dir="ltr">
-                    let p = proc (a: ?) (a 6)<br>
-                    in (p proc (b: int) zero? (b))
+            <!-- Table 2 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 2
                 </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
 
-                <div class="concept-box border-l-4 border-l-blue-500 !my-0 mb-10">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-800">שלב א': הקצאת משתני טיפוס ויצירת משוואות</h3>
-                    <p class="text-slate-700 mb-6">
-                        כדי להסיק את טיפוס הביטוי, ה-Inferrer סורק את ה-AST ומקצה משתנה טיפוס זמני לכל תת-ביטוי ולכל
-                        מזהה (Identifier) ללא טיפוס מוצהר:
-                    </p>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"><span class='font-bold text-pink-600'>T<sub class="text-[0.6em] font-bold">f</sub></span> = T<sub class="text-[0.6em] font-bold">x</sub> -> T<sub class="text-[0.6em] font-bold">2</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">4</sub></td>
+                            </tr>
 
-                    <div class="flex justify-end mb-4">
-                        <button onclick="toggleMamanTableMode()" id="btn-maman-table-toggle" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold shadow-sm transition-all cursor-pointer">
-                            ✍️ מעבר למצב תרגול אינטראקטיבי
-                        </button>
-                    </div>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"><span class='font-bold text-pink-600'>T<sub class="text-[0.6em] font-bold">f</sub></span> = T<sub class="text-[0.6em] font-bold">5</sub> -> T<sub class="text-[0.6em] font-bold">4</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = int</td>
+                            </tr>
 
-                    <div id="maman-table-static" class="overflow-x-auto">
-                        <table class="w-full text-right border-collapse bg-white font-bold">
-                            <thead>
-                                <tr class="bg-blue-100 text-blue-800 border-b border-blue-200">
-                                    <th class="p-3 font-bold border-l border-blue-200 w-1/5">תת-הביטוי / משתנה (Expression)</th>
-                                    <th class="p-3 font-bold border-l border-blue-200 w-1/5">משתנה הטיפוס</th>
-                                    <th class="p-3 font-bold border-l border-blue-200 w-1/3 text-center">פעילות ב-Tenv (סביבת הטיפוסים)</th>
-                                    <th class="p-3 font-bold text-center">המשוואות שנוצרות (Constraints) / הסבר פדגוגי</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm">
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">E_0 (התוכנית כולה)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_{prog}\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30">סביבת עבודה התחלתית ריקה: Tenv = []</td>
-                                    <td class="p-3">הטיפוס הסופי של ביטוי ה-<code>let</code> כולו. לפי חוק ה-let,
-                                        מתקיים: <span class="font-bold text-blue-700">\(t_{prog} = t_{body}\)</span>
-                                        (טיפוס הגוף).</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">a</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_a\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>כניסה ל-proc של a:</strong> מעדכנים את Tenv כך ש-[a ↦ \(t_a\)]</td>
-                                    <td class="p-3">פרמטר ללא טיפוס מוצהר של הפונקציה <code>p</code>. מקבל משתנה טיפוס
-                                        חופשי.</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">6</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_1\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30">קבוע מספר שלם בתוך הסביבה המורחבת של a</td>
-                                    <td class="p-3 font-bold text-red-600">1. \(t_1 = int\) <span
-                                             class="text-xs font-normal text-slate-500">(קבוע מספרי הוא תמיד מספר
-                                             שלם)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(a 6)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_2\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת a:</strong> מקבלים \(t_a\) מתוך ה-Tenv הנוכחי</td>
-                                    <td class="p-3 font-bold text-red-600">2. \(t_a = t_1 ightarrow t_2\) <span
-                                             class="text-xs font-normal text-slate-500">(הפעלת פונקציה: a מופעלת על 6
-                                             ומחזירה את תוצאת הגוף t_2)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">proc (a: ?) (a 6)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_{rhs}\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>יציאה מהפונקציה p:</strong> הסרת a מ-Tenv. הטיפוס שנוצר הוא ה-RHS של ה-let.</td>
-                                    <td class="p-3 font-bold text-red-600">3. \(t_{rhs} = t_a ightarrow t_2\) <span
-                                             class="text-xs font-normal text-slate-500">(טיפוס הפונקציה הוא מטיפוס הפרמטר
-                                             לטיפוס הגוף)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">p</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_p\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>הכנסת p ל-Tenv:</strong> עבור גוף ה-let מעדכנים [p ↦ \(t_{rhs}\)]</td>
-                                    <td class="p-3 font-bold text-red-600">4. \(t_p = t_{rhs}\) <span
-                                             class="text-xs font-normal text-slate-500">(קשירת המשתנה p לערך הימני
-                                             ב-let)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 bg-slate-100">
-                                    <td colspan="4" class="p-2 text-center text-slate-500 font-bold">--- גוף ה-let: (p
-                                        proc (b: int) zero? (b)) ---</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">b</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_b\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>כניסה ל-proc של b:</strong> מעדכנים את Tenv כך ש-[b ↦ int]</td>
-                                    <td class="p-3 font-bold text-red-600">5. \(t_b = int\) <span
-                                             class="text-xs font-normal text-slate-500">(פרמטר בעל הצהרת טיפוס מפורשת b:
-                                             int)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">zero? (b)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_3\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת b:</strong> מקבלים int מתוך ה-Tenv הנוכחי של b</td>
-                                    <td class="p-3 font-bold text-red-600">6. \(t_b = int\) <span
-                                             class="text-xs font-normal text-slate-500">(קלט של zero? חייב להיות
-                                             מספר)</span><br>7. \(t_3 = bool\) <span
-                                             class="text-xs font-normal text-slate-500">(פלט של zero? הוא תמיד
-                                             בוליאנית)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">proc (b: int) zero?
-                                        (b)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_{arg}\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>יציאה מהפונקציה:</strong> הסרת b מ-Tenv. הטיפוס שחוזר הוא \(t_{arg}\)</td>
-                                    <td class="p-3 font-bold text-red-600">8. \(t_{arg} = t_b ightarrow t_3\) <span
-                                             class="text-xs font-normal text-slate-500">(טיפוס פונקציית הארגומנט)</span>
-                                    </td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(p proc...) (גוף
-                                        ה-let)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_{body}\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת p:</strong> מקבלים \(t_p\) מתוך ה-Tenv הראשי של ה-let</td>
-                                    <td class="p-3 font-bold text-red-600">9. \(t_p = t_{arg} ightarrow t_{body}\)
-                                         <span class="text-xs font-normal text-slate-500">(הפעלת הפונקציה p על הארגומנט;
-                                             התוצאה היא t_body)</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    </div> <!-- End of maman-table-static -->
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                            </tr>
 
-                    <!-- Interactive Practice Table (Hidden by default) -->
-                    <div id="maman-table-interactive" class="overflow-x-auto hidden">
-                        <table class="w-full text-right border-collapse bg-white">
-                            <thead>
-                                <tr class="bg-purple-100 text-purple-800 border-b border-purple-200">
-                                    <th class="p-3 font-bold border-l border-purple-200 w-1/5">תת-הביטוי / משתנה (Expression)</th>
-                                    <th class="p-3 font-bold border-l border-purple-200 w-1/5">משתנה הטיפוס</th>
-                                    <th class="p-3 font-bold border-l border-purple-200 w-1/3 text-center">פעילות ב-Tenv (סביבת הטיפוסים)</th>
-                                    <th class="p-3 font-bold text-center">המשוואות שנוצרות (Constraints) / הסבר פדגוגי</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm">
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">E_0 (התוכנית כולה)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_{prog}\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30">סביבת עבודה התחלתית ריקה: Tenv = []</td>
-                                    <td class="p-3">הטיפוס הסופי של ביטוי ה-<code>let</code> כולו. לפי חוק ה-let, מתקיים: <span class="font-bold text-blue-700">\(t_{prog} = t_{body}\)</span> (טיפוס הגוף).</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">a</td>
-                                    <td class="p-3 text-center border-l border-slate-100">
-                                        <select class="maman-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_a">
-                                            <option value="">בחר...</option>
-                                            <option value="t_a">t_a</option>
-                                            <option value="t_1">t_1</option>
-                                            <option value="t_b">t_b</option>
-                                        </select>
-                                    </td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>כניסה ל-proc של a:</strong> מעדכנים את Tenv כך ש-[a ↦ \(t_a\)]</td>
-                                    <td class="p-3">פרמטר ללא טיפוס מוצהר של הפונקציה <code>p</code>. מקבל משתנה טיפוס חופשי.</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">6</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_1\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30">קבוע מספר שלם בתוך הסביבה המורחבת של a</td>
-                                    <td class="p-3 font-bold text-red-600">1. \(t_1 = int\) <span class="text-xs font-normal text-slate-500">(קבוע מספרי הוא תמיד מספר שלם)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(a 6)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_2\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת a:</strong> מקבלים \(t_a\) מתוך ה-Tenv הנוכחי</td>
-                                    <td class="p-3 text-center">
-                                        <select class="maman-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_a=t_1->t_2">
-                                            <option value="">בחר...</option>
-                                            <option value="t_a=t_1->t_2">t_a = t_1 ➔ t_2</option>
-                                            <option value="t_a=int">t_a = int</option>
-                                            <option value="t_a=t_b">t_a = t_b</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">proc (a: ?) (a 6)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">
-                                        <select class="maman-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_rhs">
-                                            <option value="">בחר...</option>
-                                            <option value="t_rhs">t_rhs</option>
-                                            <option value="t_p">t_p</option>
-                                            <option value="t_arg">t_arg</option>
-                                        </select>
-                                    </td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>יציאה מהפונקציה p:</strong> הסרת a מ-Tenv. הטיפוס שנוצר הוא ה-RHS של ה-let.</td>
-                                    <td class="p-3 font-bold text-red-600">3. \(t_{rhs} = t_a \rightarrow t_2\) <span class="text-xs font-normal text-slate-500">(טיפוס הפונקציה הוא מטיפוס הפרמטר לטיפוס הגוף)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">p</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_p\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30 text-center">
-                                        <select class="maman-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="p->t_rhs">
-                                            <option value="">בחר...</option>
-                                            <option value="p->t_rhs">extend-tenv with [p ↦ t_rhs]</option>
-                                            <option value="p->t_a">extend-tenv with [p ↦ t_a]</option>
-                                            <option value="empty">empty tenv</option>
-                                        </select>
-                                    </td>
-                                    <td class="p-3 font-bold text-red-600">4. \(t_p = t_{rhs}\) <span class="text-xs font-normal text-slate-500">(קשירת המשתנה p לערך הימני ב-let)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 bg-slate-100">
-                                    <td colspan="4" class="p-2 text-center text-slate-500 font-bold">--- גוף ה-let: (p proc (b: int) zero? (b)) ---</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">b</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_b\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>כניסה ל-proc של b:</strong> מעדכנים את Tenv כך ש-[b ↦ int]</td>
-                                    <td class="p-3 font-bold text-red-600">5. \(t_b = int\) <span class="text-xs font-normal text-slate-500">(פרמטר בעל הצהרת טיפוס מפורשת b: int)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">zero? (b)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_3\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת b:</strong> מקבלים int מתוך ה-Tenv הנוכחי של b</td>
-                                    <td class="p-3 font-bold text-red-600">6. \(t_b = int\) <span class="text-xs font-normal text-slate-500">(קלט של zero? חייב להיות מספר)</span><br>7. \(t_3 = bool\) <span class="text-xs font-normal text-slate-500">(פלט של zero? הוא תמיד בוליאנית)</span></td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">proc (b: int) zero? (b)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_{arg}\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>יציאה מהפונקציה:</strong> הסרת b מ-Tenv. הטיפוס שחוזר הוא \(t_{arg}\)</td>
-                                    <td class="p-3 text-center">
-                                        <select class="maman-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_arg=t_b->t_3">
-                                            <option value="">בחר...</option>
-                                            <option value="t_arg=t_b->t_3">t_arg = t_b ➔ t_3</option>
-                                            <option value="t_arg=int->bool">t_arg = int ➔ bool</option>
-                                            <option value="t_arg=t_3">t_arg = t_3</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">(p proc...) (גוף ה-let)</td>
-                                    <td class="p-3 font-mono border-l border-slate-100" dir="ltr">\(t_{body}\)</td>
-                                    <td class="p-3 text-slate-600 bg-slate-50/30"><strong>שליפת p:</strong> מקבלים \(t_p\) מתוך ה-Tenv הראשי של ה-let</td>
-                                    <td class="p-3 text-center">
-                                        <select class="maman-practice-select font-mono bg-slate-50 border border-slate-300 rounded p-1 text-xs" data-correct="t_p=t_arg->t_body">
-                                            <option value="">בחר...</option>
-                                            <option value="t_p=t_arg->t_body">t_p = t_{arg} ➔ t_{body}</option>
-                                            <option value="t_p=t_body">t_p = t_{body}</option>
-                                            <option value="t_p=t_rhs">t_p = t_{rhs}</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = int</td>
+                            </tr>
 
-                        <div class="flex justify-between items-center mt-4 p-3 bg-slate-50 rounded-lg">
-                            <button onclick="checkMamanPractice()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer">בדוק פתרונות</button>
-                            <div id="maman-practice-feedback" class="text-xs font-bold text-slate-700"></div>
-                        </div>
-                    </div>
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">5</sub> = int</td>
+                            </tr>
 
-                <div class="bg-green-50 p-8 rounded-2xl shadow-sm border border-green-200 mb-10">
-                    <h3 class="text-2xl font-bold mb-6 text-green-800 border-b border-green-200 pb-2">שלב ב': פתרון
-                        המשוואות (Unification & Substitution)</h3>
-                    <p class="mb-6 text-slate-700">
-                        כעת, ה-Unifier מתחיל לפתור את מערכת המשוואות שהגדרנו באמצעות מעברים, הפשטות והצבות דו-כיווניות:
-                    </p>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <h4 class="font-bold text-lg text-slate-500 mb-4 underline">המשוואות שנאספו:</h4>
-                            <ul class="space-y-2 font-mono text-slate-600 text-sm" dir="ltr">
-                                <li>(1) \(t_1 = int\)</li>
-                                <li>(2) \(t_a = t_1 \rightarrow t_2\)</li>
-                                <li>(3) \(t_{rhs} = t_a \rightarrow t_2\)</li>
-                                <li>(4) \(t_p = t_{rhs}\)</li>
-                                <li>(5) \(t_b = int\)</li>
-                                <li>(6) \(t_b = int\)</li>
-                                <li>(7) \(t_3 = bool\)</li>
-                                <li>(8) \(t_{arg} = t_b \rightarrow t_3\)</li>
-                                <li>(9) \(t_p = t_{arg} \rightarrow t_{body}\)</li>
-                                <li>(10) \(t_{prog} = t_{body}\)</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 class="font-bold text-lg text-green-700 mb-4 underline">שלבי צמצום והצבה:</h4>
-                            <ol class="list-decimal list-inside space-y-4 text-slate-700 text-sm">
-                                <li>
-                                    <strong>קביעת טיפוסים ישירים:</strong><br>
-                                    ממשוואה (1): <span class="text-green-600 font-mono">\(t_1 \mapsto int\)</span><br>
-                                    ממשוואה (5) ו-(6): <span class="text-green-600 font-mono">\(t_b \mapsto
-                                        int\)</span><br>
-                                    ממשוואה (7): <span class="text-green-600 font-mono">\(t_3 \mapsto bool\)</span>
-                                </li>
-                                <li>
-                                    <strong>הצבה ב-\(t_a\):</strong><br>
-                                    נציב את \(t_1 = int\) במשוואה (2):<br>
-                                    <span class="text-green-600 font-mono">\(t_a \mapsto int \rightarrow t_2\)</span>
-                                </li>
-                                <li>
-                                    <strong>בניית טיפוס הפונקציה \(t_{rhs}\) וקשירת \(t_p\):</strong><br>
-                                    נציב את \(t_a\) במשוואה (3):<br>
-                                    \(t_{rhs} = (int \rightarrow t_2) \rightarrow t_2\)<br>
-                                    מכיוון ש-\(t_p = t_{rhs}\) (משוואה 4), נקבל:<br>
-                                    <span class="text-green-600 font-mono">\(t_p \mapsto (int \rightarrow t_2)
-                                        \rightarrow t_2\)</span>
-                                </li>
-                                <li>
-                                    <strong>בניית טיפוס הארגומנט \(t_{arg}\):</strong><br>
-                                    נציב את \(t_b = int\) ו-\(t_3 = bool\) במשוואה (8):<br>
-                                    <span class="text-green-600 font-mono">\(t_{arg} \mapsto int \rightarrow
-                                        bool\)</span>
-                                </li>
-                                <li>
-                                    <strong>איחוד (Unification) של טיפוסי \(t_p\):</strong><br>
-                                    נציב את \(t_p\) ואת \(t_{arg}\) במשוואה (9):<br>
-                                    <span class="font-mono text-blue-800 bg-blue-50 px-2 py-1 rounded text-xs">\( (int
-                                        \rightarrow t_2) \rightarrow t_2 = (int \rightarrow bool) \rightarrow t_{body}
-                                        \)</span><br>
-                                    נפרק את השוויון בין שתי פונקציות (שמאל לשמאל, ימין לימין):
-                                    <ul class="list-disc list-inside mr-6 mt-1 space-y-1">
-                                        <li><strong>צד שמאל:</strong> \( int \rightarrow t_2 = int \rightarrow bool
-                                            \)<br>
-                                            מפירוק נוסף מקבלים: \(int = int\) (זהות) וכן <span
-                                                class="text-green-600 font-bold">\(t_2 \mapsto bool\)</span>.</li>
-                                        <li><strong>צד ימין:</strong> <span class="text-green-600 font-bold">\(t_2 =
-                                                t_{body}\)</span>.</li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <strong>מציאת טיפוס הגוף \(t_{body}\):</strong><br>
-                                    מכיוון ש-\(t_2 = bool\) וכן \(t_{body} = t_2\), נובע ישירות ש:<br>
-                                    <span class="text-green-600 font-mono">\(t_{body} \mapsto bool\)</span>
-                                </li>
-                                <li>
-                                    <strong>הסקה סופית של טיפוס התוכנית:</strong><br>
-                                    ממשוואה (10): \(t_{prog} = t_{body}\). לכן:<br>
-                                    <span class="text-fuchsia-600 text-lg font-bold">\(t_{prog} \mapsto bool\)</span> 🎯
-                                </li>
-                            </ol>
-                        </div>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
+            </div>
 
-                <div class="tip-box">
-                    <h4 class="font-bold text-lg mb-2 text-amber-800">💡 תובנה פדגוגית מהפתרון</h4>
-                    <p class="text-slate-700 mb-2">
-                        בתוכנית זו, הפונקציה <code>p</code> היא פונקציה מסדר גבוה. היא מקבלת פונקציה כלשהי
-                        <code>a</code> ומפעילה אותה על המספר <code>6</code>.
-                    </p>
-                    <p class="text-slate-700">
-                        מאחר ו-<code>p</code> מפעילה את <code>a</code> על קלט מסוג <code>int</code>, המהדר מסיק באופן
-                        אוטומטי ש-<code>a</code> חייב להיות מטיפוס המקבל <code>int</code> (כלומר
-                        <code>int -> t_2</code>).
-                        כאשר אנו מפעילים את <code>p</code> בגוף התוכנית על הארגומנט
-                        <code>proc (b: int) zero? (b)</code>, שטיפוסו הוא <code>int -> bool</code>, מתבצעת התאמה מלאה!
-                        משתנה הטיפוס \(t_2\) מתאחד עם <code>bool</code>, ולכן תוצאת הפונקציה כולה (וגם תוצאת התוכנית
-                        כולה) היא <code>bool</code>.
-                    </p>
+            <!-- Table 3 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 3
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">int -> int = int -> T<sub class="text-[0.6em] font-bold">4</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">4</sub></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">5</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">f</sub> = int -> int</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 4 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 4 (סופית)
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">x</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">5</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">f</sub> = int -> int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">4</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = int</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
         </div>
+        <div class="mt-4 mb-6 flex justify-center">
+            <div class="bg-white px-8 py-4 border-2 border-green-500 rounded-2xl shadow-xl flex items-center gap-6 z-20">
+                <div class="text-xl font-bold text-slate-800" dir="rtl">מסקנה : <span dir="ltr" class="font-mono text-green-700 ml-2">T<sub class="text-[0.6em] font-bold">0</sub> = int</span></div>
+                <div class="text-green-500 text-4xl font-black">✓</div>
+            </div>
+        </div>
+    </div>
 
-    </main>
+            </div>
+
+            <div id="algo-maman" class="tab-content">
+                <header class="mb-12 border-b pb-6">
+                    <div class="inline-block px-4 py-1 bg-fuchsia-100 text-fuchsia-800 rounded-full font-bold text-sm mb-4 tracking-wider uppercase">אלגוריתם הסקת טיפוסים - ממ"ן</div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">פתרון ממ"ן 16: <span class="text-fuchsia-600">פונקציות מסדר גבוה</span></h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">זהו פתרון מלא, מדויק וזהה לזה שמוצג בסימולטור השאלות. הוא מדגים את העבודה השלמה על פתרון הפונקציות המסובכות.</p>
+                </header>
+                <div class="bg-slate-800 text-slate-200 p-4 rounded-xl border border-slate-700 shadow-xl mb-10 font-mono text-lg text-center whitespace-pre-line" dir="ltr">let p = proc(a:?) (a 6)
+in (p proc(b:int) zero?(b))</div>
+
+    <!-- Part A Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex-col overflow-hidden mb-8 mt-6">
+        <div class="p-4 border-b border-slate-200 bg-slate-50">
+            <h3 class="text-sm font-bold text-slate-800">חלק א': פירוק תת-הביטויים למשוואות</h3>
+        </div>
+        <div class="p-0 overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[600px]" dir="ltr">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="p-3 font-semibold text-slate-600 w-2/5 text-xs uppercase tracking-wider">Expression</th>
+                        <th class="p-3 font-semibold text-slate-600 w-1/5 text-center border-r border-l border-slate-200 text-xs uppercase tracking-wider">Type Variable</th>
+                        <th class="p-3 font-semibold text-slate-600 w-2/5 border-r border-slate-200 text-xs uppercase tracking-wider">Equations (AQ)</th>
+                    </tr>
+                </thead>
+                <tbody class="font-mono text-[14px] bg-white text-slate-800">
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">let p = proc(a:?) (a 6) in (p proc(b:int) zero?(b))</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">0</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">p</sub> = T<sub class="text-[0.6em] font-bold">2</sub><br>T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">1</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">(p proc(b:int) zero?(b))</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">1</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">p</sub> = T<sub class="text-[0.6em] font-bold">4</sub> -> T<sub class="text-[0.6em] font-bold">1</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">proc(a:?) (a 6)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">2</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">2</sub> = T<sub class="text-[0.6em] font-bold">a</sub> -> T<sub class="text-[0.6em] font-bold">3</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">(a 6)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">3</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">a</sub> = int -> T<sub class="text-[0.6em] font-bold">3</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">proc(b:int) zero?(b)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">4</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">b</sub> = int<br>T<sub class="text-[0.6em] font-bold">4</sub> = T<sub class="text-[0.6em] font-bold">b</sub> -> T<sub class="text-[0.6em] font-bold">5</sub></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">zero?(b)</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">5</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed">T<sub class="text-[0.6em] font-bold">b</sub> = int<br>T<sub class="text-[0.6em] font-bold">5</sub> = bool</td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">a</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">a</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed"></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">b</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">b</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed"></td>
+                    </tr>
+
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="p-3">p</td>
+                        <td class="p-3 text-center border-r border-l border-slate-100 font-bold text-slate-700">T<sub class="text-[0.6em] font-bold">p</sub></td>
+                        <td class="p-3 border-r border-slate-100 font-bold text-red-600 leading-relaxed"></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Part B Tables -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex-col mb-10 mt-6 relative overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-slate-800">חלק ב': הצבות אלגוריתם ה-Unification</h3>
+        </div>
+        <div class="flex flex-row flex-nowrap p-6 gap-6 bg-slate-50 items-stretch justify-start overflow-x-auto" dir="ltr">
+
+            <!-- Table 1 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 1
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">p</sub> = T<sub class="text-[0.6em] font-bold">2</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">1</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = T<sub class="text-[0.6em] font-bold">a</sub> -> T<sub class="text-[0.6em] font-bold">3</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">a</sub> = int -> T<sub class="text-[0.6em] font-bold">3</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">p</sub> = T<sub class="text-[0.6em] font-bold">4</sub> -> T<sub class="text-[0.6em] font-bold">1</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">b</sub> = int</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">4</sub> = T<sub class="text-[0.6em] font-bold">b</sub> -> T<sub class="text-[0.6em] font-bold">5</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">5</sub> = bool</td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 2 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 2
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = T<sub class="text-[0.6em] font-bold">a</sub> -> T<sub class="text-[0.6em] font-bold">3</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">b</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">a</sub> = int -> T<sub class="text-[0.6em] font-bold">3</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">5</sub> = bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"><span class='bg-pink-100 px-1 border border-pink-300 rounded'>T<sub class="text-[0.6em] font-bold">p</sub></span> = T<sub class="text-[0.6em] font-bold">4</sub> -> T<sub class="text-[0.6em] font-bold">1</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"><span class='bg-pink-100 px-1 border border-pink-300 rounded'>T<sub class="text-[0.6em] font-bold">p</sub> = T<sub class="text-[0.6em] font-bold">2</sub></span></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">4</sub> = <span class='bg-pink-100 px-1 border border-pink-300 rounded'>T<sub class="text-[0.6em] font-bold">b</sub></span> -> <span class='bg-pink-100 px-1 border border-pink-300 rounded'>T<sub class="text-[0.6em] font-bold">5</sub></span></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">1</sub></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 3 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 3
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = <span class='bg-yellow-200 px-1 font-bold border border-yellow-400 rounded'>T<sub class="text-[0.6em] font-bold">a</sub></span> -> T<sub class="text-[0.6em] font-bold">3</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">b</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = <span class='bg-yellow-200 px-1 font-bold border border-yellow-400 rounded'>T<sub class="text-[0.6em] font-bold">4</sub></span> -> T<sub class="text-[0.6em] font-bold">1</sub></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">5</sub> = bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">0</sub> = T<sub class="text-[0.6em] font-bold">1</sub></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">p</sub> = T<sub class="text-[0.6em] font-bold">2</sub></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"><span class='bg-yellow-200 px-1 border border-yellow-400 rounded'>T<sub class="text-[0.6em] font-bold">4</sub> = int -> bool</span></td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"><span class='bg-yellow-200 px-1 border border-yellow-400 rounded'>T<sub class="text-[0.6em] font-bold">a</sub> = int -> T<sub class="text-[0.6em] font-bold">3</sub></span></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 4 -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 min-w-[280px] flex flex-col flex-shrink-0">
+                <div class="bg-indigo-600 text-white text-center py-2 px-4 rounded-t-xl font-bold text-sm tracking-wide">
+                    טבלה 4 (סופית)
+                </div>
+                <div class="flex-1 p-0">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 border-b border-slate-200">
+                                <th class="py-2 px-3 w-1/2 border-r border-slate-200">Equations</th>
+                                <th class="py-2 px-3 w-1/2">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-[13px]">
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">b</sub> = int</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">5</sub> = bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">4</sub> = int -> bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">a</sub> = int -> bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">3</sub> = bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">1</sub> = bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">p</sub> = (int -> bool) -> bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap">T<sub class="text-[0.6em] font-bold">2</sub> = (int -> bool) -> bool</td>
+                            </tr>
+
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="py-2 px-3 border-r border-slate-100 whitespace-nowrap"></td>
+                                <td class="py-2 px-3 bg-slate-50/50 whitespace-nowrap"><span class='bg-green-100 font-bold px-2 border-2 border-green-400 rounded'>T<sub class="text-[0.6em] font-bold">0</sub> = bool</span></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="mt-4 mb-6 flex justify-center">
+            <div class="bg-white px-8 py-4 border-2 border-green-500 rounded-2xl shadow-xl flex items-center gap-6 z-20">
+                <div class="text-xl font-bold text-slate-800" dir="rtl">מסקנה : <span dir="ltr" class="font-mono text-green-700 ml-2">T<sub class="text-[0.6em] font-bold">0</sub> = bool</span></div>
+                <div class="text-green-500 text-4xl font-black">✓</div>
+            </div>
+        </div>
+    </div>
+
+            </div>
+        </main>
 
     <script>
         function showTab(tabId) {

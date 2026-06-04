@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שאלת העמסת פרוצדורות (Overloading) - 2024ב מועד א</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .template-box::before {
+            content: "✍️ שבלונה למבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .thought-box {
+            position: relative;
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .thought-box::before {
+            content: "💡 הבנת התהליך האלגוריתמי";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #c084fc;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Animation */
+        .step-transition { transition: all 0.3s ease-out; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-2xl font-black text-white tracking-tight leading-tight">Overloaded<br><span class="text-blue-500">Procedures</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון שאלת מועד א 2024ב (שפה: PROC)</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()" class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge" class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <div id="code-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 0,
+                title: "שלב 0: ניתוח הדרישה ומפת דרכים",
+                filename: "question_analysis.txt",
+                explanation: `
+                    <p class="mb-4">במבחן זה (מועד א 2024ב), אנו נדרשים לשדרג את שפת <strong>PROC (יישגור)</strong> כך שתתמוך ב-<strong>העמסת פרוצדורות (Overloading)</strong>.</p>
+                    
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6 shadow-sm">
+                        <h4 class="font-bold text-blue-900 text-base mb-2">דרישות השפה החדשות:</h4>
+                        <div class="bg-white p-3 rounded border border-blue-100 font-mono text-sm mb-4 ltr text-left">
+Expression ::= overload proc { [ {identifier}*(,) ] -> Expression ; }+<br>
+Expression ::= (Expression { Expression }* )
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-blue-900 space-y-2">
+                            <li><code>overload proc { [ids*] -> body ; }+</code>: מאפשר הגדרת פרוצדורה עם מספר חתימות שונות של פרמטרים. לכל חתימה יש רשימת פרמטרים ייחודית וגוף ריצה משלה.</li>
+                            <li><code>(rator rands*)</code>: ביטוי הפעלה משודרג המקבל מספר שרירותי של ארגומנטים ומפעיל את החתימה המתאימה לפי כמות הארגומנטים שנשלחו.</li>
+                        </ul>
+                    </div>
+
+                    <div class="thought-box">
+                        <p class="text-purple-900 font-medium">
+                            <strong>הבנת המבנה הכללי באלגוריתם EOPL:</strong><br>
+                            כאשר נדרש מאיתנו להגדיר מבנה המכיל "מספר מופעים" (כמו רשימת גרסאות של פרוצדורה), אנו נשמור ב-Datatype רשימה של רשימות מזהים (ids-list) ורשימה מקבילה של גופי ביטוי (bodies).
+                            בזמן קריאה לפרוצדורה, נשלוף את רשימות המזהים והגופים הללו, ונשתמש בפונקציית סריקה רקורסיבית מותאמת כדי להתאים את כמות המזהים לכמות הארגומנטים.
+                        </p>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">מה אנו מחפשים ומנתחים בשלב זה?</h3>
+                    <ul class="space-y-3 text-slate-700">
+                        <li>
+                            <span class="font-semibold text-slate-900">1. מבנה הנתונים השמור:</span> 
+                            הפרוצדורה צריכה לשמור על <strong>הסביבה הלקסיקלית</strong> שבה היא הוגדרה (הסגר - Closure), יחד עם רשימות החתימות והגופים שלה.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">2. לוגיקת ההערכה בזמן ריצה:</span> 
+                            בביטוי הקריאה (Call), אנו מעריכים תחילה את ה-operator ואת כל ה-operands (ארגומנטים). לאחר מכן, אנו בודקים האם ה-operator הוא אכן ערך של פרוצדורה, ומפעילים לוגיקת בחירה רקורסיבית.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">3. הרחבת הסביבה:</span> 
+                            הפונקציה המובנית <code>extend-env</code> של EOPL מקבלת רשימת מזהים (symbols) ורשימת ערכים (ExpVals) ומקשרת ביניהם במכה אחת. לכן, ההנחה בפתרון התלמיד לגבי הרחבת הסביבה היא נכונה ותקנית.
+                        </li>
+                    </ul>
+                `,
+                code: `;; --- מפת הדרכים הכללית לאלגוריתם ---
+;; 1. lang.scm: הגדרת הדקדוק החדש ל-overload-proc-exp ועדכון call-exp.
+;; 2. data-structures.scm: עדכון datatype Proc לאחסון רשימות חתימות מקבילות.
+;; 3. interp.scm: מימוש Cases בתוך value-of להגדרת ולקריאת הפרוצדורה.
+;; 4. interp.scm (Helpers): כתיבת פונקציות העזר search-and-apply ו-validate-proc-input.`
+            },
+            {
+                id: 1,
+                title: "שלב 1: עדכון הדקדוק (lang.scm)",
+                filename: "lang.scm",
+                explanation: `
+                    <p class="mb-4">ה-Parser וה-Scanner צריכים לדעת לזהות את מבנה הגדרת הפרוצדורה המועמסת החדש, ואת שינוי ביטוי הקריאה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון קובץ התחביר והדקדוק (lang.scm):</strong> נחליף את ביטוי ה-proc הישן בביטוי החדש <code>overload-proc-exp</code>. נתקן את שגיאת התלמיד מהבחינה: התלמיד רשם את הביטוי התחבירי כך שגוף הביטוי מחוץ לסוגריים של רשימת החתימות, מה שהיה מאפשר להגדיר גוף ביטוי יחיד בלבד לכל הפרוצדורה. במקום זאת, נגדיר את הדקדוק כך שכל חתימה מקבלת גוף ריצה משלה, מופרדים באמצעות סימון ייעודי."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">ההבדלים בין הגדרת התלמיד השגויה להגדרה התקנית:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                            <strong class="text-red-800">❌ גרסת התלמיד (שגויה):</strong>
+                            <p class="font-mono mt-2 ltr text-left">
+                                ("overload Proc"<br>
+                                 (arbno "[" (separated-list identifier ",") "]")<br>
+                                 "->" expression)
+                            </p>
+                            <p class="mt-2 text-red-950">התוצאה: ה-Parser מצפה לרשימה של סוגריים מרובעים עם מזהים, ורק בסוף חץ אחד וביטוי גוף אחד לכולם. לא ניתן להצמיד גוף שונה לכל גרסת פרמטרים!</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                            <strong class="text-green-800">✅ הגרסה התקנית והמתוקנת:</strong>
+                            <p class="font-mono mt-2 ltr text-left">
+                                ("overload proc"<br>
+                                 "{" (separated-list "[" (separated-list identifier ",") "]" "->" expression ";") "}")
+                            </p>
+                            <p class="mt-2 text-green-950">התוצאה: ה-Parser מפרש רשימת גרסאות שלמה בתוך סוגריים מסולסלים, כשכל גרסה מורכבת מרשימת פרמטרים מרובעת וחץ המוביל לביטוי הגוף שלה.</p>
+                        </div>
+                    </div>
+                `,
+                code: `;; בקובץ lang.scm בתוך הגדרת the-grammar:
+
+(expression
+  ("overload proc" "{" (separated-list "[" (separated-list identifier ",") "]" "->" expression ";") "}")
+  overload-proc-exp)
+
+(expression
+  ("(" expression (arbno expression) ")")
+  call-exp)`
+            },
+            {
+                id: 2,
+                title: "שלב 2: עדכון מבני הנתונים (data-structures.scm)",
+                filename: "data-structures.scm",
+                explanation: `
+                    <p class="mb-4">בשלב זה אנו מגדירים כיצד נשמרת פרוצדורה מועמסת בזמן ריצה בתוך ה-Datatype <code>Proc</code>.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מבני הנתונים (data-structures.scm):</strong> נעדכן את ה-datatype של <code>proc</code>. במקום לשמור פרמטר בודד (symbol?) וגוף בודד (expression?), אנו צריכים לשמור רשימה של רשימות מזהים ורשימת גופי ביטוי תואמים. בנוסף, נשמור את הסביבה הלקסיקלית (environment?) שבה הפרוצדורה הוגדרה לצורך קישור דינמי תקין של משתנים."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">מבנה הנתונים:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-1 mb-4">
+                        <li><code>ids-list</code>: רשימה של רשימות של symbols. כלומר, מטיפוס <code>(list-of (list-of symbol?))</code>.</li>
+                        <li><code>bodies</code>: רשימה של ביטויים לביצוע. כלומר, מטיפוס <code>(list-of expression?)</code>.</li>
+                        <li><code>env</code>: הסביבה שנסגרה (Closure environment).</li>
+                    </ul>
+                `,
+                code: `;; בקובץ data-structures.scm:
+
+(define-datatype proc proc?
+  (procedure
+    (ids-list (list-of (list-of symbol?)))
+    (bodies (list-of expression?))
+    (env environment?)))`
+            },
+            {
+                id: 3,
+                title: "שלב 3: עדכון מנוע ההערכה (interp.scm - value-of)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">בתוך פונקציית ההערכה <code>value-of</code>, נוסיף את הטיפול בשני המקרים החדשים: הגדרת הפרוצדורה המועמסת וביטוי הקריאה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מנוע ההערכה (value-of בקובץ interp.scm):</strong> נוסיף את שני ה-Variants התחביריים החדשים ל-cases של value-of. ב-<code>overload-proc-exp</code>, נבצע וולידציה שחייבת להופיע לפחות גרסה אחת (אחרת נזרוק שגיאה מתאימה) ולאחר מכן נארוז את רשימות המזהים והגופים יחד עם הסביבה הנוכחית. ב-<code>call-exp</code>, נבצע הערכה של ה-operator וכן של כל ה-operands (הארגומנטים) באמצעות map ונעביר לפונקציית העזר <code>search-and-apply</code>."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">דגשי מימוש חשובים:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-2 mb-4">
+                        <li><strong>הערכה עצלה מול הערכה מיידית:</strong> הארגומנטים הנשלחים לקריאה (rands) הם ביטויים תחביריים. עלינו להעריך אותם לערכים מבוטאים (ExpVals) בזמן הקריאה <strong>לפני</strong> שאנו מנסים להתאים ביניהם לבין הפרמטרים.</li>
+                        <li><strong>שימוש ב-map:</strong> שימוש ב-map מאפשר להפעיל את <code>value-of</code> על רשימת ה-rands עם סביבת ההערכה הדינמית <code>env</code> של הקורא.</li>
+                    </ul>
+                `,
+                code: `;; בקובץ interp.scm בתוך ה-cases של value-of:
+
+(overload-proc-exp (ids-list bodies)
+  (begin
+    (validate-proc-input ids-list bodies)
+    (proc-val (procedure ids-list bodies env))))
+
+(call-exp (rator rands)
+  (let ((proc1 (expval->proc (value-of rator env)))
+        (args (map (lambda (exp) (value-of exp env)) rands)))
+    (cases proc proc1
+      (procedure (ids-list bodies env1)
+        (search-and-apply ids-list bodies env1 args)))))`
+            },
+            {
+                id: 4,
+                title: "שלב 4: פונקציות עזר (interp.scm - helpers)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">כדי לשמור על קוד נקי בתוך <code>value-of</code>, אנו מממשים את פונקציות העזר מחוצה לו.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>מימוש פונקציות עזר:</strong> נגדיר את פונקציית <code>search-and-apply</code> המבצעת מעבר רקורסיבי על רשימת החתימות. אם הגענו לסוף הרשימה ללא התאמה - נזרוק שגיאה מתאימה המפרטת את מספר הארגומנטים שנכשלו. אם נמצאה התאמה, נרחיב את הסביבה הלקסיקלית השמורה (env1) באמצעות <code>extend-env</code> ונבצע value-of לגוף המתאים בסביבה המורחבת. בנוסף, נגדיר את פונקציית <code>validate-proc-input</code> שמוודאת שהרשימה אינה ריקה."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">זרימת הפעולה של search-and-apply:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-1 mb-4">
+                        <li><strong>תנאי העצירה:</strong> בדיקה האם רשימת החתימות ריקה. אם כן, סימן שאין חתימה המקבלת את כמות הארגומנטים שנשלחה, ויש לזרוק שגיאה.</li>
+                        <li><strong>השוואת אורכים:</strong> נשלוף את רשימת המזהים הנוכחית (car של ids-list). נבדוק האם אורכה שווה לאורך רשימת ה-args שנתקבלו.</li>
+                        <li><strong>קריאה רקורסיבית / ביצוע:</strong> אם האורכים שווים - נעריך את הגוף הנוכחי. אחרת - נמשיך רקורסיבית עם ה-cdr של הרשימות.</li>
+                    </ul>
+                `,
+                code: `;; פונקציות עזר בקובץ interp.scm מחוץ ל-value-of:
+
+(define search-and-apply
+  (lambda (ids-list bodies env args)
+    (if (null? ids-list)
+        (eopl:error 'search-and-apply 
+                    "no procedure with this amount of arguments! ~s" 
+                    (length args))
+        (let ((ids (car ids-list))
+              (body (car bodies)))
+          (if (= (length ids) (length args))
+              (value-of body (extend-env ids args env))
+              (search-and-apply (cdr ids-list) (cdr bodies) env args))))))
+
+(define validate-proc-input
+  (lambda (ids-list bodies)
+    (if (null? ids-list)
+        (eopl:error 'validate-proc-input "you must define at least one proc")
+        #t)))`
+            },
+            {
+                id: 5,
+                title: "שלב 5: נקודות כשל נפוצות וטיפ של אלופים",
+                filename: "exam_tips.txt",
+                explanation: `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-xl text-red-900 shadow-md space-y-4">
+                        <h3 class="font-extrabold text-xl flex items-center text-red-800">
+                            <i class="fa-solid fa-triangle-exclamation ml-3 text-2xl"></i>
+                            מלכודות מבחן קריטיות - שאלת העמסת פרוצדורות!
+                        </h3>
+                        <p class="text-sm leading-relaxed">
+                            בשאלות העמסה והרחבת פרוצדורות, הבוחנים מקפידים על מספר דקויות לוגיות שמשפיעות ישירות על הניקוד:
+                        </p>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 1: היעדר טיפול בחתימות כפולות באותו אורך (הערת בודק)</strong>
+                                הבוחן העיר בבחינה: <em>"אין טיפול במצב של הגדרה עם מספר גופי פרוצדורה בעלות אותו מספר פרמטרים"</em>. <br>
+                                במקרה כזה, הפרוצדורה הראשונה תתפוס תמיד (Shadowing) ותהפוך את הגרסה השנייה לבלתי נגישה. <br>
+                                <strong>טיפ של אלופים:</strong> מומלץ להוסיף ל-<code>validate-proc-input</code> בדיקה שמוודאת שכל האורכים ברשימת ה-ids-list הם ייחודיים.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 2: סביבת הערכה שגויה בזמן הרצה (Dynamic vs Lexical)</strong>
+                                בקריאה לפרוצדורה, הגוף מוערך בסביבה הלקסיקלית <strong>env1</strong> (זו ששמורה בתוך הפרוצדורה ונוצרה בזמן ההגדרה) ולא בסביבה <strong>env</strong> של הקורא הנוכחי. טעות נפוצה היא לבצע <code>(value-of body (extend-env ids args env))</code> באמצעות הסביבה של הקורא, דבר שיוצר סקופ דינמי שגוי!
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 3: הנחה שגויה לגבי extend-env</strong>
+                                סטודנטים רבים תוהים האם צריך לממש פונקציה מיוחדת להרחבה מרובת משתנים. <br>
+                                <strong>הבהרה:</strong> ב-EOPL, הפונקציה <code>extend-env</code> מוגדרת כך שהיא מקבלת רשימת מזהים ורשימת ערכים תואמת, ומחזירה סביבה מורחבת. לכן אין צורך לממש פונקציה חדשה.
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-slate-700 font-medium">
+                        שמירה על הדיוקים האלגוריתמיים האלו תבטיח הבנה עמוקה של תהליך המפרש ופתרון מושלם במבחן!
+                    </p>
+                `,
+                code: `;; קוד להערכת ייחודיות אורך החתימות (שיפור וולידציה):
+(define has-duplicate-lengths?
+  (lambda (ids-list)
+    (let ((lengths (map length ids-list)))
+      (letrec ((check (lambda (lst)
+                        (cond ((null? lst) #f)
+                              ((member (car lst) (cdr lst)) #t)
+                              (else (check (cdr lst)))))))
+        (check lengths)))))`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+            
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + currentStep;
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+                
+                if (step.code && step.filename) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    if (window.Prism) {
+                        Prism.highlightElement(codeBlock);
+                    }
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+                
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+                
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

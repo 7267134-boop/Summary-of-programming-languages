@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שאלת פרמטרים עם ערכי ברירת מחדל - 2021ב מועד 78</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .template-box::before {
+            content: "✍️ שבלונה למבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .thought-box {
+            position: relative;
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .thought-box::before {
+            content: "💡 הבנת התהליך האלגוריתמי";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #c084fc;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Animation */
+        .step-transition { transition: all 0.3s ease-out; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-2xl font-black text-white tracking-tight leading-tight">Default<br><span class="text-blue-500">Parameters</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון שאלת מועד 78 2021ב (שפה: PROC)</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()" class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge" class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <div id="code-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 0,
+                title: "שלב 0: ניתוח הדרישה ומפת דרכים",
+                filename: "question_analysis.txt",
+                explanation: `
+                    <p class="mb-4">במבחן זה (מועד 78 2021ב שאלה 1), אנו נדרשים לשדרג את שפת <strong>PROC (יישגור)</strong> כך שתתמוך ב-<strong>פרמטרים עם ערכי ברירת מחדל (Default Parameters)</strong>.</p>
+                    
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6 shadow-sm">
+                        <h4 class="font-bold text-blue-900 text-base mb-2">דרישות השפה החדשות:</h4>
+                        <div class="bg-white p-3 rounded border border-blue-100 font-mono text-sm mb-4 ltr text-left">
+Expression ::= proc ( { identifier = Expression }*(,) ) Expression<br>
+Expression ::= (Expression { identifier = Expression }*(,) )
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-blue-900 space-y-2">
+                            <li><code>proc ( x=1, y=2 ) body</code>: מגדיר פרוצדורה עם רשימת פרמטרים וערכי ברירת מחדל (expressions) עבור כל אחד מהם.</li>
+                            <li><code>(rator p1=v1, p2=v2)</code>: קריאה לפרוצדורה שבה מצוינים רק חלק מהפרמטרים והערכים החדשים שלהם. הפרמטרים שלא צוינו יקבלו את ערכי ברירת המחדל.</li>
+                        </ul>
+                    </div>
+
+                    <div class="thought-box">
+                        <p class="text-purple-900 font-medium">
+                            <strong>הבנת התהליך האלגוריתמי:</strong><br>
+                            בשאלת הרחבת שפה זו, ישנו דגש מהותי על <strong>זמן ההערכה של ערכי ברירת המחדל</strong> ועל <strong>ולידציית הפרמטרים של הקורא</strong>. <br>
+                            ערכי ברירת המחדל מוגדרים בזמן הגדרת הפרוצדורה (Definition time). לכן, עלינו להעריך את ביטויי ברירת המחדל (defs) לערכים מבוטאים (expvals) מיידית בתוך <code>value-of</code> של <code>proc-exp</code>, ולשמור אותם בתוך ה-datatype של הפרוצדורה. <br>
+                            בנוסף, נתקן שתי שגיאות קריטיות של התלמיד שעליהן העיר הבוחן באדום (אימות שמות פרמטרים תקינים ובדיקת ריקון רשימת הארגומנטים).
+                        </p>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">מפת הדרכים האלגוריתמית:</h3>
+                    <ul class="space-y-3 text-slate-700">
+                        <li>
+                            <span class="font-semibold text-slate-900">1. lang.scm:</span> 
+                            עדכון הגדרת הדקדוק של הגדרת הפרוצדורה והפעלה עם סימוני <code>separated-list</code> מורכבים.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">2. data-structures.scm:</span> 
+                            עדכון ה-datatype של <code>procedure</code> שישמור רשימה של ערכי ברירת המחדל המוערכים (expvals).
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">3. interp.scm - value-of:</span> 
+                            הערכת ערכי ברירת המחדל בזמן ההגדרה, והערכת הארגומנטים הנשלחים בזמן הקריאה.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">4. interp.scm - Helpers:</span> 
+                            תיקון פונקציית העזר <code>extend-multi</code> והוספת בדיקות תקינות קריטיות.
+                        </li>
+                    </ul>
+                `,
+                code: `;; --- מפת הדרכים הכללית לאלגוריתם ---
+;; 1. lang.scm: עדכון הדקדוק ל-proc-exp ו-call-exp
+;; 2. data-structures.scm: הגדרת procedure datatype עם שדה defs של expvals
+;; 3. interp.scm: מימוש value-of ופונקציית העזר extend-multi עם וולידציה`
+            },
+            {
+                id: 1,
+                title: "שלב 1: עדכון הדקדוק (lang.scm)",
+                filename: "lang.scm",
+                explanation: `
+                    <p class="mb-4">ה-Parser וה-Scanner צריכים לזהות את אופן ההגדרה והקריאה החדש עם תמיכה בסימוני ה-<code>=</code> והפרדת הפסיקים.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון קובץ התחביר והדקדוק (lang.scm):</strong> נעדכן את הכללים הקיימים. ב-<code>proc-exp</code>, נשתמש ב-<code>separated-list identifier &quot;=&quot; expression &quot;,&quot;</code> כדי לתפוס את הגדרת הפרמטרים וערכי ה-default שלהם. באופן זהה, נעדכן את ביטוי הקריאה <code>call-exp</code> לתמיכה בהעברת מזהים וביטויים מותאמים."
+                        </p>
+                    </div>
+                `,
+                code: `;; בקובץ lang.scm בתוך הגדרת the-grammar:
+
+(expression
+  ("proc" "(" (separated-list identifier "=" expression ",") ")" expression)
+  proc-exp)
+
+(expression
+  ("(" expression (separated-list identifier "=" expression ",") ")")
+  call-exp)`
+            },
+            {
+                id: 2,
+                title: "שלב 2: עדכון מבני הנתונים (data-structures.scm)",
+                filename: "data-structures.scm",
+                explanation: `
+                    <p class="mb-4">כדי לשמור את ערכי ברירת המחדל המוערכים, עלינו לעדכן את מבנה הנתונים <code>procedure</code>.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מבני הנתונים (data-structures.scm):</strong> נרחיב את ה-datatype של <code>proc</code>. במקום לשמור רק רשימת מזהים (ids), גוף (body) וסביבה (env), נוסיף שדה חדש <code>defs</code> המייצג רשימה של ערכי ברירת מחדל מוערכים מטיפוס <code>(list-of expval?)</code>."
+                        </p>
+                    </div>
+                `,
+                code: `;; בקובץ data-structures.scm:
+
+(define-datatype proc proc?
+  (procedure
+    (ids (list-of symbol?))
+    (defs (list-of expval?)) ; שדה חדש לאחסון ערכי ברירת המחדל המוערכים
+    (body expression?)
+    (env environment?)))`
+            },
+            {
+                id: 3,
+                title: "שלב 3: עדכון מנוע ההערכה (interp.scm - value-of)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">בתוך <code>value-of</code>, נעדכן את אופן יצירת הפרוצדורה והערכת הקריאה אליה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מנוע ההערכה (interp.scm):</strong> 
+                            1. ב-<code>proc-exp</code>, נבצע הערכה מיידית של כל ביטויי ברירת המחדל (defs) בסביבה הנוכחית <code>env</code> באמצעות <code>map</code>, ונשמור את רשימת ה-expvals שהתקבלה (defs1) בתוך בנאי הפרוצדורה.
+                            2. ב-<code>call-exp</code>, נעריך את הארגומנטים שנשלחו על ידי הקורא (exps) בסביבת ההערכה הדינמית לקבלת רשימת ה-args, ולאחר מכן נעביר את רשימת שמות הפרמטרים המבוקשים (parms) וערכיהם לפונקציה <code>apply-procedure</code>."
+                        </p>
+                    </div>
+                `,
+                code: `;; בקובץ interp.scm בתוך ה-cases של value-of:
+
+(proc-exp (ids defs body)
+  (let ((defs1 (map (lambda (exp) (value-of exp env)) defs))) ; הערכה בזמן הגדרה
+    (proc-val (procedure ids defs1 body env))))
+
+(call-exp (rator parms exps)
+  (let ((proc (expval->proc (value-of rator env)))
+        (args (map (lambda (exp) (value-of exp env)) exps))) ; הערכת הארגומנטים
+    (apply-procedure proc parms args)))`
+            },
+            {
+                id: 4,
+                title: "שלב 4: פונקציות עזר (interp.scm - helpers)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">כעת נממש את פונקציות העזר מחוץ ל-<code>value-of</code>, תוך תיקון שתי המלכודות הקשות שנתגלו בפתרון המקורי.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>מימוש פונקציות העזר:</strong> 
+                            נעדכן את <code>apply-procedure</code> כך שתקבל את רשימת ה-params וה-args. נוסיף בדיקת תקינות מקדימה וקריטית: נוודא שכל המזהים ב-params (שמות הפרמטרים ששלח הקורא) הם אכן חלק מהמזהים הרשמיים של הפרוצדורה (ids), ושרשימת ה-params אינה מכילה כפילויות. 
+                            לאחר מכן, נבצע הרחבה רקורסיבית מבוססת <code>extend-multi</code>: עבור כל מזהה רשמי ב-ids, נבדוק האם הוא הועבר ב-params. אם כן, נשלוף את ערכו מהאינדקס התואם ב-args. אחרת, נשתמש בערך ברירת המחדל מתוך defs."
+                        </p>
+                    </div>
+                `,
+                code: `;; פונקציות עזר מחוץ ל-value-of בקובץ interp.scm:
+
+(define apply-procedure
+  (lambda (proc1 params args)
+    (cases proc proc1
+      (procedure (ids defs body saved-env)
+        ;; [תיקון שגיאות בודק - אימות מזהים וריקון]:
+        (cond
+          ((not (subset? params ids))
+           (eopl:error 'apply-procedure "passed invalid parameter names: ~s" params))
+          ((has-dup? params)
+           (eopl:error 'apply-procedure "duplicate parameter bindings in call: ~s" params))
+          (else
+           (value-of body (extend-multi ids defs params args saved-env))))))))
+
+(define extend-multi
+  (lambda (ids defs params args env)
+    (if (null? ids)
+        env
+        (let ((index (index-of (car ids) params)))
+          (if (= index -1)
+              ;; הפרמטר לא הועבר בקריאה -> משתמשים בערך ברירת המחדל
+              (extend-multi (cdr ids) (cdr defs) params args
+                            (extend-env (car ids) (car defs) env))
+              ;; הפרמטר הועבר בקריאה -> משתמשים בערך שהועבר מהקורא
+              (extend-multi (cdr ids) (cdr defs) params args
+                            (extend-env (car ids) (list-ref args index) env)))))))`
+            },
+            {
+                id: 5,
+                title: "שלב 5: נקודות כשל נפוצות וטיפ של אלופים",
+                filename: "exam_tips.txt",
+                explanation: `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-xl text-red-900 shadow-md space-y-4">
+                        <h3 class="font-extrabold text-xl flex items-center text-red-800">
+                            <i class="fa-solid fa-triangle-exclamation ml-3 text-2xl"></i>
+                            מלכודות מבחן קריטיות - שאלת פרמטרים עם ברירת מחדל!
+                        </h3>
+                        <p class="text-sm leading-relaxed">
+                            בשאלות של העברת פרמטרים מורכבת ופרמטרי default, הבוחנים מתמקדים בשלושה מוקדי כשל לוגיים:
+                        </p>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 1: היעדר אימות של משתנים שאינם מוגדרים (הערת בודק)</strong>
+                                בפתרון המודפס המקורי, אם הקורא העביר פרמטר שלא מוגדר בפרוצדורה (למשל, קריאה ל-<code>(myproc z=3)</code> כאשר הפרוצדורה מוגדרת כ-<code>proc(x=1,y=2)</code>), הקוד התעלם ממנו לחלוטין ולא זרק שגיאה! <br>
+                                <strong>התיקון:</strong> חובה לבצע בדיקת הכלה <code>(subset? params ids)</code> לפני ביצוע הקישורים, על מנת למנוע קבלת פרמטרים פיקטיביים.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 2: זמן הערכת ערכי ברירת המחדל (Definition time)</strong>
+                                ביטויי ה-Default מוגדרים בעת כתיבת הפרוצדורה. לכן, עלינו להעריך אותם מיידית ב-<code>value-of</code> של <code>proc-exp</code> בסביבת ההגדרה <code>env</code>. <br>
+                                טעות נפוצה היא לשמור את הביטויים (expressions) כפי שהם, ולהעריך אותם רק בזמן הקריאה ב-<code>apply-procedure</code>, מה שיגרום להערכה שגויה בסביבה הדינמית של הקורא!
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 3: בלבול בסדר הארגומנטים של list-ref</strong>
+                                הסטודנט בפתרון ציין שאינו זוכר את סדר הפרמטרים של <code>list-ref</code>. <br>
+                                <strong>זכרו:</strong> ב-Scheme/EOPL, החתימה היא <code>(list-ref lst index)</code> (קודם הרשימה ולאחר מכן האינדקס).
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-slate-700 font-medium">
+                        שמירה על בדיקות שלמות הסביבה (Exhaustive scope checks) היא ההבדל בין ציון טוב לציון מושלם במבחן!
+                    </p>
+                `,
+                code: `;; פונקציות העזר לבדיקת הכלה וכפילויות:
+
+(define subset?
+  (lambda (lst1 lst2)
+    (cond
+      ((null? lst1) #t)
+      ((member (car lst1) lst2) (subset? (cdr lst1) lst2))
+      (else #f))))
+
+(define has-dup?
+  (lambda (lst)
+    (cond
+      ((null? lst) #f)
+      ((member (car lst) (cdr lst)) #t)
+      (else (has-dup? (cdr lst))))))
+
+(define index-of
+  (lambda (element lst)
+    (letrec ((helpr (lambda (e l idx)
+                      (cond
+                        ((null? l) -1)
+                        ((equal? (car l) e) idx)
+                        (else (helpr e (cdr l) (+ 1 idx)))))))
+      (helpr element lst 0))))`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+            
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + currentStep;
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+                
+                if (step.code && step.filename) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    if (window.Prism) {
+                        Prism.highlightElement(codeBlock);
+                    }
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+                
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+                
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

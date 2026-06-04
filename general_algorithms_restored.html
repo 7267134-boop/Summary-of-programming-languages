@@ -1,0 +1,1476 @@
+אני מצרף לך פה את הקוד של הקובץ של השאלה שלוש של האלגוריתם הכללי אני רוצה שדבר ראשון תבדוק עוד פעם בנוסף לטעויות שמצאת
+תבדוק עוד פעם האם קיימות עוד טעויות אם יש אז תתקן גם אותם ובכל מקרה תתקן את הטעויות שמצאת בתוך הקובץ כשתשמור על שאר מבנה
+הקובץ תקין
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+       
+    <meta charset="UTF-8">
+       
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mastering Algorithms - מדריך שיטות פעולה למבחן</title>
+
+       
+    <script src="https://cdn.tailwindcss.com"></script>
+       
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+       
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+       
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        pre[class*="language-"] {
+            direction: ltr;
+            text-align: left;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        .thought-box {
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .tip-box {
+            background: #fffbeb;
+            border-right: 4px solid #f59e0b;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .grammar-box {
+            background: #eff6ff;
+            border-right: 4px solid #3b82f6;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Consolas', monospace;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .concept-box {
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .deep-dive {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-right: 4px solid #64748b;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .error-box {
+            background: #fef2f2;
+            border-right: 4px solid #ef4444;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Pattern Boxes from Templates */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .template-box::before {
+            content: "🛠️ איך להציב את התבנית?";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .exam-box {
+            position: relative;
+            background: #fffbeb;
+            border-right: 4px solid #f59e0b;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .exam-box::before {
+            content: "📝 זיהוי במבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #d97706;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        code.inline-code {
+            background-color: #e2e8f0;
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.9em;
+            color: #b91c1c;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .dark-scroll::-webkit-scrollbar-track {
+            background: #020617;
+        }
+
+        .dark-scroll::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+        <!-- Sidebar Navigation -->
+        <aside        
+        class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+                <div class="p-6 border-b border-slate-800 bg-darker">
+                        <h1 class="text-3xl font-black text-white tracking-tight leading-tight">Mastering<br><span      
+                                  class="text-blue-500">Algorithms</span></h1>
+                        <p class="text-xs text-slate-400 mt-2">פירוק לוגי ושלבים לפתרון שאלות מבחן</p>
+                    </div>
+
+                <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+                        <div class="nav-group">
+                                <div class="nav-group-title">מרחב עבודה</div>
+                                <button onclick="showTab('tab-intro')" id="btn-tab-intro" class="nav-btn active-nav">
+                                        <span>📝 קצת על הבחינה</span>
+                                    </button>
+                            </div>
+
+                        <div class="nav-group">
+                                <div class="nav-group-title">שאלה 1: הרחבת שפה</div>
+                                <button onclick="showTab('tab-q1-0')" id="btn-tab-q1-0" class="nav-btn"><span>1.0 מפת
+                        דרכים
+                                                וקבצים</span></button>
+                                <button onclick="showTab('tab-q1-1')" id="btn-tab-q1-1" class="nav-btn"><span>1.1 הבנת
+                                                הסמנטיקה</span></button>
+                                <button onclick="showTab('tab-q1-2')" id="btn-tab-q1-2" class="nav-btn"><span>1.2 עדכון
+                        התחביר
+                                                (Grammar)</span></button>
+                                <button onclick="showTab('tab-q1-3')" id="btn-tab-q1-3" class="nav-btn"><span>1.3 מבני
+                        נתונים
+                                                מתקדמים</span></button>
+                                <button onclick="showTab('tab-q1-4')" id="btn-tab-q1-4" class="nav-btn"><span>1.4 מנוע
+                        ההערכה
+                                                (value-of)</span></button>
+                                <button onclick="showTab('tab-q1-5')" id="btn-tab-q1-5" class="nav-btn"><span>1.5
+                        פונקציות עזר
+                                                ומלכודות</span></button>
+                            </div>
+
+                        <div class="nav-group">
+                                <div class="nav-group-title">שאלה 2: זיכרון וסביבות</div>
+                                <button onclick="showTab('tab-q2-0')" id="btn-tab-q2-0" class="nav-btn"><span>2.0 מבט על
+                        והבנת
+                                                הסביבה</span></button>
+                                <button onclick="showTab('tab-q2-1')" id="btn-tab-q2-1" class="nav-btn"><span>2.1
+                        ארכיטקטורת
+                                                הזיכרון</span></button>
+                                <button onclick="showTab('tab-q2-2')" id="btn-tab-q2-2" class="nav-btn"><span>2.2 מבני
+                        נתונים משתנים
+                                                (Mutable)</span></button>
+                                <button onclick="showTab('tab-q2-3')" id="btn-tab-q2-3" class="nav-btn"><span>2.3 זליגת
+                        סביבות
+                                                (Pollution)</span></button>
+                                <button onclick="showTab('tab-q2-4')" id="btn-tab-q2-4" class="nav-btn"><span>2.4 טעויות
+                        מבחן
+                                                נפוצות</span></button>
+                            </div>
+
+                        <div class="nav-group">
+                                <div class="nav-group-title">שאלה 3: הקשת טיפוסים</div>
+                                <button onclick="showTab('tab-q3-1')" id="btn-tab-q3-1" class="nav-btn"><span>3.1 סעיף
+                        א': משתנים
+                                                ומשוואות</span></button>
+                                <button onclick="showTab('tab-q3-2')" id="btn-tab-q3-2" class="nav-btn"><span>3.2 סעיף
+                        ב': איחוד
+                                                והצבה</span></button>
+                                <button onclick="showTab('tab-q3-3')" id="btn-tab-q3-3" class="nav-btn"><span>3.3 שגיאות
+                        ותבניות עץ
+                                                גזירה</span></button>
+                            </div>
+                    </div>
+            </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto scroll-smooth bg-white relative">
+                <div class="max-w-5xl mx-auto p-10 lg:p-16 pb-32">
+
+                        <!-- ==========================================
+                 TAB: INTRO
+            =========================================== -->
+                        <div id="tab-intro" class="tab-content active">
+                                <header class="mb-12 border-b pb-6">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                                                מבוא</div>
+                                        <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">קצת <span    
+                                                    class="text-blue-600">על הבחינה</span></h2>
+                                        <p class="text-xl text-slate-600 leading-relaxed">הקדמה קצרה על מבנה המבחן
+                        ודגשים עיקריים.</p>
+                                    </header>
+
+                                <div class="deep-dive mt-6 space-y-6">
+                                        <p class="text-xl font-bold text-blue-600 mb-4 text-center">
+                                                מזל טוב! עוד מעט אתם נבחנים ובתקווה גדולה מסיימים עם הקורס 🥳
+                                            </p>
+
+                                        <div class="border-b border-slate-100 pb-4">
+                                                <h3 class="text-xl font-bold text-slate-800 mb-3">המבחן מחולק בכללי לשני
+                            חלקים:</h3>
+                                                <ul class="list-disc list-inside space-y-3 text-slate-700">
+                                                        <li class="leading-relaxed">
+                                                                <strong class="text-blue-800">חלק ראשון של שאלות 1
+                                    ו-2:</strong> שמטרתן להוסיף \ לשנות
+                                                                משהו בארכיטקטורה של השפות. בשאלות אלו צריך להבין הייטב
+                                מה בדיוק רוצים ולהרחיב קבצים
+                                                                קבועים לפי הדרישות. השאלות די בנויות על קו מחשבה קבוע
+                                אבל דורשות עבודה ומחשבה (והרבה
+                                                                כתיבה).
+                                                            </li>
+                                                        <li class="leading-relaxed">
+                                                                <strong class="text-blue-800">וחלק שני, שאלה 3 של קביעת
+                                    טיפוסים:</strong> שאלה מאוד
+                                                                אלגוריתמית, ולכן מומלץ לתרגל אותה כמה פעמים עד
+                                שהאלגוריתם נכנס טוב לראש ואולי גם לכתוב
+                                                                איזו דוגמא בספר למקרה של בלאק אאוט (נגיד אפשר אפילו
+                                לפתור את ממן 16 על דף ריק ואז לתפוס
+                                                                שתי ציפורים במכה אחת). אם אתם יודעים את האלגוריתם אפשר
+                                להריץ אותה עם 25\25 נקודות
+                                                                מובטחות.
+                                                            </li>
+                                                    </ul>
+                                                <p class="text-slate-700 mt-4 leading-relaxed">
+                                                        <strong>לגבי סדר הפתירה במבחן:</strong> יש כאלו שאוהבים להתחיל
+                            מסגנון של חלק א' ויש כאלו
+                                                        מסגנון חלק ב', תחשבו לפני מה אתם מעדיפים.
+                                                    </p>
+                                            </div>
+
+                                        <div>
+                                                <h3 class="text-xl font-bold text-slate-800 mb-3">כמה טיפים לקראת
+                            הבחינה:</h3>
+                                                <ul class="list-disc list-inside space-y-2 text-slate-700">
+                                                        <li class="leading-relaxed">לפני הבחינה תתרגלו עם דף ועט, אל
+                                תכתבו רק תוכניות במחשב אלא תנסו
+                                                                לדמות את תנאי הבחינה המדוייקים.</li>
+                                                        <li class="leading-relaxed">כמו כל קורס - הסוד להצלחה הוא תרגול
+                                תרגול ועוד תרגול.</li>
+                                                        <li class="leading-relaxed">לבחינה עצמה תביאו מרקרים או עטים
+                                צבעוניים, יעשה לכם סדר בעיניים
+                                                                בשאלה 3.</li>
+                                                        <li class="leading-relaxed">נכון שמותר ומומלץ לכתוב בספר, אבל אל
+                                תמלאו אותו בקשקושים, קודם
+                                                                תבינו מה ואיך לפתור ואחכ תכניסו כמה שיותר הערות
+                                *רלוונטיות*, עדיף קצת ההערות טובות
+                                                                ורלוונטיות מהמון בלאגן וקשקושים לא ברורים.</li>
+                                                    </ul>
+                                            </div>
+
+                                        <div class="pt-4 border-t border-slate-100 text-center">
+                                                <p class="text-2xl font-black text-emerald-600">בהצלחה! 🎓🚀</p>
+                                            </div>
+                                    </div>
+                            </div>
+
+                        <!-- ==========================================
+                 Q1 TABS
+            =========================================== -->
+                        <div id="tab-q1-0" class="tab-content">
+                                <header class="mb-12 border-b pb-6">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-blue-600 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                                                שאלה 1 | שלב 0</div>
+                                        <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">מבט על: <span
+                                                        class="text-blue-600">מפת קבצים ואלגוריתם</span></h2>
+                                        <p class="text-xl text-slate-600 leading-relaxed">רגע לפני שאנחנו צוללים פנימה,
+                        חשוב להבין באילו
+                                                קבצים אנו עומדים לגעת ומהו תפקידו של כל קובץ בארכיטקטורת המפרש.</p>
+                                    </header>
+
+                                <div
+                    class="my-10 flex flex-col md:flex-row items-center justify-between gap-4 relative w-full px-4">
+                                        <!-- Line behind items -->
+                                        <div
+                        class="hidden md:block absolute top-[2.25rem] left-[10%] right-[10%] h-1 bg-blue-200 z-0">
+                                            </div>
+
+                                        <!-- Step 1 -->
+                                        <div class="relative z-10 flex flex-col items-center group w-full md:w-1/4">
+                                                <div                            
+                            class="w-16 h-16 rounded-full bg-blue-100 border-4 border-blue-500 flex items-center justify-center text-blue-700 text-xl font-black shadow-lg transition-transform group-hover:scale-110 mb-3">
+                                                        <i class="fa-solid fa-magnifying-glass"></i></div>
+                                                <div
+                            class="text-center bg-white p-3 rounded shadow-sm border border-slate-200 w-full relative">
+                                                        <h5 class="font-bold text-slate-800 text-sm">הבנת הסמנטיקה</h5>
+                                                        <p class="text-xs text-slate-500 mt-1">אבחון וניתוח התנהגות</p>
+                                                    </div>
+                                            </div>
+
+                                        <div class="md:hidden text-blue-300"><i class="fa-solid fa-arrow-down"></i>
+                    </div>
+
+                                        <!-- Step 2 -->
+                                        <div class="relative z-10 flex flex-col items-center group w-full md:w-1/4">
+                                                <div                            
+                            class="w-16 h-16 rounded-full bg-amber-100 border-4 border-amber-500 flex items-center justify-center text-amber-700 text-xl font-black shadow-lg transition-transform group-hover:scale-110 mb-3">
+                                                        <i class="fa-solid fa-file-code"></i></div>
+                                                <div
+                            class="text-center bg-white p-3 rounded shadow-sm border border-slate-200 w-full relative">
+                                                        <h5 class="font-bold text-slate-800 text-sm">lang.scm</h5>
+                                                        <p class="text-xs text-slate-500 mt-1">עדכון כללי התחביר</p>
+                                                    </div>
+                                            </div>
+
+                                        <div class="md:hidden text-blue-300"><i class="fa-solid fa-arrow-down"></i>
+                    </div>
+
+                                        <!-- Step 3 -->
+                                        <div class="relative z-10 flex flex-col items-center group w-full md:w-1/4">
+                                                <div                            
+                            class="w-16 h-16 rounded-full bg-fuchsia-100 border-4 border-fuchsia-500 flex items-center justify-center text-fuchsia-700 text-xl font-black shadow-lg transition-transform group-hover:scale-110 mb-3">
+                                                        <i class="fa-solid fa-boxes-stacked"></i></div>
+                                                <div
+                            class="text-center bg-white p-3 rounded shadow-sm border border-slate-200 w-full relative">
+                                                        <h5 class="font-bold text-slate-800 text-sm">data-structures
+                            </h5>
+                                                        <p class="text-xs text-slate-500 mt-1">הוספת ערכים חדשים</p>
+                                                    </div>
+                                            </div>
+
+                                        <div class="md:hidden text-blue-300"><i class="fa-solid fa-arrow-down"></i>
+                    </div>
+
+                                        <!-- Step 4 -->
+                                        <div class="relative z-10 flex flex-col items-center group w-full md:w-1/4">
+                                                <div                            
+                            class="w-16 h-16 rounded-full bg-emerald-100 border-4 border-emerald-500 flex items-center justify-center text-emerald-700 text-xl font-black shadow-lg transition-transform group-hover:scale-110 mb-3">
+                                                        <i class="fa-solid fa-microchip"></i></div>
+                                                <div
+                            class="text-center bg-white p-3 rounded shadow-sm border border-slate-200 w-full relative">
+                                                        <h5 class="font-bold text-slate-800 text-sm">interp.scm</h5>
+                                                        <p class="text-xs text-slate-500 mt-1">כתיבת הלוגיקה</p>
+                                                    </div>
+                                            </div>
+                                    </div>
+
+                                <div class="concept-box !border-blue-500">
+                                        <h3 class="text-2xl font-bold mb-4 text-blue-900">1. הקבצים המשתתפים באלגוריתם
+                    </h3>
+                                        <div class="space-y-4">
+                                                <div
+                            class="bg-white p-4 rounded shadow-sm border border-blue-100 flex items-start gap-3">
+                                                        <i
+                                class="fa-regular fa-file-code text-blue-500 text-xl mt-1"></i>
+                                                        <div>
+                                                                <h4 class="font-bold text-slate-800">lang.scm</h4>
+                                                                <p class="text-sm text-slate-600">קובץ הדקדוק. בו אנו
+                                    מגדירים ל-Parser כיצד לקרוא את
+                                                                        הטקסט של התוכנית ולהפוך אותו לעץ תחביר (AST).
+                                    עריכה פה היא חובה כדי שהמפרש יזהה את
+                                                                        המילים החדשות שהוספנו לשפה.</p>
+                                                            </div>
+                                                    </div>
+                                                <div
+                            class="bg-white p-4 rounded shadow-sm border border-blue-100 flex items-start gap-3">
+                                                        <i
+                                class="fa-regular fa-file-code text-blue-500 text-xl mt-1"></i>
+                                                        <div>
+                                                                <h4 class="font-bold text-slate-800">data-structures.scm
+                                </h4>
+                                                                <p class="text-sm text-slate-600">קובץ המבנים בזמן ריצה
+                                    (ExpVals). אם הביטוי שלנו יכול
+                                                                        להחזיר ערך מיוחד (כמו מערך, טיפוס או tuple)
+                                    שאינו מספר/בוליאן פשוט - נוסיף אותו לכאן
+                                                                        עם פונקציית חילוץ.</p>
+                                                            </div>
+                                                    </div>
+                                                <div
+                            class="bg-white p-4 rounded shadow-sm border border-blue-100 flex items-start gap-3">
+                                                        <i
+                                class="fa-regular fa-file-code text-blue-500 text-xl mt-1"></i>
+                                                        <div>
+                                                                <h4 class="font-bold text-slate-800">interp.scm</h4>
+                                                                <p class="text-sm text-slate-600">הלב הפועם, מנוע ההערכה
+                                    (value-of). כאן נכתוב את
+                                                                        הלוגיקה שמסבירה למפרש מה בדיוק לעשות עם עץ
+                                    התחביר שנוצר, ואיך להשתמש בסביבות
+                                                                        (environments) השונות.</p>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                    </div>
+
+                                <div class="deep-dive mt-6">
+                                        <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">סדר הפעולות
+                        (האלגוריתם בקצרה)</h3>
+                                        <ul class="list-decimal list-inside space-y-2 text-slate-700">
+                                                <li><strong>אבחון וסמנטיקה:</strong> הבנת השאלה ומה הביטוי מקבל.</li>
+                                                <li><strong>עריכת lang.scm:</strong> הוספת כללי `separated-list` או
+                            `arbno`.</li>
+                                                <li><strong>עריכת data-structures.scm:</strong> בדיקה האם נדרש `Variant`
+                            חדש ב-expval.</li>
+                                                <li><strong>עריכת interp.scm:</strong> הטמעת הלוגיקה בפונקציית
+                            `value-of`.</li>
+                                                <li><strong>הוצאה לפונקציות עזר:</strong> כדי לשמור על `value-of` נקי
+                            (למשל, לולאות ואוגרים).
+                                                    </li>
+                                            </ul>
+                                    </div>
+                            </div>
+
+                        <div id="tab-q1-1" class="tab-content">
+                                <header class="mb-8 border-b pb-4">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-slate-800 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono">
+                                                <i class="fa-regular fa-lightbulb mr-2"></i> שלב הבנה - ללא קובץ
+                                            </div>
+                                        <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">הבנת <span  
+                                                      class="text-blue-600">הסמנטיקה</span></h2>
+                                        <p class="text-lg text-slate-600">השלב הראשון תמיד דורש אבחון: מהו הביטוי החדש?
+                        מה הוא אמור לקבל
+                                                כארגומנטים? האם מדובר בהערכה "עצלה" (Lazy) ששולפת מידע או בביצוע מפורש?
+                    </p>
+                                    </header>
+
+                                <div class="exam-box">
+                                        <p><strong>איך מזהים ואיזה מידע לחפש במלל השאלה?</strong><br>
+                                                קראו את פסקת התיאור של הביטוי בעמוד הראשון של המבחן. חפשו את מילות המפתח
+                        המגדירות את הקלט:<br>
+                                                - אם כתוב <strong>"מקבל מזהה (Identifier)"</strong> <i
+                            class="fa-solid fa-arrow-left"></i> זה
+                                                רמז שלא מעבירים אותו ל-<code>value-of</code>! משתמשים בו כדי לשלוף
+                        מהסביבה עם
+                                                <code>apply-env</code>.<br>
+                                                - אם כתוב <strong>"מקבל ביטוי (Expression)"</strong> <i
+                            class="fa-solid fa-arrow-left"></i> חובה
+                                                להפעיל עליו <code>value-of</code> כדי להמיר אותו מעץ תחביר (AST) לערך
+                        ריצה (ExpVal).<br>
+                                                - אם כתוב <strong>"עבור כל איבר / סורק את / בודק בזה אחר זה"</strong> <i
+                                                        class="fa-solid fa-arrow-left"></i> זה רמז למבנה לולאה, כלומר
+                        חובה לפתוח פונקציית עזר
+                                                ב-<code>interp.scm</code> (ראו שלב 1.5).</p>
+                                    </div>
+
+                                <div class="concept-box">
+                                        <h3 class="text-2xl font-bold mb-4 text-green-800">דוגמאות מהשטח לניתוח ביטויים:
+                    </h3>
+
+                                        <div class="space-y-6 mt-4">
+                                                <div class="bg-white p-4 rounded shadow-sm border border-green-200">
+                                                        <h4 class="font-bold text-lg text-slate-800 mb-2">דוגמה א: שאלת
+                                הרפלקציה (2025ב א2) -
+                                                                <code>get-type(x)</code></h4>
+                                                        <p class="text-sm text-slate-700">הביטוי מוגדר
+                                כ-<code>get-type (identifier)</code>.
+                                                                <strong>הניתוח:</strong> הוא לא מקבל "Expression", אלא
+                                "identifier". זה אומר שאנחנו לא
+                                                                רצים לעשות <code>value-of</code> על x. אנחנו בסך הכל
+                                ניגשים לסביבה בעזרת
+                                                                <code>apply-env</code> כדי לשלוף את הערך שיושב שם.</p>
+                                                    </div>
+
+                                                <div class="bg-white p-4 rounded shadow-sm border border-green-200">
+                                                        <h4 class="font-bold text-lg text-slate-800 mb-2">דוגמה ב: לולאת
+                                <code>foreach</code></h4>
+                                                        <p class="text-sm text-slate-700">הביטוי קולט משתנה, מקבל רשימת
+                                ביטויים (או ביטוי שמוערך
+                                                                לרשימה), ומריץ גוף (body) עבור כל אחד מהם.
+                                <strong>הניתוח:</strong> חובה לבצע
+                                                                <code>value-of</code> על הרשימה כולה קודם, לוודא שקיבלנו
+                                <code>list-val</code>, ולאחר
+                                                                מכן להריץ את ה-body שוב ושוב בתוך <strong>סביבה מורחבת
+                                    נקודתית</strong> שבה המשתנה שווה
+                                                                לערך הנוכחי.</p>
+                                                    </div>
+                                            </div>
+                                    </div>
+                            </div>
+
+                        <div id="tab-q1-2" class="tab-content">
+                                <header class="mb-8 border-b pb-4">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-amber-500 text-amber-950 rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono shadow-sm">
+                                                <i class="fa-solid fa-file-code mr-2"></i> קובץ יעד: lang.scm
+                                            </div>
+                                        <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">עדכון <span  
+                                                      class="text-blue-600">התחביר (Grammar)</span></h2>
+                                        <p class="text-lg text-slate-600">כיצד נגדיר לשפת Scheme ולמנתח התחבירי (Parser)
+                        את החוקים החדשים
+                                                שלנו? פה לומדים לתרגם את השאלה לתבנית במדוייק.</p>
+                                    </header>
+
+                                <div class="exam-box">
+                                        <p><strong>איך מזהים במבחן?</strong><br>
+                                                המרצה תמיד ייתן לכם שורת Grammar שנראית בערך כך במלל השאלה:<br>
+                                                <code                            
+                            class="inline-code">Expression ::= "my-command" {Identifier "=" Expression}* "end"</code><br>
+                                                או:<br>
+                                                <code
+                            class="inline-code">Expression ::= "create" "[" {Expression}*(,) "]"</code>
+                                            </p>
+                                    </div>
+
+                                <div class="template-box">
+                                        <p><strong>חוקי הברזל להצבה בתבנית lang.scm:</strong><br>
+                                                1. <strong>מילים במרכאות</strong> (<code
+                            class="inline-code">"my-command"</code>): מעתיקים אותן
+                                                <strong>בדיוק כפי שהן</strong> כסטרינגים.<br>
+                                                2. <strong>סימנים מיוחדים</strong> (<code
+                            class="inline-code">"["</code>, <code                            
+                            class="inline-code">"="</code>): מעתיקים כסטרינגים נפרדים.<br>
+                                                3. <strong>מילים עם אות גדולה ללא מרכאות</strong> (<code
+                            class="inline-code">Identifier</code>,
+                                                <code class="inline-code">Expression</code>): הופכות למושגים של Racket:
+                        <code                             class="inline-code">identifier</code> או <code
+                            class="inline-code">expression</code> (ללא
+                                                מרכאות!).<br>
+                                                4. <strong>סוגריים מסולסלים עם פסיק <code>*(,)</code></strong>: הופכים
+                        ל- <code                             class="inline-code">(separated-list [סוג] ",")</code>.<br>
+                                                5. <strong>סוגריים מסולסלים עם כוכבית <code>*</code></strong> (ללא
+                        פסיק): הופכים ל- <code                            
+                            class="inline-code">(arbno [מה שיש בפנים])</code>.</p>
+                                        <p class="mt-2 text-sm text-green-800 font-bold">בסוף, נותנים שם ל-AST. נהוג
+                        לקחת את השם המרכזי של
+                                                הפקודה ולהוסיף לו <code class="inline-code">-exp</code>.</p>
+                                    </div>
+
+                                <div class="deep-dive mt-6">
+                                        <h3 class="text-2xl font-bold mb-4 text-slate-800">Separated-List מול Arbno הלכה
+                        למעשה</h3>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                                <div>
+                                                        <h4 class="font-bold text-indigo-700 mb-2">רשימה עם מפריד:
+                                separated-list</h4>
+                                                        <p class="text-sm text-slate-600 mb-2">כאשר התחביר אומר `a, b,
+                                c` עם פסיקים או תו אחר (למשל
+                                                                `foo ; bar ; baz`).</p>
+                                                       
+                            <pre><code class="language-scheme">;; דוגמה: Expression ::= "tuple" "(" {Expression}*(,) ")"
+(expression
+  ("tuple" "(" (separated-list expression ",") ")")
+  tuple-exp)
+  
+;; התוצאה: tuple-exp מקבל פרמטר יחיד שהוא:
+;; (list-of expression?)</code></pre>
+                                                   
+                        </div>
+
+                                                <div>
+                                                        <h4 class="font-bold text-teal-700 mb-2">רשימה חזרתית רגילה:
+                                arbno</h4>
+                                                        <p class="text-sm text-slate-600 mb-2">כאשר התחביר אומר שהפריטים
+                                יכולים לבוא ברצף (למשל רצף
+                                                                של תנאים `cond ... end` או הגדרות משתנים).</p>
+                                                       
+                            <pre><code class="language-scheme">;; דוגמה: Expression ::= "my-let" {Identifier "=" Expression}* "in" Expression
+(expression
+  ("my-let" (arbno identifier "=" expression) "in" expression)
+  my-let-exp)
+  
+;; התוצאה: my-let-exp מקבל 3 פרמטרים:
+;; 1. רשימת משתנים (list-of identifier?)
+;; 2. רשימת ביטויים (list-of expression?)
+;; 3. ביטוי בודד לגוף (expression?)</code></pre>
+                                                   
+                        </div>
+                                            </div>
+                                    </div>
+                            </div>
+
+                        <div id="tab-q1-3" class="tab-content">
+                                <header class="mb-8 border-b pb-4">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-amber-500 text-amber-950 rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono shadow-sm">
+                                                <i class="fa-solid fa-file-code mr-2"></i> קובץ יעד: data-structures.scm
+                                            </div>
+                                        <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">מבני נתונים
+                        <span                             class="text-blue-600">מתקדמים</span> (ExpVal)</h2>
+                                        <p class="text-lg text-slate-600">הוספת Variant ל-Expval ויצירת פונקציות חילוץ.
+                        האם הביטוי החדש
+                                                מחזיר ערך שאינו Number/Boolean/Proc רגיל?</p>
+                                    </header>
+
+                                <div class="exam-box">
+                                        <p><strong>איך מזהים במבחן שצריך לגעת ב-data-structures?</strong><br>
+                                                כאשר התוצאה של הפעולה שלכם היא <strong>לא</strong> סתם מספר (num) או
+                        בוליאני (bool), אלא משהו
+                                                מורכב שצריך לשמור בזיכרון ולהעביר הלאה כמקשה אחת (למשל: יצירת Tuple,
+                        יצירת מבנה נתונים חדש Enum,
+                                                או רשימה מותאמת אישית).</p>
+                                    </div>
+
+                                <div class="template-box">
+                                        <h3 class="font-bold text-green-900 mb-2">תבנית הוספת ערך מורכב ל-Expval</h3>
+                                        <p class="text-sm text-slate-700 mb-2">כללי ההצבה: בחר שם ברור לטיפוס (<code    
+                                                    class="inline-code"><<NEW-TYPE-NAME>></code>), ציין את שם השדה
+                        הפנימי ואת פרדיקט האימות שלו
+                                                (למשל: <code class="inline-code">(list-of expval?)</code>).</p>
+                                       
+                    <pre><code class="language-scheme">;; 1. בתוך define-datatype expval expval?
+  ;; ... הקיימים (num-val, bool-val, proc-val) ...
+  
+  ;; >> התוספת שלכם למבחן <<
+  (<<NEW-TYPE-NAME>>-val 
+    (<<FIELD-NAME>> <<PREDICATE>>)) 
+    
+  ;; דוגמה: (tuple-val (vals (list-of expval?)))
+
+;; 2. תבנית חולץ (Extractor) - חובה להוסיף כדי לקבל את מה שבתוך הקופסה!
+(define expval-><<NEW-TYPE-NAME>>
+  (lambda (v)
+    (cases expval v
+      (<<NEW-TYPE-NAME>>-val (inner-data) inner-data)
+      (else (expval-extractor-error '<<NEW-TYPE-NAME>> v)))))</code></pre>
+                                   
+                </div>
+
+                                <div class="thought-box mt-6">
+                                        <h3 class="text-2xl font-bold mb-2 text-blue-900">בדיקת טיפוסים (Type Checking
+                        Predicates)</h3>
+                                        <p class="text-slate-700 mb-4">כשהמבחן מבקש מכם <em>לסנן</em> נתונים (למשל:
+                        "תעשה סכום רק על
+                                                המספרים", או "תרוץ רק על מערכים"), חובה לכתוב פרדיקטים שבודקים את תוכן
+                        ה-Expval. נשתמש בהם
+                                                בלולאות שלנו ב-<code>interp.scm</code>.</p>
+
+                                       
+                    <pre><code class="language-scheme">;; תבניות בדיקת טיפוסים לשימוש בסינונים ולולאות
+(define is-Num-val?
+  (lambda (v)
+    (cases expval v
+      (num-val (n) #t)
+      (else #f))))
+
+(define is-Bool-val?
+  (lambda (v)
+    (cases expval v
+      (bool-val (b) #t)
+      (else #f))))</code></pre>
+                                   
+                </div>
+                            </div>
+
+                        <div id="tab-q1-4" class="tab-content">
+                                <header class="mb-8 border-b pb-4">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-amber-500 text-amber-950 rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono shadow-sm">
+                                                <i class="fa-solid fa-file-code mr-2"></i> קובץ יעד: interp.scm
+                                            </div>
+                                        <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">מנוע ההערכה
+                        <span                             class="text-blue-600">value-of</span></h2>
+                                        <p class="text-lg text-slate-600">איך אנחנו מתרגמים את ה-AST node שיצרנו לביצוע
+                        בפועל? כאן הלוגיקה
+                                                קורמת עור וגידים תוך ניהול הסביבה.</p>
+                                    </header>
+
+                                <div class="exam-box">
+                                        <p><strong>איך מזהים מה לכתוב כאן?</strong><br>
+                                                חוזרים ל- <code class="inline-code">lang.scm</code> (ראו שלב 1.2). נניח
+                        שכתבתם שם את הביטוי:<br>
+                                                <code                            
+                            class="inline-code">("my-loop" (arbno identifier "=" expression) "do" expression) my-loop-exp</code><br>
+                                                החלקים היחידים שמעניינים אותנו הם <strong>המשתנים שאינם
+                            במרכאות</strong>. במקרה זה: <code                            
+                            class="inline-code">identifier</code> (שהוא רשימה), <code                            
+                            class="inline-code">expression</code> (רשימה), ועוד <code                            
+                            class="inline-code">expression</code> בודד לגוף. זה מכתיב בדיוק אילו פרמטרים ה-case מקבל!
+                                            </p>
+                                    </div>
+
+                                <div class="template-box mb-6">
+                                        <h3 class="font-bold text-green-900 mb-2">התבנית הגנרית בתוך (cases expression
+                        exp)</h3>
+                                        <p class="text-sm text-slate-700 mb-2"><strong>החוק הגדול:</strong> כל דבר שהוא
+                        <code                             class="inline-code">-exp</code> (עץ תחביר) חובה להעביר דרך
+                        <code                             class="inline-code">value-of</code> כדי להפוך אותו ל-Expval.
+                        אם זו רשימה של <code                             class="inline-code">-exps</code>, חובה לעשות
+                        עליה <code class="inline-code">map</code> עם
+                                                הסביבה הנוכחית.</p>
+                                       
+                    <pre><code class="language-scheme">;; תבנית המייצגת ביטוי שמקבל רשימת משתנים, רשימת ביטויים וגוף יחיד
+(<<AST-NODE-NAME>>-exp (ids exps body-exp)
+  
+  ;; 1. אם יש רשימות, חובה לבדוק שהן לא ריקות (מלכודת במבחן!)
+  (if (null? ids)
+      (eopl:error '<<AST-NODE-NAME>> "Lists cannot be empty")
+      
+      ;; 2. הפיכת ה-exps לערכים ממשיים בזיכרון (ExpVals). 
+      (let ((evaluated-vals (map (lambda (e) (value-of e env)) exps)))
+        
+        ;; 3. הפעלת הלוגיקה העסקית. 
+        ;; לרוב נשלח לפונקציית עזר, נעביר אליה את ה-body-exp כ-AST (ללא value-of כאן!)
+        ;; ונעביר את ה-env כדי שהפונקציה תוכל להריץ אותו.
+        (helper-function ids evaluated-vals body-exp env))))</code></pre>
+                                   
+                </div>
+
+                                <div class="concept-box !border-emerald-500">
+                                        <h3 class="text-2xl font-bold mb-4 text-emerald-800">דוגמה קונקרטית מהמבחן:
+                        Tuple Unpacking (2021ב)
+                                            </h3>
+                                        <p class="text-slate-700 mb-4">במבחן התבקשנו לממש את הביטוי
+                                                <code>unpack var1, var2 = tuple-exp in body-exp</code>:</p>
+
+                                        <ul class="list-decimal list-inside space-y-2 text-sm text-slate-700 mb-4">
+                                                <li><strong>שלב 1: הערכה!</strong> נבצע <code>value-of</code> על
+                            <code>tuple-exp</code>.</li>
+                                                <li><strong>שלב 2: חילוץ!</strong> נפעיל <code>expval->tuple</code>
+                            (שבנינו ב-1.3) ונקבל רשימת
+                                                        ערכים.</li>
+                                                <li><strong>שלב 3: בדיקת תקינות.</strong> נוודא שמספר המשתנים (ids) שווה
+                            למספר הערכים שחולצו.
+                                                    </li>
+                                                <li><strong>שלב 4: סביבה חדשה והערכת הגוף.</strong> שימוש בפונקציית עזר
+                            להרחבת הסביבה.</li>
+                                            </ul>
+
+                                       
+                    <pre><code class="language-scheme">;; בתוך הפונקציה value-of (interp.scm):
+(unpack-exp (ids tuple-exp body-exp)
+  (let* ((tup-val (value-of tuple-exp env))     ;; 1. Evaluate
+         (vals (expval->tuple tup-val)))        ;; 2. Extract
+    (if (= (length ids) (length vals))          ;; 3. Validate
+        ;; 4. Extend and evaluate body
+        (value-of body-exp 
+                  (extend-env-list ids vals env))
+        (eopl:error 'unpack "Mismatch: variables vs tuple values!"))))</code></pre>
+                                   
+                </div>
+                            </div>
+
+                        <div id="tab-q1-5" class="tab-content">
+                                <header class="mb-8 border-b pb-4">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-amber-500 text-amber-950 rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono shadow-sm">
+                                                <i class="fa-solid fa-file-code mr-2"></i> קובץ יעד: interp.scm (מחוץ
+                        ל-value-of)
+                                            </div>
+                                        <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">פונקציות עזר
+                        <span                             class="text-red-600">ומלכודות</span></h2>
+                                        <p class="text-lg text-slate-600">פונקציות עזר מונעות ספגטי של קוד בתוך
+                        ה-<code>value-of</code>.
+                                                תבניות הלולאות והאוגרים כאן מצילות חיים במבחן.</p>
+                                    </header>
+
+                                <div class="exam-box mb-8">
+                                        <p><strong>איך מזהים במבחן מתי חייבים פונקציית עזר?</strong><br>
+                                                חפשו בשורת ה-Grammar (ב-<code>lang.scm</code>) או בתיאור השאלה סממנים
+                        לריבוי:<br>
+                                                1. סוגריים חזרתיים בתחביר: <strong><code>*(,)</code></strong> או
+                        <strong><code>*</code></strong>
+                                                (אומר שיש רשימת איברים, נצטרך לולאה רקורסיבית).<br>
+                                                2. מילות מפתח כמו: <code>fold</code>, <code>foreach</code>,
+                        <code>filter</code> (דורשות
+                                                אוגר/Accumulator).<br>
+                                                3. פעולות השמה מרובות: כמו <code>let [x,y] = ...</code> הדורשות הרחבת
+                        סביבה טורית (Shadowing).
+                                            </p>
+                                        <p class="mt-2 text-sm text-green-800 font-bold"><strong>מה עושים עם
+                            זה?</strong> כותבים את הפונקציה
+                                                בסוף הקובץ <code>interp.scm</code> (מחוץ ל-value-of), וקוראים לה מתוך
+                        ה-case שלכם.</p>
+                                    </div>
+
+                                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+                                        <!-- Right/Top Column: Env Extensions -->
+                                        <div class="space-y-6">
+                                                <div class="tip-box !m-0 !h-full">
+                                                        <h3 class="text-xl font-bold mb-4 text-orange-900">הרחבת סביבות
+                                מרובות (extend-env-list)
+                                                            </h3>
+                                                        <p class="text-sm text-slate-700 mb-4">פונקציה קלאסית להכנסת
+                                מספר משתנים לסביבה בבת אחת (כמו
+                                                                בדוגמת ה-unpack או ביצירת tuple). מרחיבה את הסביבה בצורה
+                                פשוטה, זוג אחרי זוג.</p>
+
+                                                       
+                            <pre><code class="language-scheme">;; פונקציית עזר להרחבת סביבה עבור רשימות 
+(define extend-env-list
+  (lambda (vars vals env)
+    (if (null? vars)
+        env
+        (extend-env-list 
+           (cdr vars) 
+           (cdr vals) 
+           (extend-env (car vars) (car vals) env)))))</code></pre>
+                                                   
+                        </div>
+                                            </div>
+
+                                        <!-- Left/Bottom Column: Shadowing -->
+                                        <div class="space-y-6">
+                                                <div
+                            class="thought-box !m-0 !h-full border-r-4 border-blue-500 bg-blue-50">
+                                                        <h3 class="text-xl font-bold mb-4 text-blue-900">דריסת שמות -
+                                Shadowing (משמאל לימין)</h3>
+                                                        <p class="text-sm text-slate-700 mb-4"><strong>מתי
+                                    משתמשים?</strong> כשהמבחן כולל פקודות
+                                                                השמה מרובות שבהן הסדר משנה. לדוגמה: <code              
+                                                          class="inline-code">let [x, x] = [1, 2] in x</code>. מצופה מכם
+                                להרחיב את הסביבה
+                                                                טורית כדי שהימני ידרוס את השמאלי.</p>
+
+                                                       
+                            <pre><code class="language-scheme">;; הרחבת סביבה טורית משמאל לימין
+(define extend-env-left-to-right
+  (lambda (vars vals env)
+    (if (= (length vars) (length vals))
+        (letrec ((extend-impl 
+                  (lambda (v-list val-list curr-env)
+                    (if (null? v-list)
+                        curr-env 
+                        ;; קריאה רקורסיבית עם הסביבה המורחבת
+                        (extend-impl 
+                          (cdr v-list) (cdr val-list) 
+                          (extend-env (list (car v-list)) 
+                                      (list (car val-list)) 
+                                      curr-env))))))
+          (extend-impl vars vals env))
+        (eopl:error 'extend-env "Mismatch"))))</code></pre>
+                                                   
+                        </div>
+                                            </div>
+                                    </div>
+
+                                <div class="template-box !border-emerald-500 !bg-emerald-50">
+                                        <h3 class="text-2xl font-bold mb-4 text-emerald-900">תבנית הזהב של לולאות: האוגר
+                        (Accumulator &
+                                                Filter)</h3>
+                                        <p class="text-slate-700 mb-4"><strong>מתי משתמשים?</strong> בכל שאלה שכוללת
+                        מילים כמו <code                             class="inline-code">foreach</code>, <code
+                            class="inline-code">filter</code>, <code                            
+                            class="inline-code">for/sum</code>. התבנית הזו עוברת על רשימת ExpVals, מסננת אותם לפי טיפוס
+                                                (בעזרת הפרדיקטים מסעיף 1.3), מריצה עליהם את גוף הלולאה ואוספת את התוצאה.
+                    </p>
+
+                                       
+                    <pre><code class="language-scheme">;; אידיאלי עבור foreach או filter-map
+(define loop-and-filter
+  (lambda (id vals-list body-exp env acc)
+    (cond
+      ;; 1. בסיס הרקורסיה: סיימנו, עוטפים בחזרה ל-Expval
+      [(null? vals-list) (list-val acc)]
+      
+      ;; 2. סינון הטיפוסים (למשל: נכנסים רק אם הערך הוא מספר)
+      [(is-Num-val? (car vals-list))
+       
+       ;; הזרקת הערך לסביבה הנוכחית של הלולאה
+       (let* ([new-env (extend-env (list id) (list (car vals-list)) env)]
+              
+              ;; הערכת גוף הלולאה (AST) בסביבה המורחבת החדשה
+              [body-result (value-of body-exp new-env)]
+              
+              ;; שרשור התוצאה לאוגר שלנו (append לרשימה. לפעולת סכום נשתמש ב-+)
+              [updated-acc (append acc (list body-result))])
+         
+         ;; קריאה לשאר הרשימה עם האוגר המעודכן
+         (loop-and-filter id (cdr vals-list) body-exp env updated-acc))]
+         
+      ;; 3. הערך לא עבר סינון? ממשיכים הלאה בלי לגעת באוגר
+      [else 
+       (loop-and-filter id (cdr vals-list) body-exp env acc)])))</code></pre>
+                                   
+                </div>
+
+                                <div class="error-box mt-8">
+                                        <h3 class="text-2xl font-bold text-red-800 mb-4 flex items-center">
+                                                <i class="fa-solid fa-bomb ml-3"></i> מלכודות מפורסמות בשאלה 1:
+                                            </h3>
+                                        <ul class="list-disc list-inside space-y-4 text-slate-700">
+                                                <li><strong>שימוש ב-map על ערכי Scheme טבעיים:</strong> כשאנחנו רצים על
+                            רשימת ביטויים `rands`
+                                                        ואנחנו עושים `(map (lambda (x) (value-of x env)) rands)`, אנחנו
+                            מקבלים רשימה של `expvals`.
+                                                        אם נרצה לעשות להם סכום (Sum), לא נוכל לעשות סתם `+`. חובה לעשות
+                            `map expval->num` קודם. ואז
+                                                        בסוף לעשות לתוצאה `num-val`! </li>
+                                                <li><strong>השמטת ה-`env` ב-value-of!</strong> שגיאה קלאסית: כתיבת
+                            `(value-of exp)` במקום
+                                                        `(value-of exp env)`. הפונקציה מצפה תמיד לסביבה כפרמטר שני!</li>
+                                                <li><strong>סדר הערכה משמאל לימין:</strong> לעיתים המבחן מדגיש שהערכת
+                            הארגומנטים *חייבת* להתבצע
+                                                        משמאל לימין מפורשות. פונקציית ה-<code>map</code> הדיפולטיבית של
+                            Scheme לא מבטיחה סדר. במקרה
+                                                        זה, עדיף להשתמש בלולאת רקורסיה ידנית, בדומה לתבנית ה-Accumulator
+                            למעלה.</li>
+                                            </ul>
+                                    </div>
+                            </div>
+
+                        <!-- ==========================================
+                 Q2 TABS
+            =========================================== -->
+                        <div id="tab-q2-0" class="tab-content">
+                                <header class="mb-12 border-b pb-6">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-indigo-600 text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                                                שאלה 2 | שלב 0</div>
+                                        <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">מבט על: <span
+                                                        class="text-indigo-600">ארכיטקטורת סביבות ומוטציות</span></h2>
+                                        <p class="text-xl text-slate-600 leading-relaxed">בשאלות מסוג 2 ההתמקדות היא
+                        בזיכרון, אירועים
+                                                (Events), מצביעים ולולאות. המפה של הקבצים זהה לשאלה 1, אך פה אנו עוסקים
+                        קריטית בנושא ניהול
+                                                ה-Store, הפניות (References) ושינוי נתונים במקום.</p>
+                                    </header>
+
+                                <div
+                    class="my-10 flex flex-col md:flex-row items-center justify-between gap-4 relative w-full px-4">
+                                        <!-- Line behind items -->
+                                        <div
+                        class="hidden md:block absolute top-[2.25rem] left-[10%] right-[10%] h-1 bg-indigo-200 z-0">
+                                            </div>
+
+                                        <!-- Step 1 -->
+                                        <div class="relative z-10 flex flex-col items-center group w-full md:w-1/4">
+                                                <div                            
+                            class="w-16 h-16 rounded-full bg-indigo-100 border-4 border-indigo-500 flex items-center justify-center text-indigo-700 text-xl font-black shadow-lg transition-transform group-hover:scale-110 mb-3">
+                                                        <i class="fa-solid fa-network-wired"></i></div>
+                                                <div
+                            class="text-center bg-white p-3 rounded shadow-sm border border-slate-200 w-full relative">
+                                                        <h5 class="font-bold text-slate-800 text-sm">זיהוי ארכיטקטורה
+                            </h5>
+                                                        <p class="text-xs text-slate-500 mt-1">Implicit vs Explicit</p>
+                                                    </div>
+                                            </div>
+
+                                        <div class="md:hidden text-indigo-300"><i class="fa-solid fa-arrow-down"></i>
+                    </div>
+
+                                        <!-- Step 2 -->
+                                        <div class="relative z-10 flex flex-col items-center group w-full md:w-1/4">
+                                                <div                            
+                            class="w-16 h-16 rounded-full bg-teal-100 border-4 border-teal-500 flex items-center justify-center text-teal-700 text-xl font-black shadow-lg transition-transform group-hover:scale-110 mb-3">
+                                                        <i class="fa-solid fa-layer-group"></i></div>
+                                                <div
+                            class="text-center bg-white p-3 rounded shadow-sm border border-slate-200 w-full relative">
+                                                        <h5 class="font-bold text-slate-800 text-sm">מבנים ומוטציות</h5>
+                                                        <p class="text-xs text-slate-500 mt-1">שינוי בזיכרון (setref!)
+                            </p>
+                                                    </div>
+                                            </div>
+
+                                        <div class="md:hidden text-indigo-300"><i class="fa-solid fa-arrow-down"></i>
+                    </div>
+
+                                        <!-- Step 3 -->
+                                        <div class="relative z-10 flex flex-col items-center group w-full md:w-1/4">
+                                                <div                            
+                            class="w-16 h-16 rounded-full bg-red-100 border-4 border-red-500 flex items-center justify-center text-red-700 text-xl font-black shadow-lg transition-transform group-hover:scale-110 mb-3">
+                                                        <i class="fa-solid fa-filter-circle-xmark"></i></div>
+                                                <div
+                            class="text-center bg-white p-3 rounded shadow-sm border border-slate-200 w-full relative">
+                                                        <h5 class="font-bold text-slate-800 text-sm">מניעת זליגה</h5>
+                                                        <p class="text-xs text-slate-500 mt-1">שמירה על base-env טהור
+                            </p>
+                                                    </div>
+                                            </div>
+
+                                        <div class="md:hidden text-indigo-300"><i class="fa-solid fa-arrow-down"></i>
+                    </div>
+
+                                        <!-- Step 4 -->
+                                        <div class="relative z-10 flex flex-col items-center group w-full md:w-1/4">
+                                                <div                            
+                            class="w-16 h-16 rounded-full bg-orange-100 border-4 border-orange-500 flex items-center justify-center text-orange-700 text-xl font-black shadow-lg transition-transform group-hover:scale-110 mb-3">
+                                                        <i class="fa-solid fa-check-double"></i></div>
+                                                <div
+                            class="text-center bg-white p-3 rounded shadow-sm border border-slate-200 w-full relative">
+                                                        <h5 class="font-bold text-slate-800 text-sm">ביצוע ובדיקה</h5>
+                                                        <p class="text-xs text-slate-500 mt-1">וידוא refs מול AST</p>
+                                                    </div>
+                                            </div>
+                                    </div>
+
+                                <div class="concept-box !border-indigo-500">
+                                        <h3 class="text-2xl font-bold mb-4 text-indigo-900">הקבצים הרלוונטיים (מבט על)
+                    </h3>
+                                        <div class="space-y-4">
+                                                <div
+                            class="bg-white p-4 rounded shadow-sm border border-indigo-100 flex items-start gap-3">
+                                                        <i
+                                class="fa-regular fa-file-code text-indigo-500 text-xl mt-1"></i>
+                                                        <div>
+                                                                <h4 class="font-bold text-slate-800">lang.scm</h4>
+                                                                <p class="text-sm text-slate-600">מגדיר את מבנה הפקודות
+                                    והמילים השמורות של השפה. שימו לב
+                                                                        להבחנה מתי מזהה נכתב כתחביר קשיח (כמו
+                                    `event.create()`) ומתי הוא משתנה.</p>
+                                                            </div>
+                                                    </div>
+                                                <div
+                            class="bg-white p-4 rounded shadow-sm border border-indigo-100 flex items-start gap-3">
+                                                        <i
+                                class="fa-regular fa-file-code text-indigo-500 text-xl mt-1"></i>
+                                                        <div>
+                                                                <h4 class="font-bold text-slate-800">data-structures.scm
+                                </h4>
+                                                                <p class="text-sm text-slate-600">בקובץ זה לרוב נוסיף
+                                    סוג ערך מבוטא חדש (כמו
+                                                                        <code>event-val</code> או <code>ptr-val</code>).
+                                    חשוב להכיר איזו ארכיטקטורה יושבת
+                                                                        בפנים (האם הסביבה מצפה ל-References או לערכים
+                                    מפורשים).</p>
+                                                            </div>
+                                                    </div>
+                                                <div
+                            class="bg-white p-4 rounded shadow-sm border border-indigo-100 flex items-start gap-3">
+                                                        <i
+                                class="fa-regular fa-file-code text-indigo-500 text-xl mt-1"></i>
+                                                        <div>
+                                                                <h4 class="font-bold text-slate-800">interp.scm</h4>
+                                                                <p class="text-sm text-slate-600">כאן תתרחש רוב העבודה -
+                                    כתיבת לוגיקת הזיכרון, ביצוע
+                                                                        <code>newref</code>, עדכון במקום עם
+                                    <code>setref!</code>, וטיפול נכון בסביבות
+                                                                        מקומיות בלולאות בתוך <code>value-of</code>.</p>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                    </div>
+                            </div>
+
+                        <div id="tab-q2-1" class="tab-content">
+                                <header class="mb-8 border-b pb-4">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-amber-500 text-amber-950 rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono shadow-sm">
+                                                <i class="fa-solid fa-file-code mr-2"></i> קובץ יעד: interp.scm /
+                        environments.scm
+                                            </div>
+                                        <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">זיהוי <span  
+                                                      class="text-indigo-600">ארכיטקטורת הזיכרון</span></h2>
+                                        <p class="text-lg text-slate-600">המוקש הגדול ביותר של שאלה 2 הוא ההבדל בין
+                        IMPLICIT-REFS
+                                                ל-EXPLICIT-REFS. הפתרון שלכם ב-<code>interp.scm</code> נראה אחרת לגמרי
+                        בהתאם לסוג השפה!</p>
+                                    </header>
+
+                                <div class="exam-box mb-8">
+                                        <p><strong>איך מזהים במבחן באיזו ארכיטקטורה אנחנו עובדים?</strong><br>
+                                                זה המידע החשוב ביותר לשאלה 2. חפשו בשורה הראשונה של השאלה במבחן את ציון
+                        השפה:<br>
+                                                - אם כתוב: "נוסיף לשפת <strong>יירמוז</strong>" <i
+                            class="fa-solid fa-arrow-left"></i> אנחנו
+                                                ב-<strong>IMPLICIT-REFS</strong> (הפניות משתמעות).<br>
+                                                - אם כתוב: "נוסיף לשפת <strong>ויפנה</strong>" <i
+                            class="fa-solid fa-arrow-left"></i> אנחנו
+                                                ב-<strong>EXPLICIT-REFS</strong> (הפניות מפורשות).</p>
+                                        <p class="mt-2 text-sm text-green-800 font-bold"><strong>מה עושים עם
+                            זה?</strong> זה מכתיב לנו איך
+                                                להשתמש ב-<code>extend-env</code> כשאנחנו פותחים לולאות או פונקציות (ראו
+                        למטה).</p>
+                                    </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                                        <div
+                        class="bg-slate-50 p-6 rounded-xl border border-indigo-200 shadow-sm relative overflow-hidden">
+                                                <div class="absolute top-0 right-0 w-2 h-full bg-indigo-500"></div>
+                                                <h3 class="text-2xl font-bold text-indigo-900 mb-4">IMPLICIT-REFS
+                            (משתמעות)</h3>
+                                                <p class="text-sm text-slate-700 mb-4">בשפה זו, <strong>כל משתנה שנוצר
+                                ומוסף לסביבה, מקבל
+                                                                אוטומטית תא בזיכרון.</strong> מזהים מצביעים תמיד על
+                            References במחסן.</p>
+                                                <p class="font-bold text-sm text-red-600 mb-2">איך מרחיבים סביבה
+                            (extend-env)?</p>
+                                               
+                        <pre><code class="language-scheme">;; חובה להפעיל newref על הערך!
+;; (משמש המון בלולאות for/proc או בהצהרות משתנים)
+(extend-env var (newref val) env)</code></pre>
+                                                <p class="text-xs text-slate-500 mt-2">אם תשכחו את ה-<code>newref</code>
+                            בהגדרת משתנה הלולאה
+                                                        שלכם, השפה תקרוס ברגע שתנסו לגשת אליו, כי הוא לא יהיה מצביע תקין
+                            ל-Store!</p>
+                                           
+                    </div>
+
+                                        <div
+                        class="bg-slate-50 p-6 rounded-xl border border-teal-200 shadow-sm relative overflow-hidden">
+                                                <div class="absolute top-0 right-0 w-2 h-full bg-teal-500"></div>
+                                                <h3 class="text-2xl font-bold text-teal-900 mb-4">EXPLICIT-REFS
+                            (מפורשות)</h3>
+                                                <p class="text-sm text-slate-700 mb-4">בשפה זו, הסביבה שומרת ערכים
+                            רגילים. הקצאת זיכרון ב-Store
+                                                        קורית <strong>רק אם</strong> התבקשנו להריץ פקודת
+                            <code>newref</code> בתוך השפה עצמה.</p>
+                                                <p class="font-bold text-sm text-teal-600 mb-2">איך מרחיבים סביבה
+                            (extend-env)?</p>
+                                               
+                        <pre><code class="language-scheme">;; מעבירים את הערך כמו שהוא.
+(extend-env var val env)</code></pre>
+                                                <p class="text-xs text-slate-500 mt-2">זה נראה כמו שאלה 1 רגילה, אבל
+                            האתגר מגיע כשמבקשים מכם
+                                                        לייצר מבנים מורכבים כמו מערכים או רשומות במפורש.</p>
+                                           
+                    </div>
+                                    </div>
+                            </div>
+
+                        <div id="tab-q2-2" class="tab-content">
+                                <header class="mb-8 border-b pb-4">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-amber-500 text-amber-950 rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono shadow-sm">
+                                                <i class="fa-solid fa-file-code mr-2"></i> קובץ יעד: data-structures.scm
+                        / interp.scm
+                                            </div>
+                                        <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">מבנים משתנים
+                        ו-<span                             class="text-indigo-600">מוטציות (Mutation)</span></h2>
+                                        <p class="text-lg text-slate-600">כיצד מעדכנים מידע קיים בזיכרון, ואיך בונים
+                        מבנים שמאפשרים עדכון
+                                                עתידי (כמו מערכים, אירועים ופונקציות מועמסות).</p>
+                                    </header>
+
+                                <div class="exam-box mb-8">
+                                        <p><strong>איך מזהים שאלת מוטציה (Mutation) במבחן?</strong><br>
+                                                חפשו בשורות ה-Grammar של השאלה ביטויים שמעדכנים מצב קיים:<br>
+                                                1. אופרטורים של עדכון: <code>+=</code>, <code>-=</code> (למשל: הוספה
+                        לאירועים).<br>
+                                                2. מילות מפתח של שינוי: <code>set</code>, <code>overload</code>.<br>
+                                                3. מערכים: שינוי תא במערך קיים.</p>
+                                        <p class="mt-2 text-sm text-green-800 font-bold"><strong>מה עושים עם
+                            זה?</strong> אסור להשתמש
+                                                ב-<code>extend-env</code>! זו נורת אזהרה שחובה לחלץ את התא הקיים עם
+                                                <code>(apply-env env id)</code> ולעדכן אותו במקום בעזרת
+                        <code>setref!</code> (היעזרו בתבנית
+                                                למטה).</p>
+                                    </div>
+
+                                <div class="deep-dive mb-8">
+                                        <h3 class="text-2xl font-bold text-slate-800 mb-4">תבנית מבנה משתנה: ייצוג של
+                        Array ב-Expval</h3>
+                                        <p class="text-slate-700 mb-4">כדי שמערך יאפשר שינוי פרטני לכל איבר, כל איבר שלו
+                        חייב לשבת ב-Store
+                                                משל עצמו. לכן המערך ייראה כך ב-<code>data-structures.scm</code>:</p>
+
+                                       
+                    <pre><code class="language-scheme">;; שימו לב! list-of reference? ולא expval!
+(array-val (refs (list-of reference?)))</code></pre>
+
+                                        <h4 class="font-bold text-slate-900 mt-6 mb-2">תבנית החזרת הרפרנס (Array-ref)
+                    </h4>
+                                        <p class="text-sm text-slate-700 mb-4">כאשר משתמש ניגש לתא במערך, הוא עשוי לרצות
+                        לעשות לו
+                                                <code>setref!</code>. <strong>פונקציית הגישה (ב-<code>interp.scm</code>)
+                            חייבת להחזיר את המצביע
+                                                        עטוף!</strong></p>
+
+                                       
+                    <pre><code class="language-scheme">;; בפונקציית הגישה (index-exp) ב-interp.scm
+(index-exp (arrexp index)
+  (let* ((arr-val (value-of arrexp env)) ;; חובה להעריך את ה-AST קודם!
+         (refs (expval->array arr-val))
+         (idx (expval->num (value-of index env)))
+         ;; שולפים את הרפרנס עצמו מהרשימה
+         (the-ref (list-ref refs idx)))
+         
+    ;; מוקש קריטי! לא לעשות deref! 
+    ;; לעטוף ב-ref-val כדי ש-setref! המובנה בשפה יוכל לפעול עליו
+    (ref-val the-ref)))</code></pre>
+                                   
+                </div>
+
+                                <div class="template-box !border-fuchsia-500 !bg-fuchsia-50 mt-8">
+                                        <h3 class="text-2xl font-bold text-fuchsia-900 mb-2">תבנית שינוי במקום (In-Place
+                        Mutation)</h3>
+                                        <p class="text-sm text-slate-700 mb-4"><strong>מתי משתמשים?</strong> כשהמבחן
+                        מבקש לעדכן משתנה קיים,
+                                                כמו הוספה לאירוע (<code class="inline-code">id += {procs}</code>), העמסת
+                        פונקציה קיים (<code                             class="inline-code">overload</code>) או עדכון
+                        מצביע (<code                             class="inline-code">set @ x = val</code>). בשפת
+                        <strong>IMPLICIT-REFS</strong>, אנו חייבים
+                                                לשנות את המחסן הקיים ולא להרחיב את הסביבה!</p>
+                                       
+                    <pre><code class="language-scheme">;; תבנית קלאסית: עדכון משתנה קיים ב-IMPLICIT-REFS (למשל הוספת אירוע)
+(event-add-exp (id procs)
+  ;; 1. שולפים את ההפניה (Reference) מהסביבה - לא להעריך את id!
+  (let* ((ref (apply-env env id))
+         ;; 2. חולצים את הערך הנוכחי מתוך המחסן
+         (current-val (deref ref))
+         ;; 3. מעריכים את המידע החדש שרוצים להוסיף (למשל פרוצדורות חדשות)
+         (new-data-vals (map (lambda (x) (value-of x env)) procs)))
+    
+    ;; 4. מבצעים את המניפולציה הלוגית (למשל שרשור רשימות)
+    (let ((updated-data (append (expval->event current-val) new-data-vals)))
+      (begin
+        ;; 5. חובה! מעדכנים את תא הזיכרון המקורי.
+        ;; שימוש ב-extend-env כאן הוא טעות שתגרור פסילה!
+        (setref! ref (event-val updated-data))
+        ;; 6. מחזירים ערך דאמי כי כל ביטוי חייב להחזיר ExpVal
+        (num-val 27)))))</code></pre>
+                                   
+                </div>
+                            </div>
+
+                        <div id="tab-q2-3" class="tab-content">
+                                <header class="mb-8 border-b pb-4">
+                                        <div                        
+                        class="inline-block px-4 py-1 bg-amber-500 text-amber-950 rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono shadow-sm">
+                                                <i class="fa-solid fa-file-code mr-2"></i> קובץ יעד: interp.scm
+                                            </div>
+                                        <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">זליגת סביבות
+                        <span                             class="text-red-600">(Environment Pollution)</span></h2>
+                                        <p class="text-lg text-slate-600">זהו המוקש הרשמי והגדול ביותר של מבחני שפות
+                        תכנות בנושאי הסביבות.
+                                                ההבדל בין <code>base-env</code> לסביבות מקומיות בלולאות ובמבני-תנאי.</p>
+                                    </header>
+
+                                <div class="exam-box mb-8">
+                                        <p><strong>איך מזהים סכנת זליגת סביבות (Pollution) בשאלה?</strong><br>
+                                                חפשו בתיאור ההתנהגות (סמנטיקה) מילים שמצביעות על סריקה או דילוג:<br>
+                                                - "בדוק את התנאים בזה אחר זה, ואם לא מצאת המשך..." (רמז
+                        ל-<code>switch</code>,
+                                                <code>cond</code>).<br>
+                                                - "אם התנאי שומר לא מתקיים, דלג... " (רמז ל-<code>skip</code>,
+                        <code>break</code> או
+                                                <code>Guards</code> בלולאות).</p>
+                                        <p class="mt-2 text-sm text-green-800 font-bold"><strong>מה עושים עם
+                            זה?</strong> זה אומר שכשכותבים
+                                                את פונקציית הלולאה, חובה להעביר את הסביבה המקורית
+                        (<code>base-env</code>) מארגומנט לארגומנט בתור
+                                                סביבה "טהורה", וכל הרחבת סביבה נקודתית נעשית רק עבור בדיקת הקייס הנוכחי.
+                    </p>
+                                    </div>
+
+                                <div class="error-box border-l-8 !border-red-600">
+                                        <h3 class="text-3xl font-black text-red-800 mb-4">כשהאלגוריתם נכשל (Type Errors)
+                    </h3>
+                                        <p class="text-slate-700 mb-4">לא כל התוכניות במבחן מתקמפלות בהצלחה! ישנם שני
+                        סוגים של שגיאות שעליכם
+                                                לחפש ולהכריז עליהן בשמחה (כי זה חוסך עבודה):</p>
+
+                                        <div class="bg-white p-5 rounded-lg border border-red-200 mb-4 shadow-sm">
+                                                <h4 class="font-bold text-red-900 text-lg mb-2">1. התנגשות טיפוסים ישירה
+                            (Type Mismatch)</h4>
+                                                <p class="text-sm text-slate-700 mb-2">אם במהלך ההצבות (Substitution)
+                            הגעתם פתאום למשוואה
+                                                        שאומרת: <code>int = bool</code> או
+                            <code>bool = int -> int</code>. זוהי סתירה מתמטית ברורה!
+                                                        יש לעצור את התהליך ולכתוב "האלגוריתם מזהה שגיאת טיפוס (Type
+                            Error), לא ניתן להמשיך באיחוד."
+                                                    </p>
+                                            </div>
+
+                                        <div class="bg-white p-5 rounded-lg border border-red-200 shadow-sm">
+                                                <h4 class="font-bold text-red-900 text-lg mb-2">2. חוק ההכלה האוסר
+                            (Occurs Check Failure)</h4>
+                                                <p class="text-sm text-slate-700 mb-2">אם במהלך האיחוד קיבלתם את המשוואה
+                            המעגלית הבאה:
+                                                        <code>t1 = t1 -> int</code>. זהו ניסיון ליצור מבנה פונקציה שמכיל
+                            את עצמו אינסוף פעמים.
+                                                        אלגוריתם ה-Unification הקלאסי מחזיק רכיב שנקרא "Occurs Check"
+                            שבודק אם משתנה מופיע בתוך
+                                                        הביטוי שהוא מנסה להיות מושווה אליו. אם כן - האלגוריתם נכשל עם
+                            "Occurs Check Exception" ויש
+                                                        לציין זאת.</p>
+                                            </div>
+                                    </div>
+
+                                <div class="tip-box mt-8">
+                                        <h4 class="font-bold text-xl text-amber-900 mb-4">חוקי הגזירה הרשמיים
+                        (Derivation Tree)</h4>
+                                        <p class="text-slate-700 mb-4">בסעיף ב' במבחנים רבים, במקום לטבלאות הצבה, תתבקשו
+                        לצייר את "עץ
+                                                הגזירה" המראה את הטיפוסים הפורמליים (Tenv) לפי החוקים למטה ולמעלה מהקו.
+                        זהו תרגום ישיר של פתרון
+                                                המשוואות לפורמט אקדמי כתיב:</p>
+                                       
+                    <pre><code class="language-scheme bg-white border border-amber-200 text-center text-lg">
+(Tenv ⊢ condition : bool)    (Tenv ⊢ then-exp : T)    (Tenv ⊢ else-exp : T)
+-----------------------------------------------------------------------------
+                 (Tenv ⊢ if-exp : T)
+                    </code></pre>
+                                        <p class="text-sm text-slate-600 mt-2">יש להציב את הטיפוסים שמצאתם (כמו
+                        <code>bool</code> או
+                                                <code>int</code> במקום T), ולצייר את העץ מן הביטוי העמוק ביותר ועד
+                        הביטוי העוטף (t0) שנמצא למטה
+                                                בבסיס העץ.</p>
+                                   
+                </div>
+                            </div>
+
+                    </div>
+            </main>
+
+       
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Remove active classes from navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('active-nav');
+            });
+
+            // Show selected tab content
+            const tabContent = document.getElementById(tabId);
+            if (tabContent) {
+                tabContent.classList.add('active');
+            }
+
+            // Highlight selected nav button
+            const navBtn = document.getElementById('btn-' + tabId);
+            if (navBtn) {
+                navBtn.classList.add('active-nav');
+            }
+        }
+    </script>
+       
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+       
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שאלת Multidimensional Pointers - 2024ב מועד א (98)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .template-box::before {
+            content: "✍️ שבלונה למבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .thought-box {
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Animation */
+        .step-transition { transition: all 0.3s ease-out; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-3xl font-black text-white tracking-tight leading-tight">Mastering<br><span class="text-blue-500">Pointers</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון שאלת מועד א (98) 2024ב</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()" class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge" class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <div id="code-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 0,
+                title: "שלב 0: ניתוח הדרישה ומפת דרכים",
+                filename: "question_analysis.txt",
+                explanation: `
+                    <p class="mb-4">במבחן זה (מועד א (98) 2024ב), אנו נדרשים להרחיב את שפת <strong>Implicit-Refs</strong> עם יכולות של <strong>מצביעים רב-מימדיים (Multidimensional Pointers)</strong> וגישה לנתונים דרכם.</p>
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6 shadow-sm">
+                        <h4 class="font-bold text-blue-900 text-base mb-2">דרישות השפה החדשות והתחביר:</h4>
+                        <div class="bg-white p-3 rounded border border-blue-100 font-mono text-sm mb-4 ltr text-left">
+Expression ::= { &amp; }+ (Expression) [multiptr-exp]<br>
+Expression ::= { * }+ (Expression) [multistar-exp]<br>
+Expression ::= option identifier = Expression [assign-exp]<br>
+Option ::= &epsilon; | @
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-blue-900 space-y-2">
+                            <li><code>{ &amp; }+(data)</code>: יוצר מצביע רב-מימדי לנתון. כמות סימני ה-<code>&amp;</code> מציינת את מימד המצביע (מצביע למצביע וכו').</li>
+                            <li><code>{ * }+(v)</code>: פונה לנתון המוצבע. כמות הכוכביות מציינת כמה שלבים להתקדם. מחזיר את הנתון או מצביע ביניים, או שגיאה אם חרגנו מהמימדיות.</li>
+                            <li><code>set @ id = val</code>: מעדכן את הנתון המוצבע בקצה של המצביע הרב-מימדי <code>id</code>. אם ה-option ריק, מתפקד כ-set רגיל.</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">מה אנחנו מחפשים ומנתחים בשלב זה?</h3>
+                    <ul class="space-y-3 text-slate-700">
+                        <li>
+                            <span class="font-semibold text-slate-900">1. הגדרת "לפחות אחד" בדקדוק:</span> 
+                            הסימון <code>+</code> בתחביר (כמו <code>{ &amp; }+</code>) מציין מופע אחד או יותר. מכיוון של-Parser של EOPL אין תמיכה מובנית בסימן פלוס, ניאלץ לבנות חוק עזר שמחייב מופע ראשון, ואחריו רשימה שיכולה להיות ריקה (בעזרת <code>arbno</code>).
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">2. ייצוג המצביע הרב-מימדי בזיכרון:</span> 
+                            מצביע מיוצג בזמן ריצה כסוג ערך מבוטא (ExpVal) חדש שמכיל את תא הזיכרון (Reference) ואת מימדיות המצביע (Dimension).
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">3. עקרון ה-Mutation ב-assign-exp המעודכן:</span> 
+                            כאשר ה-option הוא <code>@</code>, עלינו לעבור לאורך שרשרת המצביעים, לשלוף את ה-Reference הפנימי ביותר שמחזיק את המידע האמיתי, ולעדכן אותו עם <code>setref!</code>.
+                        </li>
+                    </ul>
+                `,
+                code: `;; --- מפת הדרכים הכללית לאלגוריתם ---
+;; 1. lang.scm: עדכון חוקי הדקדוק עבור multiptr, multistar, option ו-assign-exp.
+;; 2. data-structures.scm: הוספת ptr-val ומחלצי עזר ל-expval.
+;; 3. interp.scm (value-of): מימוש multiptr-exp ליצירת שרשרת הפניות.
+;; 4. interp.scm (value-of): מימוש multistar-exp לקילוף רקורסיבי של הפניות.
+;; 5. interp.scm (helpers): מימוש get-underlying-ref ועדכון assign-exp.`
+            },
+            {
+                id: 1,
+                title: "שלב 1: עדכון התחביר (lang.scm)",
+                filename: "lang.scm",
+                explanation: `
+                    <p class="mb-4">נוסיף את חוקי הדקדוק למנתח התחבירי. נדרש פתרון יצירתי כדי לייצג את דרישת ה-"לפחות מופע אחד" (סימן ה-<code>+</code>).</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון קובץ התחביר והדקדוק (lang.scm):</strong> נוסיף את כללי הגזירה החדשים לתוך הגדרת הדקדוק (the-grammar). על מנת לייצג מופע אחד או יותר של סימני המצביעים (התווים &amp; ו-*), נגדיר קטגוריות עזר <code>ptr</code> ו-<code>star</code> בהתאמה, ונעשה שימוש ב-<code>arbno</code> על מנת לקלוט את המימדים הנוספים. נעדכן גם את ביטוי ה-<code>assign-exp</code> ונבנה חוקים עבור <code>option</code> (שמייצג @ או מחרוזת ריקה)."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">עקרונות הגדרת הדקדוק:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-2 mb-4">
+                        <li><strong>למה לא להשתמש ב-(arbno "&amp;") ישירות?</strong> אם היינו משתמשים ב-<code>(arbno "&amp;")</code> ישירות בביטוי, ה-Parser לא היה מייצר לנו ייצוג מופשט תחת AST של רשימת סימנים שניתן לחשב את אורכה. הפרדה לטיפוס עזר (כמו <code>ptr</code>) מאפשרת ל-Racket לאסוף אותם לרשימת עצים ולספור אותם בריצה.</li>
+                        <li><strong>הגדרת מחרוזת ריקה (&epsilon;):</strong> מיוצגת בדקדוק על ידי חוק <code>option</code> ריק ללא תווים: <code>(option () default-opt)</code>.</li>
+                    </ul>
+                `,
+                code: `(expression
+  ("&" (arbno ptr) "(" expression ")")
+  multiptr-exp)
+
+(expression
+  ("*" (arbno star) "(" expression ")")
+  multistar-exp)
+
+(ptr
+  ("&")
+  pptr)
+
+(star
+  ("*")
+  sstar)
+
+;; עדכון ביטוי ההשמה הקיים:
+(expression
+  ("set" option identifier "=" expression)
+  assign-exp)
+
+;; הגדרת ה-option:
+(option
+  ("@")
+  ptr-opt)
+
+(option
+  ()
+  default-opt)`
+            },
+            {
+                id: 2,
+                title: "שלב 2: עדכון מבני נתונים (data-structures.scm)",
+                filename: "data-structures.scm",
+                explanation: `
+                    <p class="mb-4">אירוע יצירת מצביע רב-מימדי מחזיר ערך מטיפוס חדש בזמן ריצה. לכן עלינו להרחיב את ה-Expressed Values של השפה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מבני הנתונים (data-structures.scm):</strong> נבחן האם התוספת לשפה דורשת יצירת טיפוס נתונים חדש המוערך בזמן ריצה (Expressed Value). בשאלה זו, המצביע הרב-מימדי הוא ישות עצמאית בריצה. נרחיב את <code>expval</code> עם Variant חדש בשם <code>ptr-val</code> המחזיק שני שדות: הפניה (r reference?) לרפרנס הבא בשרשרת, ומימדיות (d number?) המציינת את עומק המצביע. בנוסף נגדיר שני מחלצי עזר לקבלת ההפניה והמימד."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">מבנה המצביע הרב-מימדי:</h3>
+                    <p class="text-slate-700 text-sm mb-4">
+                        שדות ה-Variant החדש מוגדרים מפורשות. אנו זקוקים למחלצים <code>expval->ptr-ref</code> ו-<code>expval->ptr-dim</code> על מנת לקלף את האריזה בזמן ריצה ולבצע את פעולות ההתקדמות בשרשרת.
+                    </p>
+                `,
+                code: `;; נוסיף ל- expval ב- data-structures.scm את ptr-val:
+(define-datatype expval expval?
+  ...
+  (ptr-val
+    (r reference?)
+    (d number?)))
+
+;; הגדרת מחלצי עזר (Extractors):
+(define expval->ptr-ref
+  (lambda (e)
+    (cases expval e
+      (ptr-val (r d) r)
+      (else (eopl:error "Not a pointer" "~s" e)))))
+
+(define expval->ptr-dim
+  (lambda (e)
+    (cases expval e
+      (ptr-val (r d) d)
+      (else (eopl:error "Not a pointer" "~s" e)))))`
+            },
+            {
+                id: 3,
+                title: "שלב 3: עדכון מנוע ההערכה - multiptr-exp",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">כעת אנו מגיעים למנוע ההערכה <code>value-of</code> ומממשים את יצירת המצביע הרב-מימדי.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון פונקציית ההערכה עבור multiptr-exp:</strong> נוסיף clause לטיפול בביטוי יצירת המצביע. במידה ואין איברי ptrs נוספים (כלומר המימד הוא 1), נעריך את הנתון, ניצור עבורו תא זיכרון חדש (newref) ונארוז אותו ב-<code>ptr-val</code> עם מימד 1. במידה והמימד גדול מ-1, נקרא רקורסיבית ליצירת המצביע הפנימי (עבור cdr ptrs), נמדוד את עומקו, וניצור מצביע חדש המצביע עליו עם עומק מוגדל ב-1."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-3 border-b pb-2">דיון עיצובי חשוב: שרשרת הפניות לעומת ייצוג שטוח</h3>
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 text-slate-800 text-sm space-y-2">
+                        <p><strong>גישת שרשרת ההפניות (המימוש שנבחר):</strong></p>
+                        <p>הקוד מייצר מצביע שמצביע על Reference של מצביע אחר שמצביע על Reference... וכך הלאה עד לנתון האמיתי. זוהי הדמיה מושלמת של מצביע-למצביע (Pointer-to-Pointer) בזכרון פיזי. כל שלב שרשרת מוקצה בנפרד ב-Store.</p>
+                        <p><strong>גישת הייצוג השטוח (הערת הבודק):</strong></p>
+                        <p>הבודק העיר בשוליים כי "לא באמת נחוץ ליצור שרשרת מצביעים לנתון. מספיק היה לשמור רפרנס יחיד לנתון המקורי, ולצידו מספר המייצג את המימד". בגישה השטוחה, <code>ptr-val</code> היה מחזיק הפניה ישירה לנתון האמיתי עם המימד $N$, וכל כוכבית הייתה פשוט מורידה את המספר $N$ ללא מעבר בזיכרון. המימוש הרקורסיבי של השרשרת מוכיח שליטה מעולה בהקצאות דינמיות ב-EOPL.</p>
+                    </div>
+                `,
+                code: `(multiptr-exp (ptrs data)
+  (if (null? ptrs)
+    (let ((val (value-of data env)))
+      (ptr-val (newref val) 1))
+    (let* ((next-ptr (value-of
+            (multiptr-exp (cdr ptrs) data) env))
+           (dim (expval->ptr-dim next-ptr)))
+      (ptr-val (newref next-ptr) (+ 1 dim)))))`
+            },
+            {
+                id: 4,
+                title: "שלב 4: עדכון מנוע ההערכה - multistar-exp",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">כאן אנו מטפלים בפתיחה וגישה למצביעים (dereference) בתוך <code>value-of</code>.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון פונקציית ההערכה עבור multistar-exp:</strong> נוסיף את הטיפול בביטוי פתיחת המצביעים. על מנת לשמור על עבודה תקינה של המפרש ולמנוע ערבוב בין טיפוסי עץ ה-AST לבין ערכי ריצה (ExpVal), נשלח את הערך המוערך לפונקציית עזר רקורסיבית <code>eval-multistar</code> שתקלף את ההפניות בהתאם למספר הכוכביות."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-3 border-b pb-2">ניתוח באגים קריטי: תיקון מנגנון הרקורסיה של ה-AST</h3>
+                    <div class="bg-amber-50 border-r-4 border-amber-500 p-4 mb-4 text-slate-800 text-sm">
+                        <i class="fa-solid fa-circle-info mr-2"></i>
+                        <strong>תיקון שגיאת טיפוסים נפוצה במבחנים:</strong>
+                        <p class="mt-1">
+                            בפתרון המחברת המקורי, הסטודנט ניסה לקרוא רקורסיבית ל-<code>value-of</code> על ביטוי שיוצר דינמית:
+                            <code class="font-mono bg-amber-100 px-1 rounded block mt-1">(value-of (multistar-exp (cdr stars) (deref r)) env)</code>
+                            אך שימו לב לבעיה: הביטוי <code>(deref r)</code> הוא **ערך ריצה (ExpVal)** ולא צומת AST (ביטוי גולמי של השפה). קריאה ל-<code>value-of</code> עליו תכשיל את המפרש באופן מיידי!
+                            <br>
+                            הפתרון הנכון והאלגנטי הוא להשתמש בפונקציית עזר רקורסיבית מחוץ ל-<code>value-of</code> המבצעת את קילוף ה-Reference ב-Scheme ישירות על ערכי ה-ExpVal, ללא קריאה ל-<code>value-of</code>.
+                        </p>
+                    </div>
+                `,
+                code: `;; בתוך value-of:
+(multistar-exp (stars v)
+  (let ((val (value-of v env)))
+    (eval-multistar stars val env)))
+
+;; פונקציית עזר מחוץ ל-value-of:
+(define eval-multistar
+  (lambda (stars val env)
+    (let ((d (expval->ptr-dim val))
+          (r (expval->ptr-ref val)))
+      (if (and (not (null? stars)) (= 1 d))
+        (eopl:error 'multistar-exp "pointer does not have enough dimensions")
+        (if (null? stars)
+          (deref r)
+          (eval-multistar (cdr stars) (deref r) env))))))`
+            },
+            {
+                id: 5,
+                title: "שלב 5: עדכון ההשמה ופונקציית get-underlying-ref",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">השלב האחרון הוא מימוש מנגנון עדכון הערך המוצבע (set) בקצה המצביע הרב-מימדי.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מנגנון ההשמה assign-exp:</strong> נשנה את הטיפול בצומת ההשמה הקיים. נבצע cases על ה-option שקיבלנו מה-Parser. במקרה של <code>default-opt</code> (ללא סימן @), נבצע השמה רגילה על משתנה הסביבה. במקרה של <code>ptr-opt</code> (עם סימן @), נקרא לפונקציית עזר <code>get-underlying-ref</code> שתעבור לאורך שרשרת ההפניות ותחזיר את ה-Reference התחתון ביותר. לבסוף, נבצע <code>setref!</code> על רפרנס זה עם הערך החדש."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">כיצד get-underlying-ref מוצאת את היעד?</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-2 mb-4">
+                        <li>הפונקציה מקבלת reference של משתנה הסביבה, ומחלצת את ערך ה-<code>ptr-val</code> שלו.</li>
+                        <li>היא בודקת את מימדיות המצביע. אם המימד הוא <code>1</code>, היא מבינה שהגענו למצביע האחרון שמצביע ישירות על תא הנתון, ולכן מחזירה את ה-Reference הפנימי שלו (<code>r</code>).</li>
+                        <li>אם המימד גדול מ-1, היא קוראת לעצמה רקורסיבית עם הרפרנס הפנימי <code>r</code> כדי להמשיך לרדת בשרשרת.</li>
+                    </ul>
+                `,
+                code: `;; טיפול ב- assign-exp המעודכן בתוך value-of:
+(assign-exp (opt id newval)
+  (cases option opt
+    (default-opt () 
+      (begin
+        (setref!
+          (apply-env env id)
+          (value-of newval env))
+        (num-val 27)))
+    (ptr-opt () 
+      (let ((underlying-ref
+             (get-underlying-ref
+               (apply-env env id))))
+        (begin
+          (setref!
+            underlying-ref
+            (value-of newval env))
+          (num-val 27))))))
+
+;; פונקציית העזר מחוץ ל-value-of:
+(define get-underlying-ref
+  (lambda (ref)
+    (let* ((val (deref ref))
+           (d (expval->ptr-dim val))
+           (r (expval->ptr-ref val)))
+      (if (= 1 d) 
+          r
+          (get-underlying-ref r)))))`
+            },
+            {
+                id: 6,
+                title: "שלב 6: נקודות כשל נפוצות וטיפ של אלופים",
+                filename: "exam_tips.txt",
+                explanation: `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-xl text-red-900 shadow-md space-y-4">
+                        <h3 class="font-extrabold text-xl flex items-center text-red-800">
+                            <i class="fa-solid fa-triangle-exclamation ml-3 text-2xl"></i>
+                            מלכודות מבחן קריטיות - שאלת Pointers!
+                        </h3>
+                        <p class="text-sm leading-relaxed">
+                            בשאלות המערבות מצביעים מורכבים ורב-מימדיים בסביבת Implicit-Refs, ישנן שלוש מלכודות שהבוחנים מקפידים עליהן במיוחד:
+                        </p>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 1: ערבוב סוגי נתונים (AST vs. ExpVal) ברקורסיה</strong>
+                                זו השגיאה הלוגית הנפוצה ביותר. סטודנטים מנסים ליצור רקורסיה על ידי יצירת צומת AST באופן דינמי והעברתו ל-<code>value-of</code>, תוך שהם משתילים בתוכו ערכי ריצה (כמו תוצאת <code>deref</code>). 
+                                מנוע <code>value-of</code> יודע להעריך רק ביטויי AST גולמיים! הפתרון הנכון הוא להעביר את הלוגיקה לפונקציית עזר רקורסיבית ב-Scheme שעובדת ישירות על ה-ExpVals בזיכרון.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 2: קטיעת השרשרת ב-get-underlying-ref</strong>
+                                בעת עדכון עם <code>set @ x = val</code>, אנו רוצים לשנות את הנתון המקורי המוצבע ולא להחליף את אחד המצביעים בדרך! 
+                                חובה לבצע רקורסיה עד שמגיעים למימד <code>1</code> ורק אז לשלוף את ה-reference התחתון ולבצע <code>setref!</code>.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 3: החסרת הגדרת מופע חובה אחד לתחביר</strong>
+                                התחביר קובע <code>{ &amp; }+</code> (לפחות מופע אחד). שימוש ב-<code>(arbno ptr)</code> בלבד יאפשר יצירת מצביע בעל אפס מימדים (שגיאה תחבירית). 
+                                חובה להציב סימן ראשון חובה מחוץ ל-arbno: <code>("&amp;" (arbno ptr) ...)</code>.
+                            </div>
+                        </div>
+                    </div>
+                `,
+                code: `;; שאלת מצביעים רב-מימדיים - פתרון מלא ומדויק.`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+            
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + currentStep;
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+                
+                if (step.code && step.filename) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    if (window.Prism) {
+                        Prism.highlightElement(codeBlock);
+                    }
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+                
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+                
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

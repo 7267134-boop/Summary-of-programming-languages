@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" class="overflow-x-hidden">
 
 <head>
     <meta charset="UTF-8">
@@ -94,7 +94,7 @@
         style="animation-delay: 2s;"></div>
 
     <!-- Header / Hero Section -->
-    <header class="relative w-full h-[75vh] min-h-[500px] flex items-center justify-center overflow-hidden z-20">
+    <header class="relative w-full h-[75vh] min-h-[500px] flex items-center justify-center z-20">
         <!-- תמונת הרקע החדשה -->
         <div class="absolute inset-0 z-0 bg-sky-100/50">
             <!-- הגדרנו שהתמונה תכסה את השטח ושומרת על פרופורציות למרכז -->
@@ -110,15 +110,37 @@
 
             <!-- קופסת "זכוכית" (Glassmorphism) כדי שהטקסט יהיה קריא על הרקע המאויר -->
             <div
-                class="bg-white/85 backdrop-blur-md border border-white/60 shadow-2xl rounded-[2.5rem] p-8 md:p-14 max-w-3xl w-full flex flex-col items-center text-center transform transition-all duration-500 hover:scale-[1.02] hover:shadow-sky-200/50">
-                <div
-                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-100 text-sky-600 text-sm font-bold mb-6 tracking-wide shadow-sm">
-                    <span class="relative flex h-2.5 w-2.5">
-                        <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-500"></span>
-                    </span>
-                    20905
+                class="bg-white/85 backdrop-blur-md border border-white/60 shadow-2xl rounded-[2.5rem] p-8 md:p-14 max-w-3xl w-full flex flex-col items-center text-center transform transition-all duration-500 hover:scale-[1.02] hover:shadow-sky-200/50 relative z-20">
+                <div class="relative group mb-6">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-100 text-sky-600 text-sm font-bold tracking-wide shadow-sm cursor-pointer hover:bg-sky-100 hover:scale-105 transition-all duration-300">
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-500"></span>
+                        </span>
+                        הקדמה קצרה לקורס והסבר מהיר על האתר
+                    </div>
+
+                    <!-- Popover Card -->
+                    <div
+                        class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-[94vw] md:w-[850px] bg-white/95 backdrop-blur-md border border-sky-100 shadow-2xl rounded-[2rem] p-8 md:p-10 text-right transition-all duration-300 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto z-[999] origin-top">
+                        <p class="text-slate-700 text-base md:text-[1.1rem] leading-relaxed font-medium mb-5">
+                            אז נתחיל בהסבר קצר על הקורס והאתר: הקורס נחשב (ובצדק) כקורס די מיושן, מבלבל ולא רלוונטי. אז
+                            למה לוקחים אותו? כי הוא קורס חובה. האתר בא לעשות לכם קצת סדר בראש במושגים ובשפות של הקורס
+                            ואותו דבר לגבי הבחינה הלא פחות מבולבלת, נתחיל בהסבר קצר לגבי מבנה הקורס, הבחינות והמטלות:
+                            בקורס נלמד על שפת scheme ושלל הרחבותיה ושפות המבוססות עליה ולמעשה מתקדמים לאט לאט משפת LET
+                            הבסיסית שלא מכילה אפילו פונקציות עד לשפת INFERED הדומה לשפות מודרניות, הבעיה שהכל די מבלבל
+                            ולא ברור מה קורה, ולזה נועד האתר- לעבור שלב שלב עד שבסוף (בתקווה) מובנות כל שפות הקורס,
+                            מהותן ואיך הן בנויות. המטלות מקבילות להתקדמות ואפשר לראות בתיבות שבהמשך לאיזה נושא כל ממן
+                            חופף (ובגדול- 11,12 על תחביר בסיסי ב scheme ו13-16 על השפות וההרחבות ולרוב מקבילות או
+                            ממוחזרות משאלות במבחן)
+                        </p>
+                        <p class="text-slate-700 text-base md:text-[1.1rem] leading-relaxed font-medium">
+                            הבחינה מקבילה לממנים אבל עדיין שאלות די מבלבלות שדורשות הבנה של מבנה התשובה שחוזר על עצמו
+                            ותרגול. מקווה שהאתר יעזור לכם קצת, בהצלחה :)
+                        </p>
+                    </div>
                 </div>
 
                 <h1
@@ -325,11 +347,11 @@
                             <!-- הפכתי את התגית לאנימציית פעימה חיה -->
                             <span
                                 class="bg-indigo-100 text-indigo-700 border border-indigo-200 text-sm px-4 py-1.5 rounded-full font-black animate-pulse-slow">
-                                היחידה בבניה
+                                2.0
                             </span>
                         </div>
                         <p class="text-slate-600 leading-relaxed text-base md:text-lg font-medium max-w-3xl">
-                            מבנה הבחינה, אלגוריתמים מוכנים מראש לפתרון בעיות, ומבחנים פתורים מסודרים לפי נושאים ושנים.
+                            מבנה הבחינה, אלגוריתמים לפתרון השאלות, ומבחנים פתורים מסודרים לפי נושאים ושנים.
                             כל מה שצריך כדי לגשת מוכנים.
                         </p>
                     </div>

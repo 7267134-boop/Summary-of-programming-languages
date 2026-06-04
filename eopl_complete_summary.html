@@ -1348,10 +1348,23 @@
                     </p>
                 </section>
 
-                <!-- סעיף 27 (לשעבר 22) -->
+                <!-- סעיף 27 (מעודכן: הקצאת משתנים וגזירת משוואות) -->
                 <section id="sec-27" class="mb-12 scroll-mt-6">
-                    <h3 class="title-green">27. שלב א': גזירת חוקים ומשוואות (Constraints)</h3>
-                    <p class="mb-3">מנוע ה-Inferrer סורק את עץ התחביר (Bottom-Up) ומייצר משוואות:</p>
+                    <h3 class="title-green">27. שלב א': הקצאת משתנים וגזירת משוואות (Constraints)</h3>
+                    <p class="mb-3">שלב זה מתחלק לשני תתי-שלבים עיקריים שמרכיבים את התהליך שלנו:</p>
+                    <div class="hand-drawn-box text-sm mb-4">
+                        <ol class="list-decimal list-inside space-y-4 text-slate-800 font-semibold pr-4">
+                            <li class="border-b border-slate-200 pb-3">
+                                <strong class="text-blue-800">הקצאת משתנים מלמעלה-למטה (Top-Down):</strong>
+                                <br>ראשית, אנו סורקים את עץ התחביר (AST) מן השורש אל העלים. אנו מקיפים כל תת-ביטוי בתוכנית ונותנים לו שם משתנה זמני (למשל $t_0$ לתוכנית כולה, $t_1$ לתת-ביטוי פנימי יותר, $t_x$ למשתנה $x$ וכו'). כך לכל חלק בקוד יש מזהה טיפוסי ייחודי.
+                            </li>
+                            <li>
+                                <strong class="text-purple-800">חילוץ המשוואות מלמטה-למעלה (Bottom-Up):</strong>
+                                <br>לאחר שכל תתי-הביטויים ממופים, אנו סורקים את העץ חזרה מהעלים כלפי מעלה. עבור כל פעולה (חיסור, בדיקת אפס, תנאי, יצירת פונקציה או הפעלתה), אנו גוזרים אילוצים (Constraints) בהתאם לחוקי השפה.
+                            </li>
+                        </ol>
+                    </div>
+
                     <div class="overflow-x-auto mb-4">
                         <table class="w-full text-right border-collapse bg-white border border-slate-300">
                             <thead>
@@ -1364,168 +1377,72 @@
                             <tbody class="text-sm font-semibold">
                                 <tr>
                                     <td class="p-3 border border-slate-300 font-mono" dir="ltr">-(E1, E2)</td>
-                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t1 = int, t2
-                                        = int, t_res = int</td>
-                                    <td class="p-3 border border-slate-300 text-slate-600">אופרטורים מתמטיים דורשים תמיד
-                                        קלטים מספריים.</td>
+                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t<sub>1</sub> = int<br>t<sub>2</sub> = int<br>t<sub>E</sub> = int</td>
+                                    <td class="p-3 border border-slate-300 text-slate-600">אופרטורים מתמטיים דורשים תמיד קלטים מספריים, והתוצאה (t<sub>E</sub>) היא מספרית.</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-3 border border-slate-300 font-mono" dir="ltr">if E1 then E2 else E3
-                                    </td>
-                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t1 = bool,
-                                        t2 = t3, t_res = t2</td>
-                                    <td class="p-3 border border-slate-300 text-slate-600">התנאי בוליאני, והזרועות
-                                        (Then/Else) חייבות להיות זהות.</td>
+                                    <td class="p-3 border border-slate-300 font-mono" dir="ltr">if E1 then E2 else E3</td>
+                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t<sub>1</sub> = bool<br>t<sub>2</sub> = t<sub>3</sub><br>t<sub>E</sub> = t<sub>2</sub></td>
+                                    <td class="p-3 border border-slate-300 text-slate-600">התנאי בוליאני, והזרועות (Then/Else) חייבות להיות זהות. התוצאה היא כאחת הזרועות.</td>
                                 </tr>
                                 <tr>
                                     <td class="p-3 border border-slate-300 font-mono" dir="ltr">proc (x) Body</td>
-                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t_res = t_x
-                                        → t_body</td>
-                                    <td class="p-3 border border-slate-300 text-slate-600">מייצר טיפוס פונקציה מהקלט
-                                        לתוצאה.</td>
+                                    <td class="p-3 border border-slate-300 font-mono text-center" dir="ltr">t<sub>E</sub> = t<sub>x</sub> &rarr; t<sub>body</sub></td>
+                                    <td class="p-3 border border-slate-300 text-slate-600">מייצר טיפוס פונקציה מהקלט לתוצאה.</td>
                                 </tr>
                                 <tr class="bg-emerald-50/40">
-                                    <td class="p-3 border border-slate-300 font-mono text-emerald-800" dir="ltr">(Rator
-                                        Rand)</td>
-                                    <td class="p-3 border border-slate-300 font-mono text-center text-emerald-800"
-                                        dir="ltr">t_rator = t_rand → t_res</td>
-                                    <td class="p-3 border border-slate-300 text-slate-800"><strong>החוק הקריטי!</strong>
-                                        טיפוס הפונקציה המופעלת (Rator) חייב להתאים לטיפוס הארגומנט (Rand) ולתוצאה.</td>
+                                    <td class="p-3 border border-slate-300 font-mono text-emerald-800" dir="ltr">(Rator Rand)</td>
+                                    <td class="p-3 border border-slate-300 font-mono text-center text-emerald-800" dir="ltr">t<sub>rator</sub> = t<sub>rand</sub> &rarr; t<sub>E</sub></td>
+                                    <td class="p-3 border border-slate-300 text-slate-800"><strong>החוק הקריטי!</strong> טיפוס הפונקציה המופעלת (Rator) חייב להתאים לטיפוס הארגומנט (Rand) ולתוצאה (t<sub>E</sub>).</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </section>
 
-                <!-- סעיף 28 (לשעבר 23) -->
+                <!-- סעיף 28 (אלגוריתם ההצבות) -->
                 <section id="sec-28" class="mb-12 scroll-mt-6">
-                    <h3 class="title-green">28. שלב ב': אלגוריתם ה-Unification וטבלת ההצבות (Substitutions)</h3>
+                    <h3 class="title-green">28. שלב ב': אלגוריתם ההצבות ואיחודים (Substitutions)</h3>
                     <p class="mb-3">
-                        האלגוריתם פותר משוואות (נניח $L = R$) מתוך רשימת המשוואות. הוא מתחזק טבלת הצבות (Substitutions
-                        table), ובכל שלב הוא:
+                        לאחר שחילצנו את המשוואות מן העץ (סעיף א'), אנו צריכים לפתור אותן. השיטה הנלמדת מבוססת על טבלת הצבות (Substitutions) שמתמלאת בהדרגה ללא מחיקה של משוואות קיימות, אלא על ידי <b>חילחול ערכים וסימון</b>.
                     </p>
                     <div class="hand-drawn-box text-sm">
                         <ol class="list-decimal list-inside space-y-4 text-slate-800 font-semibold pr-4">
-                            <li><strong>זהות (Identity):</strong> אם $L$ ו-$R$ הם אותו הטיפוס (כמו $\text{int} =
-                                \text{int}$) - מתעלמים.</li>
                             <li class="border-b border-slate-200 pb-3">
-                                <strong>הצבה (Substitution):</strong> אם צד אחד הוא משתנה זמני ($t$), בודקים אם יש צורך
-                                לעדכן אילוצים קודמים או עתידיים, ואם כן - מציבים את הערך שלו. חובה לבצע בדיקת הופעה
-                                (Occurs Check) לפני!
+                                <strong>זיהוי עוגנים (Primitives):</strong> מתחילים באיתור המשוואות הפשוטות ביותר, לרוב אלו שבהן משתנה שווה לטיפוס בסיס (למשל $t_4 = \text{int}$ או $t_7 = \text{bool}$).
+                                מסמנים כל משוואה כזו ב-<span class="text-red-500 font-bold">(*)</span> ומעתיקים אותה לעמודת ה-Substitutions הימנית.
                             </li>
                             <li class="border-b border-slate-200 pb-3">
-                                <strong>פירוק (Decomposition):</strong> אם מדובר בשתי פונקציות ($t_1 \rightarrow
-                                \text{int} = \text{bool} \rightarrow t_2$), מפרקים לשתי משוואות קטנות: $t_1 =
-                                \text{bool}$ ו-$\text{int} = t_2$.
+                                <strong>חילחול (Propagation):</strong> לאחר העברת עוגן, מציבים את הערך שמצאנו (למשל $\text{int}$) בכל מקום בו המשתנה מופיע במשוואות שנותרו. נהוג לרשום את הערך <b>מתחת למשתנה</b> במשוואה עצמה כדי להראות התקדמות מבלי למחוק.
                             </li>
-                            <li><strong>שגיאה:</strong> סתירה מהותית כמו $\text{int} = \text{bool}$ זורקת שגיאת התאמה.
-                                ממשיכים את טבלת ההצבות עד שאין יותר מה להעביר, ואז מתקבל הטיפוס הסופי.</li>
+                            <li class="border-b border-slate-200 pb-3">
+                                <strong>איחוד מבני (Structural Unification):</strong> כאשר מגיעים למשוואה בין פונקציות, למשל $(t_a \rightarrow \text{int}) = (\text{bool} \rightarrow t_b)$, מפרקים את המשוואה לרכיבים:
+                                $t_a = \text{bool}$ ו-$\text{int} = t_b$. אם מגלים סתירה (כמו $\text{int} = \text{bool}$), זהו Type Error והתוכנית נדחית. 
+                            </li>
+                            <li><strong>הרכבה מעלה:</strong> ממשיכים לחלחל ערכים שעולים מהאיחודים, עד שכל הפונקציות מורכבות במלואן, והטיפוס מחלחל עד למשתנה הראשי של התוכנית (לרוב $t_0$). בסיום, עמודת המשוואות מכילה רק משוואות מסומנות ב-*, ועמודת ה-Substitutions מכילה את הפתרון לכל משתנה.</li>
                         </ol>
                     </div>
 
-                    <!-- דוגמת הרצה מלאה מה-PDF -->
                     <div class="p-5 bg-emerald-50/40 border border-emerald-200 rounded-lg shadow-sm text-sm my-6">
-                        <h4 class="font-bold text-emerald-900 text-lg mb-3">דוגמה מעשית מלאה: הרצת אלגוריתם
-                            Substitutions</h4>
+                        <h4 class="font-bold text-emerald-900 text-lg mb-3">דוגמה להרצת האלגוריתם</h4>
                         <p class="text-slate-700 mb-3 leading-relaxed">
-                            נראה כיצד אלגוריתם ה-Unification פותר ומסיק את הטיפוס עבור הביטוי הבא:
-                            <br><code dir="ltr">let f = proc (x) - (x, 1) in (f 10)</code>
+                            נניח שקיבלנו משוואות עבור <code>let f = proc (x) - (x, 1) in (f 10)</code>:
+                            <br>המשוואות יהיו: $t_0 = t_1$, $t_f = t_x \rightarrow t_{\text{body}}$, $t_x = \text{int}$, $t_2 = \text{int}$, $t_{\text{body}} = \text{int}$, $t_3 = \text{int}$, ו-$t_f = t_3 \rightarrow t_1$.
                         </p>
-
-                        <strong class="text-slate-850 block mb-1">1. גזירת אילוצים (Constraints Generation):</strong>
-                        <ul class="list-disc list-inside space-y-1 text-slate-700 mb-4 pr-2">
-                            <li>עבור <code>proc (x)</code> נניח טיפוס קלט $t_x$ וטיפוס פלט $t_{\text{body}}$.</li>
-                            <li>עבור הגוף <code>-(x, 1)</code> נגזר האילוץ: $t_x = \text{int}$ (כי החיסור מקבל מספרים)
-                                וטיפוס הגוף הוא $\text{int}$.</li>
-                            <li>לכן טיפוס ה-proc הוא $t_{\text{proc}} = t_x \rightarrow \text{int}$.</li>
-                            <li>בשל ה-<code>let</code>, טיפוס המשתנה $f$ (נסמן $t_f$) נקשר לטיפוס ה-proc: $t_f =
-                                t_{\text{proc}}$.</li>
-                            <li>עבור גוף ה-let שהוא הפעלת פונקציה <code>(f 10)</code>: הארגומנט הוא <code>10</code>
-                                (טיפוס `int`), ולכן $t_f = \text{int} \rightarrow t_{\text{let}}$ (כאשר $t_{\text{let}}$
-                                הוא טיפוס הביטוי כולו).</li>
+                        
+                        <strong class="text-slate-850 block mb-2">שלבי הפתרון:</strong>
+                        <ul class="list-disc list-inside space-y-2 text-slate-700 mb-4 pr-2">
+                            <li><span class="font-bold text-blue-700">סימון העוגנים:</span> מסמנים בכוכבית את $t_x=\text{int}, t_2=\text{int}, t_{\text{body}}=\text{int}, t_3=\text{int}$ ומעבירים ל-Substitutions.</li>
+                            <li><span class="font-bold text-blue-700">חילחול ל-$t_f$:</span> המשוואה $t_f = t_x \rightarrow t_{\text{body}}$ הופכת ל-$t_f = \text{int} \rightarrow \text{int}$. מסמנים אותה בכוכבית ורושמים את הערך שלה.</li>
+                            <li><span class="font-bold text-purple-700">איחוד מבני (Structural Unification):</span> מציבים את $t_f$ (שהוא $\text{int} \rightarrow \text{int}$) במשוואת ההפעלה $t_f = t_3 \rightarrow t_1$. כלומר: $(\text{int} \rightarrow \text{int}) = (\text{int} \rightarrow t_1)$. מהאיחוד נסיק ש-$t_1 = \text{int}$. מסמנים זאת בכוכבית.</li>
+                            <li><span class="font-bold text-green-700">השלמה סופית:</span> מחלחלים את $t_1 = \text{int}$ אל המשוואה האחרונה $t_0 = t_1$. התוצאה: $t_0 = \text{int}$. כלומר טיפוס התוכנית הוא <code>int</code>!</li>
                         </ul>
-
-                        <strong class="text-slate-850 block mb-2">2. טבלת צעדי ה-Unification ועדכון מילון ההצבות
-                            ($\sigma$):</strong>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-right border-collapse bg-white border border-slate-300">
-                                <thead>
-                                    <tr class="bg-emerald-100 text-emerald-900 font-bold">
-                                        <th class="p-2 border border-slate-300">צעד</th>
-                                        <th class="p-2 border border-slate-300">המשוואה לפתרון</th>
-                                        <th class="p-2 border border-slate-300">הלוגיקה / פעולת האלגוריתם</th>
-                                        <th class="p-2 border border-slate-300 font-mono">מילון ההצבות המצטבר
-                                            (Substitutions)</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-slate-700">
-                                    <tr class="border-b border-slate-200">
-                                        <td class="p-2 border border-slate-300 font-bold text-center">1</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">t_x = int</td>
-                                        <td class="p-2 border border-slate-300">הצבה פשוטה – שומרים במילון.</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int]</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-200 bg-slate-50/50">
-                                        <td class="p-2 border border-slate-300 font-bold text-center">2</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">t_proc = t_x → int
-                                        </td>
-                                        <td class="p-2 border border-slate-300">מחילים את ההצבה הקודמת: $t_{\text{proc}}
-                                            = \text{int} \rightarrow \text{int}$. שומרים.</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
-                                            (int → int)]</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-200">
-                                        <td class="p-2 border border-slate-300 font-bold text-center">3</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">t_f = t_proc</td>
-                                        <td class="p-2 border border-slate-300">מחילים הצבות: $t_f = \text{int}
-                                            \rightarrow \text{int}$. שומרים במילון.</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
-                                            (int → int), t_f ↦ (int → int)]</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-200 bg-slate-50/50">
-                                        <td class="p-2 border border-slate-300 font-bold text-center">4</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">t_f = int → t_let
-                                        </td>
-                                        <td class="p-2 border border-slate-300">מחילים הצבות על שני הצדדים: $\text{int}
-                                            \rightarrow \text{int} = \text{int} \rightarrow t_{\text{let}}$.</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
-                                            (int → int), t_f ↦ (int → int)]</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-200">
-                                        <td class="p-2 border border-slate-300 font-bold text-center">5</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">int → int = int →
-                                            t_let</td>
-                                        <td class="p-2 border border-slate-300"><strong>פירוק (Decomposition):</strong>
-                                            יוצר 2 תתי-משוואות.</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
-                                            (int → int), t_f ↦ (int → int)]</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-200 bg-slate-50/50">
-                                        <td class="p-2 border border-slate-300 font-bold text-center">6</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">int = int</td>
-                                        <td class="p-2 border border-slate-300"><strong>זהות (Identity):</strong>
-                                            מתעלמים.</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">[t_x ↦ int, t_proc ↦
-                                            (int → int), t_f ↦ (int → int)]</td>
-                                    </tr>
-                                    <tr class="border-b border-slate-200">
-                                        <td class="p-2 border border-slate-300 font-bold text-center">7</td>
-                                        <td class="p-2 border border-slate-300 font-mono" dir="ltr">int = t_let</td>
-                                        <td class="p-2 border border-slate-300">מזהים משתנה: קושרים את $t_{\text{let}}$
-                                            ל-`int`. שומרים במילון.</td>
-                                        <td class="p-2 border border-slate-300 font-mono text-emerald-950" dir="ltr">
-                                            [t_x ↦ int, t_proc ↦ (int → int), t_f ↦ (int → int), t_let ↦ int]</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <p class="mt-4 font-bold text-emerald-900">
-                            הסיכום: הערך הסופי שמופק עבור טיפוס התוכנית כולה הוא <code>int</code>!
-                        </p>
+                        <div class="text-center font-bold text-emerald-800 bg-emerald-100 p-2 rounded-lg border border-emerald-300 mt-2">הטיפוס הסופי: int</div>
                     </div>
                 </section>
 
-                <!-- סעיף 29 (לשעבר 24) -->
+                <!-- ========================================== -->
+<!-- סעיף 29 (לשעבר 24) -->
                 <section id="sec-29" class="mb-12 scroll-mt-6">
                     <h3 class="title-green">29. מקרי קצה ותובנות חשובות</h3>
                     <div class="space-y-6 text-sm">

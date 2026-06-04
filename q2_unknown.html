@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שפות תכנות - הוספת ביטוי Fold</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .template-box::before {
+            content: "✍️ שבלונה למבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .thought-box {
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Animation */
+        .step-transition { transition: all 0.3s ease-out; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-3xl font-black text-white tracking-tight leading-tight">Mastering<br><span class="text-blue-500">Fold</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון שאלת מבחן 2025</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()" class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge" class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <div id="code-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 1,
+                title: "פיצוח השאלה: פרדוקס הפרמטר היחיד",
+                filename: "mental_model.txt",
+                explanation: `
+                    <p class="mb-4">לפני שנוגעים בקוד, עלינו לפתור תעלומה מתוך השאלה. הדרישה היא להוסיף <code>fold</code> לשפת <code>PROC</code>.</p>
+                    <p class="mb-4"><strong>הפרדוקס:</strong> פעולת <code>fold</code> קלאסית (כמו <code>reduce</code> ב-JS) עוברת על רשימה ומשתמשת בפונקציה שמקבלת <strong>שני פרמטרים</strong>: (1) הערך הנצבר-הצובר, (2) האיבר הנוכחי ברשימה. <br>
+                    אבל רגע! שפת <code>PROC</code> מאפשרת רק פונקציות עם <strong>פרמטר אחד בלבד!</strong> איך זה אפשרי?</p>
+                    
+                    <div class="thought-box">
+                        <p class="font-bold text-purple-800"><i class="fa-solid fa-lightbulb"></i> הפתרון המנטלי: Currying</p>
+                        <p class="text-sm text-purple-900 mt-2">הפונקציה שלנו היא פונקציה המחזירה פונקציה. <br>
+                        היא מקבלת קודם כל את הצובר (<code>acc</code>), ומחזירה <strong>פרוצדורה חדשה</strong>. הפרוצדורה החדשה הזו מקבלת את האיבר הנוכחי (<code>val</code>), ומחזירה את הצובר הבא.</p>
+                    </div>
+                    <p>ההבנה הזו היא מפתח להצלחה בשלב הלוגיקה, שכן נצטרך להפעיל את הפרוצדורה <strong>פעמיים</strong> בכל סיבוב של הלולאה.</p>
+                `,
+                code: `// התחביר המבוקש בשאלה:
+Expression ::= fold Expression Expression [{ Expression }*(,)]
+
+// איך ייראה קוד fold תקני בשפה שלנו? 
+// נשתמש ב-Currying (פונקציה שמחזירה פונקציה):
+
+let f = proc(acc) 
+          proc(val) 
+            -(acc, -(0, val))   // מחשב acc + val
+in fold f 0 [5, 6, 5]
+
+// תוצאה צפויה: 16 (0+5+6+5)`
+            },
+            {
+                id: 2,
+                title: "שלב 1 באלגוריתם: עדכון הדקדוק",
+                filename: "lang.scm",
+                explanation: `
+                    <p class="mb-4">הפעלת האלגוריתם מתחילה מה-Parser. אנחנו מסתכלים על השורה מהשאלה:</p>
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4 shadow-sm text-left ltr">
+                        <code class="font-bold text-blue-900 text-sm">
+                        Expression ::= fold Expression Expression [{ Expression }*(,)]
+                        </code>
+                    </div>
+                    <ul class="space-y-3 mb-4">
+                        <li><strong class="text-slate-900">מילים שמורות:</strong> <code>fold</code>, <code>[</code>, <code>]</code>. נכניס אותן למרכאות.</li>
+                        <li><strong class="text-slate-900">ביטויים:</strong> יש לנו שני <code>expression</code> בהתחלה (לפרוצדורה ולצובר).</li>
+                        <li><strong class="text-slate-900">רשימה:</strong> הסימון <code>*(,)</code> אומר "אפס או יותר, מופרדים בפסיקים". זה מתורגם ישירות לפקודה <code>separated-list</code> של ה-Parser.</li>
+                    </ul>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "ה-Parser יעביר לנו שלוש כניסות: <code>proc-exp</code> (הפרוצדורה), <code>acc-exp</code> (הצובר ההתחלתי), ו-<code>vals-exps</code> (רשימת ביטויי האיברים)."
+                        </p>
+                    </div>
+                `,
+                code: `;; file: lang.scm (the-grammar)
+
+(define the-grammar
+  '(
+    ;; ... שאר הדקדוק של PROC ...
+
+    ;; התוספת שלנו לביטוי fold:
+    (expression 
+      ("fold" 
+       expression                       ;; proc-exp
+       expression                       ;; acc-exp
+       "[" 
+       (separated-list expression ",")  ;; vals-exps
+       "]")
+      fold-exp)
+      
+  ))`
+            },
+            {
+                id: 3,
+                title: "שלב 2 באלגוריתם: האם צריך מבנה נתונים חדש?",
+                filename: "data-structures.scm",
+                explanation: `
+                    <p class="mb-4">שלב השאלה הקבועה: <strong>האם ביטוי <code>fold</code> מחזיר סוג נתונים חדש שהשפה לא מכירה?</strong></p>
+                    <p class="mb-4">בואו נחשוב - מה <code>fold</code> מחזיר בסוף הריצה שלו? הוא מחזיר את הערך הסופי של הצובר (Accumulator). בדוגמה שלנו מהמבחן, הוא מחזיר את המספר 16.</p>
+                    <p class="mb-4">מספרים (<code>num-val</code>), בוליאנים (<code>bool-val</code>) ופרוצדורות (<code>proc-val</code>) הם ערכים שהשפה <code>PROC</code> <strong>כבר יודעת לטפל בהם</strong>.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>מסקנה: אין שינוי ב-expval!</strong><br>
+                            אין צורך להוסיף רשימות, מערכים או אובייקטים ל-<code>data-structures.scm</code>. אנחנו מדלגים ישר למנוע ההערכה."
+                        </p>
+                    </div>
+                `,
+                code: `;; file: data-structures.scm
+
+;; אין שינוי. אנו נשענים על המבנים הקיימים:
+
+;; (define-datatype expval expval?
+;;   (num-val (value number?))
+;;   (bool-val (boolean boolean?))
+;;   (proc-val (proc proc?)))`
+            },
+            {
+                id: 4,
+                title: "שלב 3א: מנוע ההערכה - חישוב חד פעמי",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">פותחים את הפונקציה <code>value-of</code>. קיבלנו מה-Parser את <code>(proc-exp acc-exp vals-exps)</code>.</p>
+                    <p class="mb-4 text-xl font-bold text-primary">הכלל הראשון של האלגוריתם: חישוב ביטויים קבועים קורה מחוץ ללולאה!</p>
+                    <ol class="list-decimal pr-5 space-y-2 mb-4 text-slate-700">
+                        <li>הביטוי של הפרוצדורה (<code>proc-exp</code>) הוא עץ תחביר. חייבים לקרוא עליו ל-<code>value-of</code> כדי לקבל את הפונקציה האמיתית (<code>proc-val</code>).</li>
+                        <li>הביטוי של הצובר ההתחלתי (<code>acc-exp</code>) גם הוא עץ. קוראים עליו ל-<code>value-of</code> לקבלת הערך ההתחלתי (למשל, 0).</li>
+                    </ol>
+                    <p>אנו משתמשים ב-<code>let</code> כדי לחשב אותם פעם אחת בלבד לפני תחילת הריצה על הרשימה.</p>
+                `,
+                code: `;; file: interp.scm 
+;; בתוך הפונקציה value-of (cases expression exp ...)
+
+  (fold-exp (proc-exp acc-exp vals-exps)
+    
+    ;; צעד 1: Evaluate - מחשבים מראש את הפרוצדורה והצובר ההתחלתי
+    (let ((p-val (value-of proc-exp env))
+          (initial-acc-val (value-of acc-exp env)))
+          
+      ;; נוודא שאכן קיבלנו פרוצדורה תקינה באמצעות פונקציית חילוץ
+      (let ((the-proc (expval->proc p-val)))
+        
+        ;; כאן תבוא הלולאה (רקורסיה) שתעבור על הרשימה vals-exps
+        ;; ותפעיל את הפרוצדורה.
+        
+        )))`
+            },
+            {
+                id: 5,
+                title: "שלב 3ב: הרקורסיה והפעלת ה-Currying",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">זהו לב הפתרון. אנחנו בונים לולאה (<code>letrec</code>) שעוברת על רשימת הביטויים (<code>exps-list</code>) ומנהלת את הצובר (<code>current-acc</code>).</p>
+                    <h3 class="font-bold text-slate-800 mb-2 border-b pb-1">איך עובד הגוף של הלולאה?</h3>
+                    <p class="mb-2 text-slate-600">נזכור ש-<code>the-proc</code> מחכה לצובר, ומחזירה פרוצדורה חדשה שמחכה לאיבר.</p>
+                    <ol class="list-decimal pr-5 space-y-3 text-slate-700 mb-4">
+                        <li>מחשבים את ערך האיבר הנוכחי בעזרת <code>(value-of (car exps-list) env)</code>.</li>
+                        <li><strong class="text-primary">הפעלה ראשונה:</strong> מפעילים את <code>the-proc</code> על ה-<code>current-acc</code>. זה מחזיר לנו פרוצדורה חדשה פנימית. נשתמש בפונקציית העזר הקיימת בשפה <code>apply-procedure</code>.</li>
+                        <li><strong class="text-primary">הפעלה שנייה:</strong> מחלצים את הפרוצדורה הפנימית (עם <code>expval->proc</code>), ומפעילים אותה על איבר הרשימה! התוצאה היא ה-<code>new-acc</code>.</li>
+                        <li>ממשיכים לסיבוב הבא עם <code>(cdr exps-list)</code> והצובר החדש.</li>
+                    </ol>
+                `,
+                code: `;; file: interp.scm (בתוך ה-fold-exp)
+
+    (let ((p-val (value-of proc-exp env))
+          (initial-acc-val (value-of acc-exp env)))
+      (let ((the-proc (expval->proc p-val)))
+        
+        ;; בניית הלולאה
+        (letrec 
+          ((run-fold
+             (lambda (exps-list current-acc)
+               ;; תנאי עצירה: רשימה ריקה -> מחזירים את הצובר
+               (if (null? exps-list)
+                   current-acc
+                   
+                   ;; חילוץ וחישוב האיבר הנוכחי (באותה סביבה)
+                   (let ((element-val (value-of (car exps-list) env)))
+                     
+                     ;; הפעלה 1: מזינים את הצובר לפרוצדורה הראשית -> מקבלים פרוצדורה פנימית
+                     (let ((inner-proc-expval (apply-procedure the-proc current-acc)))
+                       
+                       ;; הפעלה 2: מחלצים את הפרוצדורה הפנימית ומזינים לה את האיבר
+                       (let ((new-acc 
+                               (apply-procedure (expval->proc inner-proc-expval) element-val)))
+                         
+                         ;; ממשיכים רקורסיבית לאיבר הבא עם הצובר החדש
+                         (run-fold (cdr exps-list) new-acc))))))))
+          
+          ;; התנעת הלולאה
+          (run-fold vals-exps initial-acc-val))))`
+            },
+            {
+                id: 6,
+                title: "שלב 4: סיכום ובקרת איכות",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">השלמנו את האלגוריתם במלואו. בואו נבדוק שמילאנו את כל הדרישות:</p>
+                    <ul class="list-disc pr-5 space-y-4 mb-4 text-slate-700">
+                        <li><strong class="text-slate-900">תמיכה ברשימה ריקה:</strong> מה יקרה אם המתכנת כותב <code class="bg-slate-100 px-1 rounded text-primary">fold f 0 []</code>? התחביר <code class="bg-slate-100 px-1 rounded text-primary">*(,)</code> מתיר רשימה ריקה. במקרה כזה ה-<code>run-fold</code> יקבל רשימה ריקה ומיד יחזיר את <code>initial-acc-val</code> (שזה 0). <strong class="text-green-600">עובד תקין.</strong></li>
+                        <li><strong class="text-slate-900">בדיקת שגיאות:</strong> השתמשנו פעמיים ב-<code class="bg-slate-100 px-1 rounded text-primary">expval->proc</code>. אם המשתמש ניסה להעביר מספר במקום פרוצדורה, פונקציית החילוץ תזרוק שגיאה טבעית. בנוסף, אם הפרוצדורה לא הייתה Curried החילוץ של <code>inner-proc-expval</code> יזרוק שגיאה. <strong class="text-green-600">הגנה מושלמת.</strong></li>
+                        <li><strong class="text-slate-900">ניהול סביבה (Environment):</strong> הפעלנו את <code>value-of</code> על איברי הרשימה תמיד עם ה-<code>env</code> המקורי, ללא הרחבת סביבות (extend-env). הסקופ מנוהל אוטומטית ע"י <code>apply-procedure</code>.</li>
+                    </ul>
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-200 mt-6 text-center">
+                        <p class="font-bold text-green-800 text-lg"><i class="fa-solid fa-trophy mr-2"></i> הפתרון יציב ומוכן!</p>
+                    </div>
+                `,
+                code: `;; סקירה של מנוע ההערכה השלם עבור fold:
+;; 1. מבצע Parsing לרשימה מופרדת.
+;; 2. מעריך proc ו-acc פעם אחת.
+;; 3. מפעיל פונקציה שעוטפת פונקציה (Currying)
+;;    על כל איבר כדי לדמות שתי קריאות של פרמטר יחיד.
+;; 4. מחזיר את הצובר המעודכן בסיום.
+
+;; הקוד נכתב ללא צורך ביצירת משתני סביבה חדשים 
+;; ידנית, תוך הסתמכות על מנגנון ה-Closure 
+;; המובנה בשפת PROC.`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+            
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + currentStep;
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+                
+                if (step.code) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    if (window.Prism) {
+                        Prism.highlightElement(codeBlock);
+                    }
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+                
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+                
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

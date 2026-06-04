@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שאלת Enums ו-Match - 2025ב מועד א</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .template-box::before {
+            content: "✍️ שבלונה למבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .thought-box {
+            position: relative;
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .thought-box::before {
+            content: "💡 הבנת התהליך האלגוריתמי";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #c084fc;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Animation */
+        .step-transition { transition: all 0.3s ease-out; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-2xl font-black text-white tracking-tight leading-tight">Enums &<br><span class="text-blue-500">Match Clauses</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון שאלת מועד א 2025ב (שפה: PROC)</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()" class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge" class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <div id="code-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 0,
+                title: "שלב 0: ניתוח הדרישה ומפת דרכים",
+                filename: "question_analysis.txt",
+                explanation: `
+                    <p class="mb-4">במבחן זה (מועד א 2025ב שאלה 1 - קורס 84), אנו נדרשים לשדרג את שפת <strong>PROC (יישגור)</strong> כך שתתמוך ב-<strong>Enum (טיפוסי מנייה) וביטוי התאמה מקיף (Exhaustive Match)</strong> בדומה לשפת Rust.</p>
+                    
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6 shadow-sm">
+                        <h4 class="font-bold text-blue-900 text-base mb-2">דרישות השפה החדשות:</h4>
+                        <div class="bg-white p-3 rounded border border-blue-100 font-mono text-sm mb-4 ltr text-left">
+Expression ::= enum { {Identifier }+(,) }<br>
+Expression ::= &lt; Expression . Identifier &gt;<br>
+Expression ::= match [ Identifier :: Expression ] { ?identifier => Expression ; }+
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-blue-900 space-y-2">
+                            <li><code>enum { ids* }</code>: מגדיר טיפוס מנייה חדש ומחזיר ייצוג שלו בשפה (new expressed value).</li>
+                            <li><code>&lt; enm.id &gt;</code>: מתייחס לאחד האיברים בתוך ה-enum ומחזיר אותו כערך מיוחד בשפה.</li>
+                            <li><code>match [ enmid :: exp1 ] { ?clause => body ; }+</code>: בוחן את הערך שחזר מ-<code>exp1</code> (שהוא איבר ב-enum ששמו <code>enmid</code>) ומפעיל את גוף ההתאמה (body) המתאים.</li>
+                        </ul>
+                    </div>
+
+                    <div class="thought-box">
+                        <p class="text-purple-900 font-medium">
+                            <strong>הבנת התהליך האלגוריתמי:</strong><br>
+                            במבחן זה יש דרישה קריטית שנקראת <strong>Exhaustive Match (התאמה מלאה)</strong>. הבוחנים בודקים האם הסטודנט מוודא שרשימת סעיפי ההתאמה (clauses) תואמת <strong>בדיוק</strong> (בלי חוסרים ובלי עודפים) לכל האיברים שהוגדרו ב-Enum. <br>
+                            בשפת EOPL אנו מיישמים זאת על ידי השוואת קבוצות (Set Equality) באמצעות בדיקה דו-כיוונית: שרשימת הסעיפים מוכלת בגרסאות ה-Enum ושגרסאות ה-Enum מוכלות ברשימת הסעיפים.
+                        </p>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">מה אנחנו מחפשים בכל שלב?</h3>
+                    <ul class="space-y-3 text-slate-700">
+                        <li>
+                            <span class="font-semibold text-slate-900">1. עדכון הדקדוק:</span> 
+                            הגדרת שלושת הביטויים תוך שמירה על שימוש נכון במילים שמורות, והבחנה בין תווים מילוליים (כמו <code>&quot;[&quot;</code> ו-<code>&quot;]&quot;</code>) לבין מטא-תווים של הדקדוק.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">2. עדכון מבני הנתונים:</span> 
+                            יצירת ADT מתאים עבור ה-Enum והאיברים שלו. אנו נשווה בין שתי דרכים לעיצוב ה-ADT - הדרך של הסטודנט מול הדרך המומלצת והנקייה יותר.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">3. מנוע ההערכה (value-of):</span> 
+                            שליפת ההגדרות מהסביבה הלקסיקלית, ביצוע בדיקת Exhaustiveness ומציאת האינדקס לביצוע רקורסיבי.
+                        </li>
+                    </ul>
+                `,
+                code: `;; --- מפת הדרכים הכללית לאלגוריתם ---
+;; 1. lang.scm: הוספת 3 כללי דקדוק ל-the-grammar
+;; 2. data-structures.scm: הגדרת enumdt, expval variants ומחלצים
+;; 3. interp.scm: מימוש value-of ופונקציות העזר has-dup?, subset? ו-index-of`
+            },
+            {
+                id: 1,
+                title: "שלב 1: עדכון הדקדוק (lang.scm)",
+                filename: "lang.scm",
+                explanation: `
+                    <p class="mb-4">ה-Parser וה-Scanner צריכים לדעת לפרסר את הגדרת ה-Enum, איבר ה-Enum וביטוי ה-Match.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון קובץ התחביר והדקדוק (lang.scm):</strong> נוסיף את שלושת כללי הגזירה. נשים לב לשגיאות התלמיד בכתב היד: 
+                            1. בביטוי ה-match, התלמיד כתב סוגריים מסולסלים מילוליים <code>&quot;{&quot;</code> ו-<code>&quot;}&quot;</code> סביב התנאי, בזמן שהדקדוק הגדיר מפורשות סוגריים מרובעים <code>&quot;[&quot;</code> ו-<code>&quot;]&quot;</code>.
+                            2. בביטוי ה-enum-elmt, התלמיד כתב נכון את הסימנים <code>&quot;&lt;&quot;</code> ו-<code>&quot;&gt;&quot;</code> כמחרוזות מילוליות שכן הם חלק מהקוד הפיזי שייכתב."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">דגשים ודיוקים לוגיים:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-2 mb-4">
+                        <li><code>enum-exp</code>: מקבל רשימה מופרדת בפסיקים של מזהים.</li>
+                        <li><code>enum-elmt-exp</code>: עטוף בסימני קטון-מגדול-מ מילוליים <code>&quot;&lt;&quot;</code> ו-<code>&quot;&gt;&quot;</code>.</li>
+                        <li><code>match-exp</code>: משתמש ב-<code>arbno</code> של סעיפים המתחילים ב-<code>&quot;?&quot;</code> ומסתיימים בנקודה-פסיק <code>&quot;;&quot;</code>.</li>
+                    </ul>
+                `,
+                code: `;; בקובץ lang.scm בתוך הגדרת the-grammar:
+
+(expression
+  ("enum" "{" (separated-list identifier ",") "}")
+  enum-exp)
+
+(expression
+  ("<" expression "." identifier ">")
+  enum-elmt-exp)
+
+;; [תיקון שגיאת תלמיד - שימוש בסוגריים מרובעים כפי שהוגדר]:
+(expression
+  ("match" "[" identifier "::" expression "]" 
+   (arbno "?" identifier "=>" expression ";"))
+  match-exp)`
+            },
+            {
+                id: 2,
+                title: "שלב 2: עדכון מבני הנתונים (data-structures.scm)",
+                filename: "data-structures.scm",
+                explanation: `
+                    <p class="mb-4">כדי לתמוך בטיפוס ה-Enum והאיברים שלו בזמן ריצה, עלינו להוסיף variants חדשים ל-Expressed Values.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מבני הנתונים והטיפוסים (data-structures.scm):</strong> נרחיב את ה-datatype <code>expval</code> באמצעות <code>identifier-val</code> (לייצוג איבר ה-Enum) ו-<code>enum-val</code> (לייצוג הגדרת ה-Enum). נשווה בין הדרך שבה בחר הסטודנט לייצג את ה-ADT לבין הדרך המומלצת."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2 font-mono">השוואת דרכי ייצוג ADT:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                            <strong class="text-red-800">❌ גרסת הסטודנט (מסורבלת):</strong>
+                            <p class="font-mono mt-2 ltr text-left">
+                                (define-datatype enumdt enumdt?<br>
+                                &nbsp;&nbsp;(enum (vars (list-of identifier-val?))))
+                            </p>
+                            <p class="mt-2 text-red-950">התוצאה: אחסון רשימה של עטיפות <code>identifier-val</code> בתוך ה-enum. זה מאלץ אותנו לבצע המרת map מייגעת על פני כל הרשימה לצורך קבלת הסמלים (symbols) בזמן השוואת איברים.</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                            <strong class="text-green-800">✅ הגרסה המומלצת (נקייה ותקנית):</strong>
+                            <p class="font-mono mt-2 ltr text-left">
+                                (define-datatype enumdt enumdt?<br>
+                                &nbsp;&nbsp;(enum (vars (list-of symbol?))))
+                            </p>
+                            <p class="mt-2 text-green-950">התוצאה: שמירת רשימת הסמלים הגולמיים של ה-Enum באופן ישיר. מאפשר בדיקת שייכות וזהות מהירה מאוד בעזרת <code>member</code> גולמי ללא צורך במחלצים מרובים.</p>
+                        </div>
+                    </div>
+                `,
+                code: `;; בקובץ data-structures.scm:
+
+(define-datatype enumdt enumdt?
+  (enum (vars (list-of symbol?))))
+
+;; נוסיף ל-expval:
+  (identifier-val
+    (v symbol?))
+  (enum-val
+    (v enumdt?))
+
+;; מחלצים תואמים:
+(define expval->enum
+  (lambda (val)
+    (cases expval val
+      (enum-val (v) v)
+      (else (eopl:error 'expval->enum "Not an enum: ~s" val)))))
+
+(define expval->id
+  (lambda (val)
+    (cases expval val
+      (identifier-val (v) v)
+      (else (eopl:error 'expval->id "Not an identifier: ~s" val)))))`
+            },
+            {
+                id: 3,
+                title: "שלב 3: עדכון מנוע ההערכה (interp.scm)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">נוסיף ל-<code>value-of</code> את הלוגיקה בזמן ריצה עבור הגדרת Enum, שליפת איבר Enum וביטוי ה-Match.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מנוע ההערכה (value-of בקובץ interp.scm):</strong> 
+                            1. ב-<code>enum-exp</code>, נבדוק שרשימת המשתנים אינה ריקה, שאין בה כפילויות, ונחזיר <code>enum-val</code>.
+                            2. ב-<code>enum-elmt-exp</code>, נעריך את ביטוי ה-Enum, נוודא שהוא מייצג הגדרה תקינה של Enum, ושהמזהה המבוקש מופיע בתוך רשימת איברי ה-Enum. אם כן, נחזיר <code>identifier-val</code>.
+                            3. ב-<code>match-exp</code>, נבצע בדיקת Exhaustiveness כפולה וחשובה: נוודא שרשימת הסעיפים להתאמה זהה לקבוצת האיברים המוגדרים ב-Enum, ללא כפילויות וללא חוסרים. לאחר מכן, נחלץ את אינדקס האיבר הפעיל ונבצע את הגוף התואם."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">תהליך ה-Exhaustive Match:</h3>
+                    <p class="text-slate-700 text-sm mb-4">
+                        למה הבדיקה של הסטודנט בכתב היד היא נכונה? הסטודנט בדק: <br>
+                        <code>(or (not (contain? fields pvars)) (not (contain? pvars fields)))</code> <br>
+                        זוהי הגדרת <strong>שוויון קבוצות</strong> מתמטית: אם קבוצה א' מוכלת בב' וגם ב' מוכלת בא', סימן שהן זהות לחלוטין! זה מונע מצב שבו הסטודנט שכח לרשום את אחד המקרים (חסר) או רשם מקרה שלא קיים ב-Enum (עודף).
+                    </p>
+                `,
+                code: `;; בקובץ interp.scm בתוך ה-cases של value-of:
+
+(enum-exp (vars)
+  (cond
+    ((null? vars) (eopl:error 'enum-exp "empty list of vars"))
+    ((has-dup? vars) (eopl:error 'enum-exp "enum has duplicates"))
+    (else (enum-val (enum vars)))))
+
+(enum-elmt-exp (enumexp var)
+  (let ((enm (expval->enum (value-of enumexp env))))
+    (cases enumdt enm
+      (enum (vars)
+        (if (not (member var vars))
+            (eopl:error 'enum-elmt-exp "Not an enum var: ~s" var)
+            (identifier-val var))))))
+
+(match-exp (enumvar fieldexp fields exps)
+  (let ((enumval (apply-env env enumvar)) ; שליפת הגדרת ה-Enum מהסביבה
+        (fval (value-of fieldexp env)))   ; הערכת האיבר המושווה
+    (cases expval enumval
+      (enum-val (en)
+        (cases enumdt en
+          (enum (pvars)
+            (let ((matched-var (expval->id fval)))
+              (cond
+                ((null? fields) 
+                 (eopl:error 'match-exp "empty match fields list"))
+                ((has-dup? fields) 
+                 (eopl:error 'match-exp "duplicate match clauses not allowed"))
+                ((not (member matched-var pvars)) 
+                 (eopl:error 'match-exp "matched var not in enum definition"))
+                ;; בדיקה דו-כיוונית שהרשימות זהות (Exhaustiveness Check)
+                ((or (not (subset? fields pvars))
+                     (not (subset? pvars fields)))
+                 (eopl:error 'match-exp "match is not exhaustive or has invalid fields"))
+                (else
+                 (let ((idx (index-of matched-var fields 0)))
+                   (value-of (list-ref exps idx) env))))))))
+      (else (eopl:error 'match-exp "Not an enum definition: ~s" enumvar)))))`
+            },
+            {
+                id: 4,
+                title: "שלב 4: פונקציות עזר (interp.scm - helpers)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">בשלב זה נממש את פונקציות העזר מחוץ ל-<code>value-of</code> לצורך עבודה נקייה וברורה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>מימוש פונקציות עזר:</strong> נגדיר שלוש פונקציות: 
+                            1. <code>has-dup?</code> הבודקת האם ישנם איברים כפולים ברשימה.
+                            2. <code>subset?</code> (המחליפה את <code>contain?</code> של התלמיד בכתב היד למניעת כפל סמלים) הבודקת האם רשימה אחת מוכלת ברשימה אחרת.
+                            3. <code>index-of</code> השולפת את האינדקס של האיבר הפעיל כדי שנוכל להעריך את גוף הביטוי התואם בעזרת <code>list-ref</code>."
+                        </p>
+                    </div>
+                `,
+                code: `;; פונקציות עזר בקובץ interp.scm מחוץ ל-value-of:
+
+(define has-dup?
+  (lambda (lst)
+    (cond
+      ((null? lst) #f)
+      ((member (car lst) (cdr lst)) #t)
+      (else (has-dup? (cdr lst))))))
+
+(define subset?
+  (lambda (lst1 lst2)
+    (cond
+      ((null? lst1) #t)
+      ((member (car lst1) lst2) (subset? (cdr lst1) lst2))
+      (else #f))))
+
+(define index-of
+  (lambda (element lst index)
+    (cond
+      ((null? lst) -1)
+      ((equal? (car lst) element) index)
+      (else (index-of element (cdr lst) (+ index 1))))))`
+            },
+            {
+                id: 5,
+                title: "שלב 5: נקודות כשל נפוצות וטיפ של אלופים",
+                filename: "exam_tips.txt",
+                explanation: `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-xl text-red-900 shadow-md space-y-4">
+                        <h3 class="font-extrabold text-xl flex items-center text-red-800">
+                            <i class="fa-solid fa-triangle-exclamation ml-3 text-2xl"></i>
+                            מלכודות מבחן קריטיות - שאלת Enums ו-Match!
+                        </h3>
+                        <p class="text-sm leading-relaxed">
+                            בשאלות של Enums וביטויי התאמה, הבוחנים מתמקדים בשלוש מלכודות נפוצות:
+                        </p>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 1: דילוג על Exhaustive Check או כתיבתו באופן חלקי</strong>
+                                הבוחן דורש שכל ביטוי match יכסה <strong>בדיוק</strong> את איברי ה-Enum. 
+                                אם תבדקו רק שכל המקרים ב-match קיימים ב-Enum, תפספסו מקרה שבו הסטודנט שכח לכתוב את אחד התרחישים. 
+                                <strong>טיפ של אלופים:</strong> בדיקת שוויון הקבוצות הדו-כיוונית (הכלה הדדית באמצעות <code>subset?</code>) היא חובה לקבלת מלוא הניקוד!
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 2: בלבול בין סוגריים בדקדוק</strong>
+                                בביטוי match, הדקדוק הפיזי כולל סוגריים מרובעים סביב ההגדרה: <code>match [ id :: exp ]</code>. 
+                                סטודנטים רבים כותבים בטעות סוגריים מסולסלים ב-Parser בגלל בלבול עם מטא-סימונים של תורת הדקדוקים. 
+                                ודאו שאתם מפרידים בין מה שנכתב פיזית בקוד לבין מה שמייצג חזרתיות.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 3: סרבול בעיצוב ה-ADT</strong>
+                                שמירה על רשימת <code>identifier-val</code> בתוך <code>enumdt</code> במקום רשימת symbols פשוטה תסבך לכם את הקוד בזמן הבחינה ותגביר סיכוי לשגיאות ריצה. 
+                                שמרו על הטיפוסים פשוטים ונקיים, והשתמשו בסמלים גולמיים לצורך השוואות בתוך פונקציות העזר.
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-slate-700 font-medium">
+                        שמירה על הכללים האלו תבטיח פתרון קריא, קצר ונקי ללא איבוד נקודות!
+                    </p>
+                `,
+                code: `;; --- ריכוז נקודות תורפה וטיפים למבחן ---
+;; 1. בדיקת Exhaustiveness דו-כיוונית מלאה.
+;; 2. הבחנה מוחלטת בין סוגי סוגריים.
+;; 3. שימוש ב-symbols בתוך ה-ADT לייעול הקוד.
+;; 4. בדיקת כפילויות בכל שלבי יצירת ה-Enum וה-Match.`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+            
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + currentStep;
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+                
+                if (step.code && step.filename) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    if (window.Prism) {
+                        Prism.highlightElement(codeBlock);
+                    }
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+                
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+                
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

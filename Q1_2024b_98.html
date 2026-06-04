@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שאלת for/sum - 2024ב מועד א (98)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .template-box::before {
+            content: "✍️ שבלונה למבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .thought-box {
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Animation */
+        .step-transition { transition: all 0.3s ease-out; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-3xl font-black text-white tracking-tight leading-tight">Mastering<br><span class="text-blue-500">for/sum</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון שאלת מועד א (98) 2024ב</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()" class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge" class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <div id="code-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 0,
+                title: "שלב 0: ניתוח הדרישה ומפת דרכים",
+                filename: "question_analysis.txt",
+                explanation: `
+                    <p class="mb-4">בשאלה זו (ממועד א (98) 2024ב), אנו נדרשים להרחיב את שפת <strong>PROC</strong> (שפה ללא השמות וזיכרון מפורש) עם ביטוי לולאה חדש בשם <code>for/sum</code> המאפשר סכימה דינמית עם מנגנוני סינון ובקרה.</p>
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6 shadow-sm">
+                        <h4 class="font-bold text-blue-900 text-base mb-2">מבנה ביטויי השפה החדשים:</h4>
+                        <div class="bg-white p-3 rounded border border-blue-100 font-mono text-sm mb-4 ltr text-left">
+Expression ::= for/sum [ identifier ( {Expression}+(,) ) ] { &lt; guard &gt; }* Expression for/end<br>
+guard ::= skip : Expression<br>
+guard ::= break : Expression
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-blue-900 space-y-2">
+                            <li><code>for/sum</code>: לולאה העוברת על רשימת איברים, קושרת כל איבר למשתנה הלולאה, ומסכמת את תוצאות הרצת גוף הלולאה.</li>
+                            <li><code>skip</code>: מדלג על האיבר הנוכחי ולא סוכם אותו אם תנאי השומר (guard) מתקיים.</li>
+                            <li><code>break</code>: עוצר את הלולאה באופן מיידי ומחזיר 0 מהרגע שהתנאי מתקיים.</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">מה אנחנו מחפשים ומנתחים בשלב זה?</h3>
+                    <ul class="space-y-3 text-slate-700">
+                        <li>
+                            <span class="font-semibold text-slate-900">1. משתנה הלולאה והרחבת הסביבה:</span> 
+                            הלולאה מגדירה <code>identifier</code> חדש. לכן, עבור כל איבר ברשימה, אנו חייבים להעריך את ערכו ולהרחיב את הסביבה בעזרת <code>extend-env</code>, כך שגוף הלולאה והשומרים יוכלו לגשת אליו.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">2. סדר הבדיקה של השומרים (Guards):</span> 
+                            השומרים הם חלק מרשימה <code>{ &lt; guard &gt; }*</code>. אנו חייבים לבדוק אותם לפי הסדר <strong>בסביבה המורחבת</strong> של האיבר הנוכחי, שכן השומרים תלויים בערכו של משתנה הלולאה.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">3. טיפוס החזרת הלולאה:</span> 
+                            הלולאה מפיקה סכום מספרי. השפה יודעת לייצג מספרים באמצעות <code>num-val</code>, ולכן אין צורך בתוספת של ExpVal חדש ב-<code>data-structures</code>, אך נצטרך להגדיר datatype חדש עבור השומרים (guards) עצמם לצורך ייצוג ב-AST.
+                        </li>
+                    </ul>
+                `,
+                code: `;; --- מפת הדרכים הכללית לאלגוריתם ---
+;; 1. lang.scm: עדכון הדקדוק בביטוי הלולאה forsum-exp והגדרת skip-guard ו-break-guard.
+;; 2. data-structures.scm: הגדרת define-datatype guard. ללא שינוי ב-expval.
+;; 3. interp.scm (value-of): בדיקה שהרשימה אינה ריקה, וקריאה לפונקציית עזר.
+;; 4. interp.scm (helpers): הגדרת eval-forsum (מנגנון הלולאה הרקורסיבי) ו-check-guards.`
+            },
+            {
+                id: 1,
+                title: "שלב 1: עדכון התחביר (lang.scm)",
+                filename: "lang.scm",
+                explanation: `
+                    <p class="mb-4">נוסיף את כללי הגזירה התחביריים למנתח התחבירי (Parser) כדי שידע לבנות את עצי ה-AST עבור הלולאה והשומרים.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון קובץ התחביר והדקדוק (lang.scm):</strong> נוסיף את כללי הגזירה החדשים לתוך הגדרת הדקדוק (the-grammar). נגדיר קטגוריית גזירה חדשה בשם <code>guard</code> המאפשרת זיהוי של skip-guard ו-break-guard, ונוסיף לביטויים את <code>forsum-exp</code> המשלב רשימת ביטויים מופרדת פסיקים (separated-list), רשימת שומרים (arbno), גוף וסיומת מוגדרת."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">דגשים חשובים לעדכון התחביר:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-2 mb-4">
+                        <li><strong>הפרדה בין רשימות:</strong> שימו לב שרשימת ביטויי הלולאה מוגדרת כ-<code>separated-list expression ","</code>, ואילו רשימת השומרים מוגדרת בעזרת <code>(arbno "{" guard "}")</code> המאפשרת אפס או יותר שומרים.</li>
+                        <li><strong>שימור מילות מפתח קשיחות:</strong> מילות מפתח כגון <code>"for/sum"</code>, <code>"for/end"</code>, <code>"skip"</code>, ו-<code>"break"</code> מוגדרות מפורשות כמחרוזות.</li>
+                    </ul>
+                `,
+                code: `(expression
+  ("for/sum" "{" identifier "}"
+   (separated-list expression ",") ")" "}"
+   "{" (arbno "{" guard "}")
+   expression "for/end")
+  forsum-exp)
+
+(guard
+  ("skip" ":" expression)
+  skip-guard)
+
+(guard
+  ("break" ":" expression)
+  break-guard)`
+            },
+            {
+                id: 2,
+                title: "שלב 2: עדכון מבני נתונים (data-structures.scm)",
+                filename: "data-structures.scm",
+                explanation: `
+                    <p class="mb-4">נבחן האם הלולאה החדשה מחזירה ערך מסוג חדש שהשפה אינה מכירה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מבני הנתונים (data-structures.scm):</strong> נבחן האם הביטוי החדש מחזיר ערך מטיפוס חדש שאינו מוכר לשפה. מכיוון שהתוצאה הסופית היא מספר הארוז כ-<code>num-val</code> קיים, <strong>אין צורך להרחיב את datatype expval</strong>. יחד עם זאת, אנו מייצרים קטגוריית גזירה חדשה (guard), ולכן נגדיר <code>define-datatype guard</code> ייעודי המכיל את שתי חלופות השומרים, על מנת שה-Parser יוכל לבנות ולזהות אותם ב-AST."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">בניית ה-datatype עבור השומרים:</h3>
+                    <p class="text-slate-700 text-sm mb-4">
+                        למרות שאין שינוי ב-ExpVal המוערך בריצה, אנו חייבים להצהיר על מבנה השומרים (guards) כחלק ממבני הנתונים של ה-AST כדי לאפשר שליפה של הביטוי הפנימי שלהם.
+                    </p>
+                `,
+                code: `;; בקובץ data-structures.scm נוסיף datatype חדש לשומרים:
+
+(define-datatype guard guard?
+  (skip-guard
+    (cond-exp expression?))
+  (break-guard
+    (cond-exp expression?)))`
+            },
+            {
+                id: 3,
+                title: "שלב 3: עדכון מנוע ההערכה - value-of",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">מימוש צומת הלולאה בתוך הפונקציה <code>value-of</code>.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון פונקציית ההערכה (value-of בקובץ interp.scm):</strong> נוסיף את הטיפול בצומת <code>forsum-exp</code>. נבצע וולידציה ראשונית לוודא שרשימת הביטוים לעבירה אינה ריקה (ואם כן נזרוק שגיאה מפורשת). במידה והיא תקינה, נקרא לפונקציית עזר רקורסיבית <code>eval-forsum</code> שתבצע את המעבר והסכימה, ונעביר לה את הסביבה הנוכחית <code>env</code>."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">עקרונות לוגיים:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-2 mb-4">
+                        <li><strong>בדיקת שגיאה מקדימה:</strong> השאלה מציינת שמעבירים רשימה. אם הרשימה ריקה מראש, המפרש יקרוס עם הודעת שגיאה מתאימה: <code>The list for ~s is empty</code>.</li>
+                        <li><strong>העברת הסביבה:</strong> אנו מעבירים את <code>env</code> הנוכחית על מנת שנוכל להעריך בה את האיברים הראשוניים של הלולאה.</li>
+                    </ul>
+                `,
+                code: `;; בתוך value-of בקובץ interp.scm:
+
+(forsum-exp (id exps guards body)
+  (if (null? exps)
+    (eopl:error 'forsum-exp "The list\\n      for ~s is empty" id)
+    (num-val (eval-forsum id exps guards body env))))`
+            },
+            {
+                id: 4,
+                title: "שלב 4: פונקציות עזר (interp.scm - helpers)",
+                filename: "interp_helpers.scm",
+                explanation: `
+                    <p class="mb-4">כדי לנהל את הלולאה הרקורסיבית, בדיקת השומרים וחילוץ המידע, נגדיר שלוש פונקציות עזר מחוץ ל-<code>value-of</code>.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>מימוש פונקציות עזר מחוץ ל-value-of:</strong> נגדיר את <code>eval-forsum</code> המבצעת מעבר רקורסיבי על הביטויים, מעריכה את האיבר הנוכחי, מרחיבה את הסביבה (extend-env) ומפעילה בדיקת שומרים. בהתאם לקוד הפעולה שמוחזר (0 = המשך, 1 = skip, 2 = break) היא סוכמת או מדלגת. בנוסף, נגדיר את <code>check-guards</code> שעוברת רקורסיבית על השומרים ומחזירה את קוד הפעולה, ואת <code>guard->exp</code> שמחלץ את ביטוי התנאי מתוך השומר."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">הלוגיקה הפנימית של בקרת הלולאה:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-2 mb-4">
+                        <li><strong>שימוש בקודי פעולה (Action Coding):</strong> פונקציית העזר <code>check-guards</code> מחזירה מספר המייצג את ההחלטה: <code>0</code> להמשך רגיל, <code>1</code> לדילוג (skip), ו-<code>2</code> לעצירה (break). זהו פתרון קלאסי ונקי המפריד בין זיהוי התנאים לבין ביצוע הלולאה.</li>
+                        <li><strong>בדיקת שומרים בסביבה המורחבת:</strong> שימו לב שאנו מעבירים את <code>new-env</code> (הסביבה שבה <code>id</code> קשור לערך האיבר הנוכחי) ל-<code>check-guards</code>. זה מאפשר לשומרים לגשת לערך האיבר הנוכחי בלולאה.</li>
+                        <li><strong>חילוץ טיפוסים (Type Extraction):</strong> אנו מבצעים <code>expval->num</code> הן על תוצאת גוף הלולאה והן על האיבר הנוכחי, ובודקים את השומר בעזרת <code>expval->bool</code>. אם הערכים אינם תואמים, המפרש יזרוק שגיאת טיפוס אוטומטית.</li>
+                    </ul>
+                `,
+                code: `;; פונקציות עזר מחוץ ל- value-of:
+
+(define eval-forsum
+  (lambda (id exps guards body env)
+    (if (null? exps)
+      0
+      (let* ((val (value-of (car exps) env))
+             (cur-num (expval->num val))
+             (new-env (extend-env id val env))
+             (action (check-guards guards new-env)))
+        (cond
+          ((= 0 action) (+
+            (expval->num (value-of body new-env))
+            (eval-forsum id (cdr exps) guards body env)))
+          ((= 1 action)
+            (eval-forsum id (cdr exps) guards body env))
+          ((= 2 action) 0)
+          (else (eopl:error 'eval-forsum "unknown action")))))))
+
+(define check-guards
+  (lambda (guards env)
+    (if (null? guards)
+      0
+      (let ((g (guard->exp (car guards))))
+        (let ((result (expval->bool (value-of g env))))
+          (if result
+            (cases guard (car guards)
+              (skip-guard (e) 1)
+              (break-guard (e) 2))
+            (check-guards (cdr guards) env)))))))
+
+(define guard->exp
+  (lambda (g)
+    (cases guard g
+      (skip-guard (e) e)
+      (break-guard (e) e))))`
+            },
+            {
+                id: 5,
+                title: "שלב 5: נקודות כשל נפוצות וטיפ של אלופים",
+                filename: "exam_tips.txt",
+                explanation: `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-xl text-red-900 shadow-md space-y-4">
+                        <h3 class="font-extrabold text-xl flex items-center text-red-800">
+                            <i class="fa-solid fa-triangle-exclamation ml-3 text-2xl"></i>
+                            מלכודות מבחן קריטיות - שאלת for/sum!
+                        </h3>
+                        <p class="text-sm leading-relaxed">
+                            בשאלות המימוש של מבני בקרה ולולאות מורכבות, הבוחנים מקפידים מאוד על ארבע נקודות עיקריות:
+                        </p>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 1: הערכת שומרים בסביבה הלא נכונה</strong>
+                                סטודנטים רבים מעריכים את השומרים (guards) בסביבה המקורית <code>env</code> במקום בסביבה המורחבת <code>new-env</code>. 
+                                מכיוון שהשומרים נועדו לבדוק תנאים על איברי הלולאה (למשל, <code>skip : x > 10</code> כאשר x הוא משתנה הלולאה), חובה להעביר את הסביבה המורחבת שבה המשתנה קשור לערכו הנוכחי.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 2: בלבול בין בסיס הרקורסיה לבדיקה המקדימה</strong>
+                                המעבר של הלולאה הוא רקורסיבי, ובסיס הרקורסיה של הסכימה צריך להחזיר <code>0</code> (סכום איבר נייטרלי). 
+                                מנגד, השאלה קובעת שאסור להעביר רשימה ריקה מלכתחילה. לכן, את הבדיקה הראשונית שזורקת שגיאה אנו מבצעים ב-<code>value-of</code>, ואילו בסיס הרקורסיה ב-<code>eval-forsum</code> מחזיר 0 בשקט.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 3: החסרת המרת טיפוסים (Type Conversions)</strong>
+                                מנוע הסכימה מתמטי, אך ערכי המפרש ארוזים כ-ExpVal. 
+                                חובה להשתמש ב-<code>expval->num</code> על תוצאת גוף הלולאה ועל ערך האיבר לפני שמבצעים חיבור (<code>+</code>), ולהשתמש ב-<code>expval->bool</code> על תוצאת השומר.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 4: קשירה רקורסיבית לא תקינה של שאר הלולאה</strong>
+                                בעת קריאה רקורסיבית בהמשך הלולאה (עבור skip או continue), אנו מעבירים את <code>env</code> המקורי להמשך המעבר ולא את <code>new-env</code>, שכן איבר הלולאה הבא צריך להיקשר מחדש ולא לרשת את הקשירה הישנה.
+                            </div>
+                        </div>
+                    </div>
+                `,
+                code: `;; שאלת for/sum - פתרון מלא ומדויק.`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+            
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + currentStep;
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+                
+                if (step.code && step.filename) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    if (window.Prism) {
+                        Prism.highlightElement(codeBlock);
+                    }
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+                
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+                
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

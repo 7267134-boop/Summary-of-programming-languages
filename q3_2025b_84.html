@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור - פתרון שאלת מבחן מודרכת - 2025ב 84</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .code-font {
+            font-family: 'Consolas', monospace;
+        }
+
+        #annotations-svg path,
+        #annotations-svg text,
+        #annotations-svg rect {
+            transition: stroke 0.3s, stroke-width 0.3s, fill 0.3s, opacity 0.3s, font-size 0.3s;
+        }
+
+        #code-container {
+            transition: font-size 0.3s ease, line-height 0.3s ease, padding 0.3s ease;
+        }
+
+        #code-container.shrunk {
+            font-size: 1.15rem !important;
+            line-height: 3.2rem !important;
+            padding: 1.5rem !important;
+        }
+
+        .table-row-enter {
+            animation: fadeInRow 0.5s ease-out forwards;
+        }
+
+        .row-highlight {
+            background-color: #fef9c3 !important;
+            /* yellow-100 */
+            transition: background-color 0.5s ease;
+        }
+
+        @keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+                background-color: #dcfce7;
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                background-color: transparent;
+            }
+        }
+
+        .checkmark {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        @keyframes popIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .dark-scroll::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 h-screen flex overflow-hidden bg-slate-50">
+
+    <!-- Main Content (100% height and width) -->
+    <div class="flex-1 relative overflow-hidden bg-slate-100 flex h-full">
+
+        <!-- ================= EXAM PAPER OVERLAY (Step 0) ================= -->
+        <div id="exam-paper"
+            class="absolute inset-0 bg-slate-100 z-30 flex justify-center p-6 overflow-y-auto transition-all duration-500">
+            <div
+                class="bg-white max-w-4xl w-full p-8 md:p-12 shadow-xl rounded-xl border border-slate-200 relative min-h-fit">
+                <!-- Exam lines visual -->
+                <div class="absolute right-6 top-0 bottom-0 w-px bg-red-400 opacity-20"></div>
+
+                <div class="pr-6 md:pr-10">
+                    <h2 class="text-2xl font-bold mb-4 border-b pb-2 text-slate-900">שאלה - שפת "ויקיש" (INFERRED) </h2>
+                    <p class="mb-3 text-base text-slate-700">להלן נתונה תוכנית בשפת "ויקיש" (INFERRED):</p>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 font-mono text-lg mb-4 text-slate-100 whitespace-pre-wrap break-all"
+                        dir="ltr">let a = 10
+                        in
+                        (if zero?(a) then proc (b:?) b else proc (c:?) 50) 90</div>
+
+                    <p class="mb-6 text-sm text-slate-500">ברצוננו לקבוע מהו טיפוס התוכנית (אם קיים). לשם כך, עליכם
+                        להשתמש באלגוריתם שנלמד בפרק 7 להקשת הטיפוס.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-700 mb-8">
+                        <div
+                            class="p-5 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-sm transition-shadow">
+                            <h3 class="text-base font-bold text-primary mb-2">סעיף א' <span
+                                    class="text-xs font-normal text-slate-400 font-sans mr-1">(10 נקודות)</span></h3>
+                            <p class="text-xs leading-relaxed text-slate-600">הקצו לביטוי הנתון בשאלה ולתתי הביטויים שלו
+                                משתני-טיפוס מתאימים, וחברו משוואות מתאימות לביטוי הנתון ולתתי הביטויים שלו.</p>
+                        </div>
+                        <div
+                            class="p-5 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-sm transition-shadow">
+                            <h3 class="text-base font-bold text-primary mb-2">סעיף ב' <span
+                                    class="text-xs font-normal text-slate-400 font-sans mr-1">(15 נקודות)</span></h3>
+                            <p class="text-xs leading-relaxed text-slate-600">פתרו את המשוואות שהרכבתם בסעיף א' תוך
+                                שימוש ב- substitution ו- unification בדומה למתואר בספר בעמודים 258-252. בסיום פתרון
+                                המשוואות רשמו מהו הטיפוס שאותו הקשתם עבור התוכנית הנתונה.</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="btn-start"
+                            class="px-8 py-3 bg-primary hover:bg-blue-600 text-white text-lg font-bold rounded-lg shadow transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            בואו נפתור את זה במדויק!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= WORKBENCH (Steps 1+) ================= -->
+        <div id="workbench" class="flex-1 flex hidden">
+            <!-- Sidebar (Tutor) -->
+            <div
+                class="w-96 flex-shrink-0 bg-darker text-slate-300 border-l border-slate-800 flex flex-col shadow-lg z-20 relative">
+                <div class="w-full bg-slate-800 h-1.5">
+                    <div id="progress-bar" class="bg-primary h-1.5 transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="flex-1 p-6 overflow-y-auto flex flex-col justify-between">
+                    <div class="flex-shrink-0">
+                        <h2
+                            class="text-lg font-bold text-white mb-3 border-b pb-2 border-slate-800 flex justify-between">
+                            <span id="step-title">כותרת שלב</span>
+                        </h2>
+                        <div id="step-description" class="text-slate-300 leading-relaxed space-y-4 text-[1.02rem]">
+                            <!-- Dynamic text -->
+                        </div>
+                    </div>
+
+                    <!-- Sidebar AST Reference (visible in steps 11+) -->
+                    <div id="sidebar-ast-container"
+                        class="mt-6 hidden bg-slate-900 p-4 rounded-xl border border-slate-800 relative overflow-hidden flex-shrink-0 select-none text-left"
+                        style="font-size: 0.8rem; line-height: 2.2rem; font-family: 'Consolas', monospace; direction: ltr;">
+                        <svg id="annotations-svg-sidebar" class="absolute inset-0 pointer-events-none w-full h-full"
+                            style="z-index: 0;"></svg>
+
+                        <!-- Sidebar Code Lines -->
+                        <div class="code-line relative pl-8 py-0.5 font-mono" style="z-index: 10; color: #cbd5e1;">
+                            <span id="side-t0-start"></span><span>let </span><span id="side-ta"
+                                class="relative px-0.5 font-bold rounded">a</span><span> = 10</span>
+                        </div>
+                        <div class="code-line relative pl-8 py-0.5 font-mono" style="z-index: 10; color: #cbd5e1;">
+                            <span>in</span>
+                        </div>
+                        <div class="code-line relative pl-8 py-0.5 font-mono" style="z-index: 10; color: #cbd5e1;">
+                            <span id="side-t1-start"></span><span>(</span><span id="side-t2-start"></span><span>if
+                            </span><span id="side-t6-start"></span><span>zero?(a)</span><span
+                                id="side-t6-end"></span><span> then </span><span
+                                id="side-t4-start"></span><span>proc(</span><span id="side-tb"
+                                class="relative px-0.5 font-bold rounded">b</span><span>:?) b</span><span
+                                id="side-t4-end"></span><span> else </span><span
+                                id="side-t5-start"></span><span>proc(</span><span id="side-tc"
+                                class="relative px-0.5 font-bold rounded">c</span><span>:?) 50</span><span
+                                id="side-t5-end"></span><span id="side-t2-end"></span><span> </span><span id="side-t3"
+                                class="relative px-0.5 font-bold rounded">90</span><span>)</span><span
+                                id="side-t1-end"></span><span id="side-t0-end"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-slate-800 bg-slate-950/40 flex justify-between items-center gap-2">
+                    <button id="btn-prev"
+                        class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40">חזור</button>
+                    <span id="step-counter"
+                        class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+                    <button id="btn-next"
+                        class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold">המשך</button>
+                </div>
+            </div>
+
+            <!-- Workspace Panels -->
+            <div id="workspace-scroll"
+                class="flex-1 flex flex-col p-6 gap-8 overflow-y-auto relative bg-slate-50 scroll-smooth">
+
+                <!-- AST View -->
+                <div
+                    class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex-shrink-0 relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">עץ גזירה והקצאת טיפוסים
+                            (AST)</h3>
+                        <span
+                            class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono">let-exp</span>
+                    </div>
+
+                    <div class="relative select-none text-left p-12 border border-slate-100 rounded-xl bg-slate-50/50"
+                        dir="ltr" id="code-container"
+                        style="line-height: 4rem; font-size: 1.45rem; font-family: 'Consolas', monospace;">
+                        <!-- SVG overlay for annotations -->
+                        <svg id="annotations-svg" class="absolute inset-0 pointer-events-none w-full h-full"
+                            style="z-index: 0;"></svg>
+
+                        <!-- Code Lines -->
+                        <div class="code-line relative pl-16 py-1 font-mono" style="z-index: 10;">
+                            <span id="code-t0-start"></span><span>let </span><span id="code-ta"
+                                class="relative px-1 font-bold rounded">a</span><span> = 10</span>
+                        </div>
+                        <div class="code-line relative pl-16 py-1 font-mono" style="z-index: 10;">
+                            <span>in</span>
+                        </div>
+                        <div class="code-line relative pl-16 py-1 font-mono" style="z-index: 10;">
+                            <span id="code-t1-start"></span><span>(</span><span id="code-t2-start"></span><span>if
+                            </span><span id="code-t6-start"></span><span>zero?(a)</span><span
+                                id="code-t6-end"></span><span> then </span><span
+                                id="code-t4-start"></span><span>proc(</span><span id="code-tb"
+                                class="relative px-1 font-bold rounded">b</span><span>:?) b</span><span
+                                id="code-t4-end"></span><span> else </span><span
+                                id="code-t5-start"></span><span>proc(</span><span id="code-tc"
+                                class="relative px-1 font-bold rounded">c</span><span>:?) 50</span><span
+                                id="code-t5-end"></span><span id="code-t2-end"></span><span> </span><span id="code-t3"
+                                class="relative px-1 font-bold rounded">90</span><span>)</span><span
+                                id="code-t1-end"></span><span id="code-t0-end"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part A: EQU Table -->
+                <div id="panel-a"
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 hidden flex-col overflow-hidden">
+                    <div class="p-4 border-b border-slate-200 bg-slate-50">
+                        <h3 class="text-sm font-bold text-slate-800">סעיף א': בניית טבלת משוואות</h3>
+                    </div>
+                    <div class="p-0">
+                        <table class="w-full text-left border-collapse" dir="ltr">
+                            <thead class="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th class="p-3 font-semibold text-slate-600 w-2/5 text-xs uppercase tracking-wider">
+                                        Expression</th>
+                                    <th
+                                        class="p-3 font-semibold text-slate-600 w-1/5 text-center border-r border-slate-200 text-xs uppercase tracking-wider">
+                                        Type Variable</th>
+                                    <th
+                                        class="p-3 font-semibold text-slate-600 w-2/5 border-r border-slate-200 text-xs uppercase tracking-wider">
+                                        Equations (AQ)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-a-body" class="code-font text-[14px] bg-white text-slate-800">
+                                <!-- Generated rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Part B: Substitutions Tables -->
+                <div id="panel-b"
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 hidden flex-col mb-10 relative overflow-hidden">
+                    <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-slate-800">סעיף ב': אלגוריתם הצבות ואיחודים
+                        </h3>
+                    </div>
+
+                    <!-- Dynamic container for tables -->
+                    <div id="b-content-area"
+                        class="flex flex-row flex-nowrap p-6 gap-2 bg-slate-50 items-stretch justify-start overflow-x-auto"
+                        dir="ltr">
+                        <!-- Tables will be injected here -->
+                    </div>
+
+                    <!-- Final Conclusion Absolute Overlay -->
+                    <div id="final-conclusion"
+                        class="hidden absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white px-8 py-4 border-2 border-green-500 rounded-2xl shadow-xl flex items-center gap-6 z-20">
+                        <div class="text-2xl font-bold text-slate-800" dir="rtl">מסקנה סופית: <span dir="ltr"
+                                class="font-mono text-green-700 ml-2">t0 = int</span></div>
+                        <div class="text-green-500 text-6xl font-black checkmark">✓</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic Engine -->
+    <script>
+        // Data format helpers
+        const t = (sub) => `t<sub style="font-size:0.7em">${sub}</sub>`;
+
+        // Specific formatting functions for the "Open University" style annotations
+        const ann = (v, val, c) => `<span class="inline-block text-center align-top mx-[2px] leading-tight"><span class="block">${v}</span><span class="block text-[8px] font-bold text-${c}-600 leading-none mt-[2px]">(${val})</span></span>`;
+        const m = `<span class="font-bold text-red-600 mr-1 select-none">(*)</span>`;
+
+        // Definition of the Rows for Part A
+        const r0 = { exp: "program", tvar: t('0'), equ: `1. ${t('a')} = int<br>2. ${t('0')} = ${t('1')}`, hl: false };
+        const r1 = { exp: "((if zero?(a) then proc (b:?) b else proc (c:?) 50) 90)", tvar: t('1'), equ: `${t('2')} = ${t('3')} &rarr; ${t('1')}`, hl: false };
+        const r2 = { exp: "(if zero?(a) then proc (b:?) b else proc (c:?) 50)", tvar: t('2'), equ: `1. ${t('6')} = bool<br>2. ${t('2')} = ${t('4')}<br>3. ${t('2')} = ${t('5')}`, hl: false };
+        const r3 = { exp: "90", tvar: t('3'), equ: `${t('3')} = int`, hl: false };
+        const r4 = { exp: "proc (b:?) b", tvar: t('4'), equ: `${t('4')} = ${t('b')} &rarr; ${t('b')}`, hl: false };
+        const r5 = { exp: "proc (c:?) 50", tvar: t('5'), equ: `${t('5')} = ${t('c')} &rarr; int`, hl: false };
+        const r6 = { exp: "zero?(a)", tvar: t('6'), equ: `1. ${t('a')} = int<br>2. ${t('6')} = bool`, hl: false };
+        const ra = { exp: "a", tvar: t('a'), equ: "", hl: false };
+        const rb = { exp: "b", tvar: t('b'), equ: "", hl: false };
+        const rc = { exp: "c", tvar: t('c'), equ: "", hl: false };
+
+        const empty = (r) => ({ ...r, equ: "" });
+        const highlight = (r) => ({ ...r, hl: true });
+
+        const steps = [
+            {
+                title: "סעיף א': נתחום את תתי-הביטויים",
+                text: "נחלץ את המבנה של התוכנית מן החוץ פנימה. נקיף תחילה את כל התוכנית (החל מה-let ועד הסוף) ונקצה לה את המשתנה <b>t0</b>.<br><br>התיחום יישאר קבוע על המסך כדי שנוכל לראות את החלוקה לאורך כל הפתרון.",
+                ui: { panel: 'ast', activeBox: 'ast-t0' }
+            },
+            {
+                title: "סעיף א': המשתנה החיצוני",
+                text: "בתוך משפט ה-let, אנו מגדירים את <code>let a = 10</code>. נתחום את המשתנה <code>a</code> ונקצה לו <b>ta</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-ta' }
+            },
+            {
+                title: "סעיף א': הגוף של ה-Let",
+                text: "נמשיך פנימה לביטוי שאחרי ה-in. הביטוי הוא הפעלת פונקציה <code>((if zero?(a) then proc (b:?) b else proc (c:?) 50) 90)</code>. נקיף אותה ונקצה לה את המשתנה <b>t1</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t1' }
+            },
+            {
+                title: "סעיף א': האופרטור (הפונקציה המופעלת)",
+                text: "הפעלת הפונקציה (t1) מורכבת מאופרטור (הפונקציה) ואופרנד (הארגומנט). האופרטור הוא ביטוי ה-if כולו: <code>(if zero?(a) then proc (b:?) b else proc (c:?) 50)</code>. נתחום אותו כ-<b>t2</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t2' }
+            },
+            {
+                title: "סעיף א': האופרנד (הארגומנט)",
+                text: "האופרנד המועבר לפונקציה הוא הערך <code>90</code>. נתחום אותו ונקצה לו <b>t3</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t3' }
+            },
+            {
+                title: "סעיף א': תנאי ה-if",
+                text: "בתוך ביטוי ה-if (t2), התנאי הוא הביטוי <code>zero?(a)</code>. נתחום אותו ונקצה לו <b>t6</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t6' }
+            },
+            {
+                title: "סעיף א': ענף ה-then",
+                text: "בתוך ביטוי ה-if (t2), ענף ה-then הוא הגדרת פונקציה: <code>proc(b:?) b</code>. נתחום אותה כ-<b>t4</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t4' }
+            },
+            {
+                title: "סעיף א': ענף ה-else",
+                text: "ענף ה-else של ה-if הוא הגדרת פונקציה נוספת: <code>proc(c:?) 50</code>. נתחום אותה כ-<b>t5</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t5' }
+            },
+            {
+                title: "סעיף א': משתני הטיפוס של הארגומנטים",
+                text: "לסיום, הפרמטרים <code>b</code> ו-<code>c</code> של הפרוצדורות הפנימיות יתוחמו כ-<b>tb</b> ו-<b>tc</b> בהתאמה.<br><br>כעת המבנה ההיררכי של כל התוכנית ברור לחלוטין ואנו מוכנים לבנות את טבלת המשוואות.",
+                ui: { panel: 'ast', activeBox: 'ast-tb' }
+            },
+            // Phase A: Top-Down Expressions, Bottom-Up Equations
+            {
+                title: "בניית טבלת המשוואות: מלמעלה למטה!",
+                text: "<b>כאן הסוד לפשטות:</b> כשאנו בונים את הטבלה, הרבה יותר אינטואיטיבי לפרוס תחילה את עמודות הביטויים (Expressions) <b>מלמעלה למטה</b> (מ-t0 ועד tc).<br><br>את עמודת המשוואות (Equations) נשאיר ריקה כרגע. שיטה זו מונעת בלבול ושכחת איברים.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), empty(r2), empty(r3), empty(r4), empty(r5), empty(r6), empty(ra), empty(rb), empty(rc)]
+                }
+            },
+            {
+                title: "חילוץ משוואות (AQ) - מלמטה למעלה",
+                text: "כעת, לאחר שהכל פרוס מולנו, נחלץ את המשוואות <b>מלמטה למעלה</b>! קל הרבה יותר להבין ממה מורכב ביטוי גדול לאחר שפתרנו את אבני הבניין הקטנות שלו.<br><br>נתחיל מ-a, b, ו-c: אין להם אילוצים משלהם, לכן עמודת המשוואות שלהם נותרת ריקה.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), empty(r2), empty(r3), empty(r4), empty(r5), empty(r6), highlight(ra), highlight(rb), highlight(rc)]
+                }
+            },
+            {
+                title: "משוואות עבור תנאי ה-zero?(a) (t6)",
+                text: "נעלה ל-t6 (הביטוי <code>zero?(a)</code>).<br>הפונקציה zero? חייבת לקבל מספר שלם ולכן <b>ta = int</b>, והיא מחזירה ערך בוליאני ולכן <b>t6 = bool</b>.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), empty(r2), empty(r3), empty(r4), empty(r5), highlight(r6), ra, rb, rc]
+                }
+            },
+            {
+                title: "משוואה עבור האופרנד (t3)",
+                text: "נעלה ל-t3 (הביטוי <code>90</code>). מכיוון שזהו מספר שלם קבוע, נקבל מיד את המשוואה: <b>t3 = int</b>.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), empty(r2), highlight(r3), empty(r4), empty(r5), r6, ra, rb, rc]
+                }
+            },
+            {
+                title: "משוואות עבור הפונקציות הפנימיות (t4, t5)",
+                text: "נעלה ל-t4 ול-t5 (הגדרות הפרוצדורות):<br>1) <b>t4:</b> הפונקציה <code>proc(b:?) b</code> מקבלת ארגומנט מטיפוס tb ומחזירה אותו ישירות, לכן: <b>t4 = tb &rarr; tb</b>.<br>2) <b>t5:</b> הפונקציה <code>proc(c:?) 50</code> מקבלת ארגומנט מטיפוס tc ומחזירה תמיד 50 (טיפוס int), לכן: <b>t5 = tc &rarr; int</b>.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), empty(r2), r3, highlight(r4), highlight(r5), r6, ra, rb, rc]
+                }
+            },
+            {
+                title: "משוואות עבור ביטוי ה-if (t2)",
+                text: "נעלה ל-t2 (הביטוי <code>if zero?(a)...</code>).<br>1) התנאי <code>zero?(a)</code> (t6) חייב להיות בוליאני, לכן: <b>t6 = bool</b>.<br>2) שני ענפי ה-if (ה-then וה-else) חייבים להיות בעלי טיפוס זהה לזה של ה-if כולו, לכן: <b>t2 = t4</b> וכן <b>t2 = t5</b>.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [empty(r0), empty(r1), highlight(r2), r3, r4, r5, r6, ra, rb, rc]
+                }
+            },
+            {
+                title: "הביטוי השלם וסיום הטבלה (t0, t1)",
+                text: "נסיים עם t1 ו-t0:<br>1) <b>t1:</b> ההפעלה של הפונקציה t2 על האופרנד t3. לכן t2 חייב להיות פונקציה המקבלת את t3 ומחזירה את t1: <b>t2 = t3 &rarr; t1</b>.<br>2) <b>t0:</b> ב-let אנו מציבים 10 לתוך a, לכן <b>ta = int</b>. בנוסף, הטיפוס של התוכנית כולה (t0) הוא כטיפוס הגוף (t1), לכן: <b>t0 = t1</b>.",
+                ui: {
+                    panel: 'panel-a',
+                    aRows: [highlight(r0), highlight(r1), r2, r3, r4, r5, r6, ra, rb, rc]
+                }
+            },
+            // Phase B: Method of the Open University (Incremental Mark and Annotate)
+            {
+                title: "סעיף ב': מצב התחלתי",
+                text: "העתקנו את כל המשוואות לעמודת ה-Equations. עמודת ה-Substitutions ריקה.<br><br>בגישה הדרגתית זו, לא נמחק או נדרוס את המשוואות בטבלה השמאלית. במקום זאת, נסמן ב-<span class='text-red-500 font-bold'>(*)</span> את העוגנים (הפרימיטיביים) הברורים - <code>ta = int</code>, <code>t3 = int</code> ו-<code>t6 = bool</code> המוכנים להעברה לצד ימין.",
+                ui: { panel: 'panel-b', bTransition: [0] }
+            },
+            {
+                title: "שלב 1: חילחול הפרימיטיביים והכנת הפונקציות",
+                text: "העברנו את הפרימיטיביים ימינה. כעת, אנו רושמים את ההצבה של <code>t3</code> מתחת למופע שלו במשוואה של <code>t2</code>.<br><br>בנוסף, הפונקציות <code>t4</code> ו-<code>t5</code> כבר מוגדרות במלואן (כפונקציות של המשתנים שלהן), ולכן נסמן אותן בכוכבית כיוון שהן מוכנות להעברה.",
+                ui: { panel: 'panel-b', bTransition: [0, 1] }
+            },
+            {
+                title: "שלב 2: הרכבת t4, t5 וחילחול ל-t2",
+                text: "הפונקציות <code>t4</code> ו-<code>t5</code> עברו ל-Substitutions.<br><br>כעת אנו מציבים את הערכים שלהן בתוך שאר המשוואות של <code>t2</code>. נוצר לנו אוסף של שלוש משוואות מגבילות עבור <code>t2</code>. אנו מסמנים אותן בכוכבית לקראת <b>איחוד מבני (Structural Unification)</b>.",
+                ui: { panel: 'panel-b', bTransition: [1, 2] }
+            },
+            {
+                title: "שלב 3: איחוד מבני ופירוק משוואות",
+                text: "מתוך ההשוואה בין המבנים <code>int &rarr; t1</code>, <code>tb &rarr; tb</code>, ו-<code>tc &rarr; int</code>, האלגוריתם מחלץ את הרכיבים השווים:<br>1) מהשוואת הארגומנטים וההחזרות, נובע ש-<code>tb = int</code>. נסמן משוואה זו בכוכבית.<br>2) כמו כן נובע ש-<code>tc = tb</code> ו-<code>t1 = tb</code>.<br>במקביל, <code>t2</code> עבר ימינה כ-<code>int &rarr; int</code>.",
+                ui: { panel: 'panel-b', bTransition: [2, 3] }
+            },
+            {
+                title: "שלב 4: חילחול tb ופתרון t0",
+                text: "<code>tb</code> עבר ימינה כ-<code>int</code>.<br><br>כעת הוא מחלחל מעלה ומאפשר לנו להציב <code>int</code> במקום <code>tc</code> ובמקום <code>t1</code>. במקביל, מאחר ש-<code>t0 = t1</code>, גם <code>t0</code> סופג את הערך <code>int</code> ומוכן לפתרון מלא.",
+                ui: { panel: 'panel-b', bTransition: [3, 4] }
+            },
+            {
+                title: "סיום מוחלט והמסקנה הסופית",
+                text: "כל המשוואות טופלו, סומנו בכוכבית והוצבו במדויק. אין סתירות! <code>t1</code> ו-<code>tc</code> הפכו ל-int, וכך גם <code>t0</code>.<br><br>המסקנה הסופית מתוך ההצבות הטוריות: התוכנית תקינה לחלוטין וטיפוסה הוא <b>int</b>.",
+                ui: { panel: 'panel-b', bTransition: [4, 5], finalConclusion: true }
+            }
+        ];
+
+        // bTables strictly follow the incremental propagation and marking methodology.
+        const bTables = [
+            { // Table 0: Mark Primitives
+                title: "טבלה 1: מצב התחלתי",
+                equ: [
+                    `t<sub>0</sub> = t<sub>1</sub>`,
+                    `t<sub>2</sub> = t<sub>3</sub> &rarr; t<sub>1</sub>`,
+                    `t<sub>2</sub> = t<sub>4</sub>`,
+                    `t<sub>2</sub> = t<sub>5</sub>`,
+                    `t<sub>4</sub> = t<sub>b</sub> &rarr; t<sub>b</sub>`,
+                    `t<sub>5</sub> = t<sub>c</sub> &rarr; int`,
+                    `${m} t<sub>a</sub> = int`,
+                    `${m} t<sub>6</sub> = bool`,
+                    `${m} t<sub>3</sub> = int`
+                ],
+                sub: []
+            },
+            { // Table 1: Annotate t3, mark t4 & t5
+                title: "טבלה 2: חילחול הפרימיטיביים",
+                equ: [
+                    `t<sub>0</sub> = t<sub>1</sub>`,
+                    `t<sub>2</sub> = ${ann('t<sub>3</sub>', 'int', 'blue')} &rarr; t<sub>1</sub>`,
+                    `t<sub>2</sub> = t<sub>4</sub>`,
+                    `t<sub>2</sub> = t<sub>5</sub>`,
+                    `${m} t<sub>4</sub> = t<sub>b</sub> &rarr; t<sub>b</sub>`,
+                    `${m} t<sub>5</sub> = t<sub>c</sub> &rarr; int`
+                ],
+                sub: [
+                    "t<sub>a</sub> = int", "t<sub>6</sub> = bool", "t<sub>3</sub> = int"
+                ]
+            },
+            { // Table 2: Annotate t2 from t4 and t5, mark t2 eqns
+                title: "טבלה 3: הרכבת t4, t5 וחילחול",
+                equ: [
+                    `t<sub>0</sub> = t<sub>1</sub>`,
+                    `${m} t<sub>2</sub> = int &rarr; t<sub>1</sub>`,
+                    `${m} t<sub>2</sub> = ${ann('t<sub>4</sub>', 't<sub>b</sub>&rarr;t<sub>b</sub>', 'pink')}`,
+                    `${m} t<sub>2</sub> = ${ann('t<sub>5</sub>', 't<sub>c</sub>&rarr;int', 'pink')}`
+                ],
+                sub: [
+                    "t<sub>a</sub> = int", "t<sub>6</sub> = bool", "t<sub>3</sub> = int",
+                    "t<sub>4</sub> = t<sub>b</sub> &rarr; t<sub>b</sub>", "t<sub>5</sub> = t<sub>c</sub> &rarr; int"
+                ]
+            },
+            { // Table 3: Perform Structural Unification
+                title: "טבלה 4: איחוד ופירוק (SU)",
+                equ: [
+                    `t<sub>0</sub> = t<sub>1</sub>`,
+                    `${m} t<sub>b</sub> = int`,
+                    `t<sub>c</sub> = t<sub>b</sub>`,
+                    `t<sub>1</sub> = t<sub>b</sub>`
+                ],
+                sub: [
+                    "t<sub>a</sub> = int", "t<sub>6</sub> = bool", "t<sub>3</sub> = int",
+                    "t<sub>4</sub> = t<sub>b</sub> &rarr; t<sub>b</sub>", "t<sub>5</sub> = t<sub>c</sub> &rarr; int",
+                    "t<sub>2</sub> = int &rarr; int"
+                ]
+            },
+            { // Table 4: Propagate tb
+                title: "טבלה 5: חילחול tb והרכבת t1, tc",
+                equ: [
+                    `${m} t<sub>0</sub> = ${ann('t<sub>1</sub>', 'int', 'green')}`,
+                    `${m} t<sub>c</sub> = ${ann('t<sub>b</sub>', 'int', 'orange')}`,
+                    `${m} t<sub>1</sub> = ${ann('t<sub>b</sub>', 'int', 'orange')}`
+                ],
+                sub: [
+                    "t<sub>a</sub> = int", "t<sub>6</sub> = bool", "t<sub>3</sub> = int",
+                    "t<sub>4</sub> = int &rarr; int", "t<sub>5</sub> = int &rarr; int", "t<sub>2</sub> = int &rarr; int",
+                    "t<sub>b</sub> = int"
+                ]
+            },
+            { // Table 5: Final State
+                title: "טבלה 6: מצב סופי",
+                equ: [],
+                sub: [
+                    "t<sub>a</sub> = int", "t<sub>6</sub> = bool", "t<sub>3</sub> = int",
+                    "t<sub>4</sub> = int &rarr; int", "t<sub>5</sub> = int &rarr; int", "t<sub>2</sub> = int &rarr; int",
+                    "t<sub>b</sub> = int", "t<sub>c</sub> = int", "t<sub>1</sub> = int",
+                    "<span class='bg-green-100 font-bold px-2 py-1 border-2 border-green-400 rounded shadow-sm text-green-800 block text-center mt-2'>t<sub>0</sub> = int</span>"
+                ]
+            }
+        ];
+
+        let currentStep = -1;
+
+        // Definition of all annotations to be rendered via SVG
+        const annotations = [
+            { id: 't0', type: 'bracket-left', start: 'code-t0-start', end: 'code-t1-end', xOffset: -30, color: '#0ea5e9' },
+            { id: 'ta', type: 'arrow-up', target: 'code-ta', color: '#0ea5e9' },
+            { id: 't1', type: 'bracket-left', start: 'code-t1-start', end: 'code-t1-end', xOffset: -12, color: '#0ea5e9' },
+            { id: 't2', type: 'bracket-top', start: 'code-t2-start', end: 'code-t2-end', yOffset: -16, labelOffset: -24, color: '#d946ef' },
+            { id: 't3', type: 'arrow-up', target: 'code-t3', color: '#d946ef' },
+            { id: 't6', type: 'bracket-bottom', start: 'code-t6-start', end: 'code-t6-end', yOffset: 8, labelOffset: 20, color: '#f43f5e' },
+            { id: 'tb', type: 'arrow-up', target: 'code-tb', color: '#f43f5e' },
+            { id: 'tc', type: 'arrow-up', target: 'code-tc', color: '#f43f5e' },
+            { id: 't4', type: 'bracket-bottom', start: 'code-t4-start', end: 'code-t4-end', yOffset: 8, labelOffset: 20, color: '#d946ef' },
+            { id: 't5', type: 'bracket-bottom', start: 'code-t5-start', end: 'code-t5-end', yOffset: 8, labelOffset: 20, color: '#d946ef' }
+        ];
+
+        function getRelativeRect(el) {
+            const container = document.getElementById('code-container');
+            const containerRect = container.getBoundingClientRect();
+            const rect = el.getBoundingClientRect();
+            return {
+                left: rect.left - containerRect.left + container.scrollLeft,
+                right: rect.right - containerRect.left + container.scrollLeft,
+                top: rect.top - containerRect.top + container.scrollTop,
+                bottom: rect.bottom - containerRect.top + container.scrollTop,
+                width: rect.width,
+                height: rect.height
+            };
+        }
+
+        function drawSVG() {
+            const svg = document.getElementById('annotations-svg');
+            if (!svg) return;
+            svg.innerHTML = ''; // Clear previous drawings
+
+            const stepData = steps[currentStep];
+            const activeBoxId = stepData ? stepData.ui.activeBox : null;
+            const activeId = activeBoxId ? activeBoxId.replace('ast-', '') : null;
+            const isTablePhase = stepData && (stepData.ui.panel === 'panel-a' || stepData.ui.panel === 'panel-b');
+
+            // Find index of the active step annotation to determine "already drawn" annotations
+            const activeIndex = annotations.findIndex(ann => ann.id === activeId);
+
+            annotations.forEach((ann, index) => {
+                const startEl = document.getElementById(ann.start || ann.target);
+                const endEl = document.getElementById(ann.end || ann.target);
+                if (!startEl || !endEl) return;
+
+                // Determine if this annotation is currently active, already passed, or in table phase
+                const isPassed = isTablePhase || (activeIndex === -1) || (index <= activeIndex);
+                if (!isPassed && currentStep !== -1) {
+                    return;
+                }
+
+                const isActive = (activeId === ann.id);
+                const strokeColor = ann.color;
+                const strokeWidth = isActive ? 3 : 1.5;
+                const opacity = isActive ? 1 : 0.45;
+                const textWeight = isActive ? 'bold' : 'normal';
+                const fontSize = isActive ? '14px' : '11px';
+                const textColor = isActive ? ann.color : '#64748b';
+
+                // Yellow highlight background for variables
+                if (ann.type === 'arrow-up') {
+                    const targetEl = document.getElementById(ann.target);
+                    const rect = getRelativeRect(targetEl);
+                    const bgHighlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    bgHighlight.setAttribute('x', rect.left - 2);
+                    bgHighlight.setAttribute('y', rect.top + 2);
+                    bgHighlight.setAttribute('width', rect.width + 4);
+                    bgHighlight.setAttribute('height', rect.height - 4);
+                    bgHighlight.setAttribute('fill', '#fef08a'); // yellow-200
+                    bgHighlight.setAttribute('opacity', isActive ? 0.85 : 0.35);
+                    bgHighlight.setAttribute('rx', '3');
+                    svg.appendChild(bgHighlight);
+                }
+
+                if (ann.type === 'bracket-left') {
+                    const startRect = getRelativeRect(startEl);
+                    const endRect = getRelativeRect(endEl);
+                    const x = startRect.left + ann.xOffset;
+                    const y_top = startRect.top + 3;
+                    const y_bottom = endRect.bottom - 3;
+
+                    // Draw [ path
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x + 8},${y_top} L ${x},${y_top} L ${x},${y_bottom} L ${x + 8},${y_bottom}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    if (isActive) {
+                        path.setAttribute('filter', 'drop-shadow(0px 0px 2px ' + strokeColor + ')');
+                    }
+                    svg.appendChild(path);
+
+                    // Draw label text
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x - 18);
+                    text.setAttribute('y', (y_top + y_bottom) / 2 + 4);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'arrow-up') {
+                    const rect = getRelativeRect(startEl);
+                    const x_center = rect.left + rect.width / 2;
+                    const y_top = rect.top;
+                    const arrowLen = 18;
+                    const y_arrow_top = y_top - arrowLen;
+
+                    // Draw line
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_center},${y_top - 2} L ${x_center},${y_arrow_top}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    svg.appendChild(path);
+
+                    // Draw arrowhead
+                    const head = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    head.setAttribute('d', `M ${x_center - 3.5},${y_arrow_top + 3.5} L ${x_center},${y_arrow_top} L ${x_center + 3.5},${y_arrow_top + 3.5}`);
+                    head.setAttribute('stroke', strokeColor);
+                    head.setAttribute('stroke-width', strokeWidth);
+                    head.setAttribute('fill', 'none');
+                    head.setAttribute('opacity', opacity);
+                    head.setAttribute('stroke-linecap', 'round');
+                    head.setAttribute('stroke-linejoin', 'round');
+                    svg.appendChild(head);
+
+                    // Draw label text
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x_center);
+                    text.setAttribute('y', y_arrow_top - 5);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'bracket-top') {
+                    const startRect = getRelativeRect(startEl);
+                    const endRect = getRelativeRect(endEl);
+                    const x_start = startRect.left + 2;
+                    const x_end = endRect.right - 2;
+                    const y_base = startRect.top;
+                    const y_top = y_base + ann.yOffset;
+
+                    // Draw rounded curve over text
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_start},${y_base - 1} Q ${x_start},${y_top} ${x_start + 6},${y_top} L ${x_end - 6},${y_top} Q ${x_end},${y_top} ${x_end},${y_base - 1}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    if (isActive) {
+                        path.setAttribute('filter', 'drop-shadow(0px 0px 2px ' + strokeColor + ')');
+                    }
+                    svg.appendChild(path);
+
+                    // Draw label text
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', (x_start + x_end) / 2);
+                    text.setAttribute('y', y_base + ann.labelOffset);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'bracket-bottom') {
+                    const startRect = getRelativeRect(startEl);
+                    const endRect = getRelativeRect(endEl);
+                    const x_start = startRect.left + 2;
+                    const x_end = endRect.right - 2;
+                    const y_base = startRect.bottom;
+                    const y_bottom = y_base + ann.yOffset;
+
+                    // Draw rounded curve under text
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_start},${y_base + 1} Q ${x_start},${y_bottom} ${x_start + 6},${y_bottom} L ${x_end - 6},${y_bottom} Q ${x_end},${y_bottom} ${x_end},${y_base + 1}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    if (isActive) {
+                        path.setAttribute('filter', 'drop-shadow(0px 0px 2px ' + strokeColor + ')');
+                    }
+                    svg.appendChild(path);
+
+                    // Draw label text
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', (x_start + x_end) / 2);
+                    text.setAttribute('y', y_base + ann.labelOffset);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+            });
+        }
+
+        const sidebarAnnotations = [
+            { id: 't0', type: 'bracket-left', start: 'side-t0-start', end: 'side-t1-end', xOffset: -22, color: '#0ea5e9' },
+            { id: 'ta', type: 'arrow-up', target: 'side-ta', color: '#0ea5e9' },
+            { id: 't1', type: 'bracket-left', start: 'side-t1-start', end: 'side-t1-end', xOffset: -10, color: '#0ea5e9' },
+            { id: 't2', type: 'bracket-top', start: 'side-t2-start', end: 'side-t2-end', yOffset: -8, labelOffset: -16, color: '#d946ef' },
+            { id: 't3', type: 'arrow-up', target: 'side-t3', color: '#d946ef' },
+            { id: 'tb', type: 'arrow-up', target: 'side-tb', color: '#f43f5e' },
+            { id: 'tc', type: 'arrow-up', target: 'side-tc', color: '#f43f5e' },
+            { id: 't6', type: 'bracket-bottom', start: 'side-t6-start', end: 'side-t6-end', yOffset: 6, labelOffset: 14, color: '#f43f5e' },
+            { id: 't4', type: 'bracket-bottom', start: 'side-t4-start', end: 'side-t4-end', yOffset: 6, labelOffset: 14, color: '#d946ef' },
+            { id: 't5', type: 'bracket-bottom', start: 'side-t5-start', end: 'side-t5-end', yOffset: 6, labelOffset: 14, color: '#d946ef' }
+        ];
+
+        function getSidebarRelativeRect(el) {
+            const container = document.getElementById('sidebar-ast-container');
+            const containerRect = container.getBoundingClientRect();
+            const rect = el.getBoundingClientRect();
+            return {
+                left: rect.left - containerRect.left + container.scrollLeft,
+                right: rect.right - containerRect.left + container.scrollLeft,
+                top: rect.top - containerRect.top + container.scrollTop,
+                bottom: rect.bottom - containerRect.top + container.scrollTop,
+                width: rect.width,
+                height: rect.height
+            };
+        }
+
+        function drawSidebarSVG() {
+            const svg = document.getElementById('annotations-svg-sidebar');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const stepData = steps[currentStep];
+            const activeBoxId = stepData ? stepData.ui.activeBox : null;
+            const activeId = activeBoxId ? activeBoxId.replace('ast-', '') : null;
+
+            sidebarAnnotations.forEach((ann) => {
+                const sideStartId = ann.start ? ann.start.replace('code-', 'side-') : null;
+                const sideTargetId = ann.target ? ann.target.replace('code-', 'side-') : null;
+                const sideEndId = ann.end ? ann.end.replace('code-', 'side-') : null;
+
+                const startEl = document.getElementById(sideStartId || sideTargetId);
+                const endEl = document.getElementById(sideEndId || sideTargetId);
+                if (!startEl || !endEl) return;
+
+                const isActive = (activeId === ann.id);
+                const strokeColor = ann.color;
+                const strokeWidth = isActive ? 2 : 1;
+                const opacity = isActive ? 1 : 0.4;
+                const textColor = isActive ? ann.color : '#94a3b8';
+                const fontSize = '9px';
+                const textWeight = isActive ? 'bold' : 'normal';
+
+                if (ann.type === 'arrow-up') {
+                    const rect = getSidebarRelativeRect(startEl);
+                    const bgHighlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    bgHighlight.setAttribute('x', rect.left - 1.5);
+                    bgHighlight.setAttribute('y', rect.top + 1);
+                    bgHighlight.setAttribute('width', rect.width + 3);
+                    bgHighlight.setAttribute('height', rect.height - 2);
+                    bgHighlight.setAttribute('fill', '#fef08a');
+                    bgHighlight.setAttribute('opacity', isActive ? 0.8 : 0.25);
+                    bgHighlight.setAttribute('rx', '2');
+                    svg.appendChild(bgHighlight);
+                }
+
+                if (ann.type === 'bracket-left') {
+                    const startRect = getSidebarRelativeRect(startEl);
+                    const endRect = getSidebarRelativeRect(endEl);
+                    const x = startRect.left + (ann.xOffset / 2);
+                    const y_top = startRect.top + 2;
+                    const y_bottom = endRect.bottom - 2;
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x + 4},${y_top} L ${x},${y_top} L ${x},${y_bottom} L ${x + 4},${y_bottom}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    path.setAttribute('stroke-linecap', 'round');
+                    svg.appendChild(path);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x - 9);
+                    text.setAttribute('y', (y_top + y_bottom) / 2 + 3);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'arrow-up') {
+                    const rect = getSidebarRelativeRect(startEl);
+                    const x_center = rect.left + rect.width / 2;
+                    const y_top = rect.top;
+                    const arrowLen = 10;
+                    const y_arrow_top = y_top - arrowLen;
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_center},${y_top - 1} L ${x_center},${y_arrow_top}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    svg.appendChild(path);
+
+                    const head = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    head.setAttribute('d', `M ${x_center - 2},${y_arrow_top + 2} L ${x_center},${y_arrow_top} L ${x_center + 2},${y_arrow_top + 2}`);
+                    head.setAttribute('stroke', strokeColor);
+                    head.setAttribute('stroke-width', strokeWidth);
+                    head.setAttribute('fill', 'none');
+                    head.setAttribute('opacity', opacity);
+                    head.setAttribute('stroke-linecap', 'round');
+                    head.setAttribute('stroke-linejoin', 'round');
+                    svg.appendChild(head);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x_center);
+                    text.setAttribute('y', y_arrow_top - 3);
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'bracket-top') {
+                    const startRect = getSidebarRelativeRect(startEl);
+                    const endRect = getSidebarRelativeRect(endEl);
+                    const x_start = startRect.left + 1;
+                    const x_end = endRect.right - 1;
+                    const y_base = startRect.top;
+                    const y_top = y_base + (ann.yOffset / 1.5);
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_start},${y_base} Q ${x_start},${y_top} ${x_start + 4},${y_top} L ${x_end - 4},${y_top} Q ${x_end},${y_top} ${x_end},${y_base}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    svg.appendChild(path);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', (x_start + x_end) / 2);
+                    text.setAttribute('y', y_base + (ann.labelOffset / 1.5));
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+                else if (ann.type === 'bracket-bottom') {
+                    const startRect = getSidebarRelativeRect(startEl);
+                    const endRect = getSidebarRelativeRect(endEl);
+                    const x_start = startRect.left + 1;
+                    const x_end = endRect.right - 1;
+                    const y_base = startRect.bottom;
+                    const y_bottom = y_base + (ann.yOffset / 1.5);
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x_start},${y_base} Q ${x_start},${y_bottom} ${x_start + 4},${y_bottom} L ${x_end - 4},${y_bottom} Q ${x_end},${y_bottom} ${x_end},${y_base}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    svg.appendChild(path);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', (x_start + x_end) / 2);
+                    text.setAttribute('y', y_base + (ann.labelOffset / 1.5));
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-size', fontSize);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('opacity', opacity);
+                    text.textContent = ann.id;
+                    svg.appendChild(text);
+                }
+            });
+        }
+
+        // Helper to generate a single B-Table HTML
+        function createBTableHTML(tableData) {
+            return `
+                <div class="flex flex-col bg-white border border-slate-200 shadow-sm rounded-xl flex-shrink-0 w-full max-w-[360px] min-w-[270px] overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="bg-slate-50 text-center py-1.5 font-bold text-slate-700 border-b border-slate-200 text-xs rounded-t-xl">${tableData.title}</div>
+                    <table class="w-full text-[10px] code-font border-collapse">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="py-0.5 px-1.5 border-l border-slate-200 w-[35%] text-slate-500 text-left font-semibold uppercase tracking-wider">Equations</th>
+                                <th class="py-0.5 px-1.5 w-[65%] text-slate-500 text-left font-semibold uppercase tracking-wider">Substitutions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="align-top">
+                            <tr>
+                                <td class="py-1 px-1.5 border-l border-slate-200 leading-relaxed space-y-1.5 bg-white text-slate-800 font-mono">
+                                    ${tableData.equ.length ? tableData.equ.map(item => `<div>${item}</div>`).join('') : '<span class="text-slate-300 italic text-xs">Empty</span>'}
+                                </td>
+                                <td class="py-1 px-1.5 leading-relaxed space-y-1.5 bg-slate-50/30 text-slate-700 font-mono">
+                                    ${tableData.sub.length ? tableData.sub.map(item => `<div>${item}</div>`).join('') : '<span class="text-slate-300 italic text-xs">Empty</span>'}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function updateUI() {
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            const examPaper = document.getElementById('exam-paper');
+            const workbench = document.getElementById('workbench');
+
+            if (currentStep === -1) {
+                examPaper.classList.remove('opacity-0', 'pointer-events-none');
+                workbench.classList.add('hidden');
+                return;
+            } else {
+                examPaper.classList.add('opacity-0', 'pointer-events-none');
+                workbench.classList.remove('hidden');
+            }
+
+            const stepData = steps[currentStep];
+
+            // Setup texts
+            document.getElementById('step-title').innerHTML = stepData.title;
+            document.getElementById('step-description').innerHTML = stepData.text;
+            document.getElementById('step-counter').innerText = `${currentStep + 1} / ${steps.length}`;
+
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            btnPrev.disabled = currentStep === 0;
+
+            // Hide main logic panels
+            document.getElementById('panel-a').classList.add('hidden');
+            document.getElementById('panel-b').classList.add('hidden');
+            document.getElementById('final-conclusion').classList.add('hidden');
+
+            // Manage AST visibility (workspace card vs sidebar reference)
+            const codeContainer = document.getElementById('code-container');
+            const astCard = codeContainer ? codeContainer.closest('.bg-white') : null;
+            const sidebarAst = document.getElementById('sidebar-ast-container');
+
+            if (astCard) {
+                if (currentStep >= 11) {
+                    // Hide main AST card in workspace to let the table take full height
+                    astCard.classList.add('hidden');
+                } else {
+                    // Show main AST card in workspace for bounding
+                    astCard.classList.remove('hidden');
+                    codeContainer.classList.remove('shrunk');
+                }
+            }
+
+            if (sidebarAst) {
+                if (currentStep >= 11 && stepData.ui.panel === 'panel-a') {
+                    // Show as reference in the sidebar during Part A table phase
+                    sidebarAst.classList.remove('hidden');
+                } else {
+                    // Hide otherwise
+                    sidebarAst.classList.add('hidden');
+                }
+            }
+
+            // Draw SVG Annotations
+            // Small timeout to allow DOM/layout to stabilize
+            setTimeout(() => {
+                if (currentStep < 11) {
+                    drawSVG();
+                } else if (stepData.ui.panel === 'panel-a') {
+                    drawSidebarSVG();
+                }
+            }, 35);
+
+            // Panel A Rendering
+            if (stepData.ui.panel === 'panel-a') {
+                document.getElementById('panel-a').classList.remove('hidden');
+                document.getElementById('panel-a').classList.add('flex');
+                const tbody = document.getElementById('table-a-body');
+                tbody.innerHTML = '';
+
+                if (stepData.ui.aRows) {
+                    stepData.ui.aRows.forEach((r, i) => {
+                        const tr = document.createElement('tr');
+                        let rowClasses = 'border-b border-slate-100 ';
+                        if (currentStep > 10 && r.hl) rowClasses += 'row-highlight ';
+
+                        tr.className = rowClasses;
+                        tr.innerHTML = `
+                            <td class="py-1.5 px-3 border-l border-slate-100 font-semibold">${r.exp}</td>
+                            <td class="py-1.5 px-3 border-l border-slate-100 font-bold text-center text-primary bg-slate-50/50">${r.tvar}</td>
+                            <td class="py-1.5 px-3 bg-white ${r.equ ? 'text-slate-800' : 'text-slate-300 italic'} font-sans">${r.equ || '-'}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                    const container = document.getElementById('workspace-scroll');
+                    if (currentStep >= 11 && currentStep <= 17) {
+                        setTimeout(() => {
+                            container.scrollTop = container.scrollHeight;
+                        }, 10);
+                    }
+                }
+            }
+
+            // Panel B Rendering (Tables with Arrows)
+            if (stepData.ui.panel === 'panel-b') {
+                document.getElementById('panel-b').classList.remove('hidden');
+                document.getElementById('panel-b').classList.add('flex');
+
+                const bContentArea = document.getElementById('b-content-area');
+                bContentArea.innerHTML = '';
+
+                const trans = stepData.ui.bTransition;
+
+                trans.forEach((tableIndex, i) => {
+                    bContentArea.innerHTML += createBTableHTML(bTables[tableIndex]);
+                    if (i < trans.length - 1) {
+                        bContentArea.innerHTML += `
+                            <div class="flex items-center justify-center text-3xl font-black text-slate-300 mx-1 animate-pulse self-center flex-shrink-0">
+                                &rarr;
+                            </div>
+                        `;
+                    }
+                });
+
+                // Auto scroll workspace container down to see new tables
+                setTimeout(() => {
+                    const workspaceScroll = document.getElementById('workspace-scroll');
+                    const bContent = document.getElementById('b-content-area');
+                    workspaceScroll.scrollTop = workspaceScroll.scrollHeight;
+                    bContent.scrollLeft = bContent.scrollWidth;
+                }, 50);
+
+                if (stepData.ui.finalConclusion) {
+                    document.getElementById('final-conclusion').classList.remove('hidden');
+                }
+            }
+        }
+
+        // Event Listeners for Navigation and Resize
+        document.getElementById('btn-start').addEventListener('click', () => {
+            currentStep = 0;
+            updateUI();
+        });
+
+        document.getElementById('btn-next').addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateUI();
+            }
+        });
+
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateUI();
+            } else if (currentStep === 0) {
+                currentStep = -1;
+                updateUI();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (currentStep !== -1) {
+                if (currentStep < 11) {
+                    drawSVG();
+                } else if (steps[currentStep] && steps[currentStep].ui.panel === 'panel-a') {
+                    drawSidebarSVG();
+                }
+            }
+        });
+
+        document.fonts.ready.then(() => {
+            if (currentStep !== -1) {
+                if (currentStep < 11) {
+                    drawSVG();
+                } else if (steps[currentStep] && steps[currentStep].ui.panel === 'panel-a') {
+                    drawSidebarSVG();
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>

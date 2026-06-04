@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שאלת אירועים (Events) - 2024ב מועד א</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .template-box::before {
+            content: "✍️ שבלונה למבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .thought-box {
+            position: relative;
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .thought-box::before {
+            content: "💡 הבנת התהליך האלגוריתמי";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #c084fc;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Animation */
+        .step-transition { transition: all 0.3s ease-out; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-2xl font-black text-white tracking-tight leading-tight">Events in<br><span class="text-blue-500">Implicit-Refs</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון שאלת מועד א 2024ב (שפה: IMPLICIT-REFS)</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()" class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge" class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <div id="code-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 0,
+                title: "שלב 0: ניתוח הדרישה ומפת דרכים",
+                filename: "question_analysis.txt",
+                explanation: `
+                    <p class="mb-4">במבחן זה (מועד א 2024ב שאלה 2), אנו נדרשים להרחיב את שפת <strong>IMPLICIT-REFS (יורמוז)</strong> בתמיכה ב-<strong>אירועים (Events)</strong>.</p>
+                    
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6 shadow-sm">
+                        <h4 class="font-bold text-blue-900 text-base mb-2">דרישות השפה החדשות:</h4>
+                        <div class="bg-white p-3 rounded border border-blue-100 font-mono text-sm mb-4 ltr text-left">
+Expression ::= event.create()<br>
+Expression ::= &lt;Identifier&gt; += { { Expression }+(;) }
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-blue-900 space-y-2">
+                            <li><code>event.create()</code>: יוצר ומחזיר אירוע ריק חדש (סוג טיפוס נתונים מבוטא חדש בשפה).</li>
+                            <li><code>id += { proc1; proc2; ... }</code>: רושם פרוצדורות חדשות לאירוע קיים המשוייך למזהה <code>id</code>.</li>
+                            <li>התנהגות משתנה ל-<code>call-exp</code>: אם נקרא עם פרוצדורה, היא מופעלת כרגיל. אם נקרא עם אירוע, <strong>כל הפרוצדורות הרשומות באירוע מופעלות בזו אחר זו</strong> לפי סדר רישומן, עם אותו ארגומנט.</li>
+                        </ul>
+                    </div>
+
+                    <div class="thought-box">
+                        <p class="text-purple-900 font-medium">
+                            <strong>הבנת המבנה הכללי באלגוריתם EOPL ובפרט IMPLICIT-REFS:</strong><br>
+                            בחלקה השני של שאלת מפרשים אנו נרצה להבין כיצד התנהגות השפה משפיעה על הלוגיקה: <br>
+                            שפת <strong>IMPLICIT-REFS</strong> מתאפיינת בניהול מפורש של <strong>מחסן (Store) ורפרנסים (References)</strong>. מזהים בסביבה אינם מצביעים ישירות על ערכים, אלא על הפניות במחסן. <br>
+                            לכן, בביטוי הרישום <code>id += ...</code>, הארגומנט הראשון הוא <strong>מזהה (Identifier)</strong>. כדי לשנות את האירוע, אנו חייבים לפנות לסביבה באמצעות <code>apply-env</code> לקבלת ההפניה (Ref), לשלוף את הערך הקיים, להוסיף את הפרוצדורות החדשות, ולבסוף לעדכן את המחסן באמצעות <code>setref!</code>.
+                        </p>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">מפת הדרכים האלגוריתמית:</h3>
+                    <ul class="space-y-3 text-slate-700">
+                        <li>
+                            <span class="font-semibold text-slate-900">1. lang.scm:</span> 
+                            הוספת כללי דקדוק וביטויים מותאמים.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">2. data-structures.scm:</span> 
+                            הגדרת Variant חדש <code>event-val</code> ב-ExpVal המכיל רשימת פרוצדורות (proc?).
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">3. interp.scm - value-of:</span> 
+                            מימוש הערכת הביטויים, שמירה על ניהול Store תקין, והפעלת פולימורפיזם בביטוי הקריאה.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">4. interp.scm - Helpers:</span> 
+                            פונקציית הפעלה מרובה רקורסיבית וואלידציה של טיפוסי הפרוצדורות.
+                        </li>
+                    </ul>
+                `,
+                code: `;; --- מפת הדרכים הכללית לאלגוריתם ---
+;; 1. lang.scm: הגדרת הדקדוק של event.create וביטוי ההוספה +=
+;; 2. data-structures.scm: הרחבת expval ב-event-val (list-of proc?)
+;; 3. interp.scm: מימוש value-of לביטויים החדשים ועדכון call-exp פולימורפי
+;; 4. interp.scm (Helpers): כתיבת apply-multi-proc ו-check-all-procs`
+            },
+            {
+                id: 1,
+                title: "שלב 1: עדכון הדקדוק (lang.scm)",
+                filename: "lang.scm",
+                explanation: `
+                    <p class="mb-4">ה-Parser וה-Scanner צריכים לדעת לזהות את שני הביטויים החדשים.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון קובץ התחביר והדקדוק (lang.scm):</strong> נוסיף את הכללים עבור יצירת אירוע ורישום פרוצדורות. נשים לב היטב לשגיאה של התלמיד בכתב היד: התלמיד רשם את המזהים של האירוע עטופים בסימוני הכתב-העילי <code>&quot;&lt;&quot;</code> ו-<code>&quot;&gt;&quot;</code> כמחרוזות מילוליות! סימונים אלה הם תיאור דקדוקי מטא-תחבירי בלבד ואינם נכתבים כתווים פיזיים בקוד."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">דיוקים בהגדרת הדקדוק:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-2 mb-4">
+                        <li><code>event.create()</code> מיוצג כמחרוזת אחת קבועה ללא משתנים פנימיים.</li>
+                        <li><code>event-add-exp</code> מקבל מזהה (identifier) כמצביע ראשון ורשימת ביטויים (separated-list of expressions) המופרדים בנקודה פסיק <code>&quot;;&quot;</code>.</li>
+                    </ul>
+                `,
+                code: `;; בקובץ lang.scm בתוך הגדרת the-grammar:
+
+(expression
+  ("event.create()")
+  event-create-exp)
+
+;; [תיקון שגיאת תלמיד]: התלמיד רשם שגוי: ("<" identifier ">" "+=" ...)
+(expression
+  (identifier "+=" "{" (separated-list expression ";") "}")
+  event-add-exp)`
+            },
+            {
+                id: 2,
+                title: "שלב 2: עדכון מבני הנתונים (data-structures.scm)",
+                filename: "data-structures.scm",
+                explanation: `
+                    <p class="mb-4">כדי לייצג אירוע בזמן ריצה, אנו מגדירים טיפוס נתונים חדש שמייצג אותו ועוטפים אותו בתוך <code>expval</code>.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מבני הנתונים (data-structures.scm):</strong> נרחיב את ה-datatype של <code>expval</code> באמצעות variant חדש בשם <code>event-val</code>. נדון בהחלטת העיצוב החשובה: הבוחן העיר בבחינה שמומלץ לשמור את רשימת הפרוצדורות כרשימה של <code>proc?</code> (המבנה הפנימי של פרוצדורה ב-EOPL) ולא כרשימה של <code>expval?</code> (העטיפה החיצונית של proc-val). לכן, נחלץ את ה-proc מתוך ה-expval בזמן ההוספה ונשמור אותם נקיים, ונגדיר פונקציית שליפה מתאימה <code>expval-&gt;event</code>."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">הגדרת ה-Variant והמחלץ:</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-700 space-y-1 mb-4">
+                        <li><code>event-val</code>: Variant חדש בתוך הגדרת <code>expval</code> שמקבל רשימת פרוצדורות <code>(procs (list-of proc?))</code>.</li>
+                        <li><code>expval-&gt;event</code>: פונקציית חילוץ ששולפת את רשימת ה-procs מתוך ה-expval או זורקת שגיאה אם הערך אינו אירוע.</li>
+                    </ul>
+                `,
+                code: `;; בקובץ data-structures.scm בתוך הגדרת expval datatype:
+  (event-val
+    (procs (list-of proc?)))
+
+;; פונקציית חילוץ חדשה:
+(define expval->event
+  (lambda (v)
+    (cases expval v
+      (event-val (procs) procs)
+      (else (eopl:error 'expval->event "not an event: ~s" v)))))`
+            },
+            {
+                id: 3,
+                title: "שלב 3: עדכון מנוע ההערכה (interp.scm)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">זהו הלב האלגוריתמי של הפתרון. אנו מיישמים את הלוגיקה בזמן ריצה בתוך <code>value-of</code>.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מנוע ההערכה (value-of בקובץ interp.scm):</strong> נעדכן את שלושת המקרים. ב-<code>event-create-exp</code>, נחזיר אירוע ריק <code>(event-val '())</code>. ב-<code>event-add-exp</code>, נשלוף את הרפרנס של <code>evnt</code> בעזרת <code>apply-env</code>, נדלה את הערך הנוכחי ונחלץ ממנו את הפרוצדורות הקיימות. במקביל, נעריך את ביטויי הפרוצדורות החדשות, נחלץ מכל אחד מהם את ה-proc, ונחבר את שתי הרשימות בעזרת <code>append</code>. לבסוף, נעדכן את המחסן בעזרת <code>setref!</code>. ב-<code>call-exp</code>, נבצע cases כפול ומותאם כדי לתמוך פולימורפית הן בקריאה לפרוצדורה רגילה והן להפעלת אירוע."
+                        </p>
+                    </div>
+
+                    <div class="thought-box">
+                        <p class="text-purple-900 font-medium">
+                            <strong>❌ מניעת מלכודת 'הערכת-יתר' (Evaluation):</strong><br>
+                            במימוש של <code>event-add-exp</code>, הצעד התחבירי הראשון <code>evnt</code> הוא מזהה. <br>
+                            הסטודנט בכתב היד רשם שגוי: <code>(value-of evnt env)</code>. זהו כשל מהותי בשפת IMPLICIT-REFS! קריאה כזו מנסה להעריך מזהה כביטוי, מה שיחזיר ערך מבוטא ולא יאפשר לנו לשנות את המחסן. <br>
+                            הדרך הנכונה לקבלת הרפרנס המקורי היא שליפה ישירה <code>(apply-env env evnt)</code> ולאחר מכן ביצוע dereference.
+                        </p>
+                    </div>
+                `,
+                code: `;; בקובץ interp.scm בתוך ה-cases של value-of:
+
+(event-create-exp ()
+  (event-val '()))
+
+(event-add-exp (evnt procs)
+  (let ((ref (apply-env env evnt))) ; שליפת הרפרנס מהסביבה הלקסיקלית
+    (let ((old-procs (expval->event (deref ref))) ; שליפת הפרוצדורות הקיימות
+          (new-vals (map (lambda (exp) (value-of exp env)) procs))) ; הערכת הביטויים החדשים
+      (begin
+        (validate-add-input new-vals) ; בדיקה שכולם מסוג proc-val
+        (let ((new-procs (map expval->proc new-vals))) ; חילוץ ה-proc הפנימי
+          (let ((all-procs (append old-procs new-procs))) ; מיזוג הרשימות
+            (begin
+              (setref! ref (event-val all-procs)) ; עדכון המחסן
+              (num-val 23)))))))) ; החזרת ערך דאמי תקין
+
+(call-exp (rator rand)
+  (let ((v (value-of rator env))
+        (arg (value-of rand env)))
+    (cases expval v
+      (proc-val (proc)
+        (apply-procedure proc arg))
+      (event-val (procs)
+        (if (null? procs)
+            (eopl:error 'value-of "cant invoke empty event")
+            (apply-multi-proc procs arg)))
+      (else (eopl:error 'value-of "only procedure or event can be invoked")))))`
+            },
+            {
+                id: 4,
+                title: "שלב 4: פונקציות עזר (interp.scm - helpers)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">בשלב זה נממש את פונקציות העזר מחוץ ל-<code>value-of</code> לקריאה מרובת פרוצדורות ולוולידציה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>מימוש פונקציות העזר:</strong> נממש את <code>apply-multi-proc</code> המבצעת קריאה רקורסיבית ורציפה לכל הפרוצדורות הרשומות על אותו ארגומנט, ומחזירה את התוצאה של הפרוצדורה האחרונה (מכיוון שלא הוגדרה דרישה אחרת). בנוסף, נגדיר את פונקציית הוולידציה <code>validate-add-input</code> שמוודאת שהרשימה אינה ריקה, וכן שהערכים המבוטאים שהתקבלו הם אכן מסוג <code>proc-val</code>."
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">תיקון לוגיקת המיזוג:</h3>
+                    <p class="text-slate-700 mb-4">
+                        בכתב היד, הסטודנט ניסה לממש פונקציית מיזוג רשימות ייעודית בשם <code>combine</code>. הבודק מחק אותה בצדק ורשם <em>"יש את append לזה"</em>. שימוש בפונקציה המובנית <code>append</code> של Scheme הוא מהיר, יעיל ומונע שגיאות מימוש מיותרות במבחן.
+                    </p>
+                `,
+                code: `;; פונקציות עזר בקובץ interp.scm מחוץ ל-value-of:
+
+(define apply-multi-proc
+  (lambda (procs arg)
+    (let ((res (apply-procedure (car procs) arg)))
+      (if (null? (cdr procs))
+          res
+          (apply-multi-proc (cdr procs) arg)))))
+
+(define validate-add-input
+  (lambda (vals)
+    (if (null? vals)
+        (eopl:error 'validate-add-input "empty list not allowed for add events")
+        (check-all-procs vals))))
+
+(define check-all-procs
+  (lambda (vals)
+    (if (null? vals)
+        #t
+        (cases expval (car vals)
+          (proc-val (proc)
+            (check-all-procs (cdr vals)))
+          (else (eopl:error 'check-all-procs "event cant contain non-procedure elements"))))))`
+            },
+            {
+                id: 5,
+                title: "שלב 5: נקודות כשל נפוצות וטיפ של אלופים",
+                filename: "exam_tips.txt",
+                explanation: `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-xl text-red-900 shadow-md space-y-4">
+                        <h3 class="font-extrabold text-xl flex items-center text-red-800">
+                            <i class="fa-solid fa-triangle-exclamation ml-3 text-2xl"></i>
+                            מלכודות מבחן קריטיות - שאלת אירועים!
+                        </h3>
+                        <p class="text-sm leading-relaxed">
+                            בשאלות של אירועים ורפרנסים בשפת IMPLICIT-REFS, הבוחנים מתמקדים בשלושה מוקדים בהם סטודנטים נופלים:
+                        </p>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 1: בלבול בין מזהה (Identifier) לביטוי (Expression) ב-IMPLICIT-REFS</strong>
+                                בביטוי <code>id += ...</code>, המשתנה <code>id</code> מועבר כפרמטר מסוג <strong>symbol</strong> (מזהה) ולא כביטוי. 
+                                קריאה ל-<code>(value-of evnt env)</code> היא שגיאה מהותית. 
+                                הדרך הנכונה לגשת לערכו היא לקרוא ל-<code>(apply-env env evnt)</code> לקבלת הרפרנס, ולאחר מכן לבצע <code>deref</code>.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 2: רמה אחת בלבד של חילוץ (Proc vs ExpVal)</strong>
+                                ודאו שאתם שומרים ב-<code>event-val</code> רשימה של <code>proc?</code> ולא של <code>expval?</code>. 
+                                חוסר תשומת לב גורר שמירת עטיפות כפולות, מה שיקריס את המפרש בהפעלת <code>apply-procedure</code>. 
+                                יש לבצע חילוץ כפול: בדיקת Cases על expval כדי לוודא <code>proc-val</code>, וחילוץ ה-<code>proc</code> מתוכו.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 3: החזרת ערך גולמי של Scheme ב-value-of</strong>
+                                כל קריאה ל-<code>value-of</code> חייבת להחזיר ערך מטיפוס <code>expval</code>. 
+                                בהוספת אירוע <code>event-add-exp</code>, אחרי ביצוע השינוי במחסן (setref!), חובה להחזיר ערך מבוטא תקין (למשל, <code>(num-val 23)</code>), ולא <code>#t</code> או ערך גולמי אחר של Scheme.
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-slate-700 font-medium">
+                        הטמעת ההפרדה המוחלטת בין הרפרנס במחסן לבין הערך המבוטא היא המפתח להצלחה בשאלות Reference!
+                    </p>
+                `,
+                code: `;; --- ריכוז נקודות תורפה וטיפים למבחן ---
+;; 1. ב-IMPLICIT-REFS מזהים מצביעים על הפניות במחסן.
+;; 2. שימוש ב-apply-env לקבלת רפרנס לשינוי.
+;; 3. חילוץ כפול של ה-proc הפנימי מה-expval.
+;; 4. שימוש ב-append מובנה למיזוג רשימות.`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+            
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + currentStep;
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+                
+                if (step.code && step.filename) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    if (window.Prism) {
+                        Prism.highlightElement(codeBlock);
+                    }
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+                
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+                
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

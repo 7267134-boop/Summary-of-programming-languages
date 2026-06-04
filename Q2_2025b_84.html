@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שאלת for/proc עם Guards - 2025ב מועד א</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Box Styles */
+        .template-box {
+            position: relative;
+            background: #f0fdf4;
+            border-right: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .template-box::before {
+            content: "✍️ שבלונה למבחן";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #16a34a;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .thought-box {
+            position: relative;
+            background: #fdf4ff;
+            border-right: 4px solid #d946ef;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .thought-box::before {
+            content: "💡 הבנת התהליך האלגוריתמי";
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #c084fc;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark-scroll::-webkit-scrollbar-track { background: #020617; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Animation */
+        .step-transition { transition: all 0.3s ease-out; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+        <div class="p-6 border-b border-slate-800 bg-darker">
+            <h1 class="text-2xl font-black text-white tracking-tight leading-tight">Loops &<br><span class="text-blue-500">Guards</span></h1>
+            <p class="text-xs text-slate-400 mt-2">פתרון שאלת מועד א 2025ב (שפה: IMPLICIT-REFS)</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center gap-2 relative z-10">
+            <button id="prev-btn" onclick="prevStep()" class="px-4 py-2 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded transition font-semibold disabled:opacity-40 text-sm">חזור</button>
+            <span id="step-counter" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full"></span>
+            <button id="next-btn" onclick="nextStep()" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition font-semibold text-sm">המשך</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6">
+                <div id="step-number-badge" class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4">טוען...</h2>
+            </header>
+
+            <div id="step-explanation" class="text-lg text-slate-700 leading-relaxed mb-10 space-y-4">
+                <!-- Explanation text injected by JS -->
+            </div>
+
+            <div id="code-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between text-slate-400 text-sm">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div id="file-name" class="font-mono text-emerald-300 font-bold text-xs" dir="ltr"></div>
+                </div>
+                <div>
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+
+    <script>
+        const steps = [
+            {
+                id: 0,
+                title: "שלב 0: ניתוח הדרישה ומפת דרכים",
+                filename: "question_analysis.txt",
+                explanation: `
+                    <p class="mb-4">במבחן זה (מועד א 2025ב שאלה 2 - קורס 84), אנו נדרשים להרחיב את שפת <strong>IMPLICIT-REFS (יורמוז)</strong> בתמיכה בלולאת <strong>for/proc עם Guards</strong>.</p>
+                    
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6 shadow-sm">
+                        <h4 class="font-bold text-blue-900 text-base mb-2">דרישות השפה החדשות:</h4>
+                        <div class="bg-white p-3 rounded border border-blue-100 font-mono text-sm mb-4 ltr text-left">
+Expression ::= for/proc ( identifier ; [ { identifier }*(,) ] ; [ { Expression }*(,) ] ) {&lt; Guard &gt;}* { Expression }<br>
+Guard ::= skip : Expression<br>
+Guard ::= break : Expression
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-blue-900 space-y-2">
+                            <li><code>for/proc ( loopvar; [ids*]; [bodies*] ) &lt;guards*&gt; { body }</code>: בכל איטרציה נבנית פרוצדורה חדשה עם הפרמטר הבא מתוך <code>ids</code> והגוף הבא מתוך <code>bodies</code>, והיא נקשרת למשתנה הלולאה המקומי <code>loopvar</code>.</li>
+                            <li><code>skip : exp</code>: אם הביטוי מוערך כאמת (#t), מדלגים על גוף הלולאה באיטרציה הנוכחית וממשיכים הלאה.</li>
+                            <li><code>break : exp</code>: אם הביטוי מוערך כאמת (#t), מפסיקים את פעולת הלולאה ויוצאים מיד.</li>
+                        </ul>
+                    </div>
+
+                    <div class="thought-box">
+                        <p class="text-purple-900 font-medium">
+                            <strong>הבנת המבנה הכללי באלגוריתם IMPLICIT-REFS:</strong><br>
+                            מכיוון שזו שפת השמות עם הפניות משתנות (References), הגדרת משתנה הלולאה <code>loopvar</code> בכל איטרציה מחייבת אותנו <strong>להקצות רפרנס חדש במחסן</strong>. <br>
+                            כלומר, אנו נקרא ל-<code>(newref (proc-val (procedure ...)))</code> ונרחיב את הסביבה באמצעות <code>extend-env</code>. <br>
+                            בנוסף, נדון בשני נושאים אלגוריתמיים מרתקים: <strong>הערכה עצלה מול הערכה מיידית של Guards</strong>, וכן <strong>רקורסיה מבוססת עץ AST מול רקורסיה מבוססת פונקציית עזר בסקים</strong>.
+                        </p>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">מפת הדרכים האלגוריתמית:</h3>
+                    <ul class="space-y-3 text-slate-700">
+                        <li>
+                            <span class="font-semibold text-slate-900">1. lang.scm:</span> 
+                            הוספת כללי דקדוק ללולאה ולשני סוגי ה-Guards.
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">2. data-structures.scm:</span> 
+                            הגדרת ה-ADT עבור ה-Guards (skip-guard ו-break-guard).
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-900">3. interp.scm - value-of:</span> 
+                            הערכת הלולאה, ניהול המחסן, וריצת ה-Guards בזמן ריצה.
+                        </li>
+                    </ul>
+                `,
+                code: `;; --- מפת הדרכים הכללית לאלגוריתם ---
+;; 1. lang.scm: הגדרת הדקדוק של for/proc ושני ה-guards
+;; 2. data-structures.scm: הגדרת ה-ADT ל-guard
+;; 3. interp.scm: מימוש value-of לביטוי הלולאה
+;; 4. interp.scm (Helpers): פונקציות העזר לזיהוי וחילוץ אינדקסים`
+            },
+            {
+                id: 1,
+                title: "שלב 1: עדכון הדקדוק (lang.scm)",
+                filename: "lang.scm",
+                explanation: `
+                    <p class="mb-4">ה-Parser וה-Scanner צריכים לדעת לזהות את הלולאה ואת ה-Guards.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון קובץ התחביר והדקדוק (lang.scm):</strong> נגדיר את ביטוי הלולאה <code>forproc-exp</code> ואת ביטויי ה-Guard. נשים לב לפרטים הקטנים: הסימנים <code>&quot;&lt;&quot;</code> ו-<code>&quot;&gt;&quot;</code> מופיעים סביב ה-Guards כסמלים מילוליים בקוד, ולכן נרשום אותם בגרשיים מפורשים. כמו כן, נבצע פירוק לרשימות המופרדות בפסיקים באמצעות <code>separated-list</code>."
+                        </p>
+                    </div>
+                `,
+                code: `;; בקובץ lang.scm בתוך הגדרת the-grammar:
+
+(expression
+  ("for/proc" "(" identifier ";"
+   "[" (separated-list identifier ",") "]" ";"
+   "[" (separated-list expression ",") "]" ")"
+   (arbno "<" guard ">")
+   "{" expression "}")
+  forproc-exp)
+
+(guard
+  ("skip" ":" expression)
+  skip-guard)
+
+(guard
+  ("break" ":" expression)
+  break-guard)`
+            },
+            {
+                id: 2,
+                title: "שלב 2: עדכון מבני הנתונים (data-structures.scm)",
+                filename: "data-structures.scm",
+                explanation: `
+                    <p class="mb-4">עבור ה-Guards, אנו מגדירים ADT ייעודי שיאפשר לנו להבדיל בין סוגי ה-Guards בזמן ריצה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מבני הנתונים (data-structures.scm):</strong> נגדיר datatype חדש בשם <code>guard</code> המכיל שני מקרים (variants): <code>skip-guard</code> ו-<code>break-guard</code>, כשכל אחד מהם עוטף את הביטוי התנאי שלו."
+                        </p>
+                    </div>
+                `,
+                code: `;; בקובץ data-structures.scm:
+
+(define-datatype guard guard?
+  (skip-guard
+    (exp expression?))
+  (break-guard
+    (exp expression?)))`
+            },
+            {
+                id: 3,
+                title: "שלב 3: עדכון מנוע ההערכה (interp.scm)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">כאן אנו מעדכנים את <code>value-of</code> ומממשים את הלולאה. נשווה בין דרכי המימוש של הסטודנט לדרכים המומלצות.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>עדכון מנוע ההערכה (interp.scm):</strong> בכל איטרציה אנו מרחיבים את הסביבה הלקסיקלית על ידי יצירת רפרנס חדש במחסן עבור משתנה הלולאה המקומי, שבו שמורה הפרוצדורה המתאימה. לאחר מכן נבחן את שתי החלטות העיצוב החשובות:"
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">1. הערכת גארדים: עצלה (Lazy) מול מיידית (Eager)</h3>
+                    <div class="text-sm text-slate-700 space-y-2 mb-4">
+                        <div class="bg-white p-3 rounded border border-slate-200">
+                            <strong>הגרסה של הסטודנט (מיידית):</strong> הסטודנט העריך את כל ה-Guards מראש באמצעות <code>map</code>, ואז חיפש את ה-true הראשון. <br>
+                            <em>חיסרון:</em> אם ה-Guard הראשון היה break, ה-Parser עדיין העריך את כל ה-Guards הבאים. אם אחד מהם מכיל שגיאה (כמו חלוקה באפס), המפרש יקרוס ללא צורך!
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded border border-blue-200">
+                            <strong>הגרסה המומלצת (עצלה):</strong> הערכת ה-Guards בזה אחר זה בצורה טורית. ברגע ש-Guard אחד מחזיר true, אנו מייצרים מיד את פעולת ה-skip או ה-break המתאימה, מבלי להעריך את שאר ה-Guards.
+                        </div>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">2. רקורסיה: רקורסיית AST מול רקורסיית עזר של Scheme</h3>
+                    <div class="text-sm text-slate-700 space-y-2 mb-4 font-mono">
+                        <p>הסטודנט ביצע רקורסיה על ידי יצירת צומת AST חדש וקריאה מחדש ל-<code>value-of</code>:</p>
+                        <pre class="language-scheme"><code>(value-of (forproc-exp loopvar (cdr pvars) ...) env)</code></pre>
+                        <p>זוהי לוגיקה נכונה למבחן ומאוד מקובלת, אך היא מסורבלת ומייצרת צמתים זמניים במפרש. הדרך התעשייתית היא להגדיר פונקציית עזר רקורסיבית מבוססת Scheme שמריצה את האיטרציות באופן ישיר.</p>
+                    </div>
+                `,
+                code: `;; בקובץ interp.scm בתוך cases של value-of:
+
+(forproc-exp (loopvar pvars pbodies guards body)
+  (cond
+    ((not (= (length pvars) (length pbodies)))
+     (eopl:error 'forproc-exp "Not same length lists"))
+    ((= 0 (length pvars))
+     (num-val 27)) ; החזרת ערך דאמי תקין
+    (else
+      ;; בכל איטרציה מייצרים רפרנס חדש עבור משתנה הלולאה
+      (let* ((new-env (extend-env loopvar
+                        (newref (proc-val (procedure
+                          (car pvars) (car pbodies) env))) env))
+             ;; חילוץ הביטויים של הגארדים
+             (exps (map (lambda (g)
+                          (cases guard g
+                            (skip-guard (v) v)
+                            (break-guard (v) v))) guards))
+             ;; הערכת הגארדים בסביבה החדשה (גרסת הסטודנט)
+             (vals (map (lambda (e) (value-of e new-env)) exps))
+             (i (index-of (bool-val #t) vals)))
+        (cond
+          ((= -1 i) ; אין אף גארד שהתקיים -> מבצעים את הגוף וממשיכים
+           (begin
+             (value-of body new-env)
+             (value-of (forproc-exp loopvar
+               (cdr pvars) (cdr pbodies) guards body) env)))
+          (else
+           (let ((act (action-of i guards)))
+             (if (string=? act "skip") ; גארד מסוג skip -> מדלגים על הגוף וממשיכים
+                 (value-of (forproc-exp loopvar (cdr pvars)
+                             (cdr pbodies) guards body) env)
+                 ; גארד מסוג break -> עוצרים מיד ומחזירים ערך דאמי
+                 (num-val 27)))))))))`
+            },
+            {
+                id: 4,
+                title: "שלב 4: פונקציות עזר (interp.scm - helpers)",
+                filename: "interp.scm",
+                explanation: `
+                    <p class="mb-4">להלן פונקציות העזר מחוץ ל-<code>value-of</code> המאפשרות לקוד של הלולאה לעבוד בצורה נקייה וחלקה.</p>
+                    
+                    <div class="template-box">
+                        <p class="text-emerald-900 font-medium">
+                            "<strong>מימוש פונקציות עזר:</strong> 
+                            1. <code>action-of</code> מחזירה מחרוזת המייצגת את סוג ה-Guard לפי האינדקס שלו.
+                            2. <code>index-of</code> מחזירה את האינדקס של האיבר הראשון התואם ברשימה (או 1- אם לא נמצא)."
+                        </p>
+                    </div>
+                `,
+                code: `;; פונקציות עזר מחוץ ל-value-of בקובץ interp.scm:
+
+(define action-of
+  (lambda (i gs)
+    (let ((g (list-ref gs i)))
+      (cases guard g
+        (skip-guard (v) "skip")
+        (break-guard (v) "break")))))
+
+(define index-of
+  (lambda (e lst)
+    (letrec ((helpr (lambda (element list idx)
+                      (cond
+                        ((null? list) -1)
+                        ((equal? (car list) element) idx)
+                        (else (helpr element (cdr list) (+ 1 idx)))))))
+      (helpr e lst 0))))`
+            },
+            {
+                id: 5,
+                title: "שלב 5: נקודות כשל נפוצות וטיפ של אלופים",
+                filename: "exam_tips.txt",
+                explanation: `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-xl text-red-900 shadow-md space-y-4">
+                        <h3 class="font-extrabold text-xl flex items-center text-red-800">
+                            <i class="fa-solid fa-triangle-exclamation ml-3 text-2xl"></i>
+                            מלכודות מבחן קריטיות - שאלת for/proc עם Guards!
+                        </h3>
+                        <p class="text-sm leading-relaxed">
+                            בשאלות של לולאות וניהול הפניות ב-IMPLICIT-REFS, מומלץ להיזהר מהמלכודות הבאות:
+                        </p>
+                        
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 1: הקצאת רפרנס (newref) עבור משתנה הלולאה</strong>
+                                בשפת IMPLICIT-REFS, כל קשירת משתנה חדש בסביבה דורשת הקצאת רפרנס. 
+                                אם תבצעו <code>(extend-env loopvar (proc-val ...) env)</code> ללא שימוש ב-<code>newref</code>, מנוע הזיכרון יקרוס או שפעולת השמה (mutation) עתידית עליו תיכשל. 
+                                חובה לכתוב <code>(newref (proc-val ...))</code>.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 2: סביבת הגדרת הפרוצדורה (Lexical scoping)</strong>
+                                כשבונים את הפרוצדורה בכל איטרציה, יש להעביר את הסביבה הלקסיקלית שבה הלולאה מוגדרת <code>env</code> ולא את הסביבה המורחבת של האיטרציה הבודדת <code>new-env</code>. 
+                                קשירת הפרוצדורה ל-new-env עלולה לגרום ללולאה אינסופית או לקריסה עקב מעגליות לא רצויה.
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-red-100">
+                                <strong class="text-red-950 block mb-1">❌ מלכודת 3: החזרת ערך דאמי בסיום הלולאה וב-Break</strong>
+                                ללולאה אין ערך חישוב מוחזר רשמי בשפה, אך כל ביטוי במפרש EOPL חייב להחזיר ערך מסוג <code>expval</code>. 
+                                הקפידו להחזיר ערך דאמי תקין כמו <code>(num-val 27)</code> הן בסיום הלולאה והן בעצירתה עקב גארד מסוג break.
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-slate-700 font-medium">
+                        זכרו: הקפדה על חוקי ניהול המחסן של IMPLICIT-REFS תבטיח לכם פתרון תקין ומלא!
+                    </p>
+                `,
+                code: `;; --- ריכוז נקודות תורפה וטיפים למבחן ---
+;; 1. קשירת משתנה דורשת שימוש ב-newref בשפת IMPLICIT-REFS.
+;; 2. רקורסיית לולאה מתקדמת בסביבה הלקסיקלית env.
+;; 3. הקפדה על ערך החזרה דאמי (num-val 27) בכל נקודות היציאה מהלולאה.`
+            }
+        ];
+
+        let currentStep = 0;
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        function init() {
+            renderSidebar();
+            updateUI();
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${index}: ${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Fade out
+            contentContainer.classList.remove('fade-enter-active');
+            contentContainer.classList.add('fade-enter');
+            
+            setTimeout(() => {
+                stepNumberBadge.textContent = "תחנה " + currentStep;
+                stepTitle.textContent = step.title;
+                stepExplanation.innerHTML = step.explanation;
+                
+                if (step.code && step.filename) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-regular fa-file-code ml-2"></i>${step.filename}`;
+                    codeBlock.textContent = step.code;
+                    if (window.Prism) {
+                        Prism.highlightElement(codeBlock);
+                    }
+                } else {
+                    codeContainer.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentStep === 0;
+                stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+                
+                if (currentStep === steps.length - 1) {
+                    nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+                } else {
+                    nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+                }
+
+                renderSidebar();
+                
+                // Fade in
+                contentContainer.classList.remove('fade-enter');
+                contentContainer.classList.add('fade-enter-active');
+            }, 150);
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

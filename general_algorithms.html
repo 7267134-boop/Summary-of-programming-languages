@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Algorithms - מדריך האלגוריתמים המקיף</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Heebo', 'Segoe UI', 'sans-serif'],
+                        mono: ['Consolas', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Heebo', sans-serif; background-color: #f8fafc; }
+        .tab-content { display: none; opacity: 0; transition: opacity 0.3s; }
+        .tab-content.active { display: block; opacity: 1; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        pre[class*="language-"] { direction: ltr; text-align: left; border-radius: 0.75rem; font-size: 0.95rem; }
+        
+        .nav-btn { display: block; width: 100%; text-align: right; padding: 0.75rem 1rem; color: #cbd5e1; transition: all 0.2s; border-radius: 0.5rem; margin-bottom: 0.25rem; font-size: 0.95rem; }
+        .nav-btn:hover { background-color: #1e293b; color: #fff; padding-right: 1.5rem; }
+        .nav-btn.active-nav { background-color: #2563eb; color: #fff; font-weight: bold; border-right: 4px solid #60a5fa; }
+        .nav-group-title { font-size: 0.75rem; font-weight: 800; color: #64748b; margin-top: 1.5rem; margin-bottom: 0.5rem; padding-right: 0.5rem; }
+        
+        /* Custom UI Components */
+        .thought-box { background: #fdf4ff; border-right: 4px solid #d946ef; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .tip-box { background: #fffbeb; border-right: 4px solid #f59e0b; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .exam-box { position: relative; background: #fffbeb; border-right: 4px solid #f59e0b; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .exam-box::before { content: "📝 תכל'ס במבחן"; position: absolute; top: -12px; right: 16px; background: #d97706; color: white; padding: 2px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        .template-box { position: relative; background: #f0fdf4; border-right: 4px solid #22c55e; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .template-box::before { content: "🛠️ תבנית קוד"; position: absolute; top: -12px; right: 16px; background: #16a34a; color: white; padding: 2px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        .mental-model-box { background: #eef2ff; border-right: 4px solid #6366f1; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .error-box { background: #fef2f2; border-right: 4px solid #ef4444; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        .deep-dive { background: #f8fafc; border: 1px solid #cbd5e1; border-right: 4px solid #64748b; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; }
+        code.inline-code { background-color: #e2e8f0; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-family: monospace; color: #b91c1c; }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+<aside class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800">
+    <div class="p-6 border-b border-slate-800 bg-darker">
+        <h1 class="text-3xl font-black text-white tracking-tight leading-tight">Mastering<br><span class="text-blue-500">Algorithms</span></h1>
+        <p class="text-xs text-slate-400 mt-2">אלגוריתמים, מודלים מנטליים, תבניות ומלכודות</p>
+    </div>
+    <div class="flex-1 overflow-y-auto p-4 pb-20">
+        <div class="nav-group">
+            <div class="nav-group-title">מרחב עבודה</div>
+            <button onclick="showTab('tab-intro')" id="btn-tab-intro" class="nav-btn active-nav"><span>📝 מבוא ושיטות עבודה</span></button>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">שאלה 1: הרחבת שפה (Syntax)</div>
+            <button onclick="showTab('tab-q1-0')" id="btn-tab-q1-0" class="nav-btn"><span>1.0 מפת דרכים וויזואלית</span></button>
+            <button onclick="showTab('tab-q1-1')" id="btn-tab-q1-1" class="nav-btn"><span>1.1 תבניות ב-lang ו-data</span></button>
+            <button onclick="showTab('tab-q1-2')" id="btn-tab-q1-2" class="nav-btn"><span>1.2 סגירות ו-Env (Closures)</span></button>
+            <button onclick="showTab('tab-q1-3')" id="btn-tab-q1-3" class="nav-btn"><span>1.3 אלגוריתם value-of</span></button>
+            <button onclick="showTab('tab-q1-4')" id="btn-tab-q1-4" class="nav-btn"><span>1.4 מלכודות נפוצות מ-5 מבחנים</span></button>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">שאלה 2: זיכרון (Store & Refs)</div>
+            <button onclick="showTab('tab-q2-0')" id="btn-tab-q2-0" class="nav-btn"><span>2.0 Store vs Env (ויזואלי)</span></button>
+            <button onclick="showTab('tab-q2-1')" id="btn-tab-q2-1" class="nav-btn"><span>2.1 Implicit מול Explicit Refs</span></button>
+            <button onclick="showTab('tab-q2-2')" id="btn-tab-q2-2" class="nav-btn"><span>2.2 תבניות קבועות במוטציות</span></button>
+            <button onclick="showTab('tab-q2-3')" id="btn-tab-q2-3" class="nav-btn"><span>2.3 זליגת סביבות (Pollution)</span></button>
+            <button onclick="showTab('tab-q2-4')" id="btn-tab-q2-4" class="nav-btn"><span>2.4 השוואה ייחודית מול שאלה 1</span></button>
+        </div>
+        <div class="nav-group">
+            <div class="nav-group-title">שאלה 3: הקשת טיפוסים (Type)</div>
+            <button onclick="showTab('tab-q3-0')" id="btn-tab-q3-0" class="nav-btn"><span>3.0 זרימת אלגוריתם (ויזואלי)</span></button>
+            <button onclick="showTab('tab-q3-1')" id="btn-tab-q3-1" class="nav-btn"><span>3.1 חלק א: חילוץ משוואות (Rules)</span></button>
+            <button onclick="showTab('tab-q3-2')" id="btn-tab-q3-2" class="nav-btn"><span>3.2 חלק ב: אלגוריתם Unification</span></button>
+            <button onclick="showTab('tab-q3-3')" id="btn-tab-q3-3" class="nav-btn"><span>3.3 שגיאות (Type / Occurs Check)</span></button>
+            <button onclick="showTab('tab-q3-4')" id="btn-tab-q3-4" class="nav-btn"><span>3.4 עצי גזירה (Derivation Trees)</span></button>
+        </div>
+    </div>
+</aside>
+<main class="flex-1 overflow-y-auto bg-white relative">
+    <div class="max-w-5xl mx-auto p-10 lg:p-16 pb-32">
+
+<div id="tab-intro" class="tab-content active">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">מבוא <span class="text-blue-600">ושיטות עבודה למבחן</span></h2>
+        <p class="text-xl text-slate-600">מדריך זה נכתב לאחר סקירה וניתוח של למעלה מ-15 מבחני עבר. המדריך מפרק את התבניות הקבועות שמופיעות בכל שאלה, ומציג את הדרך הלוגית והסדורה לעבור אותן.</p>
+    </header>
+    <div class="deep-dive space-y-6">
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">למה בעצם בנינו את המדריך הזה?</h3>
+        <p class="text-lg">במבחן יש שלוש שאלות ענקיות, אך לכל אחת מהן יש **DNA קבוע**:</p>
+        <ul class="list-disc list-inside space-y-2 mt-4 text-slate-700">
+            <li><strong>שאלה 1 (הרחבת שפה):</strong> בודקת את ההבנה של <code>Syntax</code> (איך הקוד נכתב) ו-<code>Semantics</code> (איך הוא מתורגם לערכים באמצעות הסביבה). אין פה התעסקות עם זיכרון (Store).</li>
+            <li><strong>שאלה 2 (זיכרון ומוטציות):</strong> בודקת את ההבנה של <code>Store</code> (המחסן ששומר ערכים אמיתיים) ו-<code>References</code> (מצביעים). כאן כמעט תמיד תדרשו לעדכן מידע קיים בעזרת <code>setref!</code>.</li>
+            <li><strong>שאלה 3 (טיפוסים):</strong> אלגוריתם פורמלי ללא קוד. בודק אם אתם יודעים לגזור משוואות טיפוסים (Type Equations) ולפתור אותן עם מילון הצבות (Substitution).</li>
+        </ul>
+        <div class="exam-box">
+            <p><strong>אופן העבודה במבחן:</strong> אל תחפשו "לזכור בעל פה" מבנה של פונקציה ממבחן קודם. חפשו את ה<strong>תבנית</strong>. כל שאלה 1 צריכה Parser. כל שאלה 2 צריכה Reference. עבדו לפי צ'קליסט השלבים המופיע בכל פרק!</p>
+        </div>
+    </div>
+</div>
+
+<!-- Q1 STAGE 0 -->
+<div id="tab-q1-0" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <div class="inline-block px-4 py-1 bg-blue-600 text-white rounded-full font-bold text-sm mb-4">שאלה 1 | שלב 0</div>
+        <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">מפת דרכים <span class="text-blue-600">וויזואלית (שאלה 1)</span></h2>
+        <p class="text-xl text-slate-600">איך המפרש קורא את התוכנית החדשה שלכם משורת קוד פשוטה ועד להרצה?</p>
+    </header>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-8">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">זרימת המידע (Pipeline) של שאלה 1</h3>
+        <div class="mermaid flex justify-center">
+            graph LR
+            A[String<br>"let x=5"] -->|Scanner & Parser<br>lang.scm| B(AST<br>data-structures.scm)
+            B -->|Evaluation<br>interp.scm| C{value-of}
+            C -->|apply-env / extend-env| D[ExpVal<br>num-val, bool-val...]
+            
+            style A fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
+            style B fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+            style C fill:#fffbeb,stroke:#f59e0b,stroke-width:2px
+            style D fill:#fdf4ff,stroke:#d946ef,stroke-width:2px
+        </div>
+    </div>
+    <div class="mental-model-box">
+        <h3 class="text-2xl font-bold text-indigo-900 mb-4">מה מייחד את שאלה 1?</h3>
+        <p class="text-slate-800">בשאלה 1 הכל מתחיל ונגמר ב<strong>סביבה (Environment)</strong>. המטרה שלכם היא להבין: 1. מה התחביר? 2. מה הערך שמוחזר? 3. האם אנחנו פותחים Scope חדש (כמו בלוק let או for) שמרחיב את הסביבה למשתנים פנימיים? <strong>אין נגיעה ב-Store!</strong></p>
+    </div>
+</div>
+
+<!-- Q1 STAGE 1 -->
+<div id="tab-q1-1" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">תבניות ב- <span class="text-blue-600">lang.scm ו-data-structures.scm</span></h2>
+    </header>
+    <div class="deep-dive">
+        <h3 class="font-bold text-xl text-slate-800 mb-2">שלב 1: עדכון lang.scm (הפארסר)</h3>
+        <p class="text-slate-700 mb-4">חפשו את שורת התחביר (Grammar) בשאלה, והמירו אותה במדויק לחוקי SLLGEN. דוגמאות ממבחני 2021-2025:</p>
+        <ul class="list-disc list-inside space-y-2 font-mono text-sm bg-slate-100 p-4 rounded text-blue-900">
+            <li>"let" identifier "=" expression -> <code>("let" identifier "=" expression)</code></li>
+            <li>{identifier}*(,) -> <code>(separated-list identifier ",")</code> (רשימה מופרדת פסיקים)</li>
+            <li>{expression}* -> <code>(arbno expression)</code> (רשימה רצופה של אפס או יותר)</li>
+        </ul>
+        <div class="error-box mt-4 !m-0">
+            <p><strong>מלכודת נפוצה:</strong> כתיבת מזהה עם מירכאות ("identifier") במקום בלי. מילה שמורה (Keyword) תמיד עם מירכאות, טיפוס דינמי כמו מספר או מזהה לעולם ללא מירכאות!</p>
+        </div>
+    </div>
+    <div class="template-box">
+        <h3 class="font-bold text-xl text-green-900 mb-2">שלב 2: עדכון data-structures.scm (מבנה ה-Expval)</h3>
+        <p class="text-slate-700 mb-4">מתי נוסיף ערך חדש ל-Expval? רק אם השפה מחזירה טיפוס נתונים חדש שעוד לא קיים (כמו Tuple, Class, או Lazy-Thunk). אם השאלה רק יוצרת לולאה או ביטוי מותנה - לרוב אין צורך לגעת פה!</p>
+        <pre><code class="language-scheme">;; תבנית הוספת טיפוס פשוט (למשל רשימת ערכים - Tuple מ-2021)
+(define-datatype expval expval?
+  (num-val (num number?))
+  (bool-val (bool boolean?))
+  ;; הוספה שלנו:
+  (tuple-val (vals (list-of expval?))))
+
+;; חולץ (Extractor) מתאים:
+(define expval->tuple
+  (lambda (v)
+    (cases expval v
+      (tuple-val (vals) vals)
+      (else (expval-extractor-error 'tuple v)))))</code></pre>
+    </div>
+</div>
+
+<!-- Q1 STAGE 2 -->
+<div id="tab-q1-2" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">סגירות <span class="text-blue-600">(Closures) והסביבה</span></h2>
+    </header>
+    <div class="mental-model-box bg-purple-50 border-purple-500">
+        <h3 class="text-2xl font-bold text-purple-900 mb-4">מתי שומרים סביבה בתוך הערך? (Lazy Evaluation)</h3>
+        <p class="text-slate-800 mb-4">במבחנים רבים (כמו מועד 2025ב), המשתמש מעביר פקודה שלא מתבצעת מיד. למשל פונקציה, או בלוק "Thunk" של הערכה עצלה. החוק החשוב ביותר בתכנות פונקציונלי הוא Lexical Scoping.</p>
+        <div class="bg-white p-4 rounded shadow-sm">
+            <p class="text-red-700 font-bold">חוק הברזל:</p>
+            <p class="text-slate-700">אם ה-ExpVal שאתם בונים ב-<code>data-structures</code> מכיל <code>expression</code> שעוד לא עבר <code>value-of</code>, <strong>אתם חייבים לשמור בתוכו את ה-<code>environment</code> של הרגע בו הוא נוצר!</strong></p>
+        </div>
+    </div>
+    <div class="template-box">
+        <pre><code class="language-scheme">;; ב-data-structures.scm: תבנית לשמירת סביבה (Closure/Thunk)
+(lazy-val 
+  (body-exp expression?)
+  (saved-env environment?)) ;; ארוז בתוך הקופסה!
+
+;; וב-interp.scm כשיבקשו לבצע (Force) אותו:
+(force-exp (lazy-expr)
+  (let* ((lazy-obj (value-of lazy-expr env))
+         ;; שולפים חזרה גם את הביטוי וגם את הסביבה השמורה
+         (extracted (expval->lazy lazy-obj)) 
+         (body (car extracted))
+         (saved-env (cadr extracted)))
+         
+    ;; מעריכים את הביטוי תחת הסביבה **השמורה**, ולא הסביבה הנוכחית!
+    (value-of body saved-env)))</code></pre>
+    </div>
+</div>
+
+<!-- Q1 STAGE 3 -->
+<div id="tab-q1-3" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">אלגוריתם <span class="text-blue-600">value-of</span></h2>
+    </header>
+    <div class="exam-box">
+        <p>כאן קורה כל הקסם. לכל שורת תחביר שהוספנו ב-<code>lang.scm</code>, נוצר מקרה ב-<code>cases expression</code> בתוך <code>interp.scm</code>.</p>
+    </div>
+    <div class="deep-dive">
+        <h3 class="text-xl font-bold text-slate-800 mb-4">התבנית הכללית ב-value-of</h3>
+        <ol class="list-decimal list-inside space-y-3 text-slate-700">
+            <li><strong>קבלת הארגומנטים מה-AST:</strong> אם זה ביטוי (expression), מעריכים אותו מיד עם <code>(value-of arg env)</code>. אם זה מזהה (identifier), מחלצים אותו באמצעות <code>(apply-env env id)</code>.</li>
+            <li><strong>חילוץ נתונים (Unpacking):</strong> הפעלת פונקציות כמו <code>expval->num</code> כדי לעשות מתמטיקה.</li>
+            <li><strong>הלוגיקה (Logic):</strong> הרצת לולאה, יצירת סביבה מורחבת (<code>extend-env</code>) להרצת גוף הפונקציה.</li>
+            <li><strong>אריזה מחדש (Wrapping):</strong> תמיד לעטוף את התוצאה הסופית ב-<code>num-val</code>, <code>bool-val</code> וכו'. פונקציית <code>value-of</code> <strong>חייבת להחזיר ExpVal!</strong></li>
+        </ol>
+    </div>
+    <div class="template-box">
+        <h3 class="font-bold text-green-900 mb-2">דוגמה מקלאסית: לולאת let מקבילית לעומת טורית (Shadowing)</h3>
+        <p class="text-sm text-slate-700 mb-4">כשיש לנו רשימת מזהים ורשימת ביטויים שאותם נרצה להציב. שימו לב להבדל:</p>
+        <pre><code class="language-scheme">;; 1. Parallel (let) - כולם מוערכים תחת סביבת הבסיס (base-env)
+(define extend-env-parallel
+  (lambda (vars vals-exps env)
+    ;; שמים לב: מעריכים את כולם מול env הטהור בבת אחת עם map!
+    (let ((evaluated-vals (map (lambda (e) (value-of e env)) vals-exps)))
+      ;; ורק אז מרחיבים את הסביבה
+      (extend-env-list vars evaluated-vals env))))
+
+;; 2. Sequential (let* / Shadowing) - כל ביטוי מוערך ומרחיב מיד את הסביבה!
+(define extend-env-sequential
+  (lambda (vars vals-exps current-env)
+    (if (null? vars)
+        current-env
+        (let* ((val (value-of (car vals-exps) current-env)) ;; הערכה מול הסביבה המעודכנת
+               (new-env (extend-env (car vars) val current-env))) ;; הרחבה מיידית
+          (extend-env-sequential (cdr vars) (cdr vals-exps) new-env)))))</code></pre>
+    </div>
+</div>
+
+<!-- Q1 STAGE 4 -->
+<div id="tab-q1-4" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">מלכודות נפוצות <span class="text-red-600">מ-5 מבחנים שונים</span></h2>
+    </header>
+    <div class="grid grid-cols-1 gap-6">
+        <div class="error-box">
+            <h4 class="font-bold text-xl text-red-900 mb-2">1. שכחתם לעטוף תוצאה סופית (Return Type Trap)</h4>
+            <p class="text-slate-800 mb-2">מבחן 2024ב: סטודנטים ביצעו חיבור רשימות (Append) והחזירו את הרשימה ישירות. <strong>שגיאה!</strong> כל קייס ב-<code>value-of</code> חייב להסתיים בקריאה לבונה (Constructor) כמו <code>(tuple-val result-list)</code> או <code>(num-val result)</code>. המפרש דורש ExpVal.</p>
+        </div>
+        <div class="error-box">
+            <h4 class="font-bold text-xl text-red-900 mb-2">2. בלבול בין List-of Exps ל-List-of ExpVals</h4>
+            <p class="text-slate-800 mb-2">מבחן 2021ב: ה-Parser מחזיר רשימה של AST Nodes (תחביר). כדי לבצע מניפולציה ב-<code>interp.scm</code> (כמו חיבור), חייבים להעביר אותם במפת הערכה: <code>(map (lambda (x) (value-of x env)) exp-list)</code>. בלי זה, תנסו לחבר אובייקטים של עץ במקום ערכים מתמטיים!</p>
+        </div>
+        <div class="error-box">
+            <h4 class="font-bold text-xl text-red-900 mb-2">3. שימוש ב-setref! (טאבו לשאלה 1)</h4>
+            <p class="text-slate-800 mb-2">בשאלה 1 אין נגיעה במחסן (Store). אלגוריתם ה-Environment רק מצלם עותקים מורחבים בעזרת <code>extend-env</code> ומעביר פנימה. שימוש ב-<code>setref!</code> בשאלה 1 יוביל לפסילת סעיף על חוסר הבנה של סמנטיקת השפה הבסיסית.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Q2 STAGE 0 -->
+<div id="tab-q2-0" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <div class="inline-block px-4 py-1 bg-indigo-600 text-white rounded-full font-bold text-sm mb-4">שאלה 2 | שלב 0</div>
+        <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">Store vs Environment <span class="text-indigo-600">(מבט ויזואלי)</span></h2>
+        <p class="text-xl text-slate-600">בשאלה 2 אנו מטפלים בהשפעות לוואי (Side Effects), שכתוב משתנים, ואלוקציית זיכרון ממשית במחסן.</p>
+    </header>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-8">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">הארכיטקטורה הכפולה: Environment & Store</h3>
+        <div class="mermaid flex justify-center">
+            graph LR
+            subgraph "1. הסביבה (Environment)"
+            A["x"] -->|Mapping| B["Ref(0)"]
+            C["y"] -->|Mapping| D["Ref(1)"]
+            end
+            
+            subgraph "2. המחסן (Store)"
+            B -->|deref / setref!| E["num-val(10)"]
+            D -->|deref / setref!| F["bool-val(#t)"]
+            end
+            
+            style A fill:#eff6ff,stroke:#3b82f6
+            style B fill:#dbeafe,stroke:#2563eb,stroke-dasharray: 5 5
+            style E fill:#fef3c7,stroke:#d97706,stroke-width:2px
+            style F fill:#fef3c7,stroke:#d97706,stroke-width:2px
+        </div>
+    </div>
+    <div class="mental-model-box bg-indigo-50 border-indigo-500">
+        <h3 class="text-2xl font-bold text-indigo-900 mb-4">מה מייחד את שאלה 2?</h3>
+        <p class="text-slate-800">בעוד שבשאלה 1 יצרנו משתנים חדשים "שהסתירו" (Shadowing) את הקודמים על ידי הרחבת הסביבה, <strong>בשאלה 2 המטרה היא לגשת אל התא המקורי בזיכרון (Store) ולהחליף את מה שבתוכו מבלי לשנות את הסביבה (Environment).</strong> אנו משתמשים ב-<code>apply-env</code> כדי למצוא את המצביע (Ref), ואז ב-<code>deref</code> ו-<code>setref!</code> כדי לשחק עם התוכן הפיזי.</p>
+    </div>
+</div>
+
+<!-- Q2 STAGE 1 -->
+<div id="tab-q2-1" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">זיהוי קריטי: <span class="text-indigo-600">Implicit מול Explicit</span></h2>
+    </header>
+    <div class="exam-box mb-8">
+        <h3 class="font-bold text-xl mb-2">איך מזהים בשורת השאלה באיזו שפה אנחנו?</h3>
+        <p>בשורה הראשונה של שאלה 2 יופיע המפתח: <em>"נוסיף לשפת <strong>יירמוז</strong>"</em> משמעותו IMPLICIT-REFS. <em>"נוסיף לשפת <strong>ויפנה</strong>"</em> משמעותו EXPLICIT-REFS.</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-red-50 p-6 rounded-xl border border-red-200 shadow-sm relative">
+            <h3 class="text-2xl font-bold text-red-900 mb-4">IMPLICIT-REFS (הפניות משתמעות)</h3>
+            <p class="text-slate-700 mb-4">בארכיטקטורה זו, <strong>כל משתנה שנוצר הוא אוטומטית מצביע למחסן!</strong></p>
+            <p class="text-sm font-bold text-red-700 mb-2">חובה ב-extend-env:</p>
+            <pre><code class="language-scheme">;; יצירת משתנה חדש תמיד דורשת newref על הערך המוערך!
+(extend-env id 
+            (newref (value-of exp env)) 
+            env)</code></pre>
+            <p class="text-sm mt-3 text-slate-600">חובה לשלוף: <code>(deref (apply-env env id))</code></p>
+        </div>
+        <div class="bg-teal-50 p-6 rounded-xl border border-teal-200 shadow-sm relative">
+            <h3 class="text-2xl font-bold text-teal-900 mb-4">EXPLICIT-REFS (הפניות מפורשות)</h3>
+            <p class="text-slate-700 mb-4">בארכיטקטורה זו, הזיכרון לא מוקצה אוטומטית! הסביבה שומרת ערכים רגילים כמו בשאלה 1, אלא אם הפעלת <code>newref</code> במפורש בתוך קוד השפה (AST).</p>
+            <p class="text-sm font-bold text-teal-700 mb-2">חובה ב-extend-env:</p>
+            <pre><code class="language-scheme">;; בדיוק כמו בשאלה 1 - הערך נכנס "ערום" לסביבה
+(extend-env id 
+            (value-of exp env) 
+            env)</code></pre>
+            <p class="text-sm mt-3 text-slate-600">חובה לשלוף: <code>(apply-env env id)</code>. רק מי ש-<code>ref-val</code> עובר ל-deref.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Q2 STAGE 2 -->
+<div id="tab-q2-2" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">תבניות <span class="text-indigo-600">מוטציה (Mutation) קבועות</span></h2>
+    </header>
+    <div class="deep-dive">
+        <h3 class="font-bold text-2xl text-slate-800 mb-4">תבנית 1: שינוי במקום (In-Place Mutation)</h3>
+        <p class="text-slate-700 mb-4">חוזרת במבחני 2024 ו-2025: מבקשים להוסיף, להעמיס או לשנות משתנה שקיים כבר בסביבה (כמו <code>id += val</code>). אל תרחיבו סביבה לעולם במקרה זה!</p>
+        <pre><code class="language-scheme">;; דוגמה: שפת IMPLICIT-REFS. אופרטור פלוס-שווה (add-to-exp)
+(add-to-exp (id add-exp)
+  ;; 1. שולפים את הרפרנס המקורי ישירות (בלי value-of ל-id!)
+  (let* ((ref (apply-env env id))
+         
+         ;; 2. מביאים את התוכן הקיים מהמחסן (deref)
+         (old-val (expval->num (deref ref)))
+         
+         ;; 3. מעריכים את הביטוי החדש שאנחנו מוסיפים
+         (add-val (expval->num (value-of add-exp env)))
+         
+         ;; 4. חישוב לוגי (בדוגמה הזו מתמטיקה)
+         (new-total (+ old-val add-val)))
+         
+    ;; 5. חובה: לעדכן את המחסן המקורי, ולהחזיר ערך דאמי או את הערך החדש כExpval
+    (begin
+      (setref! ref (num-val new-total))
+      (num-val new-total))))</code></pre>
+    </div>
+    
+    <div class="template-box">
+        <h3 class="font-bold text-2xl text-green-900 mb-4">תבנית 2: מערך שמכיל מצביעים ב-Store</h3>
+        <p class="text-slate-700 mb-4">אם מבקשים ליישם מבנה נתונים כמו <code>Array</code> או <code>Tuple</code> שאפשר לעדכן פרטנית איבר בתוכו (ולא את כולו) - ה-Expval חייב להחזיק רשימה של רפרנסים (מצביעים למחסן), ולא רשימה של ערכים.</p>
+        <pre><code class="language-scheme">;; ב-data-structures:
+;; טעות נפוצה היא לעשות list-of expval?. חייבים list-of reference!
+(array-val (refs (list-of reference?)))
+
+;; ב-interp.scm: יצירת מערך דורשת אכלוס המחסן
+(array-creation-exp (exps)
+  (let* ((evaluated-exps (map (lambda (e) (value-of e env)) exps))
+         ;; אנו הופכים כל Expval למצביע עצמאי ב-Store
+         (refs-list (map newref evaluated-exps)))
+    (array-val refs-list)))</code></pre>
+    </div>
+</div>
+
+<!-- Q2 STAGE 3 -->
+<div id="tab-q2-3" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">זליגת סביבות <span class="text-red-600">(Environment Pollution)</span></h2>
+    </header>
+    <div class="error-box">
+        <h3 class="text-2xl font-bold text-red-900 mb-4">המוקש הגדול של לולאות בשאלה 2</h3>
+        <p class="text-slate-800 mb-4">במבחן שבו מבקשים לסרוק רשימה של הצהרות או משתנים עם <code>switch</code> או <code>cond</code>, לעיתים אנו מעריכים ביטוי המייצר סביבה זמנית לבדיקת תנאי או Guards. <strong>אם במקרה תעבירו את הסביבה הזמנית לקריאה הרקורסיבית של האיבר הבא - גרמתם לזליגה (Pollution). האיבר הבא "יכיר" את המשתנים של האיבר הקודם!</strong></p>
+    </div>
+    <div class="tip-box">
+        <h3 class="font-bold text-xl text-amber-900 mb-4">הפתרון: שמירת Base-Env</h3>
+        <p class="text-slate-700 mb-4">יש להעביר את הסביבה הראשונית (הטהורה) לאורך כל הלולאה. הרחבה מתבצעת רק לצורך הערכת <strong>גוף (Body) ספציפי לאחר שעמד בתנאי</strong> ולא בתור הסביבה המועברת הלאה.</p>
+        <pre><code class="language-scheme">;; תבנית לולאה בטוחה המונעת זליגה
+(define execute-cases-safely
+  (lambda (cases base-env)
+    (if (null? cases)
+        (num-val 0)
+        (let* ((current-case (car cases))
+               ;; נניח ובדקנו תנאי, והוא עבר
+               (condition-passed? (check-guard current-case base-env)))
+               
+          (if condition-passed?
+              ;; ביצוע הגוף תחת סביבה מורחבת נקודתית
+              (value-of (get-body current-case) 
+                        (extend-env 'temp (num-val 1) base-env))
+                        
+              ;; המוקש: הקריאה לאיבר הבא מקבלת תמיד את base-env!
+              (execute-cases-safely (cdr cases) base-env))))))</code></pre>
+    </div>
+</div>
+
+<!-- Q2 STAGE 4 -->
+<div id="tab-q2-4" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">השוואה ייחודית: <span class="text-indigo-600">שאלה 1 מול שאלה 2</span></h2>
+    </header>
+    <div class="deep-dive">
+        <table class="w-full text-right border-collapse">
+            <thead>
+                <tr class="bg-slate-200 text-slate-800 border-b-2 border-slate-300">
+                    <th class="p-4 font-bold">נושא</th>
+                    <th class="p-4 font-bold text-blue-700">שאלה 1 (הרחבת שפה)</th>
+                    <th class="p-4 font-bold text-indigo-700">שאלה 2 (זיכרון)</th>
+                </tr>
+            </thead>
+            <tbody class="text-slate-700">
+                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                    <td class="p-4 font-bold">יצירת משתנה חדש</td>
+                    <td class="p-4">דריסה ומיסוך באמצעות <code>extend-env</code></td>
+                    <td class="p-4">אלוקציה למחסן ב-IMPLICIT-REFS באמצעות <code>newref</code> עטוף ב-<code>extend-env</code></td>
+                </tr>
+                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                    <td class="p-4 font-bold">עדכון משתנה קיים</td>
+                    <td class="p-4 text-red-500 font-bold">לא אפשרי / דורס לחלוטין את הסביבה במורד העץ</td>
+                    <td class="p-4">מבוצע באופן טבעי באמצעות שליפת <code>ref</code> מהסביבה והפעלת <code>setref!</code> על המחסן</td>
+                </tr>
+                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                    <td class="p-4 font-bold">שליפת ערך</td>
+                    <td class="p-4"><code>(apply-env env id)</code> מחזיר את ה-ExpVal</td>
+                    <td class="p-4">IMPLICIT: <code>(deref (apply-env env id))</code> חובה לעבור דרך המחסן</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Q3 STAGE 0 -->
+<div id="tab-q3-0" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <div class="inline-block px-4 py-1 bg-fuchsia-600 text-white rounded-full font-bold text-sm mb-4">שאלה 3 | שלב 0</div>
+        <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">הקשת טיפוסים <span class="text-fuchsia-600">(מבט ויזואלי)</span></h2>
+        <p class="text-xl text-slate-600">משוואות, אילוצים, ועצי גזירה (Derivation Trees). איך עובד ה-Type Checker מאחורי הקלעים.</p>
+    </header>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-8">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">זרימת אלגוריתם הקשת טיפוסים (Type Inference)</h3>
+        <div class="mermaid flex justify-center">
+            graph LR
+            A[1. הקצאת משתנים<br>T1, T2 לכל תת-ביטוי] --> B[2. ייצור משוואות<br>T1 = int, T2 = T1 -> bool]
+            B --> C[3. אלגוריתם איחוד<br>Unification & Substitution]
+            C --> D{נמצאה סתירה?}
+            D -->|כן| E[שגיאת טיפוס / Occurs Check]
+            D -->|לא| F[4. בניית עץ גזירה פורמלי]
+            
+            style A fill:#fdf4ff,stroke:#d946ef,stroke-width:2px
+            style B fill:#fdf4ff,stroke:#d946ef,stroke-width:2px
+            style C fill:#fae8ff,stroke:#c026d3,stroke-width:2px
+            style E fill:#fef2f2,stroke:#ef4444,stroke-width:2px
+            style F fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+        </div>
+    </div>
+</div>
+
+<!-- Q3 STAGE 1 -->
+<div id="tab-q3-1" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">חלק א': <span class="text-fuchsia-600">חילוץ משוואות (Rules)</span></h2>
+    </header>
+    <div class="exam-box mb-8">
+        <h3 class="text-2xl font-bold text-slate-800 mb-4">איך ניגשים לסעיף א' במבחן?</h3>
+        <p class="text-slate-700">בסעיף זה מוצג לכם קוד Scheme, ועליכם לחלץ את האילוצים (Equations). התחילו להציב משתני טיפוס $t_1, t_2...$ מבחוץ פנימה.</p>
+    </div>
+    <div class="deep-dive">
+        <h3 class="text-2xl font-bold text-slate-800 mb-4">חוקי משוואות הברזל (Typing Rules) מ-5 מבחנים:</h3>
+        <div class="space-y-6">
+            <div class="bg-white p-5 rounded border border-slate-200">
+                <h4 class="font-bold text-fuchsia-900 text-lg">1. משוואת התניה (If)</h4>
+                <p class="text-sm font-mono bg-slate-100 p-2 mb-2 inline-block">if e1 then e2 else e3</p>
+                <ul class="list-disc list-inside text-slate-700 text-sm">
+                    <li>התנאי תמיד בוליאני: $T(e_1) = bool$</li>
+                    <li>הענפים חייבים להחזיר טיפוס זהה: $T(e_2) = T(e_3)$</li>
+                    <li>טיפוס ה-If כולו זהה לטיפוס הענף: $T(if_expr) = T(e_2)$</li>
+                </ul>
+            </div>
+            
+            <div class="bg-white p-5 rounded border border-slate-200">
+                <h4 class="font-bold text-fuchsia-900 text-lg">2. משוואת פונקציה (Proc)</h4>
+                <p class="text-sm font-mono bg-slate-100 p-2 mb-2 inline-block">proc(x) body</p>
+                <ul class="list-disc list-inside text-slate-700 text-sm">
+                    <li>טיפוס הפונקציה כולו הוא מיפוי מהפרמטר אל הגוף: $T(proc) = T(x) \rightarrow T(body)$</li>
+                    <li>כל אזכור של $x$ בתוך $body$ מניח שהוא מטיפוס $T(x)$.</li>
+                </ul>
+            </div>
+            
+            <div class="bg-white p-5 rounded border border-slate-200">
+                <h4 class="font-bold text-fuchsia-900 text-lg">3. משוואת הפעלה (Application)</h4>
+                <p class="text-sm font-mono bg-slate-100 p-2 mb-2 inline-block">(rator rand)</p>
+                <ul class="list-disc list-inside text-slate-700 text-sm">
+                    <li>מפעיל הפונקציה ($rator$) חייב להיות מסוג פונקציה שמקבלת את הארגומנט ($rand$) ומחזירה את תוצאת הביטוי כולו:</li>
+                    <li class="font-bold mt-2">$T(rator) = T(rand) \rightarrow T(application_expr)$</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Q3 STAGE 2 -->
+<div id="tab-q3-2" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">חלק ב': <span class="text-fuchsia-600">אלגוריתם Unification</span></h2>
+    </header>
+    <div class="mental-model-box bg-fuchsia-50 border-fuchsia-500">
+        <h3 class="text-2xl font-bold text-fuchsia-900 mb-4">המודל המנטלי: הצבות הולכות לאחור (Substitutions)</h3>
+        <p class="text-slate-800 mb-3">פתרון משוואות הוא לא אלגברה רגילה, אנו בונים <strong>מילון הצבות</strong>. בכל פעם שאנו מגלים עובדה (למשל $t_2 = int$), אנו רושמים אותה במילון. <strong>חובה לחזור אחורה</strong> למילון ולבדוק אם יש איבר שחיכה ל-$t_2$ ולעדכן אותו!</p>
+    </div>
+    <div class="template-box">
+        <h4 class="font-bold text-xl text-green-900 mb-4">טבלת פתרון אופיינית</h4>
+        <table class="w-full text-right border-collapse text-slate-700 text-sm">
+            <thead>
+                <tr class="bg-slate-200 font-bold border-b-2 border-slate-300">
+                    <th class="p-3">צעד</th>
+                    <th class="p-3">המשוואה הנבדקת</th>
+                    <th class="p-3">מילון ההצבות המעודכן (Substitution)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                    <td class="p-3">1</td>
+                    <td class="p-3 font-mono">$t_1 = t_2 ightarrow t_3$</td>
+                    <td class="p-3 font-mono">${t_1 mapsto (t_2 ightarrow t_3)}$</td>
+                </tr>
+                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                    <td class="p-3">2</td>
+                    <td class="p-3 font-mono">$t_2 = int$</td>
+                    <td class="p-3 text-red-600 font-bold">הצבה לאחור: ${t_1 mapsto (int ightarrow t_3), t_2 mapsto int}$</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Q3 STAGE 3 -->
+<div id="tab-q3-3" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">שגיאות אופייניות <span class="text-red-600">(Type Mismatch & Occurs Check)</span></h2>
+    </header>
+    <div class="error-box border-l-8 !border-red-600">
+        <h3 class="text-2xl font-black text-red-800 mb-4">מתי האלגוריתם נכשל קליל?</h3>
+        <p class="text-slate-700 mb-4">חלק משאלות המבחן נבנו בכוונה כדי לקרוס (למשל מועד 2020ב)! שימו לב לשני סוגי הכישלונות הרשמיים שעליכם לציין:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-5 rounded-lg border border-red-200 shadow-sm">
+                <h4 class="font-bold text-red-900 text-lg mb-2">1. התנגשות טיפוסים (Type Mismatch)</h4>
+                <p class="text-sm text-slate-700 mb-2">מתרחש כאשר יש דרישה סותרת לטיפוס בסיסי. למשל במהלך ההצבות הגעתם למשוואה שאומרת: $int = bool$, או $bool = (int ightarrow int)$.</p>
+                <p class="text-sm text-slate-500 italic mt-2">הכרזה מומלצת: "שגיאת התנגשות טיפוסים. לא ניתן לאחד $int$ עם $bool$, האלגוריתם נעצר."</p>
+            </div>
+            <div class="bg-white p-5 rounded-lg border border-red-200 shadow-sm">
+                <h4 class="font-bold text-red-900 text-lg mb-2">2. חוק ההכלה (Occurs Check)</h4>
+                <p class="text-sm text-slate-700 mb-2">מתרחש כאשר משתנה מנסה להיות מושווה לטיפוס פונקציה שמכיל את עצמו! למשל: $t_1 = (t_1 ightarrow int)$. אלגוריתם ה-Unification תמיד בודק אם צד שמאל מופיע בתוך צד ימין. אם כן - זו סתירה מעגלית!</p>
+                <p class="text-sm text-slate-500 italic mt-2">הכרזה מומלצת: "כישלון Occurs Check. $t_1$ מופיע בתוך $(t_1 ightarrow int)$, האלגוריתם נעצר."</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Q3 STAGE 4 -->
+<div id="tab-q3-4" class="tab-content">
+    <header class="mb-12 border-b pb-6">
+        <h2 class="text-4xl font-black text-slate-800 mb-4">עצי גזירה <span class="text-fuchsia-600">(Derivation Trees)</span></h2>
+    </header>
+    <div class="deep-dive">
+        <h3 class="text-2xl font-bold text-slate-800 mb-4">ציור עץ לוגי באקדמיה</h3>
+        <p class="text-slate-700 mb-4">במבחנים מסוימים במקום (או בנוסף ל) אלגוריתם האיחוד, יבקשו לצייר עץ גזירה. המשמעות היא לקחת את המשוואות ולכתוב אותן בפורמט לוגי של "הנחות מעל הקו, מסקנה מתחת לקו".</p>
+        
+        <div class="bg-white p-6 rounded border border-slate-300 font-mono text-center overflow-x-auto my-6">
+            <p class="mb-2 text-slate-500 text-sm">דוגמה לכלל של Application (rator rand):</p>
+            <div class="inline-block text-lg">
+                <div class="border-b-2 border-black px-4 pb-2">
+                    (Tenv ⊢ rator : T1 → T2) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Tenv ⊢ rand : T1)
+                </div>
+                <div class="pt-2">
+                    (Tenv ⊢ (rator rand) : T2)
+                </div>
+            </div>
+        </div>
+        
+        <p class="text-slate-700 mb-4">הסבר הכלל:<br>
+        <strong>למעלה (ההנחות):</strong> אם בסביבת הטיפוסים Tenv, הפונקציה <code>rator</code> היא מטיפוס ממיפוי T1 ל-T2, **וגם** הארגומנט <code>rand</code> הוא מטיפוס T1.<br>
+        <strong>למטה (המסקנה):</strong> אז ביטוי ההפעלה כולו יקבל בהכרח את טיפוס התוצאה T2.</p>
+        <p class="text-sm font-bold text-amber-600 mt-4">טיפ למבחן: ציירו את העץ מלמטה למעלה! התחילו עם המסקנה הכללית שאתם רוצים להוכיח בתחתית העץ, ופצלו אותה לתנאים הקטנים שעולים כלפי מעלה עד שמגיעים לטיפוסי בסיס שאינם דורשים הנחות (כמו מספרים).</p>
+    </div>
+</div>
+
+    </div>
+</main>
+
+<script>
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active-nav'));
+        
+        const tabContent = document.getElementById(tabId);
+        if (tabContent) tabContent.classList.add('active');
+        
+        const navBtn = document.getElementById('btn-' + tabId);
+        if (navBtn) navBtn.classList.add('active-nav');
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+</body>
+</html>
