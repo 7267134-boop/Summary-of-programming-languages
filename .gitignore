@@ -11,6 +11,9 @@
 !*.html
 !**/*.html
 
+# Allow theme manager JS
+!theme-manager.js
+
 # Allow the Exams/exam folder and all its contents
 ![Ee]xam*/
 ![Ee]xam*/**
