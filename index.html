@@ -112,6 +112,7 @@
             z-index: 0;
         }
     </style>
+    <script src="theme-manager.js"></script>
 </head>
 
 <body class="text-textMain font-sans min-h-screen relative overflow-x-hidden">
@@ -137,6 +138,26 @@
             <span class="text-sm sm:text-base font-bold text-slate-700 group-hover:text-sky-800 transition-colors leading-tight relative z-20">לקורסים<br>נוספים</span>
         </div>
     </a>
+
+    <!-- Theme Toggle Button -->
+    <button onclick="toggleTheme()" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 group block bg-transparent rounded-full p-[2px] transition-all duration-500 hover:shadow-2xl hover:shadow-sky-300/30 hover:-translate-y-1 hover:scale-105 w-20 h-20 sm:w-24 sm:h-24 overflow-hidden">
+        <!-- Spinning Blue Border -->
+        <div class="blue-spin-bg"></div>
+
+        <!-- Inner Glass Container -->
+        <div class="bg-white/20 backdrop-blur-xl rounded-full w-full h-full relative z-10 flex flex-col items-center justify-center border border-white/30 hover:bg-white/30 transition-all duration-500 shadow-[0_8px_32px_rgba(255,255,255,0.05)] text-center p-1 overflow-hidden">
+            <!-- Silver Waves -->
+            <div class="absolute inset-0 silver-waves-bg pointer-events-none z-0"></div>
+            
+            <!-- Icon -->
+            <div class="w-8 h-8 sm:w-10 sm:h-10 mb-1 rounded-full bg-white/30 flex items-center justify-center text-sky-700 group-hover:bg-gradient-to-br group-hover:from-sky-400 group-hover:to-indigo-500 group-hover:text-white transition-all duration-500 shadow-inner relative z-20">
+                <i id="theme-toggle-icon" data-lucide="sun" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+            </div>
+            
+            <!-- Text -->
+            <span id="theme-toggle-text" class="text-[10px] sm:text-xs font-bold text-slate-700 group-hover:text-sky-800 transition-colors leading-tight relative z-20">מצב<br>רגיל</span>
+        </div>
+    </button>
 
     <!-- אפקטי תאורה ברקע (Blobs) -->
     <div
