@@ -78,5 +78,17 @@
     // Ensure icons update after DOM is fully loaded if button is rendered later
     document.addEventListener('DOMContentLoaded', () => {
         updateButtonIcon(currentTheme);
+        
+        // Hide button on all pages except index.html
+        const isIndex = window.location.pathname.endsWith('index.html') || 
+                        window.location.pathname.endsWith('/') || 
+                        window.location.pathname === '';
+        
+        if (!isIndex) {
+            const btn = document.querySelector('button[onclick="toggleTheme()"]');
+            if (btn) {
+                btn.style.display = 'none';
+            }
+        }
     });
 })();

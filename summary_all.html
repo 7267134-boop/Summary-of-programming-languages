@@ -242,6 +242,20 @@
 </head>
 <body class="bg-amber-50/20">
 
+    <!-- Floating Theme Toggle Button -->
+    <button
+        onclick="toggleTheme()"
+        title="Toggle Theme"
+        class="fixed top-4 left-4 z-50 flex items-center justify-center p-2 rounded-2xl shadow-lg transition-all duration-300 hover:scale-110 border border-white/20 bg-white/20 backdrop-blur-md text-slate-800"
+        style="box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);"
+    >
+        <div class="flex flex-col items-center">
+            <i id="theme-toggle-icon" data-lucide="sun" class="w-5 h-5"></i>
+            <span id="theme-toggle-text" class="text-[9px] font-bold mt-1 text-center leading-tight">מצב<br>רגיל</span>
+        </div>
+    </button>
+    
+
     <!-- מיכל עוטף ענקי לחלוקת מסך: ניווט משמאל, תוכן מימין -->
     <div class="min-h-screen flex flex-col lg:flex-row">
         
