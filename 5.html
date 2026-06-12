@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>הכנה לבחינה - שפות תכנות</title>
+    <title>מערכת הכנה לבחינה - שפות תכנות</title>
     <!-- Heebo and Assistant Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=Assistant:wght@300;400;600;700&display=swap"
@@ -120,24 +120,9 @@
             background: #94a3b8;
         }
     </style>
-    <script src="theme-manager.js"></script>
 </head>
 
 <body class="text-textMain min-h-screen relative flex flex-col overflow-y-auto">
-
-    <!-- Floating Theme Toggle Button -->
-    <button
-        onclick="toggleTheme()"
-        title="Toggle Theme"
-        class="fixed top-4 left-4 z-50 flex items-center justify-center p-2 rounded-2xl shadow-lg transition-all duration-300 hover:scale-110 border border-white/20 bg-white/20 backdrop-blur-md text-slate-800"
-        style="box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);"
-    >
-        <div class="flex flex-col items-center">
-            <i id="theme-toggle-icon" data-lucide="sun" class="w-5 h-5"></i>
-            <span id="theme-toggle-text" class="text-[9px] font-bold mt-1 text-center leading-tight">מצב<br>רגיל</span>
-        </div>
-    </button>
-    
 
     <!-- Background lighting blobs (highly visible for glassmorphism) -->
     <div
@@ -158,7 +143,7 @@
             </div>
             <div>
                 <h1 class="text-lg font-black text-slate-800 tracking-tight leading-none font-sans">הכנה לבחינה</h1>
-                <p class="text-[10px] text-slate-500 mt-1 font-medium">תרגול שאלות, מבחנים ואלגוריתמים</p>
+                <p class="text-[10px] text-slate-500 mt-1 font-medium">פורטל הכנה מרכזי | שפות תכנות</p>
             </div>
         </div>
 
@@ -173,15 +158,15 @@
             </a>
             <button onclick="showView('questions')" id="navbtn-questions"
                 class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
-                <i class="fa-solid fa-circle-question ml-1.5"></i> חלוקה לפי שאלות
+                <i class="fa-solid fa-circle-question ml-1.5"></i>שאלות ותשובות
             </button>
             <button onclick="showView('exams')" id="navbtn-exams"
                 class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
-                <i class="fa-solid fa-file-invoice ml-1.5"></i>חלוקה לפי מבחנים
+                <i class="fa-solid fa-file-invoice ml-1.5"></i>מבחנים משנים קודמות
             </button>
             <a href="index.html"
                 class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-transparent hover:border-slate-200/50">
-                <i class="fa-solid fa-house ml-1.5"></i>חזרה לתפריט הראשי
+                <i class="fa-solid fa-house ml-1.5"></i>בית
             </a>
         </nav>
     </header>
@@ -194,6 +179,10 @@
              ======================================================== -->
         <section id="view-dashboard" class="view-container active flex-col items-center justify-center py-12 px-6">
             <div class="max-w-4xl w-full text-center mb-16 opacity-0 animate-fade-in-up">
+                <span
+                    class="bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs px-4 py-1.5 rounded-full font-black animate-pulse-slow">
+                    מרכז פתרונות מורחב 2.0
+                </span>
                 <h2
                     class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 to-sky-600 tracking-tight mt-6 mb-4 font-sans">
                     הכנה למבחן- מאיפה מתחילים
@@ -204,8 +193,7 @@
                     כל אחד מה שנוח לו, אני ממליץ לקחת מסך שני ולפתוח ליד את הקובץ PDF של המבחן שלומדים באותו זמן באתר,
                     השילוב של איך שהכתיבה מתבצעת בפועל במבחן עם האתר מכניס טוב לראש את הדרך פיתרון, ולסיום- נכון שכמו
                     שלא קשה לראות שבניית האתר והרבה מהכתיבה נעשו על ידי AI אבל עברתי על החומר מכל הכיוונים, דייקתי
-                    סיננתי
-                    וניסיתי לנפות טעויות כמיטב יכולתי, אם בכל זאת נתקלתם בטעות- אני אשמח שתעדכנו אותי שאוכל לתקן,
+                    סיננתי וניסיתי לנפות טעויות כמיטב יכולתי, אם בכל זאת נתקלתם בטעות- אני אשמח שתעדכנו אותי שאוכל לתקן,
                     בהצלחה!
                 </p>
             </div>
@@ -230,15 +218,14 @@
                                 <i class="fa-solid fa-gears text-2xl"></i>
                             </div>
                             <span
-                                class="bg-white/10 border border-white/20 text-xs px-3 py-1.5 rounded-full text-slate-700 font-bold tracking-wide group-hover:bg-sky-50 group-hover:text-sky-700 group-hover:border-sky-200 transition-colors">פתיחה
-                            </span>
+                                class="bg-white/10 border border-white/20 text-xs px-3 py-1.5 rounded-full text-slate-700 font-bold tracking-wide group-hover:bg-sky-50 group-hover:text-sky-700 group-hover:border-sky-200 transition-colors">שאלה
+                                3</span>
                         </div>
                         <h2
                             class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-sky-600 transition-colors relative z-10 font-sans">
                             מדריך אלגוריתמי לפתירת שאלות</h2>
                         <p class="text-slate-500 leading-relaxed font-medium relative z-10 flex-grow">
-                            אז איך בנוי המבחן? מהו המבנה הכללי של כל אחת מהשאלות? ומה בכלל השאלות המשונות האלה רוצות
-                            ממני?? בואו נעשה קצת סדר
+                            איך בנוי המבחן? איך ניגשים אליו? ומה בכלל השאלות המשונות האלו רוצות ממני?? בואו ננסה להבין
                         </p>
                         <div
                             class="mt-6 flex items-center text-sm font-bold text-slate-400 group-hover:text-sky-600 transition-colors duration-300 relative z-10 font-sans font-bold">
@@ -266,9 +253,8 @@
                                 <i class="fa-solid fa-circle-question text-2xl"></i>
                             </div>
                             <span
-                                class="bg-white/10 border border-white/20 text-xs px-3 py-1.5 rounded-full text-slate-700 font-bold tracking-wide group-hover:bg-emerald-50 group-hover:text-emerald-700 group-hover:border-emerald-200 transition-colors">לתרגול
-                                לפי מספר שאלה
-                            </span>
+                                class="bg-white/10 border border-white/20 text-xs px-3 py-1.5 rounded-full text-slate-700 font-bold tracking-wide group-hover:bg-emerald-50 group-hover:text-emerald-700 group-hover:border-emerald-200 transition-colors">Q1,
+                                Q2, Q3</span>
                         </div>
                         <h2
                             class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-emerald-600 transition-colors relative z-10 font-sans">
@@ -303,14 +289,13 @@
                                 <i class="fa-solid fa-file-invoice text-2xl"></i>
                             </div>
                             <span
-                                class="bg-white/10 border border-white/20 text-xs px-3 py-1.5 rounded-full text-slate-700 font-bold tracking-wide group-hover:bg-violet-50 group-hover:text-violet-700 group-hover:border-violet-200 transition-colors">לתרגול
-                                לפי מבחנים</span>
+                                class="bg-white/10 border border-white/20 text-xs px-3 py-1.5 rounded-full text-slate-700 font-bold tracking-wide group-hover:bg-violet-50 group-hover:text-violet-700 group-hover:border-violet-200 transition-colors">מבחנים</span>
                         </div>
                         <h2
                             class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-violet-600 transition-colors relative z-10 font-sans">
                             ריכוז לפי מבחנים</h2>
                         <p class="text-slate-500 leading-relaxed font-medium relative z-10 flex-grow font-sans">
-                            שאלות משנים קודמות מרוכזות ומאוגדות ביחד לפי מועדי הבחינות, ומאפשרות תרגול מלא ושלם של
+                            כל השאלות משנים קודמות מרוכזות ומאוגדות ביחד לפי מועדי הבחינות, ומאפשרות תרגול מלא ושלם של
                             שאלוני מבחן לפי סדר שנים כרונולוגי.
                         </p>
                         <div
@@ -531,95 +516,141 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
-                                    <h3 class="text-base font-black text-slate-800">סמסטר ג' מועד 93</h3>
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ג' מועד 83</h3>
                                     <span
                                         class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
                                         מבחן 1
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
 
-                                    <a href="q3_2025c_93.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-violet-50/50 hover:border-violet-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                    <a href="Exams/Exams/2025/2025ג/q0_2025c_83.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
-                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
-                                                Q3
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
-                                                3: הסקת טיפוסים</span>
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
                                     </a>
 
-                                </div>
-                            </div>
-
-                            <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
-                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
-                                    <h3 class="text-base font-black text-slate-800">סמסטר ג' מועד 83</h3>
-                                    <span
-                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
-                                        מבחן 2
-                                    </span>
-                                </div>
-                                <div class="space-y-2.5">
+                                    <a href="Exams/Exams/2025/2025ג/מבחן שפות תכנות - מועד 93 - 25ג - ציון 98.pdf"
+                                        target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה (ציון 98)</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="q1_2025c_83.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-blue-50/50 hover:border-blue-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-50/60 to-white/60 border-blue-200/50 border hover:from-blue-100/60 hover:to-white/80 hover:border-blue-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-blue-500/10 text-blue-700 border border-blue-500/25">
                                                 Q1
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 1: הרחבת מפרש</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-blue-400/70 group-hover:text-blue-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="Q2_2025c_83.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-indigo-50/50 hover:border-indigo-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-50/60 to-white/60 border-indigo-200/50 border hover:from-indigo-100/60 hover:to-white/80 hover:border-indigo-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-indigo-500/10 text-indigo-700 border border-indigo-500/25">
                                                 Q2
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 2: ניהול זיכרון ומוטציות בסביבות</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-indigo-400/70 group-hover:text-indigo-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="q3_2025c_83.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-violet-50/50 hover:border-violet-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-violet-50/60 to-white/60 border-violet-200/50 border hover:from-violet-100/60 hover:to-white/80 hover:border-violet-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
                                                 Q3
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 3: הסקת טיפוסים</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-violet-400/70 group-hover:text-violet-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
                             </div>
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 93</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 2
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2025/2025b_93_grade86.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה (ציון 86)</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="q3_2025c_93.html" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-violet-50/60 to-white/60 border-violet-200/50 border hover:from-violet-100/60 hover:to-white/80 hover:border-violet-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
+                                                Q3
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
+                                                3: הסקת טיפוסים</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-violet-400/70 group-hover:text-violet-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 91</h3>
                                     <span
@@ -627,58 +658,103 @@
                                         מבחן 3
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2025/2025ב א2/q0_2025b_91.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2025/2025ב א2/20905_2025b_91_grade100.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה (ציון 100)</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2025/2025ב א2/N102477206.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה נוספת</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="q1_2025b_91.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-blue-50/50 hover:border-blue-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-50/60 to-white/60 border-blue-200/50 border hover:from-blue-100/60 hover:to-white/80 hover:border-blue-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-blue-500/10 text-blue-700 border border-blue-500/25">
                                                 Q1
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 1: הרחבת מפרש</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-blue-400/70 group-hover:text-blue-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="q2_2025b_91.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-indigo-50/50 hover:border-indigo-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-50/60 to-white/60 border-indigo-200/50 border hover:from-indigo-100/60 hover:to-white/80 hover:border-indigo-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-indigo-500/10 text-indigo-700 border border-indigo-500/25">
                                                 Q2
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 2: ניהול זיכרון, הפניות משתמעות</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-indigo-400/70 group-hover:text-indigo-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="q3_2025b_91.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-violet-50/50 hover:border-violet-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-violet-50/60 to-white/60 border-violet-200/50 border hover:from-violet-100/60 hover:to-white/80 hover:border-violet-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
                                                 Q3
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 3: הסקת טיפוסים</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-violet-400/70 group-hover:text-violet-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
                             </div>
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 84</h3>
                                     <span
@@ -686,51 +762,81 @@
                                         מבחן 4
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2025/2025ב א/q0_2025b_84.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2025/2025ב א/N102453778.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="Q1_2025b_84.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-blue-50/50 hover:border-blue-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-50/60 to-white/60 border-blue-200/50 border hover:from-blue-100/60 hover:to-white/80 hover:border-blue-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-blue-500/10 text-blue-700 border border-blue-500/25">
                                                 Q1
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 1: הרחבת מפרש</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-blue-400/70 group-hover:text-blue-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="Q2_2025b_84.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-indigo-50/50 hover:border-indigo-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-50/60 to-white/60 border-indigo-200/50 border hover:from-indigo-100/60 hover:to-white/80 hover:border-indigo-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-indigo-500/10 text-indigo-700 border border-indigo-500/25">
                                                 Q2
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 2: מוטציות והפניות משתמעות</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-indigo-400/70 group-hover:text-indigo-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="q3_2025b_84.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-violet-50/50 hover:border-violet-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-violet-50/60 to-white/60 border-violet-200/50 border hover:from-violet-100/60 hover:to-white/80 hover:border-violet-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
                                                 Q3
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 3: הסקת טיפוסים</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-violet-400/70 group-hover:text-violet-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
@@ -749,7 +855,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 98</h3>
                                     <span
@@ -757,43 +863,73 @@
                                         מבחן 5
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2024b/2024b98/2024b-98.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2024b/2024b98/2024b-98-grade-100.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה (ציון 100)</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="Q1_2024b_98.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-blue-50/50 hover:border-blue-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-50/60 to-white/60 border-blue-200/50 border hover:from-blue-100/60 hover:to-white/80 hover:border-blue-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-blue-500/10 text-blue-700 border border-blue-500/25">
                                                 Q1
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 1: הרחבת מפרש</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-blue-400/70 group-hover:text-blue-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="Q2_2024b_98.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-indigo-50/50 hover:border-indigo-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-50/60 to-white/60 border-indigo-200/50 border hover:from-indigo-100/60 hover:to-white/80 hover:border-indigo-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-indigo-500/10 text-indigo-700 border border-indigo-500/25">
                                                 Q2
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 2: ניהול זיכרון ומוטציות</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-indigo-400/70 group-hover:text-indigo-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
                             </div>
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 87</h3>
                                     <span
@@ -801,36 +937,154 @@
                                         מבחן 6
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2024b/2024b87/2024b-87.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2024b/2024b87/2024b-87-grade92.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה (ציון 92)</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="Q1_2024b_87.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-blue-50/50 hover:border-blue-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-50/60 to-white/60 border-blue-200/50 border hover:from-blue-100/60 hover:to-white/80 hover:border-blue-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-blue-500/10 text-blue-700 border border-blue-500/25">
                                                 Q1
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 1: הרחבת מפרש</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-blue-400/70 group-hover:text-blue-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="Q2_2024b_87.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-indigo-50/50 hover:border-indigo-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-50/60 to-white/60 border-indigo-200/50 border hover:from-indigo-100/60 hover:to-white/80 hover:border-indigo-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-indigo-500/10 text-indigo-700 border border-indigo-500/25">
                                                 Q2
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 2: מוטציות וסביבות</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-indigo-400/70 group-hover:text-indigo-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 84</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 7
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2024b/2024b84/2024b-84.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2024b/2024b84/2024b-84-grade-87.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה (ציון 87)</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2024b/2024b84/2024b-84-grade-99.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה (ציון 99)</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' 1</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 8
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2024b/מבחן 2024ב1.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
@@ -849,29 +1103,102 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 87</h3>
                                     <span
                                         class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
-                                        מבחן 7
+                                        מבחן 9
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2023b/2023b - 87 שאלון.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="q3_2023b_87.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-violet-50/50 hover:border-violet-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-violet-50/60 to-white/60 border-violet-200/50 border hover:from-violet-100/60 hover:to-white/80 hover:border-violet-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
                                                 Q3
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 3: הסקת טיפוסים</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-violet-400/70 group-hover:text-violet-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד א</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 10
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2023b/מועד א/מועד א.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד ב</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 11
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2023b/מועד ב/מועד ב.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
@@ -890,147 +1217,222 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 87</h3>
                                     <span
                                         class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
-                                        מבחן 8
+                                        מבחן 12
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2021/שפות תכנות 2021ב מועד ב - 87.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="q3_2021b_87.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-violet-50/50 hover:border-violet-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-violet-50/60 to-white/60 border-violet-200/50 border hover:from-violet-100/60 hover:to-white/80 hover:border-violet-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
                                                 Q3
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 3: הסקת טיפוסים</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-violet-400/70 group-hover:text-violet-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
                             </div>
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 78</h3>
                                     <span
                                         class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
-                                        מבחן 9
+                                        מבחן 13
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2021/2021ב-מועד א2 -78.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2021/2021ב-מועד א2 -78 - פתרון.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="Q1_2021b_78.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-blue-50/50 hover:border-blue-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-50/60 to-white/60 border-blue-200/50 border hover:from-blue-100/60 hover:to-white/80 hover:border-blue-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-blue-500/10 text-blue-700 border border-blue-500/25">
                                                 Q1
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 1: הרחבת מפרש</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-blue-400/70 group-hover:text-blue-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="Q2_2021b_78.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-indigo-50/50 hover:border-indigo-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-50/60 to-white/60 border-indigo-200/50 border hover:from-indigo-100/60 hover:to-white/80 hover:border-indigo-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-indigo-500/10 text-indigo-700 border border-indigo-500/25">
                                                 Q2
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 2: ניהול זיכרון וסביבות</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-indigo-400/70 group-hover:text-indigo-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="q3_2021b_78.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-violet-50/50 hover:border-violet-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-violet-50/60 to-white/60 border-violet-200/50 border hover:from-violet-100/60 hover:to-white/80 hover:border-violet-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
                                                 Q3
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 3: הסקת טיפוסים</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-violet-400/70 group-hover:text-violet-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
                             </div>
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 57</h3>
                                     <span
                                         class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
-                                        מבחן 10
+                                        מבחן 14
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2021/2021b-57.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2021/2021b - moed 57 - sol.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="Q1_2021b_57.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-blue-50/50 hover:border-blue-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-50/60 to-white/60 border-blue-200/50 border hover:from-blue-100/60 hover:to-white/80 hover:border-blue-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-blue-500/10 text-blue-700 border border-blue-500/25">
                                                 Q1
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 1: הרחבת מפרש</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-blue-400/70 group-hover:text-blue-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="Q2_2021b_57.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-indigo-50/50 hover:border-indigo-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-50/60 to-white/60 border-indigo-200/50 border hover:from-indigo-100/60 hover:to-white/80 hover:border-indigo-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-indigo-500/10 text-indigo-700 border border-indigo-500/25">
                                                 Q2
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 2: ניהול זיכרון וסביבות</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-indigo-400/70 group-hover:text-indigo-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                     <a href="q3_2021b_57.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-violet-50/50 hover:border-violet-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-violet-50/60 to-white/60 border-violet-200/50 border hover:from-violet-100/60 hover:to-white/80 hover:border-violet-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
                                                 Q3
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 3: הסקת טיפוסים</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-violet-400/70 group-hover:text-violet-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
@@ -1049,29 +1451,416 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 88</h3>
                                     <span
                                         class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
-                                        מבחן 11
+                                        מבחן 15
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2020/2020b-88/2020b 88.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2020/2020b-88/פתרון 2020ב מועד 88.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
 
                                     <a href="q3_2020b_88.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-violet-50/50 hover:border-violet-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-violet-50/60 to-white/60 border-violet-200/50 border hover:from-violet-100/60 hover:to-white/80 hover:border-violet-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-violet-500/10 text-violet-700 border border-violet-500/25">
                                                 Q3
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 3: הסקת טיפוסים</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-violet-400/70 group-hover:text-violet-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 73</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 16
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2020/2020b-73/2020b 73.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2020/2020b-73/2020b - 73- מחברת.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 72</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 17
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2020/2020b-72/2020b 72.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2020/2020b-72/מועד 2020ב 72 שאלה 4.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה (שאלה 4)</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="mb-12 w-full">
+                        <div class="flex items-center gap-4 mb-6">
+                            <h3
+                                class="text-2xl font-black text-slate-700 bg-white/60 px-4 py-1.5 rounded-xl border border-slate-200/50 shadow-sm">
+                                2019</h3>
+                            <div class="h-px bg-slate-300/70 flex-grow"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 91</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 18
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2019/2019b-91/שפות תכנות 2019ב 91.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 84</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 19
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2019/2019b-84/2019b-84.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 83</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 20
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2019/2019b-83/shelon 2019ב 83.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2019/2019b-83/שאלה 2.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה (שאלה 2)</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="mb-12 w-full">
+                        <div class="flex items-center gap-4 mb-6">
+                            <h3
+                                class="text-2xl font-black text-slate-700 bg-white/60 px-4 py-1.5 rounded-xl border border-slate-200/50 shadow-sm">
+                                2018</h3>
+                            <div class="h-px bg-slate-300/70 flex-grow"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 95</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 21
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2018/2018b-95/2018b_95.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 85</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 22
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2018/2018b-85/2018b_85.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 84</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 23
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2018/2018b-84/2018b_84.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="mb-12 w-full">
+                        <div class="flex items-center gap-4 mb-6">
+                            <h3
+                                class="text-2xl font-black text-slate-700 bg-white/60 px-4 py-1.5 rounded-xl border border-slate-200/50 shadow-sm">
+                                2017</h3>
+                            <div class="h-px bg-slate-300/70 flex-grow"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">סמסטר ב' מועד 86</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 24
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/2017b-86/שאלון 2017ב מועד 86.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                    <a href="Exams/Exams/2017b-86/מחברת 2017ב מועד 86.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-50/60 to-white/60 border border-rose-200/50 hover:from-rose-100/60 hover:to-white/80 hover:border-rose-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-rose-500/10 text-rose-700 border border-rose-500/25">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-rose-900">מחברת
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-rose-400/70 group-hover:text-rose-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
@@ -1090,29 +1879,87 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                             <div
-                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300">
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">תרגול וחזרה 24ב</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 25
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/שאלות תרגול וחזרה 24ב.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
+                                    <h3 class="text-base font-black text-slate-800">שאלות תרגול וחזרה</h3>
+                                    <span
+                                        class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
+                                        מבחן 26
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+
+                                    <a href="Exams/Exams/שאלות תרגול וחזרה.pdf" target="_blank"
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-50/60 to-white/60 border border-emerald-200/50 hover:from-emerald-100/60 hover:to-white/80 hover:border-emerald-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <span
+                                                class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[10px] bg-emerald-500/10 text-emerald-700 border border-emerald-500/25">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span
+                                                class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">טופס
+                                                בחינה</span>
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-chevron-left text-emerald-400/70 group-hover:text-emerald-600 transition-colors text-[9px]"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white/40 backdrop-blur-md rounded-2xl border-2 border-slate-200/60 p-5 shadow-sm hover:shadow-md hover:bg-white/50 transition-all duration-300 flex flex-col">
                                 <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-200/60">
                                     <h3 class="text-base font-black text-slate-800">מבחן לא ידוע / מועדים מיוחדים</h3>
                                     <span
                                         class="bg-slate-200/50 border border-slate-300/30 text-[8px] px-2 py-0.5 rounded-full text-slate-600 font-bold">
-                                        מבחן 12
+                                        מבחן 27
                                     </span>
                                 </div>
-                                <div class="space-y-2.5">
+                                <div class="space-y-1.5 flex-grow">
 
                                     <a href="q2_unknown.html" target="_blank"
-                                        class="flex items-center justify-between p-3 rounded-xl border border-white/40 bg-white/50 hover:bg-indigo-50/50 hover:border-indigo-300/30 transition-all duration-200 group cursor-pointer shadow-sm">
+                                        class="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-50/60 to-white/60 border-indigo-200/50 border hover:from-indigo-100/60 hover:to-white/80 hover:border-indigo-300/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer shadow-sm mt-1.5">
                                         <div class="flex items-center gap-2.5">
                                             <span
                                                 class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-[9px] bg-indigo-500/10 text-indigo-700 border border-indigo-500/25">
                                                 Q2
                                             </span>
                                             <span
-                                                class="text-xs font-bold text-slate-700 group-hover:text-slate-900">שאלה
+                                                class="text-xs font-bold text-slate-800 group-hover:text-slate-950">שאלה
                                                 2: ניהול זיכרון משתנה</span>
                                         </div>
                                         <i
-                                            class="fa-solid fa-chevron-left text-slate-400 group-hover:text-slate-600 transition-colors text-[9px]"></i>
+                                            class="fa-solid fa-chevron-left text-indigo-400/70 group-hover:text-indigo-600 transition-colors text-[9px]"></i>
                                     </a>
 
                                 </div>
