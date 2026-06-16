@@ -120,9 +120,21 @@
             background: #94a3b8;
         }
     </style>
+    <script src="theme-manager.js"></script>
 </head>
 
 <body class="text-textMain min-h-screen relative flex flex-col overflow-y-auto">
+
+    <!-- Floating Theme Toggle Button -->
+    <button onclick="toggleTheme()" title="Toggle Theme"
+        class="fixed top-4 left-4 z-50 flex items-center justify-center p-2 rounded-2xl shadow-lg transition-all duration-300 hover:scale-110 border border-white/20 bg-white/20 backdrop-blur-md text-slate-800"
+        style="box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);">
+        <div class="flex flex-col items-center">
+            <i id="theme-toggle-icon" data-lucide="sun" class="w-5 h-5"></i>
+            <span id="theme-toggle-text" class="text-[9px] font-bold mt-1 text-center leading-tight">מצב<br>רגיל</span>
+        </div>
+    </button>
+
 
     <!-- Background lighting blobs (highly visible for glassmorphism) -->
     <div
@@ -156,6 +168,10 @@
             <a href="general_algorithms.html" id="navbtn-algorithms"
                 class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
                 <i class="fa-solid fa-gears ml-1.5"></i> יחידת פתיחה
+            </a>
+            <a href="functions_dictionary.html" id="navbtn-dictionary"
+                class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-book-open ml-1.5"></i>מילון פונקציות
             </a>
             <button onclick="showView('questions')" id="navbtn-questions"
                 class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
@@ -199,8 +215,8 @@
                 </p>
             </div>
 
-            <!-- Cards Grid (3 bubbles styled like index.html) -->
-            <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+            <!-- Cards Grid (4 bubbles) -->
+            <div class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
 
                 <!-- Bubble 1: Algorithms (Links to general_algorithms.html) -->
                 <a href="general_algorithms.html"
@@ -237,9 +253,44 @@
                     </div>
                 </a>
 
-                <!-- Bubble 2: Questions & Answers (Internal view switching) -->
+                <!-- Bubble 2: Functions Dictionary (Links to functions_dictionary.html) -->
+                <a href="functions_dictionary.html"
+                    class="group text-right relative overflow-hidden block bg-gradient-to-br from-white/20 to-white/10 hover:from-orange-400/40 hover:to-amber-500/40 rounded-[24px] p-[2px] transition-all duration-500 hover:shadow-2xl hover:shadow-orange-300/30 hover:-translate-y-2 hover:scale-[1.02] opacity-0 animate-fade-in-up delay-200 cursor-pointer">
+                    <div
+                        class="bg-white/15 backdrop-blur-xl rounded-[22px] p-8 h-full relative z-10 flex flex-col border border-white/25 hover:bg-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(255,255,255,0.03)]">
+                        <svg class="absolute bottom-[-5%] left-[-5%] w-40 h-40 text-orange-50 opacity-20 group-hover:opacity-40 group-hover:-rotate-12 transition-all duration-700 pointer-events-none z-0"
+                            fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                        </svg>
+
+                        <div class="flex items-start justify-between mb-6 relative z-10">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-orange-600 group-hover:bg-gradient-to-br group-hover:from-orange-400 group-hover:to-amber-500 group-hover:text-white transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-orange-200 shadow-inner">
+                                <i class="fa-solid fa-book-open text-2xl"></i>
+                            </div>
+                            <span
+                                class="bg-white/10 border border-white/20 text-xs px-3 py-1.5 rounded-full text-slate-700 font-bold tracking-wide group-hover:bg-orange-50 group-hover:text-orange-700 group-hover:border-orange-200 transition-colors">
+                                מאגר עזר</span>
+                        </div>
+                        <h2
+                            class="text-2xl font-bold text-slate-800 mb-3 group-hover:text-orange-600 transition-colors relative z-10 font-sans">
+                            מילון פונקציות </h2>
+                        <p class="text-slate-500 leading-relaxed font-medium relative z-10 flex-grow">
+                            פקודות ופונקציות של שפת Scheme והמפרש, עם הסברים, מודל מחשבתי ודוגמאות קוד!
+                        </p>
+                        <div
+                            class="mt-6 flex items-center text-sm font-bold text-slate-400 group-hover:text-orange-600 transition-colors duration-300 relative z-10 font-sans">
+                            פתח מילון
+                            <i
+                                class="fa-solid fa-arrow-left mr-2 transform transition-transform duration-300 group-hover:-translate-x-2 text-xs"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Bubble 3: Questions & Answers (Internal view switching) -->
                 <button onclick="showView('questions')"
-                    class="group text-right relative overflow-hidden block bg-gradient-to-br from-white/20 to-white/10 hover:from-emerald-400/40 hover:to-teal-500/40 rounded-[24px] p-[2px] transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-300/30 hover:-translate-y-2 hover:scale-[1.02] opacity-0 animate-fade-in-up delay-200 cursor-pointer font-sans">
+                    class="group text-right relative overflow-hidden block bg-gradient-to-br from-white/20 to-white/10 hover:from-emerald-400/40 hover:to-teal-500/40 rounded-[24px] p-[2px] transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-300/30 hover:-translate-y-2 hover:scale-[1.02] opacity-0 animate-fade-in-up delay-300 cursor-pointer font-sans">
                     <div
                         class="bg-white/15 backdrop-blur-xl rounded-[22px] p-8 h-full relative z-10 flex flex-col text-right border border-white/25 hover:bg-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(255,255,255,0.03)]">
                         <svg class="absolute bottom-[-5%] left-[-5%] w-40 h-40 text-emerald-50 opacity-20 group-hover:opacity-40 group-hover:rotate-12 transition-all duration-700 pointer-events-none z-0"
@@ -273,9 +324,9 @@
                     </div>
                 </button>
 
-                <!-- Bubble 3: Exams (Internal view switching) -->
+                <!-- Bubble 4: Exams (Internal view switching) -->
                 <button onclick="showView('exams')"
-                    class="group text-right relative overflow-hidden block bg-gradient-to-br from-white/20 to-white/10 hover:from-violet-400/40 hover:to-fuchsia-500/40 rounded-[24px] p-[2px] transition-all duration-500 hover:shadow-2xl hover:shadow-violet-300/30 hover:-translate-y-2 hover:scale-[1.02] opacity-0 animate-fade-in-up delay-300 cursor-pointer font-sans">
+                    class="group text-right relative overflow-hidden block bg-gradient-to-br from-white/20 to-white/10 hover:from-violet-400/40 hover:to-fuchsia-500/40 rounded-[24px] p-[2px] transition-all duration-500 hover:shadow-2xl hover:shadow-violet-300/30 hover:-translate-y-2 hover:scale-[1.02] opacity-0 animate-fade-in-up delay-[400ms] cursor-pointer font-sans">
                     <div
                         class="bg-white/15 backdrop-blur-xl rounded-[22px] p-8 h-full relative z-10 flex flex-col text-right border border-white/25 hover:bg-white/25 transition-all duration-500 shadow-[0_8px_32px_rgba(255,255,255,0.03)]">
                         <svg class="absolute bottom-[-5%] left-[-5%] w-40 h-40 text-violet-50 opacity-20 group-hover:opacity-40 group-hover:-rotate-12 transition-all duration-700 pointer-events-none z-0"

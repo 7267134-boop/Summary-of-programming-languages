@@ -2,8 +2,13 @@
     const THEME_STORAGE_KEY = 'site-theme';
     const THEMES = ['normal', 'dark', 'reading'];
     
-    // Get current theme or default to normal
-    let currentTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'normal';
+    // Get current theme or default to normal with fallback for restricted environments
+    let currentTheme = 'normal';
+    try {
+        currentTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'normal';
+    } catch (e) {
+        console.warn("localStorage is not available, defaulting to normal theme:", e);
+    }
     
     // Create style element for theme
     const styleEl = document.createElement('style');
@@ -68,7 +73,11 @@
         const nextIndex = (currentIndex + 1) % THEMES.length;
         currentTheme = THEMES[nextIndex];
         
-        localStorage.setItem(THEME_STORAGE_KEY, currentTheme);
+        try {
+            localStorage.setItem(THEME_STORAGE_KEY, currentTheme);
+        } catch (e) {
+            console.warn("localStorage is not available, theme change won't persist:", e);
+        }
         applyTheme(currentTheme);
     };
 

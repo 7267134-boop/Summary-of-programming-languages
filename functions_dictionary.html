@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="h-full overflow-x-hidden">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מילון הפונקציות המקיף - שפות תכנות</title>
+    <!-- Heebo and Assistant Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=Assistant:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        calmBg: '#f4f7fb',
+                        cardBg: '#ffffff',
+                        textMain: '#334155',
+                        textMuted: '#64748b',
+                        accentSoft: '#38bdf8',
+                        accentStrong: '#0284c7',
+                        accentHover: '#e0f2fe',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Heebo', 'Assistant', 'sans-serif']
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'modal-enter': 'modalEnter 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        modalEnter: {
+                            '0%': { opacity: '0', transform: 'scale(0.95) translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .modal-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #0ea5e9;
+            /* sky-500 */
+            border-color: rgba(14, 165, 233, 0.5);
+            /* sky-500/50 */
+            box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.2);
+            font-weight: 800;
+        }
+
+        .sub-filter-btn {
+            transition: all 0.3s ease;
+        }
+
+        .sub-filter-btn.active {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #8b5cf6;
+            /* violet-500 */
+            border-color: rgba(139, 92, 246, 0.5);
+            /* violet-500/50 */
+            font-weight: 800;
+        }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Custom Prism styles to fit RTL environment */
+        pre[class*="language-"] {
+            direction: ltr;
+            text-align: left;
+            border-radius: 0.75rem;
+            margin: 0;
+            padding: 1.25rem;
+            font-size: 0.9rem;
+        }
+    </style>
+    <script src="theme-manager.js"></script>
+</head>
+
+<body
+    class="bg-calmBg text-textMain min-h-screen relative flex flex-col font-sans selection:bg-accentSoft selection:text-white pb-20">
+
+    <!-- Floating Theme Toggle Button -->
+    <button onclick="toggleTheme()" title="Toggle Theme"
+        class="fixed top-4 left-4 z-50 flex items-center justify-center p-2 rounded-2xl shadow-lg transition-all duration-300 hover:scale-110 border border-white/20 bg-white/20 backdrop-blur-md text-slate-800"
+        style="box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);">
+        <div class="flex flex-col items-center">
+            <i id="theme-toggle-icon" data-lucide="sun" class="w-5 h-5"></i>
+            <span id="theme-toggle-text" class="text-[9px] font-bold mt-1 text-center leading-tight">מצב<br>רגיל</span>
+        </div>
+    </button>
+
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-40 glass-panel border-b border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1
+                            class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600">
+                            מילון פונקציות </h1>
+                        <p class="text-[10px] text-slate-500 font-medium tracking-wider">SCHEME & EOPL REFERENCE</p>
+                    </div>
+                </div>
+                <!-- Search Bar (Moved to Navbar) -->
+                <div class="hidden sm:block flex-grow max-w-xl mx-8 relative">
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
+                    </div>
+                    <input type="text" id="searchInput"
+                        class="block w-full rounded-full border border-slate-200 bg-white/50 backdrop-blur-sm py-2 pr-10 pl-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500 shadow-sm transition-all focus:bg-white"
+                        placeholder="חיפוש פונקציה, ביטוי...">
+                </div>
+                <div>
+                    <a href="5.html"
+                        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm">
+                        <span class="hidden md:inline">חזרה ללוח הבקרה</span>
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
+
+        <!-- Toggle Filters Button -->
+        <div class="flex justify-center mb-2">
+            <button id="toggleFiltersBtn"
+                class="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-sky-600 transition-colors bg-white/50 px-4 py-1.5 rounded-full border border-slate-200/50 shadow-sm backdrop-blur-md">
+                <span>הסתר סינונים</span>
+                <i data-lucide="chevron-up" id="toggleFiltersIcon"
+                    class="w-4 h-4 transition-transform duration-300"></i>
+            </button>
+        </div>
+
+        <!-- Filter Header -->
+        <div id="filterPanel"
+            class="glass-panel rounded-3xl p-6 mb-8 transition-all duration-500 overflow-hidden origin-top">
+
+            <div class="text-center mb-6">
+                <h2
+                    class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-700 to-indigo-600 tracking-tight font-sans">
+                    סינון ומיקוד במילון
+                </h2>
+            </div>
+
+            <!-- Primary Categories -->
+            <div class="flex flex-wrap justify-center gap-3 mb-6" id="primaryFilters">
+                <button
+                    class="filter-btn active py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
+                    data-filter="all">
+                    הכל
+                </button>
+                <button
+                    class="filter-btn py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
+                    data-filter="general">
+                    שפת תשתית (Scheme)
+                </button>
+                <button
+                    class="filter-btn py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
+                    data-filter="lang">
+                    עדכון lang.scm
+                </button>
+                <button
+                    class="filter-btn py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
+                    data-filter="data-structures">
+                    עדכון data-structures.scm
+                </button>
+                <button
+                    class="filter-btn py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
+                    data-filter="interp">
+                    עדכון interp.scm
+                </button>
+                <button
+                    class="filter-btn py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
+                    data-filter="q2">
+                    שאלה 2 (Implicit/Explicit)
+                </button>
+            </div>
+
+            <!-- Secondary Categories (Sub-filters) - Initially hidden, shown dynamically -->
+            <div id="subFilterContainer" class="hidden">
+                <div class="h-px bg-slate-300/50 max-w-2xl mx-auto mb-6"></div>
+                <div class="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto" id="subFilters">
+                    <!-- Dynamic Sub filters will be injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Functions Grid -->
+        <div id="functionsGrid"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative min-h-[300px]">
+            <!-- Cards injected via JS -->
+        </div>
+
+        <!-- No Results State -->
+        <div id="noResults" class="hidden flex-col items-center justify-center py-20 text-center">
+            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                <i data-lucide="search-x" class="w-10 h-10 text-slate-400"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-2">לא נמצאו תוצאות</h3>
+            <p class="text-slate-500">נסה לחפש מונח אחר או לנקות את הסינונים.</p>
+        </div>
+
+    </main>
+
+    <!-- Modal Backdrop -->
+    <div id="functionModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity opacity-0" id="modalBackdrop">
+        </div>
+
+        <!-- Modal Panel -->
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+
+                <div id="modalContent"
+                    class="modal-glass relative transform overflow-hidden rounded-2xl text-right shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl opacity-0 scale-95 flex flex-col max-h-[90vh]">
+
+                    <!-- Close button -->
+                    <button id="closeModalBtn"
+                        class="absolute top-4 left-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors z-10">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Modal Header -->
+                    <div class="px-6 pt-6 pb-4 border-b border-slate-100">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span id="modalCategoryBadge"
+                                class="inline-flex items-center rounded-md bg-sky-50 px-2 py-1 text-xs font-medium text-sky-700 ring-1 ring-inset ring-sky-700/10"></span>
+                            <span id="modalSubCategoryBadge"
+                                class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10"></span>
+                        </div>
+                        <h3 id="modalTitle"
+                            class="text-3xl font-black font-mono text-slate-800 dir-ltr text-left inline-block"
+                            id="modal-title"></h3>
+                    </div>
+
+                    <!-- Modal Body (Scrollable) -->
+                    <div class="px-6 py-5 overflow-y-auto flex-grow">
+
+                        <!-- Model / Description -->
+                        <div class="mb-6">
+                            <h4
+                                class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                <i data-lucide="brain-circuit" class="w-4 h-4"></i> מה זה בעצם עושה?
+                            </h4>
+                            <p id="modalModel"
+                                class="text-lg text-slate-800 leading-relaxed font-medium bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            </p>
+                        </div>
+
+                        <!-- Code Example -->
+                        <div class="mb-6 relative group">
+                            <h4
+                                class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                <i data-lucide="code" class="w-4 h-4"></i> איך זה נראה בקוד?
+                            </h4>
+                            <div class="relative">
+                                <pre><code id="modalCode" class="language-scheme"></code></pre>
+                                <button onclick="copyCode()"
+                                    class="absolute top-3 right-3 p-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
+                                    title="העתק קוד">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Usage -->
+                        <div class="mb-2">
+                            <h4
+                                class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                <i data-lucide="lightbulb" class="w-4 h-4"></i> מתי משתמשים בזה במבחן?
+                            </h4>
+                            <div
+                                class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-amber-900 text-md leading-relaxed">
+                                <span id="modalUsage"></span>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Examples (If any) -->
+                        <div id="modalDetailedContainer" class="hidden mt-6">
+                            <h4
+                                class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                <i data-lucide="microscope" class="w-4 h-4"></i> דוגמאות מפורטות / הערות
+                            </h4>
+                            <div class="text-slate-700 text-sm leading-relaxed" id="modalDetailed"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="functions_data.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Subcategory definitions for filtering
+        const subCategoryDefinitions = {
+            'general': [
+                { id: 'all', label: 'כללי (הכל)' },
+                { id: 'lists', label: 'בנייה ופירוק של רשימות' },
+                { id: 'higher-order', label: 'סינון וצמצום' },
+                { id: 'logic', label: 'בקרת זרימה ולוגיקה' },
+                { id: 'predicates', label: 'שאלות זיהוי' },
+                { id: 'comparisons', label: 'השוואות' },
+                { id: 'search', label: 'מילונים וחיפושים' },
+                { id: 'vectors', label: 'מערכים' },
+                { id: 'strings', label: 'מחרוזות והדפסות' },
+                { id: 'math', label: 'מתמטיקה' },
+                { id: 'mutation', label: 'שינויי זיכרון' },
+                { id: 'eopl-types', label: 'כלי בדיקה EoPL' }
+            ],
+            'lang': [
+                { id: 'all', label: 'הכל ב-lang' },
+                { id: 'lexer', label: 'מילון תווים (Lexer)' },
+                { id: 'parser', label: 'חוקי תחביר (Parser)' }
+            ],
+            'data-structures': [
+                { id: 'all', label: 'הכל ב-data-structures' },
+                { id: 'datatype', label: 'מערכת טיפוסים' },
+                { id: 'expval', label: 'פותחני קופסאות' },
+                { id: 'env', label: 'מערכת הזיכרון (Env)' }
+            ],
+            'interp': [
+                { id: 'all', label: 'הכל ב-interp' },
+                { id: 'eval', label: 'מנוע ראשי' },
+                { id: 'constructors', label: 'אריזה מחדש' }
+            ],
+            'q2': [
+                { id: 'all', label: 'הכל ב-Q2' },
+                { id: 'store', label: 'ניהול מחסן (Store)' },
+                { id: 'ast-q2', label: 'ביטויים משני מצב' },
+                { id: 'infra', label: 'תשתיות הרצה מדורגות' }
+            ]
+        };
+
+        const categoryLabels = {
+            'general': 'Scheme',
+            'lang': 'lang.scm',
+            'data-structures': 'data-structures.scm',
+            'interp': 'interp.scm',
+            'q2': 'שאלה 2'
+        };
+
+        let currentFilter = 'all';
+        let currentSubFilter = 'all';
+        let searchQuery = '';
+
+        const grid = document.getElementById('functionsGrid');
+        const noResults = document.getElementById('noResults');
+        const searchInput = document.getElementById('searchInput');
+        const primaryFilters = document.querySelectorAll('.filter-btn');
+        const subFilterContainer = document.getElementById('subFilterContainer');
+        const subFiltersWrapper = document.getElementById('subFilters');
+
+        // Render Cards
+        function renderCards() {
+            grid.innerHTML = '';
+
+            const filtered = dictionaryData.filter(item => {
+                // Search
+                const q = searchQuery.toLowerCase();
+                const matchesSearch = !q ||
+                    item.title.toLowerCase().includes(q) ||
+                    item.model.toLowerCase().includes(q) ||
+                    item.code.toLowerCase().includes(q);
+
+                // Primary Filter
+                const matchesPrimary = currentFilter === 'all' || item.category === currentFilter;
+
+                // Sub Filter
+                const matchesSub = currentSubFilter === 'all' || item.subCategory === currentSubFilter;
+
+                return matchesSearch && matchesPrimary && matchesSub;
+            });
+
+            if (filtered.length === 0) {
+                grid.classList.add('hidden');
+                noResults.classList.remove('hidden');
+                noResults.classList.add('flex');
+            } else {
+                grid.classList.remove('hidden');
+                noResults.classList.add('hidden');
+                noResults.classList.remove('flex');
+
+                const styles = [
+                    { color: 'fuchsia', icon: 'fa-box-open' },
+                    { color: 'blue', icon: 'fa-play' },
+                    { color: 'amber', icon: 'fa-database' },
+                    { color: 'rose', icon: 'fa-exchange-alt' },
+                    { color: 'emerald', icon: 'fa-layer-group' },
+                    { color: 'cyan', icon: 'fa-bolt' },
+                    { color: 'sky', icon: 'fa-magnifying-glass' },
+                    { color: 'violet', icon: 'fa-code' },
+                    { color: 'orange', icon: 'fa-cubes' },
+                    { color: 'teal', icon: 'fa-puzzle-piece' }
+                ];
+
+                filtered.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    // Stagger animation
+                    const delay = Math.min(index * 50, 500);
+                    card.className = `group opacity-0 animate-fade-in-up cursor-pointer h-full`;
+                    card.style.animationDelay = `${delay}ms`;
+
+                    const s = styles[index % styles.length];
+
+                    card.innerHTML = `
+                        <div class="bg-white border-2 border-slate-200 group-hover:border-${s.color}-400 p-6 shadow-sm group-hover:shadow-xl transition-all flex flex-col justify-center items-center text-center h-full rounded-[1rem]">
+                            <div class="bg-${s.color}-100 text-${s.color}-600 border border-${s.color}-200 w-16 h-16 rounded-full flex items-center justify-center shadow-md mb-4 text-2xl group-hover:bg-${s.color}-500 group-hover:text-white transition-colors">
+                                <i class="fa-solid ${s.icon}"></i>
+                            </div>
+                            <h4 class="text-2xl font-black text-slate-800 mb-2 font-mono text-${s.color}-600 dir-ltr">${item.title}</h4>
+                            <p class="text-slate-500 font-bold line-clamp-2">${item.model}</p>
+                            <div class="text-slate-400 mt-4 text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-expand"></i> לחץ לפירוט</div>
+                        </div>
+                    `;
+
+                    card.onclick = () => openModal(item);
+                    grid.appendChild(card);
+                });
+                lucide.createIcons();
+            }
+        }
+
+        // Render Sub-filters
+        function renderSubFilters() {
+            if (currentFilter === 'all' || !subCategoryDefinitions[currentFilter]) {
+                subFilterContainer.classList.add('hidden');
+                currentSubFilter = 'all';
+                return;
+            }
+
+            subFilterContainer.classList.remove('hidden');
+            subFiltersWrapper.innerHTML = '';
+
+            subCategoryDefinitions[currentFilter].forEach(sub => {
+                const btn = document.createElement('button');
+                btn.className = `sub-filter-btn py-2 px-4 bg-white/30 hover:bg-white/60 backdrop-blur-md rounded-lg border border-white/50 hover:border-violet-400/50 hover:bg-white/50 text-slate-700 font-bold text-xs transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm ${sub.id === currentSubFilter ? 'active' : ''}`;
+                btn.innerText = sub.label;
+                btn.onclick = () => {
+                    currentSubFilter = sub.id;
+                    renderSubFilters(); // re-render to update active classes
+                    renderCards();
+                };
+                subFiltersWrapper.appendChild(btn);
+            });
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderCards();
+        });
+
+        primaryFilters.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                primaryFilters.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                currentSubFilter = 'all'; // reset sub filter on primary change
+                renderSubFilters();
+                renderCards();
+            });
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('functionModal');
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const modalContent = document.getElementById('modalContent');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        function openModal(item) {
+            // Populate data
+            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalCategoryBadge').innerText = categoryLabels[item.category] || item.category;
+
+            const subCatObj = subCategoryDefinitions[item.category]?.find(sc => sc.id === item.subCategory);
+            document.getElementById('modalSubCategoryBadge').innerText = subCatObj ? subCatObj.label : item.subCategory;
+
+            document.getElementById('modalModel').innerText = item.model;
+            document.getElementById('modalUsage').innerText = item.usage;
+
+            const codeEl = document.getElementById('modalCode');
+            codeEl.textContent = item.code;
+            Prism.highlightElement(codeEl);
+
+            const detailedContainer = document.getElementById('modalDetailedContainer');
+            const detailedContent = document.getElementById('modalDetailed');
+            if (item.detailed) {
+                detailedContent.innerHTML = item.detailed;
+                detailedContainer.classList.remove('hidden');
+            } else {
+                detailedContainer.classList.add('hidden');
+            }
+
+            // Show modal
+            modal.classList.remove('hidden');
+            // Trigger reflow
+            void modal.offsetWidth;
+
+            modalBackdrop.classList.remove('opacity-0');
+            modalBackdrop.classList.add('opacity-100');
+
+            modalContent.classList.remove('opacity-0', 'scale-95');
+            modalContent.classList.add('opacity-100', 'scale-100', 'animate-modal-enter');
+
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeModal() {
+            modalBackdrop.classList.remove('opacity-100');
+            modalBackdrop.classList.add('opacity-0');
+
+            modalContent.classList.remove('opacity-100', 'scale-100', 'animate-modal-enter');
+            modalContent.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300); // Wait for transition
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modalBackdrop.addEventListener('click', closeModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        function copyCode() {
+            const codeText = document.getElementById('modalCode').textContent;
+            navigator.clipboard.writeText(codeText).then(() => {
+                // Visual feedback could be added here
+                alert('הקוד הועתק בהצלחה!');
+            });
+        }
+
+        // Toggle Filters Logic
+        const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
+        const filterPanel = document.getElementById('filterPanel');
+        const toggleFiltersIcon = document.getElementById('toggleFiltersIcon');
+
+        let filtersVisible = true;
+        toggleFiltersBtn.addEventListener('click', () => {
+            filtersVisible = !filtersVisible;
+            if (filtersVisible) {
+                filterPanel.style.maxHeight = '1000px';
+                filterPanel.style.opacity = '1';
+                filterPanel.style.transform = 'scaleY(1)';
+                filterPanel.style.margin = '0 0 2rem 0';
+                filterPanel.style.padding = '1.5rem';
+                toggleFiltersBtn.querySelector('span').innerText = 'הסתר סינונים';
+                toggleFiltersIcon.classList.remove('rotate-180');
+            } else {
+                filterPanel.style.maxHeight = '0';
+                filterPanel.style.opacity = '0';
+                filterPanel.style.transform = 'scaleY(0)';
+                filterPanel.style.margin = '0';
+                filterPanel.style.padding = '0';
+                toggleFiltersBtn.querySelector('span').innerText = 'הצג סינונים';
+                toggleFiltersIcon.classList.add('rotate-180');
+            }
+        });
+
+        // Initial Render
+        renderCards();
+
+    </script>
+</body>
+
+</html>
