@@ -305,18 +305,15 @@
 <body class="text-slate-800 h-screen flex overflow-hidden">
 
     <!-- Floating Theme Toggle Button -->
-    <button
-        onclick="toggleTheme()"
-        title="Toggle Theme"
+    <button onclick="toggleTheme()" title="Toggle Theme"
         class="fixed top-4 left-4 z-50 flex items-center justify-center p-2 rounded-2xl shadow-lg transition-all duration-300 hover:scale-110 border border-white/20 bg-white/20 backdrop-blur-md text-slate-800"
-        style="box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);"
-    >
+        style="box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);">
         <div class="flex flex-col items-center">
             <i id="theme-toggle-icon" data-lucide="sun" class="w-5 h-5"></i>
             <span id="theme-toggle-text" class="text-[9px] font-bold mt-1 text-center leading-tight">מצב<br>רגיל</span>
         </div>
     </button>
-    
+
 
     <!-- Sidebar Navigation -->
     <aside
@@ -596,7 +593,7 @@
                         חלק 1.2</div>
                     <h2 class="text-5xl font-black text-slate-800 tracking-tight mb-4">משתנים ופונקציות: <span
                             class="text-blue-600">define, let, letrec</span></h2>
-                    <p class="text-xl text-slate-600 leading-relaxed">שמירת מידע בזיכרון היא פעולה בסיסית. Racket מציעה
+                    <p class="text-xl text-slate-600 leading-relaxed">שמירת מידע בזיכרון היא פעולה בסיסית. Scheme מציעה
                         מספר דרכים לקשור (Bind) ערכים למשתנים, בהתאם לטווח ההכרה (Scope) הנדרש.</p>
                 </header>
 
@@ -1147,7 +1144,7 @@
                             class="text-blue-600">define-datatype</span></h2>
                     <p class="text-xl text-slate-600 leading-relaxed">שפות תכנות פועלות על ידי מניפולציה של מבני נתונים
                         מורכבים (כמו עצי AST, סביבות מורחבות, וערכים חישוביים). ספר הקורס (EOPL) פיתח ספריה מיוחדת
-                        המרחיבה את Racket ומקלה על יצירת <strong>טיפוסי נתונים אלגבריים (Algebraic Data Types)</strong>.
+                        המרחיבה את Scheme ומקלה על יצירת <strong>טיפוסי נתונים אלגבריים (Algebraic Data Types)</strong>.
                         זהו הכלי שנמצא בכל קובץ <code>data-structures.scm</code>.</p>
                 </header>
 
@@ -2891,7 +2888,7 @@
                 <div class="thought-box mb-10">
                     <h3 class="text-2xl font-bold mb-4 text-fuchsia-800">פתרון 1: שימוש במנגנון תפיסת שגיאות ב-Racket
                         (הכי נקי ומתאים לריצה)</h3>
-                    <p class="mb-4 text-slate-700">בסביבת DrRacket (ובשפת Racket), ניתן לעטוף את הקריאה
+                    <p class="mb-4 text-slate-700">בסביבת DrRacket (ובשפת Scheme), ניתן לעטוף את הקריאה
                         ל-<code>apply-env</code> במנגנון תפיסת
                         חריגות <code
                             class="bg-gray-100 px-1 rounded text-sm text-[#0f172a] font-mono">with-handlers</code> .
@@ -2921,7 +2918,7 @@
                 <div class="deep-dive mb-10">
                     <h3 class="text-2xl font-bold mb-4 text-slate-800">פתרון 2: סגנון שאלות מבחן (העברת Failure
                         Callback)</h3>
-                    <p class="mb-4 text-slate-700">במבחנים רבים, במקום להשתמש במנגנון שגיאות של Racket, מניחים כי
+                    <p class="mb-4 text-slate-700">במבחנים רבים, במקום להשתמש במנגנון שגיאות של Scheme, מניחים כי
                         פונקציית החיפוש <code>apply-env</code> (והסביבה עצמה) מעודכנת לקבל פרמטר נוסף: <strong>פונקציית
                             כישלון (Failure Continuation / Callback)</strong> שתופעל במקרה שהמשתנה אינו נמצא, במקום
                         לקרוס.</p>
