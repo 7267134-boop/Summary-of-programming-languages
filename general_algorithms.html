@@ -303,18 +303,15 @@
 <body class="text-slate-800 h-screen flex overflow-hidden">
 
     <!-- Floating Theme Toggle Button -->
-    <button
-        onclick="toggleTheme()"
-        title="Toggle Theme"
+    <button onclick="toggleTheme()" title="Toggle Theme"
         class="fixed top-4 left-4 z-50 flex items-center justify-center p-2 rounded-2xl shadow-lg transition-all duration-300 hover:scale-110 border border-white/20 bg-white/20 backdrop-blur-md text-slate-800"
-        style="box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);"
-    >
+        style="box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);">
         <div class="flex flex-col items-center">
             <i id="theme-toggle-icon" data-lucide="sun" class="w-5 h-5"></i>
             <span id="theme-toggle-text" class="text-[9px] font-bold mt-1 text-center leading-tight">מצב<br>רגיל</span>
         </div>
     </button>
-    
+
     <!-- Floating Sidebar Toggle Button -->
     <button
         class="fixed top-4 z-50 bg-white/90 backdrop-blur border border-slate-200 shadow-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 p-2.5 rounded-xl cursor-pointer"
@@ -366,11 +363,13 @@
                         (value-of)</span></button>
                 <button class="nav-btn" id="btn-tab-q1-5" onclick="showTab('tab-q1-5')"><span>⚠️ 1.5 פונקציות עזר
                         ומלכודות</span></button>
-                <button class="nav-btn" id="btn-tab-q1-6" onclick="showTab('tab-q1-6')"><span>🧪 1.6 מעבדת המפרש: איסוף</span></button>
+                <button class="nav-btn" id="btn-tab-q1-6" onclick="showTab('tab-q1-6')"><span>🧪 1.6 מעבדת המפרש:
+                        איסוף</span></button>
             </div>
             <div class="nav-group">
                 <div class="nav-group-title">בין שאלה 1 ל-2</div>
-                <button class="nav-btn" id="btn-tab-vs-q1-q2" onclick="showTab('tab-vs-q1-q2')"><span>⚖️  אז מה ההבדל בין 1 ל-2?</span></button>
+                <button class="nav-btn" id="btn-tab-vs-q1-q2" onclick="showTab('tab-vs-q1-q2')"><span>⚖️ אז מה ההבדל בין
+                        1 ל-2?</span></button>
             </div>
             <div class="nav-group">
                 <div class="nav-group-title">שאלה 2: זיכרון וסביבות</div>
@@ -388,7 +387,8 @@
                         בסיסי</span></button>
                 <button class="nav-btn" id="btn-tab-q2-6" onclick="showTab('tab-q2-6')"><span>⚡ 2.6 interp מתקדם
                         והלפרים</span></button>
-                <button class="nav-btn" id="btn-tab-q2-7" onclick="showTab('tab-q2-7')"><span>🧬 2.7 מעבדת המוטציות והזיכרון</span></button>
+                <button class="nav-btn" id="btn-tab-q2-7" onclick="showTab('tab-q2-7')"><span>🧬 2.7 מעבדת המוטציות
+                        והזיכרון</span></button>
             </div>
             <div class="nav-group">
                 <div class="nav-group-title">שאלה 3: הקשת טיפוסים</div>
@@ -2042,7 +2042,7 @@
                                     לכתוב קוד.
                                     קחו צבע אחד ותמרקרו ב-BNF את מבנה הנתונים. קחו צבע שני ותמרקרו בטקסט את המילים
                                     שקשורות ל<strong>סביבה (env)</strong>.
-                                    אז עברו על הדוגמאות ושאלו את עצמכם על כל שורה: "איזה באג פוטנציאלי  מנסים לתפוס
+                                    אז עברו על הדוגמאות ושאלו את עצמכם על כל שורה: "איזה באג פוטנציאלי מנסים לתפוס
                                     אותי עליו כאן?". כשמבינים את ה"למה", קל מאוד לכתוב את ה"איך".
                                 </p>
                             </div>
@@ -2176,7 +2176,7 @@
                                 class="font-bold text-slate-800 mb-4 text-lg border-b-2 border-primary inline-block pb-1">
                                 <i class="fa-solid fa-shapes ml-2"></i> תבניות הוספה נפוצות (Patterns)
                             </h4>
-                            <p class="text-slate-700 mb-4">במבחנים   חוזרים על עצמם 3 מבנים מרכזיים.
+                            <p class="text-slate-700 mb-4">במבחנים חוזרים על עצמם 3 מבנים מרכזיים.
                                 זיהוי התבנית חוסך התלבטויות:</p>
                             <div class="space-y-6">
                                 <div class="bg-slate-50 border border-slate-200 rounded-lg p-5">
@@ -2215,7 +2215,7 @@
 
 <span class="text-slate-500">; 2. הפקודה הראשית תאסוף רשימה פשוטה של הביטויים האלו!</span>
 (expression 
-  (<span class="text-green-400">"foreach"</span> (<span class="text-purple-400"></span> expression) <span class="text-green-400">"do"</span> expression) 
+  (<span class="text-green-400">"foreach"</span> (<span class="text-purple-400">arbno</span> expression) <span class="text-green-400">"do"</span> expression) 
   foreach-exp)</code></pre>
                                     </div>
                                     <p class="text-sm text-slate-700 mt-2">ה-AST יקבל פה רק <strong>2 פרמטרים</strong>
@@ -2884,7 +2884,7 @@
                                 class="font-bold text-slate-800 mb-4 text-lg border-b-2 border-orange-600 inline-block pb-1">
                                 <i class="fa-solid fa-code-branch ml-2"></i> 2 שבלונות העל לפונקציות עזר (Helpers)
                             </h4>
-                            <p class="text-slate-700 mb-4">במבחנים  , הלוגיקה המורכבת מתחלקת ל-2 סוגים
+                            <p class="text-slate-700 mb-4">במבחנים , הלוגיקה המורכבת מתחלקת ל-2 סוגים
                                 עיקריים של "לולאות" שנממש כפונקציות רקורסיביות:</p>
                             <div class="space-y-8">
                                 <div class="bg-orange-50 border border-orange-200 rounded-lg p-5">
@@ -2928,10 +2928,13 @@
                                     </div>
                                 </div>
                                 <div class="bg-teal-50 border border-teal-200 rounded-lg p-5">
-                                    <h5 class="font-bold text-teal-900 mb-2 text-lg">תבנית 2: מיפוי וקיפול פונקציונלי (Map / Fold)</h5>
+                                    <h5 class="font-bold text-teal-900 mb-2 text-lg">תבנית 2: מיפוי וקיפול פונקציונלי
+                                        (Map / Fold)</h5>
                                     <p class="text-sm text-slate-700 mb-3">
-                                        <strong>חוק ברזל לשאלה 1:</strong> אין לנו זיכרון (Store) ואין מצב משתנה! לכן, המושג של איטרטור ("טרקטור") שמבצע אפקטי-צד שגוי לחלוטין.
-                                        כדי לעבד רשימות, נשתמש בתבניות פונקציונליות טהורות. ברוב המקרים של רשימות בשאלה 1 נשתמש ב-<code>map</code>.
+                                        <strong>חוק ברזל לשאלה 1:</strong> אין לנו זיכרון (Store) ואין מצב משתנה! לכן,
+                                        המושג של איטרטור ("טרקטור") שמבצע אפקטי-צד שגוי לחלוטין.
+                                        כדי לעבד רשימות, נשתמש בתבניות פונקציונליות טהורות. ברוב המקרים של רשימות בשאלה
+                                        1 נשתמש ב-<code>map</code>.
                                     </p>
                                     <div class="bg-[#1e293b] rounded-lg p-4 text-sm font-mono text-slate-300 overflow-x-auto"
                                         dir="ltr">
@@ -2999,290 +3002,314 @@
             =========================================== -->
             <div class="tab-content" id="tab-q1-6">
                 <header class="mb-8 border-b pb-4 text-center">
-                    <div class="inline-block px-4 py-1 bg-fuchsia-500 text-fuchsia-950 rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono shadow-sm">
+                    <div
+                        class="inline-block px-4 py-1 bg-fuchsia-500 text-fuchsia-950 rounded-full font-bold text-sm mb-4 tracking-wider uppercase font-mono shadow-sm">
                         <i class="fa-solid fa-flask mr-2"></i> מעבדת המפרש: איסוף (Collect)
                     </div>
-                    <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">סימולטור ויזואלי: <span class="text-fuchsia-600">לולאת איסוף טהורה</span></h2>
-                    <p class="text-lg text-slate-600 max-w-3xl mx-auto">נמחיש כיצד מנוע השפה בונה ומריץ את הלולאה <code>for id = exp1 to exp2 collect exp3</code> – מקבלת הדרישה ועד לקבלת הרשימה הסופית ללא שום תופעות לוואי.</p>
+                    <h2 class="text-4xl font-black text-slate-800 tracking-tight mb-2">סימולטור ויזואלי: <span
+                            class="text-fuchsia-600">לולאת איסוף טהורה</span></h2>
+                    <p class="text-lg text-slate-600 max-w-3xl mx-auto">נמחיש כיצד מנוע השפה בונה ומריץ את הלולאה
+                        <code>for id = exp1 to exp2 collect exp3</code> – מקבלת הדרישה ועד לקבלת הרשימה הסופית ללא שום
+                        תופעות לוואי.</p>
                 </header>
 
-                <section class="bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-slate-800 to-black text-white rounded-3xl shadow-[0_0_40px_rgba(139,92,246,0.15)] p-8 mb-10 border border-slate-700 relative overflow-hidden" dir="rtl">
+                <section
+                    class="bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-slate-800 to-black text-white rounded-3xl shadow-[0_0_40px_rgba(139,92,246,0.15)] p-8 mb-10 border border-slate-700 relative overflow-hidden"
+                    dir="rtl">
                     <!-- Timeline -->
                     <div class="relative mb-8 z-10 pb-4 hidden md:block">
-                        <div class="absolute top-1/2 left-4 right-4 h-1 bg-slate-700 -translate-y-1/2 rounded-full z-0"></div>
-                        <div class="absolute top-1/2 right-4 h-1 bg-fuchsia-500 -translate-y-1/2 rounded-full z-0 transition-all duration-500" id="exam-progress-bar" style="width: 0%;"></div>
-                        <div class="flex justify-between relative z-10 text-xs font-bold text-slate-400" id="exam-timeline">
+                        <div class="absolute top-1/2 left-4 right-4 h-1 bg-slate-700 -translate-y-1/2 rounded-full z-0">
+                        </div>
+                        <div class="absolute top-1/2 right-4 h-1 bg-fuchsia-500 -translate-y-1/2 rounded-full z-0 transition-all duration-500"
+                            id="exam-progress-bar" style="width: 0%;"></div>
+                        <div class="flex justify-between relative z-10 text-xs font-bold text-slate-400"
+                            id="exam-timeline">
                             <!-- JS generates timeline dots -->
                         </div>
                     </div>
 
                     <!-- Main Board -->
-                    <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden shadow-2xl relative z-10 flex flex-col h-auto lg:h-[600px]">
-                        
+                    <div
+                        class="bg-slate-900/80 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden shadow-2xl relative z-10 flex flex-col h-auto lg:h-[600px]">
+
                         <div class="flex flex-col lg:flex-row flex-1 overflow-hidden">
                             <!-- Challenge Area -->
-                            <div class="w-full lg:w-7/12 p-8 flex flex-col relative bg-gradient-to-br from-slate-900 to-slate-800 overflow-y-auto" id="exam-challenge-content">
+                            <div class="w-full lg:w-7/12 p-8 flex flex-col relative bg-gradient-to-br from-slate-900 to-slate-800 overflow-y-auto"
+                                id="exam-challenge-content">
                                 <!-- JS injects the interactive challenge -->
                             </div>
-                            
+
                             <!-- Terminal/Code Area -->
-                            <div class="w-full lg:w-5/12 border-t lg:border-t-0 lg:border-r border-slate-700 flex flex-col bg-slate-950">
-                                <div class="bg-slate-800/80 px-4 py-3 border-b border-slate-700 flex items-center justify-between">
-                                    <div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/80"></div><div class="w-3 h-3 rounded-full bg-yellow-500/80"></div><div class="w-3 h-3 rounded-full bg-green-500/80"></div></div>
-                                    <span class="text-sm font-bold font-mono text-slate-300" id="exam-filename"><i class="fa-solid fa-code"></i> terminal</span>
+                            <div
+                                class="w-full lg:w-5/12 border-t lg:border-t-0 lg:border-r border-slate-700 flex flex-col bg-slate-950">
+                                <div
+                                    class="bg-slate-800/80 px-4 py-3 border-b border-slate-700 flex items-center justify-between">
+                                    <div class="flex gap-1.5">
+                                        <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                                        <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                                        <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                                    </div>
+                                    <span class="text-sm font-bold font-mono text-slate-300" id="exam-filename"><i
+                                            class="fa-solid fa-code"></i> terminal</span>
                                 </div>
-                                <div class="p-6 overflow-y-auto flex-1 font-mono text-[14px] leading-relaxed dir-ltr text-left" id="exam-feedback-content">
+                                <div class="p-6 overflow-y-auto flex-1 font-mono text-[14px] leading-relaxed dir-ltr text-left"
+                                    id="exam-feedback-content">
                                     <span class="text-slate-500">>> המערכת מוכנה. ממתין לקלט מהסטודנט...</span>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Controls -->
-                        <div class="bg-slate-800 px-6 py-4 border-t border-slate-700 flex items-center justify-between z-20">
-                            <button id="exam-btn-prev" onclick="examSim.prev()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50">חזור לבדיקה</button>
+                        <div
+                            class="bg-slate-800 px-6 py-4 border-t border-slate-700 flex items-center justify-between z-20">
+                            <button id="exam-btn-prev" onclick="examSim.prev()"
+                                class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50">חזור
+                                לבדיקה</button>
                             <span class="text-slate-400 font-mono text-sm" id="exam-step-counter">שאלה 1/8</span>
-                            <button id="exam-btn-next" onclick="examSim.next()" class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-lg shadow-fuchsia-500/30 disabled:opacity-50" disabled>המשך לשלב הבא</button>
+                            <button id="exam-btn-next" onclick="examSim.next()"
+                                class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-lg shadow-fuchsia-500/30 disabled:opacity-50"
+                                disabled>המשך לשלב הבא</button>
                         </div>
                     </div>
                 </section>
 
                 <script>
-                class ExamSimulator {
-                    constructor() {
-                        this.step = 1;
-                        this.maxStep = 8;
-                        this.unlocked = [true, false, false, false, false, false, false, false];
-                        
-                        this.data = {
-                            1: {
-                                title: "ניתוח לקסיקלי ותחבירי",
-                                file: "lang.scm",
-                                challengeHtml: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 1: הגדרת חוק הדקדוק</h3>" +
-                                    "<p class='text-slate-400 mb-6'>עליך להוסיף את התמיכה בלולאת האיסוף: <code class='text-fuchsia-300'>for id = exp1 to exp2 collect exp3</code>. איזה מבין חוקי הדקדוק הבאים הוא הנכון?</p>" +
-                                    "<div class='flex flex-col gap-3'>" +
-                                    "<button onclick='examSim.answer(1, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>Expression ::= for Identifier = Expression to Expression collect Expression</button>" +
-                                    "<button onclick='examSim.answer(1, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-blue-600 rounded-lg font-mono text-sm text-slate-100 shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-colors'>Expression ::= \"for\" Identifier \"=\" Expression \"to\" Expression \"collect\" Expression</button>" +
-                                    "<button onclick='examSim.answer(1, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>Expression ::= (for Identifier = Expression to Expression collect Expression)</button>" +
-                                    "</div>",
-                                successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> תשובה נכונה!<br><br>הסורק (Scanner) קורא רצף של תווים. המירכאות <code class='text-fuchsia-300'>\"for\"</code> מגדירות את המילים השמורות כ<b>טרמינלים</b> – 'פיגומים' שמחזיקים את עץ התחביר. בלי מירכאות, המילה תיחשב כ-Identifier שרירותי והמערכת תקרוס.",
-                                errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Lexical/Syntax Failure</span><br><br>התעלמת מפיגומי התחביר (Terminals).<br>ה-Scanner לא ידע להבדיל בין המילה השמורה 'for' לבין סתם משתנה שקוראים לו 'for'. עליך להקיף מילים קבועות במירכאות."
-                            },
-                            2: {
-                                title: "בניית ה-AST",
-                                file: "data-structures.scm",
-                                challengeHtml: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 2: אריזת ה-AST</h3>" +
-                                    "<p class='text-slate-400 mb-6'>חוק הדקדוק מכיל טרמינלים (מילים שמורות כמו <code class='text-fuchsia-300'>for</code>, <code class='text-fuchsia-300'>to</code>) וגם רכיבים סמנטיים (שמות משתנים וביטויים). מה <b>באמת</b> נשמר בתוך ה-Variant <code class='text-fuchsia-300'>collect-exp</code> ב-AST?</p>" +
-                                    "<div class='flex flex-col gap-3'>" +
-                                    "<button onclick='examSim.answer(2, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>collect-exp (for = to collect var start-exp end-exp body-exp)</button>" +
-                                    "<button onclick='examSim.answer(2, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg font-mono text-sm text-slate-300 transition-colors'>collect-exp (var start-exp end-exp body-exp)</button>" +
-                                    "<button onclick='examSim.answer(2, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>collect-exp (for var start-exp to end-exp collect body-exp)</button>" +
-                                    "</div>",
-                                successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> אריזה לוגית מושלמת!<br><br>ה-AST מכיל רק <b>סמנטיקה טהורה</b>: שם המשתנה (var), ביטוי ההתחלה (start-exp), ביטוי הסיום (end-exp), וגוף הלולאה (body-exp). הטרמינלים (for, to, =, collect) הם סוכר תחבירי שתפקידם הסתיים בשלב הקודם.",
-                                errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Syntactic Sugar Contamination</span><br><br>הכנסת טרמינלים לתוך ה-AST! המילים for, to, =, collect הן 'פיגומים' שמסייעים לפרסר לזהות את המבנה. ברגע שהפרסר סיים את עבודתו, הן נזרקות. ה-AST שומר אך ורק את הרכיבים הלוגיים הדרושים למנוע."
-                            },
-                            3: {
-                                title: "החלטה ארכיטקטונית",
-                                file: "Architecture",
-                                challengeHtml: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 3: מנגנון המימוש</h3>" +
-                                    "<p class='text-slate-400 mb-6'>היכן במערכת כדאי לממש את הלוגיקה של לולאת ה-Collect?</p>" +
-                                    "<div class='grid grid-cols-1 md:grid-cols-2 gap-4'>" +
-                                    "<button onclick='examSim.answer(3, false)' class='p-6 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-xl text-center transition-all hover:border-red-500 hover:scale-105 group'>" +
-                                    "<div class='text-4xl mb-4 text-slate-500 group-hover:text-red-400'><i class='fa-solid fa-industry'></i></div>" +
-                                    "<h4 class='font-bold text-white mb-2'>Macro Expansion</h4>" +
-                                    "<p class='text-xs text-slate-400'>(syntax-expand)</p>" +
-                                    "</button>" +
-                                    "<button onclick='examSim.answer(3, true)' class='p-6 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-xl text-center transition-all hover:border-blue-500 hover:scale-105 group'>" +
-                                    "<div class='text-4xl mb-4 text-slate-500 group-hover:text-blue-400'><i class='fa-solid fa-microchip'></i></div>" +
-                                    "<h4 class='font-bold text-white mb-2'>Runtime Engine</h4>" +
-                                    "<p class='text-xs text-slate-400'>(value-of)</p>" +
-                                    "</button>" +
-                                    "</div>",
-                                successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> בחירה ארכיטקטונית נכונה!<br><br>כיוון שמספר האיטרציות של הלולאה תלוי בביטויים שחייבים להערך בזמן ריצה (למשל, לרוץ עד שהמשתנה יגיע ל-<code>x*2</code>), המאקרו בזמן קומפילציה לא יודע כמה פעמים לשכפל את הקוד. לכן החובה היא להרחיב את ה-Runtime Engine.",
-                                errorFeedback: "<span class='text-red-400 font-bold'>[FATAL ERROR] Compile-time failure</span><br><br>איך המאקרו יפרוס את הלולאה לפקודות let נפרדות כשהוא לא יודע מה הערך של 'exp2'? המאקרו רץ <b>לפני</b> הערכת הביטויים. אי אפשר לפרוס לולאה דינמית מראש."
-                            },
-                            4: {
-                                title: "ניהול זיכרון וסביבה",
-                                file: "interp.scm",
-                                challengeHtml: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 4: עדכון הסביבה הלוקאלית</h3>" +
-                                    "<p class='text-slate-400 mb-6'>בתוך האיטרציה, אנו צריכים לקשור את משתנה הלולאה (var) לערכו הנוכחי (current-val). באיזו פונקציה תשתמש כדי לעדכן את הסביבה?</p>" +
-                                    "<div class='flex flex-col gap-3'>" +
-                                    "<button onclick='examSim.answer(4, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>(extend-env var (newref current-val) env)</button>" +
-                                    "<button onclick='examSim.answer(4, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>(begin (setref! var current-val) env)</button>" +
-                                    "<button onclick='examSim.answer(4, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg font-mono text-sm text-slate-300 transition-colors'>(extend-env var (num-val current-val) env)</button>" +
-                                    "</div>",
-                                successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> שמירה על טוהר פונקציונלי!<br><br>השתמשת בחיבור לקסיקלי ישיר באמצעות <code>extend-env</code>. הראית הבנה מלאה שהשפה בשאלה 1 חסרת מצב (Stateless) וללא תופעות לוואי.",
-                                errorFeedback: "<span class='text-red-500 font-black'>[CRITICAL ARCHITECTURE VIOLATION]</span><br><br>הכנסת מצביע (Reference / Store) לעולם פונקציונלי טהור! זוהי שגיאה של 0 נקודות בסעיף. בשאלה 1 אין שינוי מצב – יש לייצר סביבה חדשה שבה המשתנה מצביע ישירות לערך ולא לכתובת בזיכרון."
-                            },
-                            5: {
-                                title: "הריקוד הרקורסיבי",
-                                file: "Execution",
-                                challengeHtml: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 5: הצטברות הערכים</h3>" +
-                                    "<p class='text-slate-400 mb-6'>הגעת לשלב האחרון - פונקציית העזר הרקורסיבית המייצרת את הרשימה. בחר את ההתנהגות הנכונה לאיסוף תוצאות גוף הלולאה.</p>" +
-                                    "<div class='bg-slate-950/80 p-5 rounded-lg font-mono text-[13px] text-slate-300 dir-ltr text-left mb-6 border border-slate-700 shadow-inner'>" +
-                                    "<span class='text-blue-400'>(define</span> loop <span class='text-blue-400'>(lambda</span> (curr end)<br>" +
-                                    "&nbsp;&nbsp;<span class='text-blue-400'>(if</span> (> curr end)<br>" +
-                                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-emerald-400'>'()</span><br>" +
-                                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='bg-slate-800 text-yellow-400 px-2 py-1 rounded inline-block animate-pulse'>___MISSING_CODE___</span><br>" +
-                                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop (+ curr 1) end))))" +
-                                    "</div>" +
-                                    "<div class='flex flex-col gap-3'>" +
-                                    "<button onclick='examSim.answer(5, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-[13px] text-slate-300 transition-colors'>(append (value-of body-exp ...) (loop ...))</button>" +
-                                    "<button onclick='examSim.answer(5, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg font-mono text-[13px] text-slate-300 transition-colors'>(cons (value-of body-exp ...) (loop ...))</button>" +
-                                    "<button onclick='examSim.answer(5, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-[13px] text-slate-300 transition-colors'>(let ((res (value-of body-exp ...))) res)</button>" +
-                                    "</div>",
-                                successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> רשימה פונקציונלית מושלמת!<br><br>ללא כל שינוי בזיכרון, פונקציית ה-<code>cons</code> תופרת באלגנטיות את תוצאת האיטרציה הנוכחית לשאר הרשימה שמוחזרת מהקריאה הרקורסיבית.",
-                                errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Accumulation logic</span><br><br>append מחבר רשימות, אבל הערך המוחזר מהגוף אינו בהכרח רשימה! אנו צריכים לבנות רשימה חדשה מאיברים בודדים, לכן <code>cons</code> היא הפונקציה המדויקת להוסיף את הערך הנוכחי כאיבר הראשון של רשימת ההמשך."
-                            },
-                            6: {
-                                title: "הערכת גבולות (Eager Evaluation)",
-                                file: "interp.scm",
-                                challengeHtml: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 6: מתי לחשב?</h3>" +
-                                    "<p class='text-slate-400 mb-6'>הביטויים <code>start-exp</code> ו-<code>end-exp</code> צריכים להפוך למספרים (Integers) כדי שנוכל לקדם את הלולאה. <b>מתי</b> יש להריץ עליהם <code>value-of</code>?</p>" +
-                                    "<div class='flex flex-col gap-3'>" +
-                                    "<button onclick='examSim.answer(6, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg text-sm text-slate-300 transition-colors'>A) להעביר את הביטויים (Expressions) לתוך הלולאה הרקורסיבית ולחשב אותם מחדש בכל איטרציה.</button>" +
-                                    "<button onclick='examSim.answer(6, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg text-sm text-slate-300 transition-colors'>B) להעריך אותם (value-of) פעם אחת לפני תחילת הלולאה ולהעביר רק מספרים (Eager Evaluation).</button>" +
-                                    "<button onclick='examSim.answer(6, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg text-sm text-slate-300 transition-colors'>C) לא צריך לחשב כלום ב-value-of, המספרים כבר קיימים בעץ ה-AST ומוכנים לשימוש.</button>" +
-                                    "</div>",
-                                successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> הערכה נכונה!<br><br>השפה מבוססת Eager Evaluation. עלינו לפענח את ביטויי ההתחלה והסיום פעם אחת בלבד <b>לפני</b> שניכנס לרקורסיה. העברתם כביטויים לתוך הלולאה היא שגיאה אלגוריתמית בזבזנית.",
-                                errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Evaluation Timing</span><br><br>בחירה שגויה. לחשב את הגבול העליון מחדש בכל איטרציה זה חוסר יעילות משווע. כמו כן, ב-AST אין מספרים (Numbers) אלא רק ביטויים (Expressions) שמחכים לחישוב!"
-                            },
-                            7: {
-                                title: "חתימת פונקציית העזר",
-                                file: "The Helper",
-                                challengeHtml: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 7: מדוע Helper?</h3>" +
-                                    "<p class='text-slate-400 mb-6'>מדוע אנו יוצרים פונקציית עזר פנימית (loop) ולא פשוט קוראים מחדש ל-<code>value-of</code> עם <code>(+ curr 1)</code>?</p>" +
-                                    "<div class='flex flex-col gap-3'>" +
-                                    "<button onclick='examSim.answer(7, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg text-sm text-slate-300 transition-colors'>A) מכיוון ש-value-of במערכת שלנו פשוט לא תומכת בקריאות רקורסיביות.</button>" +
-                                    "<button onclick='examSim.answer(7, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg text-sm text-slate-300 transition-colors'>B) כי value-of מצפה לקבל עצי AST. ברגע שחילצנו מספרים, אנחנו חייבים פונקציה חיצונית שעובדת על ערכים (Numbers).</button>" +
-                                    "</div>",
-                                successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> הבנה מטא-מעגלית!<br><br>יש הבדל קריטי בין רמת השפה המפורשת (ה-AST) לרמת מנוע המימוש (Scheme). <code>value-of</code> מקבל אך ורק עצי תחביר. כשהופכים ל-Scheme Numbers, חייבים פונקציה שעובדת עליהם.",
-                                errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Type Signature Error</span><br><br>שגוי! <code>value-of</code> קוראת לעצמה ברקורסיה כל הזמן. הבעיה היא הטיפוסים: value-of חתומה לקבל עץ AST ואילו התוצאה של (+ curr 1) היא מספר רגיל."
-                            },
-                            8: {
-                                title: "ההרכבה הסופית",
-                                file: "Assembly.scm",
-                                challengeHtml: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 8: סדר הביצוע</h3>" +
-                                    "<p class='text-slate-400 mb-6'>המנוע מתקרב לקריסה! עליך לסדר את 4 שורות הקוד לפי <b>סדר הריצה הלוגי הנכון</b> (מלמעלה למטה). הקלק על השורות בסדר הנכון:</p>" +
-                                    "<div class='flex flex-col gap-2 mb-4 dir-ltr' id='assembly-lines'>" +
-                                    "<button onclick='examSim.clickLine(this, 3)' class='p-3 bg-slate-800 border-2 border-slate-600 text-slate-300 text-left font-mono text-sm rounded hover:bg-slate-700 transition-colors assembly-btn'>(letrec ((loop (lambda (curr end) ...)))</button>" +
-                                    "<button onclick='examSim.clickLine(this, 1)' class='p-3 bg-slate-800 border-2 border-slate-600 text-slate-300 text-left font-mono text-sm rounded hover:bg-slate-700 transition-colors assembly-btn'>(let ((val-start (value-of start-exp env)) (val-end ...)))</button>" +
-                                    "<button onclick='examSim.clickLine(this, 4)' class='p-3 bg-slate-800 border-2 border-slate-600 text-slate-300 text-left font-mono text-sm rounded hover:bg-slate-700 transition-colors assembly-btn'>(loop num-start num-end))</button>" +
-                                    "<button onclick='examSim.clickLine(this, 2)' class='p-3 bg-slate-800 border-2 border-slate-600 text-slate-300 text-left font-mono text-sm rounded hover:bg-slate-700 transition-colors assembly-btn'>(let ((num-start (expval->num val-start)) (num-end ...)))</button>" +
-                                    "</div>" +
-                                    "<div class='flex gap-2' id='assembly-progress'></div>",
-                                successFeedback: "<span class='text-emerald-400 font-bold'>[SUCCESS]</span> הרכבה מושלמת!<br><br><b>הסדר:</b><br>1. מחשבים ביטויים (value-of)<br>2. מחלצים ערכים (expval->num)<br>3. מגדירים לולאה (letrec)<br>4. מפעילים אותה (loop)<br><br><span class='text-emerald-400 font-black text-xl mt-4 block'>המבחן כולו עבר בהצלחה! 💯</span>",
-                                errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Assembly Failure</span><br><br>סדר ריצה שגוי! אי אפשר להגדיר פונקציה על משתנים שעוד לא חולצו, ואי אפשר לחלץ ערך לפני שמריצים value-of. אנא לחץ שוב על כפתור התשובה כדי לאפס ולנסות מחדש."
-                            }
-                        };
-                        
-                        this.assemblyClicks = [];
-                    }
+                    class ExamSimulator {
+                        constructor() {
+                            this.step = 1;
+                            this.maxStep = 8;
+                            this.unlocked = [true, false, false, false, false, false, false, false];
 
-                    render() {
-                        const d = this.data[this.step];
-                        document.getElementById('exam-filename').innerHTML = "<i class='fa-solid fa-code'></i> " + d.file;
-                        document.getElementById('exam-challenge-content').innerHTML = d.challengeHtml;
-                        
-                        let defaultMsg = ">> ממתין לקלט הסטודנט... השאלה נוגעת ל: " + d.title;
-                        if(this.unlocked[this.step - 1] && this.step < this.maxStep) {
-                            defaultMsg = "<span class='text-emerald-400'>[SOLVED] השאלה פתורה. ענה על השאלות הבאות.</span>";
+                            this.data = {
+                                1: {
+                                    title: "ניתוח לקסיקלי ותחבירי",
+                                    file: "lang.scm",
+                                    challengeHtml:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 1: הגדרת חוק הדקדוק</h3>" +
+                                        "<p class='text-slate-400 mb-6'>עליך להוסיף את התמיכה בלולאת האיסוף: <code class='text-fuchsia-300'>for id = exp1 to exp2 collect exp3</code>. איזה מבין חוקי הדקדוק הבאים הוא הנכון?</p>" +
+                                        "<div class='flex flex-col gap-3'>" +
+                                        "<button onclick='examSim.answer(1, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>Expression ::= for Identifier = Expression to Expression collect Expression</button>" +
+                                        "<button onclick='examSim.answer(1, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-blue-600 rounded-lg font-mono text-sm text-slate-100 shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-colors'>Expression ::= \"for\" Identifier \"=\" Expression \"to\" Expression \"collect\" Expression</button>" +
+                                        "<button onclick='examSim.answer(1, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>Expression ::= (for Identifier = Expression to Expression collect Expression)</button>" +
+                                        "</div>",
+                                    successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> תשובה נכונה!<br><br>הסורק (Scanner) קורא רצף של תווים. המירכאות <code class='text-fuchsia-300'>\"for\"</code> מגדירות את המילים השמורות כ<b>טרמינלים</b> – 'פיגומים' שמחזיקים את עץ התחביר. בלי מירכאות, המילה תיחשב כ-Identifier שרירותי והמערכת תקרוס.",
+                                    errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Lexical/Syntax Failure</span><br><br>התעלמת מפיגומי התחביר (Terminals).<br>ה-Scanner לא ידע להבדיל בין המילה השמורה 'for' לבין סתם משתנה שקוראים לו 'for'. עליך להקיף מילים קבועות במירכאות."
+                                },
+                                2: {
+                                    title: "בניית ה-AST",
+                                    file: "data-structures.scm",
+                                    challengeHtml:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 2: אריזת ה-AST</h3>" +
+                                        "<p class='text-slate-400 mb-6'>חוק הדקדוק מכיל טרמינלים (מילים שמורות כמו <code class='text-fuchsia-300'>for</code>, <code class='text-fuchsia-300'>to</code>) וגם רכיבים סמנטיים (שמות משתנים וביטויים). מה <b>באמת</b> נשמר בתוך ה-Variant <code class='text-fuchsia-300'>collect-exp</code> ב-AST?</p>" +
+                                        "<div class='flex flex-col gap-3'>" +
+                                        "<button onclick='examSim.answer(2, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>collect-exp (for = to collect var start-exp end-exp body-exp)</button>" +
+                                        "<button onclick='examSim.answer(2, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg font-mono text-sm text-slate-300 transition-colors'>collect-exp (var start-exp end-exp body-exp)</button>" +
+                                        "<button onclick='examSim.answer(2, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>collect-exp (for var start-exp to end-exp collect body-exp)</button>" +
+                                        "</div>",
+                                    successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> אריזה לוגית מושלמת!<br><br>ה-AST מכיל רק <b>סמנטיקה טהורה</b>: שם המשתנה (var), ביטוי ההתחלה (start-exp), ביטוי הסיום (end-exp), וגוף הלולאה (body-exp). הטרמינלים (for, to, =, collect) הם סוכר תחבירי שתפקידם הסתיים בשלב הקודם.",
+                                    errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Syntactic Sugar Contamination</span><br><br>הכנסת טרמינלים לתוך ה-AST! המילים for, to, =, collect הן 'פיגומים' שמסייעים לפרסר לזהות את המבנה. ברגע שהפרסר סיים את עבודתו, הן נזרקות. ה-AST שומר אך ורק את הרכיבים הלוגיים הדרושים למנוע."
+                                },
+                                3: {
+                                    title: "החלטה ארכיטקטונית",
+                                    file: "Architecture",
+                                    challengeHtml:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 3: מנגנון המימוש</h3>" +
+                                        "<p class='text-slate-400 mb-6'>היכן במערכת כדאי לממש את הלוגיקה של לולאת ה-Collect?</p>" +
+                                        "<div class='grid grid-cols-1 md:grid-cols-2 gap-4'>" +
+                                        "<button onclick='examSim.answer(3, false)' class='p-6 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-xl text-center transition-all hover:border-red-500 hover:scale-105 group'>" +
+                                        "<div class='text-4xl mb-4 text-slate-500 group-hover:text-red-400'><i class='fa-solid fa-industry'></i></div>" +
+                                        "<h4 class='font-bold text-white mb-2'>Macro Expansion</h4>" +
+                                        "<p class='text-xs text-slate-400'>(syntax-expand)</p>" +
+                                        "</button>" +
+                                        "<button onclick='examSim.answer(3, true)' class='p-6 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-xl text-center transition-all hover:border-blue-500 hover:scale-105 group'>" +
+                                        "<div class='text-4xl mb-4 text-slate-500 group-hover:text-blue-400'><i class='fa-solid fa-microchip'></i></div>" +
+                                        "<h4 class='font-bold text-white mb-2'>Runtime Engine</h4>" +
+                                        "<p class='text-xs text-slate-400'>(value-of)</p>" +
+                                        "</button>" +
+                                        "</div>",
+                                    successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> בחירה ארכיטקטונית נכונה!<br><br>כיוון שמספר האיטרציות של הלולאה תלוי בביטויים שחייבים להערך בזמן ריצה (למשל, לרוץ עד שהמשתנה יגיע ל-<code>x*2</code>), המאקרו בזמן קומפילציה לא יודע כמה פעמים לשכפל את הקוד. לכן החובה היא להרחיב את ה-Runtime Engine.",
+                                    errorFeedback: "<span class='text-red-400 font-bold'>[FATAL ERROR] Compile-time failure</span><br><br>איך המאקרו יפרוס את הלולאה לפקודות let נפרדות כשהוא לא יודע מה הערך של 'exp2'? המאקרו רץ <b>לפני</b> הערכת הביטויים. אי אפשר לפרוס לולאה דינמית מראש."
+                                },
+                                4: {
+                                    title: "ניהול זיכרון וסביבה",
+                                    file: "interp.scm",
+                                    challengeHtml:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 4: עדכון הסביבה הלוקאלית</h3>" +
+                                        "<p class='text-slate-400 mb-6'>בתוך האיטרציה, אנו צריכים לקשור את משתנה הלולאה (var) לערכו הנוכחי (current-val). באיזו פונקציה תשתמש כדי לעדכן את הסביבה?</p>" +
+                                        "<div class='flex flex-col gap-3'>" +
+                                        "<button onclick='examSim.answer(4, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>(extend-env var (newref current-val) env)</button>" +
+                                        "<button onclick='examSim.answer(4, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-sm text-slate-300 transition-colors'>(begin (setref! var current-val) env)</button>" +
+                                        "<button onclick='examSim.answer(4, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg font-mono text-sm text-slate-300 transition-colors'>(extend-env var (num-val current-val) env)</button>" +
+                                        "</div>",
+                                    successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> שמירה על טוהר פונקציונלי!<br><br>השתמשת בחיבור לקסיקלי ישיר באמצעות <code>extend-env</code>. הראית הבנה מלאה שהשפה בשאלה 1 חסרת מצב (Stateless) וללא תופעות לוואי.",
+                                    errorFeedback: "<span class='text-red-500 font-black'>[CRITICAL ARCHITECTURE VIOLATION]</span><br><br>הכנסת מצביע (Reference / Store) לעולם פונקציונלי טהור! זוהי שגיאה של 0 נקודות בסעיף. בשאלה 1 אין שינוי מצב – יש לייצר סביבה חדשה שבה המשתנה מצביע ישירות לערך ולא לכתובת בזיכרון."
+                                },
+                                5: {
+                                    title: "הריקוד הרקורסיבי",
+                                    file: "Execution",
+                                    challengeHtml:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 5: הצטברות הערכים</h3>" +
+                                        "<p class='text-slate-400 mb-6'>הגעת לשלב האחרון - פונקציית העזר הרקורסיבית המייצרת את הרשימה. בחר את ההתנהגות הנכונה לאיסוף תוצאות גוף הלולאה.</p>" +
+                                        "<div class='bg-slate-950/80 p-5 rounded-lg font-mono text-[13px] text-slate-300 dir-ltr text-left mb-6 border border-slate-700 shadow-inner'>" +
+                                        "<span class='text-blue-400'>(define</span> loop <span class='text-blue-400'>(lambda</span> (curr end)<br>" +
+                                        "&nbsp;&nbsp;<span class='text-blue-400'>(if</span> (> curr end)<br>" +
+                                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-emerald-400'>'()</span><br>" +
+                                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='bg-slate-800 text-yellow-400 px-2 py-1 rounded inline-block animate-pulse'>___MISSING_CODE___</span><br>" +
+                                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop (+ curr 1) end))))" +
+                                        "</div>" +
+                                        "<div class='flex flex-col gap-3'>" +
+                                        "<button onclick='examSim.answer(5, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-[13px] text-slate-300 transition-colors'>(append (value-of body-exp ...) (loop ...))</button>" +
+                                        "<button onclick='examSim.answer(5, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg font-mono text-[13px] text-slate-300 transition-colors'>(cons (value-of body-exp ...) (loop ...))</button>" +
+                                        "<button onclick='examSim.answer(5, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg font-mono text-[13px] text-slate-300 transition-colors'>(let ((res (value-of body-exp ...))) res)</button>" +
+                                        "</div>",
+                                    successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> רשימה פונקציונלית מושלמת!<br><br>ללא כל שינוי בזיכרון, פונקציית ה-<code>cons</code> תופרת באלגנטיות את תוצאת האיטרציה הנוכחית לשאר הרשימה שמוחזרת מהקריאה הרקורסיבית.",
+                                    errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Accumulation logic</span><br><br>append מחבר רשימות, אבל הערך המוחזר מהגוף אינו בהכרח רשימה! אנו צריכים לבנות רשימה חדשה מאיברים בודדים, לכן <code>cons</code> היא הפונקציה המדויקת להוסיף את הערך הנוכחי כאיבר הראשון של רשימת ההמשך."
+                                },
+                                6: {
+                                    title: "הערכת גבולות (Eager Evaluation)",
+                                    file: "interp.scm",
+                                    challengeHtml:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 6: מתי לחשב?</h3>" +
+                                        "<p class='text-slate-400 mb-6'>הביטויים <code>start-exp</code> ו-<code>end-exp</code> צריכים להפוך למספרים (Integers) כדי שנוכל לקדם את הלולאה. <b>מתי</b> יש להריץ עליהם <code>value-of</code>?</p>" +
+                                        "<div class='flex flex-col gap-3'>" +
+                                        "<button onclick='examSim.answer(6, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg text-sm text-slate-300 transition-colors'>A) להעביר את הביטויים (Expressions) לתוך הלולאה הרקורסיבית ולחשב אותם מחדש בכל איטרציה.</button>" +
+                                        "<button onclick='examSim.answer(6, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg text-sm text-slate-300 transition-colors'>B) להעריך אותם (value-of) פעם אחת לפני תחילת הלולאה ולהעביר רק מספרים (Eager Evaluation).</button>" +
+                                        "<button onclick='examSim.answer(6, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg text-sm text-slate-300 transition-colors'>C) לא צריך לחשב כלום ב-value-of, המספרים כבר קיימים בעץ ה-AST ומוכנים לשימוש.</button>" +
+                                        "</div>",
+                                    successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> הערכה נכונה!<br><br>השפה מבוססת Eager Evaluation. עלינו לפענח את ביטויי ההתחלה והסיום פעם אחת בלבד <b>לפני</b> שניכנס לרקורסיה. העברתם כביטויים לתוך הלולאה היא שגיאה אלגוריתמית בזבזנית.",
+                                    errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Evaluation Timing</span><br><br>בחירה שגויה. לחשב את הגבול העליון מחדש בכל איטרציה זה חוסר יעילות משווע. כמו כן, ב-AST אין מספרים (Numbers) אלא רק ביטויים (Expressions) שמחכים לחישוב!"
+                                },
+                                7: {
+                                    title: "חתימת פונקציית העזר",
+                                    file: "The Helper",
+                                    challengeHtml:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 7: מדוע Helper?</h3>" +
+                                        "<p class='text-slate-400 mb-6'>מדוע אנו יוצרים פונקציית עזר פנימית (loop) ולא פשוט קוראים מחדש ל-<code>value-of</code> עם <code>(+ curr 1)</code>?</p>" +
+                                        "<div class='flex flex-col gap-3'>" +
+                                        "<button onclick='examSim.answer(7, false)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 rounded-lg text-sm text-slate-300 transition-colors'>A) מכיוון ש-value-of במערכת שלנו פשוט לא תומכת בקריאות רקורסיביות.</button>" +
+                                        "<button onclick='examSim.answer(7, true)' class='text-left dir-ltr p-4 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 hover:border-blue-500 rounded-lg text-sm text-slate-300 transition-colors'>B) כי value-of מצפה לקבל עצי AST. ברגע שחילצנו מספרים, אנחנו חייבים פונקציה חיצונית שעובדת על ערכים (Numbers).</button>" +
+                                        "</div>",
+                                    successFeedback: "<span class='text-green-400 font-bold'>[SUCCESS]</span> הבנה מטא-מעגלית!<br><br>יש הבדל קריטי בין רמת השפה המפורשת (ה-AST) לרמת מנוע המימוש (Scheme). <code>value-of</code> מקבל אך ורק עצי תחביר. כשהופכים ל-Scheme Numbers, חייבים פונקציה שעובדת עליהם.",
+                                    errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Type Signature Error</span><br><br>שגוי! <code>value-of</code> קוראת לעצמה ברקורסיה כל הזמן. הבעיה היא הטיפוסים: value-of חתומה לקבל עץ AST ואילו התוצאה של (+ curr 1) היא מספר רגיל."
+                                },
+                                8: {
+                                    title: "ההרכבה הסופית",
+                                    file: "Assembly.scm",
+                                    challengeHtml:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שאלה 8: סדר הביצוע</h3>" +
+                                        "<p class='text-slate-400 mb-6'>המנוע מתקרב לקריסה! עליך לסדר את 4 שורות הקוד לפי <b>סדר הריצה הלוגי הנכון</b> (מלמעלה למטה). הקלק על השורות בסדר הנכון:</p>" +
+                                        "<div class='flex flex-col gap-2 mb-4 dir-ltr' id='assembly-lines'>" +
+                                        "<button onclick='examSim.clickLine(this, 3)' class='p-3 bg-slate-800 border-2 border-slate-600 text-slate-300 text-left font-mono text-sm rounded hover:bg-slate-700 transition-colors assembly-btn'>(letrec ((loop (lambda (curr end) ...)))</button>" +
+                                        "<button onclick='examSim.clickLine(this, 1)' class='p-3 bg-slate-800 border-2 border-slate-600 text-slate-300 text-left font-mono text-sm rounded hover:bg-slate-700 transition-colors assembly-btn'>(let ((val-start (value-of start-exp env)) (val-end ...)))</button>" +
+                                        "<button onclick='examSim.clickLine(this, 4)' class='p-3 bg-slate-800 border-2 border-slate-600 text-slate-300 text-left font-mono text-sm rounded hover:bg-slate-700 transition-colors assembly-btn'>(loop num-start num-end))</button>" +
+                                        "<button onclick='examSim.clickLine(this, 2)' class='p-3 bg-slate-800 border-2 border-slate-600 text-slate-300 text-left font-mono text-sm rounded hover:bg-slate-700 transition-colors assembly-btn'>(let ((num-start (expval->num val-start)) (num-end ...)))</button>" +
+                                        "</div>" +
+                                        "<div class='flex gap-2' id='assembly-progress'></div>",
+                                    successFeedback: "<span class='text-emerald-400 font-bold'>[SUCCESS]</span> הרכבה מושלמת!<br><br><b>הסדר:</b><br>1. מחשבים ביטויים (value-of)<br>2. מחלצים ערכים (expval->num)<br>3. מגדירים לולאה (letrec)<br>4. מפעילים אותה (loop)<br><br><span class='text-emerald-400 font-black text-xl mt-4 block'>המבחן כולו עבר בהצלחה! 💯</span>",
+                                    errorFeedback: "<span class='text-red-400 font-bold'>[ERROR] Assembly Failure</span><br><br>סדר ריצה שגוי! אי אפשר להגדיר פונקציה על משתנים שעוד לא חולצו, ואי אפשר לחלץ ערך לפני שמריצים value-of. אנא לחץ שוב על כפתור התשובה כדי לאפס ולנסות מחדש."
+                                }
+                            };
+
+                            this.assemblyClicks = [];
                         }
-                        document.getElementById('exam-feedback-content').innerHTML = "<span class='text-slate-500'>" + defaultMsg + "</span>";
-                        
-                        document.getElementById('exam-step-counter').innerText = "שאלה " + this.step + "/" + this.maxStep;
-                        
-                        document.getElementById('exam-btn-prev').disabled = this.step === 1;
-                        document.getElementById('exam-btn-next').disabled = !this.unlocked[this.step - 1] || this.step === this.maxStep;
 
-                        this.assemblyClicks = []; // Reset for step 8
-                        this.renderTimeline();
-                    }
+                        render() {
+                            const d = this.data[this.step];
+                            document.getElementById('exam-filename').innerHTML = "<i class='fa-solid fa-code'></i> " + d.file;
+                            document.getElementById('exam-challenge-content').innerHTML = d.challengeHtml;
 
-                    renderTimeline() {
-                        let html = "";
-                        for(let i=1; i<=this.maxStep; i++) {
-                            let cl = "bg-slate-800 text-slate-500 border-slate-700";
-                            let cont = i;
-                            if(i < this.step || this.unlocked[i-1]) {
-                                cl = "bg-emerald-600 text-white border-emerald-400 shadow-lg shadow-emerald-500/30";
-                                cont = "<i class='fa-solid fa-check'></i>";
+                            let defaultMsg = ">> ממתין לקלט הסטודנט... השאלה נוגעת ל: " + d.title;
+                            if (this.unlocked[this.step - 1] && this.step < this.maxStep) {
+                                defaultMsg = "<span class='text-emerald-400'>[SOLVED] השאלה פתורה. ענה על השאלות הבאות.</span>";
                             }
-                            if(i === this.step) {
-                                cl = "bg-blue-600 text-white border-blue-400 scale-110 shadow-lg shadow-blue-500/50 z-10 relative";
-                                cont = i;
-                            }
-                            html += "<div class='w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center border-2 transition-all font-bold text-[10px] md:text-xs " + cl + "'>" + cont + "</div>";
-                        }
-                        document.getElementById('exam-timeline').innerHTML = html;
-                        document.getElementById('exam-progress-bar').style.width = ((this.step-1)/(this.maxStep-1))*100 + "%";
-                        
-                        if(this.step === this.maxStep && this.unlocked[this.maxStep-1]) {
-                            document.getElementById('exam-progress-bar').style.width = "100%";
-                        }
-                    }
+                            document.getElementById('exam-feedback-content').innerHTML = "<span class='text-slate-500'>" + defaultMsg + "</span>";
 
-                    answer(step, isCorrect) {
-                        if(isCorrect) {
-                            document.getElementById('exam-feedback-content').innerHTML = this.data[step].successFeedback;
-                            this.unlocked[step-1] = true;
-                            if(step < this.maxStep) {
-                                document.getElementById('exam-btn-next').disabled = false;
-                            }
+                            document.getElementById('exam-step-counter').innerText = "שאלה " + this.step + "/" + this.maxStep;
+
+                            document.getElementById('exam-btn-prev').disabled = this.step === 1;
+                            document.getElementById('exam-btn-next').disabled = !this.unlocked[this.step - 1] || this.step === this.maxStep;
+
+                            this.assemblyClicks = []; // Reset for step 8
                             this.renderTimeline();
-                        } else {
-                            document.getElementById('exam-feedback-content').innerHTML = this.data[step].errorFeedback;
-                            if(step === 8) {
-                                setTimeout(() => this.render(), 3000);
+                        }
+
+                        renderTimeline() {
+                            let html = "";
+                            for (let i = 1; i <= this.maxStep; i++) {
+                                let cl = "bg-slate-800 text-slate-500 border-slate-700";
+                                let cont = i;
+                                if (i < this.step || this.unlocked[i - 1]) {
+                                    cl = "bg-emerald-600 text-white border-emerald-400 shadow-lg shadow-emerald-500/30";
+                                    cont = "<i class='fa-solid fa-check'></i>";
+                                }
+                                if (i === this.step) {
+                                    cl = "bg-blue-600 text-white border-blue-400 scale-110 shadow-lg shadow-blue-500/50 z-10 relative";
+                                    cont = i;
+                                }
+                                html += "<div class='w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center border-2 transition-all font-bold text-[10px] md:text-xs " + cl + "'>" + cont + "</div>";
+                            }
+                            document.getElementById('exam-timeline').innerHTML = html;
+                            document.getElementById('exam-progress-bar').style.width = ((this.step - 1) / (this.maxStep - 1)) * 100 + "%";
+
+                            if (this.step === this.maxStep && this.unlocked[this.maxStep - 1]) {
+                                document.getElementById('exam-progress-bar').style.width = "100%";
+                            }
+                        }
+
+                        answer(step, isCorrect) {
+                            if (isCorrect) {
+                                document.getElementById('exam-feedback-content').innerHTML = this.data[step].successFeedback;
+                                this.unlocked[step - 1] = true;
+                                if (step < this.maxStep) {
+                                    document.getElementById('exam-btn-next').disabled = false;
+                                }
+                                this.renderTimeline();
+                            } else {
+                                document.getElementById('exam-feedback-content').innerHTML = this.data[step].errorFeedback;
+                                if (step === 8) {
+                                    setTimeout(() => this.render(), 3000);
+                                }
+                            }
+                        }
+
+                        clickLine(btn, order) {
+                            if (btn.disabled) return;
+                            btn.disabled = true;
+                            btn.classList.add('opacity-50', 'bg-blue-900', 'border-blue-500');
+
+                            this.assemblyClicks.push(order);
+
+                            const prog = document.getElementById('assembly-progress');
+                            prog.innerHTML += "<div class='w-6 h-6 rounded bg-blue-500 text-white flex items-center justify-center text-xs font-bold'>" + this.assemblyClicks.length + "</div>";
+
+                            if (this.assemblyClicks.length === 4) {
+                                let isCorrect = true;
+                                for (let i = 0; i < 4; i++) {
+                                    if (this.assemblyClicks[i] !== i + 1) isCorrect = false;
+                                }
+                                this.answer(8, isCorrect);
+                            }
+                        }
+
+                        next() {
+                            if (this.step < this.maxStep && this.unlocked[this.step - 1]) {
+                                this.step++;
+                                this.render();
+                            }
+                        }
+
+                        prev() {
+                            if (this.step > 1) {
+                                this.step--;
+                                this.render();
                             }
                         }
                     }
 
-                    clickLine(btn, order) {
-                        if(btn.disabled) return;
-                        btn.disabled = true;
-                        btn.classList.add('opacity-50', 'bg-blue-900', 'border-blue-500');
-                        
-                        this.assemblyClicks.push(order);
-                        
-                        const prog = document.getElementById('assembly-progress');
-                        prog.innerHTML += "<div class='w-6 h-6 rounded bg-blue-500 text-white flex items-center justify-center text-xs font-bold'>" + this.assemblyClicks.length + "</div>";
-                        
-                        if(this.assemblyClicks.length === 4) {
-                            let isCorrect = true;
-                            for(let i=0; i<4; i++) {
-                                if(this.assemblyClicks[i] !== i+1) isCorrect = false;
-                            }
-                            this.answer(8, isCorrect);
-                        }
-                    }
-
-                    next() {
-                        if(this.step < this.maxStep && this.unlocked[this.step-1]) {
-                            this.step++;
-                            this.render();
-                        }
-                    }
-
-                    prev() {
-                        if(this.step > 1) {
-                            this.step--;
-                            this.render();
-                        }
-                    }
-                }
-
-                const examSim = new ExamSimulator();
-                document.addEventListener("DOMContentLoaded", () => {
-                    if(document.getElementById('exam-challenge-content')) examSim.render();
-                });
+                    const examSim = new ExamSimulator();
+                    document.addEventListener("DOMContentLoaded", () => {
+                        if (document.getElementById('exam-challenge-content')) examSim.render();
+                    });
                 </script>
             </div>
             <!-- ==========================================
@@ -3290,164 +3317,223 @@
             =========================================== -->
             <div class="tab-content" id="tab-vs-q1-q2">
                 <header class="mb-10 border-b border-slate-200 pb-6 text-center">
-                    <div class="inline-block px-5 py-1.5 bg-slate-100 text-slate-600 rounded-full font-bold text-xs mb-4 tracking-widest uppercase shadow-sm border border-slate-200">
+                    <div
+                        class="inline-block px-5 py-1.5 bg-slate-100 text-slate-600 rounded-full font-bold text-xs mb-4 tracking-widest uppercase shadow-sm border border-slate-200">
                         <i class="fa-solid fa-code-compare mr-2"></i> הפרדה ארכיטקטונית
                     </div>
                     <h2 class="text-4xl md:text-5xl font-black text-slate-800 tracking-tight mb-4">
-                        שאלה 1 מול שאלה 2: <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500">שינוי המודל המנטלי</span>
+                        שאלה 1 מול שאלה 2: <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500">שינוי
+                            המודל המנטלי</span>
                     </h2>
                     <p class="text-lg md:text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto">
-                        כדי לפתור את המבחן בהצלחה, חייבים להבין את חוק האצבע: <strong>בשאלה 1 המטרה היא לחשב תוצאה. בשאלה 2 המטרה היא לשנות מצב (State).</strong> שימוש בכלים משאלה 1 כדי לפתור את שאלה 2 יוביל לשגיאות תכנון קריטיות.
+                        כדי לפתור את המבחן בהצלחה, חייבים להבין את חוק האצבע: <strong>בשאלה 1 המטרה היא לחשב תוצאה.
+                            בשאלה 2 המטרה היא לשנות מצב (State).</strong> שימוש בכלים משאלה 1 כדי לפתור את שאלה 2 יוביל
+                        לשגיאות תכנון קריטיות.
                     </p>
                 </header>
-            
+
                 <!-- Comparison Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                     <!-- Q1 Card -->
-                    <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-blue-400 to-cyan-400 opacity-80 group-hover:opacity-100 transition-opacity"></div>
+                    <div
+                        class="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group">
+                        <div
+                            class="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-blue-400 to-cyan-400 opacity-80 group-hover:opacity-100 transition-opacity">
+                        </div>
                         <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
                             <h3 class="text-2xl font-black text-slate-800 flex items-center">
                                 <i class="fa-solid fa-cube text-blue-500 ml-3 text-xl"></i>
                                 שפות פונקציונליות טהורות
                             </h3>
-                            <span class="bg-blue-50 text-blue-700 font-mono font-bold px-3 py-1 rounded-lg text-sm border border-blue-100 shadow-sm">LET, CHECKED</span>
+                            <span
+                                class="bg-blue-50 text-blue-700 font-mono font-bold px-3 py-1 rounded-lg text-sm border border-blue-100 shadow-sm">LET,
+                                CHECKED</span>
                         </div>
-                        
+
                         <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                            בעולם של שאלה 1 הכל קבוע וידוע. משתנים לא יכולים להשתנות אחרי ההגדרה שלהם. העבודה מתמקדת לרוב בהוספת סוכר תחבירי, בלולאות פשוטות שמחזירות ערך, או באכיפת טיפוסים חמורה.
+                            בעולם של שאלה 1 הכל קבוע וידוע. משתנים לא יכולים להשתנות אחרי ההגדרה שלהם. העבודה מתמקדת
+                            לרוב בהוספת סוכר תחבירי, בלולאות פשוטות שמחזירות ערך, או באכיפת טיפוסים חמורה.
                         </p>
-            
+
                         <ul class="space-y-4">
                             <li class="flex items-start">
-                                <div class="bg-blue-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-blue-100">
+                                <div
+                                    class="bg-blue-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-blue-100">
                                     <i class="fa-solid fa-memory text-blue-500 text-sm"></i>
                                 </div>
                                 <div>
-                                    <strong class="block text-slate-800 text-sm mb-1">ניהול זיכרון נקי (No Store)</strong>
-                                    <p class="text-xs text-slate-500 leading-relaxed">הסביבה (Environment) ממפה משתנה ישירות לערך שלו (ExpVal). ברגע ששלפנו משתנה מהסביבה, אנחנו יכולים לעבוד איתו מיד.</p>
+                                    <strong class="block text-slate-800 text-sm mb-1">ניהול זיכרון נקי (No
+                                        Store)</strong>
+                                    <p class="text-xs text-slate-500 leading-relaxed">הסביבה (Environment) ממפה משתנה
+                                        ישירות לערך שלו (ExpVal). ברגע ששלפנו משתנה מהסביבה, אנחנו יכולים לעבוד איתו
+                                        מיד.</p>
                                 </div>
                             </li>
                             <li class="flex items-start">
-                                <div class="bg-blue-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-blue-100">
+                                <div
+                                    class="bg-blue-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-blue-100">
                                     <i class="fa-solid fa-shield-halved text-blue-500 text-sm"></i>
                                 </div>
                                 <div>
-                                    <strong class="block text-slate-800 text-sm mb-1">מערכת הטיפוסים (Type Checker)</strong>
-                                    <p class="text-xs text-slate-500 leading-relaxed">בשפות ה-CHECKED, הלב של השאלה יתמקד בעדכון <code>checker.scm</code> והוספת אילוצי טיפוסים חזקים.</p>
+                                    <strong class="block text-slate-800 text-sm mb-1">מערכת הטיפוסים (Type
+                                        Checker)</strong>
+                                    <p class="text-xs text-slate-500 leading-relaxed">בשפות ה-CHECKED, הלב של השאלה
+                                        יתמקד בעדכון <code>checker.scm</code> והוספת אילוצי טיפוסים חזקים.</p>
                                 </div>
                             </li>
                             <li class="flex items-start">
-                                <div class="bg-blue-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-blue-100">
+                                <div
+                                    class="bg-blue-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-blue-100">
                                     <i class="fa-solid fa-microchip text-blue-500 text-sm"></i>
                                 </div>
                                 <div>
-                                    <strong class="block text-slate-800 text-sm mb-1">מקרואים ותרגום תחבירי (Macros)</strong>
-                                    <p class="text-xs text-slate-500 leading-relaxed">לעיתים קרובות נתבקש לכתוב <code>syntax-expand</code> ללא התערבות של ה-<code>value-of</code>.</p>
+                                    <strong class="block text-slate-800 text-sm mb-1">מקרואים ותרגום תחבירי
+                                        (Macros)</strong>
+                                    <p class="text-xs text-slate-500 leading-relaxed">לעיתים קרובות נתבקש לכתוב
+                                        <code>syntax-expand</code> ללא התערבות של ה-<code>value-of</code>.</p>
                                 </div>
                             </li>
                         </ul>
                     </div>
-            
+
                     <!-- Q2 Card -->
-                    <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-indigo-500 to-purple-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
+                    <div
+                        class="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group">
+                        <div
+                            class="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-indigo-500 to-purple-500 opacity-80 group-hover:opacity-100 transition-opacity">
+                        </div>
                         <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
                             <h3 class="text-2xl font-black text-slate-800 flex items-center">
                                 <i class="fa-solid fa-network-wired text-indigo-500 ml-3 text-xl"></i>
                                 העולם האימפרטיבי
                             </h3>
-                            <span class="bg-indigo-50 text-indigo-700 font-mono font-bold px-3 py-1 rounded-lg text-sm border border-indigo-100 shadow-sm">IMPLICIT-REFS</span>
+                            <span
+                                class="bg-indigo-50 text-indigo-700 font-mono font-bold px-3 py-1 rounded-lg text-sm border border-indigo-100 shadow-sm">IMPLICIT-REFS</span>
                         </div>
-                        
+
                         <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                            שאלה 2 מכניסה אותנו לעולם דינמי. מטרת הקוד היא לבצע תופעות לוואי (Mutations): לעדכן מערכים, לנהל מצב גלובלי, או לרשום פונקציות לאירועים שמתרחשים בהמשך.
+                            שאלה 2 מכניסה אותנו לעולם דינמי. מטרת הקוד היא לבצע תופעות לוואי (Mutations): לעדכן מערכים,
+                            לנהל מצב גלובלי, או לרשום פונקציות לאירועים שמתרחשים בהמשך.
                         </p>
-            
+
                         <ul class="space-y-4">
                             <li class="flex items-start">
-                                <div class="bg-indigo-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-indigo-100">
+                                <div
+                                    class="bg-indigo-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-indigo-100">
                                     <i class="fa-solid fa-database text-indigo-500 text-sm"></i>
                                 </div>
                                 <div>
                                     <strong class="block text-slate-800 text-sm mb-1">החסן ומוטציות (The Store)</strong>
-                                    <p class="text-xs text-slate-500 leading-relaxed">הסביבה לא מחזיקה ערכים, אלא <strong>מצביעים</strong> (References). משתנה חדש חייב להיפתח עם <code>newref</code>, ושליפה מחייבת <code>deref</code>.</p>
+                                    <p class="text-xs text-slate-500 leading-relaxed">הסביבה לא מחזיקה ערכים, אלא
+                                        <strong>מצביעים</strong> (References). משתנה חדש חייב להיפתח עם
+                                        <code>newref</code>, ושליפה מחייבת <code>deref</code>.</p>
                                 </div>
                             </li>
                             <li class="flex items-start">
-                                <div class="bg-indigo-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-indigo-100">
+                                <div
+                                    class="bg-indigo-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-indigo-100">
                                     <i class="fa-solid fa-pen-nib text-indigo-500 text-sm"></i>
                                 </div>
                                 <div>
                                     <strong class="block text-slate-800 text-sm mb-1">דריסת זיכרון (setref!)</strong>
-                                    <p class="text-xs text-slate-500 leading-relaxed">בשונה משאלה 1, פקודות רבות בשאלה 2 מיועדות לאקשן באמצעות <code>setref!</code> בתוספת החזרת ערך דמה לריצוי המפרש.</p>
+                                    <p class="text-xs text-slate-500 leading-relaxed">בשונה משאלה 1, פקודות רבות בשאלה 2
+                                        מיועדות לאקשן באמצעות <code>setref!</code> בתוספת החזרת ערך דמה לריצוי המפרש.
+                                    </p>
                                 </div>
                             </li>
                             <li class="flex items-start">
-                                <div class="bg-indigo-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-indigo-100">
+                                <div
+                                    class="bg-indigo-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-3 mt-0.5 border border-indigo-100">
                                     <i class="fa-solid fa-link text-indigo-500 text-sm"></i>
                                 </div>
                                 <div>
                                     <strong class="block text-slate-800 text-sm mb-1">כינויים (Aliasing)</strong>
-                                    <p class="text-xs text-slate-500 leading-relaxed">כאשר אנו מעבירים משתנה לפונקציה או בלוק, לרוב נעביר את המצביע הקיים שלו כדי ששינויים פנימיים "יורגשו" גם מחוץ לבלוק.</p>
+                                    <p class="text-xs text-slate-500 leading-relaxed">כאשר אנו מעבירים משתנה לפונקציה או
+                                        בלוק, לרוב נעביר את המצביע הקיים שלו כדי ששינויים פנימיים "יורגשו" גם מחוץ
+                                        לבלוק.</p>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </div>
-            
+
                 <!-- Visual Env Representation -->
                 <div class="bg-slate-50 rounded-2xl p-8 border border-slate-200 shadow-inner text-center mb-10">
-                    <h3 class="text-xl font-bold text-slate-800 mb-8"><i class="fa-solid fa-sitemap ml-2 text-slate-400"></i> ההבדל החזותי: איך הסביבה (Env) ממומשת באמת?</h3>
-                    
-                    <div class="flex flex-col lg:flex-row items-center justify-center gap-12 relative z-10 w-full max-w-4xl mx-auto">
-                        
+                    <h3 class="text-xl font-bold text-slate-800 mb-8"><i
+                            class="fa-solid fa-sitemap ml-2 text-slate-400"></i> ההבדל החזותי: איך הסביבה (Env) ממומשת
+                        באמת?</h3>
+
+                    <div
+                        class="flex flex-col lg:flex-row items-center justify-center gap-12 relative z-10 w-full max-w-4xl mx-auto">
+
                         <!-- Q1 Diagram -->
-                        <div class="flex-1 w-full bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                            <h4 class="text-blue-600 font-bold mb-4 font-mono text-sm tracking-wide bg-blue-50 py-1 rounded inline-block px-4 border border-blue-100">Q1: LET / CHECKED</h4>
+                        <div
+                            class="flex-1 w-full bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <h4
+                                class="text-blue-600 font-bold mb-4 font-mono text-sm tracking-wide bg-blue-50 py-1 rounded inline-block px-4 border border-blue-100">
+                                Q1: LET / CHECKED</h4>
                             <div class="flex items-center justify-center gap-4">
-                                <div class="bg-white border border-blue-200 text-blue-900 px-4 py-3 rounded-lg shadow-sm flex flex-col items-center">
-                                    <span class="text-[10px] uppercase text-blue-500 font-black tracking-widest mb-1">Environment</span>
+                                <div
+                                    class="bg-white border border-blue-200 text-blue-900 px-4 py-3 rounded-lg shadow-sm flex flex-col items-center">
+                                    <span
+                                        class="text-[10px] uppercase text-blue-500 font-black tracking-widest mb-1">Environment</span>
                                     <div class="font-mono text-sm font-bold flex items-center gap-3">
                                         <span class="bg-slate-100 px-2 rounded border border-slate-200">x</span>
                                         <i class="fa-solid fa-arrow-left text-blue-400"></i>
-                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded border border-blue-200">(num-val 5)</span>
+                                        <span
+                                            class="bg-blue-100 text-blue-800 px-2 py-1 rounded border border-blue-200">(num-val
+                                            5)</span>
                                     </div>
                                 </div>
                             </div>
-                            <p class="text-slate-500 text-xs mt-4 leading-relaxed font-medium">מיפוי ישיר. המשתנה מכיר אך ורק את הערך הסופי שלו.</p>
+                            <p class="text-slate-500 text-xs mt-4 leading-relaxed font-medium">מיפוי ישיר. המשתנה מכיר
+                                אך ורק את הערך הסופי שלו.</p>
                         </div>
-            
+
                         <!-- VS Icon -->
-                        <div class="hidden lg:flex items-center justify-center w-12 h-12 bg-white rounded-full border border-slate-200 shadow-sm shrink-0">
+                        <div
+                            class="hidden lg:flex items-center justify-center w-12 h-12 bg-white rounded-full border border-slate-200 shadow-sm shrink-0">
                             <i class="fa-solid fa-code-compare text-slate-300"></i>
                         </div>
-            
+
                         <!-- Q2 Diagram -->
-                        <div class="flex-1 w-full bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                            <h4 class="text-indigo-600 font-bold mb-4 font-mono text-sm tracking-wide bg-indigo-50 py-1 rounded inline-block px-4 border border-indigo-100">Q2: IMPLICIT-REFS</h4>
+                        <div
+                            class="flex-1 w-full bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <h4
+                                class="text-indigo-600 font-bold mb-4 font-mono text-sm tracking-wide bg-indigo-50 py-1 rounded inline-block px-4 border border-indigo-100">
+                                Q2: IMPLICIT-REFS</h4>
                             <div class="flex items-center justify-center gap-3">
-                                <div class="bg-white border border-indigo-200 text-indigo-900 px-3 py-3 rounded-lg shadow-sm flex flex-col items-center w-[45%] relative">
-                                    <span class="text-[10px] uppercase text-indigo-500 font-black tracking-widest mb-1">Environment</span>
+                                <div
+                                    class="bg-white border border-indigo-200 text-indigo-900 px-3 py-3 rounded-lg shadow-sm flex flex-col items-center w-[45%] relative">
+                                    <span
+                                        class="text-[10px] uppercase text-indigo-500 font-black tracking-widest mb-1">Environment</span>
                                     <div class="font-mono text-xs font-bold flex items-center gap-2">
                                         <span class="bg-slate-100 px-1 rounded border border-slate-200">x</span>
                                         <i class="fa-solid fa-arrow-left text-indigo-400"></i>
-                                        <span class="bg-indigo-100 text-indigo-800 px-1 py-1 rounded border border-indigo-200">Ref(0)</span>
+                                        <span
+                                            class="bg-indigo-100 text-indigo-800 px-1 py-1 rounded border border-indigo-200">Ref(0)</span>
                                     </div>
                                 </div>
                                 <i class="fa-solid fa-link text-slate-300"></i>
-                                <div class="bg-white border border-emerald-200 text-emerald-900 px-3 py-3 rounded-lg shadow-sm flex flex-col items-center w-[45%] relative">
-                                    <span class="text-[10px] uppercase text-emerald-500 font-black tracking-widest mb-1">The Store</span>
+                                <div
+                                    class="bg-white border border-emerald-200 text-emerald-900 px-3 py-3 rounded-lg shadow-sm flex flex-col items-center w-[45%] relative">
+                                    <span
+                                        class="text-[10px] uppercase text-emerald-500 font-black tracking-widest mb-1">The
+                                        Store</span>
                                     <div class="font-mono text-xs font-bold flex items-center gap-2">
                                         <span class="bg-slate-100 px-1 rounded border border-slate-200">[0]</span>
                                         <i class="fa-solid fa-arrow-left text-emerald-400"></i>
-                                        <span class="bg-emerald-100 text-emerald-800 px-1 py-1 rounded border border-emerald-200">(num-val 5)</span>
+                                        <span
+                                            class="bg-emerald-100 text-emerald-800 px-1 py-1 rounded border border-emerald-200">(num-val
+                                            5)</span>
                                     </div>
                                 </div>
                             </div>
-                            <p class="text-slate-500 text-xs mt-4 leading-relaxed font-medium">שכבת ביניים. הסביבה מצביעה לכתובת בזיכרון, ושם מונח הערך הניתן להחלפה.</p>
+                            <p class="text-slate-500 text-xs mt-4 leading-relaxed font-medium">שכבת ביניים. הסביבה
+                                מצביעה לכתובת בזיכרון, ושם מונח הערך הניתן להחלפה.</p>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -4332,29 +4418,41 @@ Expression ::= switch Expression {
                         <i class="fa-solid fa-chevron-down text-slate-400"></i>
                     </div>
                     <div class="p-6">
-                        <div class="bg-red-50 border-r-4 border-red-600 p-5 rounded-xl mb-6 shadow-sm relative overflow-hidden">
+                        <div
+                            class="bg-red-50 border-r-4 border-red-600 p-5 rounded-xl mb-6 shadow-sm relative overflow-hidden">
                             <div class="absolute top-0 left-0 w-16 h-16 bg-red-100 rounded-br-full z-0"></div>
-                            <h3 class="font-black text-red-900 text-lg mb-2 relative z-10"><i class="fa-solid fa-skull-crossbones ml-2"></i> חוק הברזל של IMPLICIT-REFS: חילוץ המצביע</h3>
+                            <h3 class="font-black text-red-900 text-lg mb-2 relative z-10"><i
+                                    class="fa-solid fa-skull-crossbones ml-2"></i> חוק הברזל של IMPLICIT-REFS: חילוץ
+                                המצביע</h3>
                             <p class="text-slate-800 text-sm mb-3 relative z-10">
-                                בשאלה 1, כשחיפשנו משתנה בסביבה קיבלנו את הערך שלו. <strong>בשאלה 2 (IMPLICIT-REFS), הסביבה שומרת רק מצביעים (כתובות בזיכרון)!</strong><br>
-                                לכן, פונקציית <code>var-exp</code> במפרש חייבת להשתנות. חובה להשתמש ב-<code>deref</code> כדי לפתוח את המגירה ולקחת את הערך.
+                                בשאלה 1, כשחיפשנו משתנה בסביבה קיבלנו את הערך שלו. <strong>בשאלה 2 (IMPLICIT-REFS),
+                                    הסביבה שומרת רק מצביעים (כתובות בזיכרון)!</strong><br>
+                                לכן, פונקציית <code>var-exp</code> במפרש חייבת להשתנות. חובה להשתמש ב-<code>deref</code>
+                                כדי לפתוח את המגירה ולקחת את הערך.
                             </p>
                             <div class="bg-slate-900 p-3 rounded text-left dir-ltr relative z-10">
-                                <div class="text-red-400 text-xs mb-1 border-b border-slate-700 pb-1">// ככה שולפים משתנה בשאלה 2!</div>
+                                <div class="text-red-400 text-xs mb-1 border-b border-slate-700 pb-1">// ככה שולפים
+                                    משתנה בשאלה 2!</div>
                                 <code class="text-emerald-300 font-mono text-sm block">(var-exp (var)</code>
-                                <code class="text-emerald-300 font-mono text-sm block ml-4">(deref (apply-env env var)))</code>
+                                <code
+                                    class="text-emerald-300 font-mono text-sm block ml-4">(deref (apply-env env var)))</code>
                             </div>
                         </div>
 
                         <div class="mt-8 border-r-4 border-indigo-500 pr-4">
-                            <h3 class="text-xl font-bold text-indigo-800 mb-3"><i class="fa-solid fa-wand-magic-sparkles ml-2"></i> תבנית הזהב לשאלה 2: תבנית המוטציה (Mutation)</h3>
+                            <h3 class="text-xl font-bold text-indigo-800 mb-3"><i
+                                    class="fa-solid fa-wand-magic-sparkles ml-2"></i> תבנית הזהב לשאלה 2: תבנית המוטציה
+                                (Mutation)</h3>
                             <p class="text-sm text-slate-700 mb-4">
-                                בשפות עם זיכרון, הרבה פקודות (כמו <code>set</code>, עדכון מערך, או רישום לאירוע) לא נועדו להחזיר תשובה חישובית, אלא <strong>לשנות את המידע בזיכרון</strong>. 
-                                מכיוון שהמפרש של EOPL חייב להחזיר משהו, נשתמש בבלוק <code>begin</code> שמבצע את הדריסה (<code>setref!</code>) ואז מחזיר ערך דמה (למשל 27).
+                                בשפות עם זיכרון, הרבה פקודות (כמו <code>set</code>, עדכון מערך, או רישום לאירוע) לא
+                                נועדו להחזיר תשובה חישובית, אלא <strong>לשנות את המידע בזיכרון</strong>.
+                                מכיוון שהמפרש של EOPL חייב להחזיר משהו, נשתמש בבלוק <code>begin</code> שמבצע את הדריסה
+                                (<code>setref!</code>) ואז מחזיר ערך דמה (למשל 27).
                             </p>
-                            
+
                             <div class="bg-slate-900 rounded-lg p-4 mb-4 text-left" dir="ltr">
-                                <div class="text-indigo-400 text-xs mb-2 border-b border-slate-700 pb-1">// דוגמה קלאסית: ביטוי השמה מחדש (Assignment)</div>
+                                <div class="text-indigo-400 text-xs mb-2 border-b border-slate-700 pb-1">// דוגמה
+                                    קלאסית: ביטוי השמה מחדש (Assignment)</div>
                                 <pre><code class="language-scheme text-sm">
 (assign-exp (var exp1)
   (begin
@@ -4367,7 +4465,8 @@ Expression ::= switch Expression {
                             </div>
                         </div>
 
-                        <h4 class="font-bold text-dark mb-4 border-b pb-2">תבניות בסיסיות (Patterns) לעדכון value-of</h4>
+                        <h4 class="font-bold text-dark mb-4 border-b pb-2">תבניות בסיסיות (Patterns) לעדכון value-of
+                        </h4>
                         <div class="space-y-6">
                             <div class="border border-slate-200 rounded-lg overflow-hidden">
                                 <div
@@ -4431,14 +4530,21 @@ Expression ::= switch Expression {
                                 </div>
                             </div>
                             <div class="mt-8 border-r-4 border-fuchsia-500 pr-4 bg-fuchsia-50 p-4 rounded-l-lg">
-                                <h3 class="text-xl font-bold text-fuchsia-900 mb-3"><i class="fa-solid fa-list-ol ml-2"></i> המקרה המורכב: עדכון רשימות ומערכים בזיכרון (Events)</h3>
+                                <h3 class="text-xl font-bold text-fuchsia-900 mb-3"><i
+                                        class="fa-solid fa-list-ol ml-2"></i> המקרה המורכב: עדכון רשימות ומערכים בזיכרון
+                                    (Events)</h3>
                                 <p class="text-sm text-slate-700 mb-4">
-                                    בשאלות של "אירועים" (Events) או מערכים, נדרש לשמור <strong>רשימה של ערכים</strong> בתוך תא בודד בזיכרון, ולעדכן אותה בהדרגה (למשל, הוספת מאזין חדש).<br>
-                                    השיטה היא: למשוך את הרשימה מהזיכרון (<code class="text-xs font-mono">deref</code>), לשרשר אליה איבר חדש בסקים (<code class="text-xs font-mono">append</code> או <code class="text-xs font-mono">cons</code>), ולדחוף את הרשימה החדשה חזרה לאותו תא (<code class="text-xs font-mono">setref!</code>).
+                                    בשאלות של "אירועים" (Events) או מערכים, נדרש לשמור <strong>רשימה של ערכים</strong>
+                                    בתוך תא בודד בזיכרון, ולעדכן אותה בהדרגה (למשל, הוספת מאזין חדש).<br>
+                                    השיטה היא: למשוך את הרשימה מהזיכרון (<code class="text-xs font-mono">deref</code>),
+                                    לשרשר אליה איבר חדש בסקים (<code class="text-xs font-mono">append</code> או <code
+                                        class="text-xs font-mono">cons</code>), ולדחוף את הרשימה החדשה חזרה לאותו תא
+                                    (<code class="text-xs font-mono">setref!</code>).
                                 </p>
-                                
+
                                 <div class="bg-slate-900 rounded-lg p-4 text-left" dir="ltr">
-                                    <div class="text-fuchsia-400 text-xs mb-2 border-b border-slate-700 pb-1">// דוגמה: הוספת פונקציה לרשימת אירועים ששמורה במצביע event-ref</div>
+                                    <div class="text-fuchsia-400 text-xs mb-2 border-b border-slate-700 pb-1">// דוגמה:
+                                        הוספת פונקציה לרשימת אירועים ששמורה במצביע event-ref</div>
                                     <pre><code class="language-scheme text-sm">
 (add-listener-exp (event-var proc-exp)
   (let* ((event-ref (apply-env env event-var)) ;; הבאת המצביע של האירוע
@@ -4476,19 +4582,29 @@ Expression ::= switch Expression {
                     </div>
                     <div class="p-6">
                         <div class="bg-amber-50 border border-amber-300 p-5 rounded-xl mb-6 shadow-sm">
-                            <h3 class="font-bold text-amber-900 text-lg mb-2"><i class="fa-solid fa-people-arrows ml-2"></i> אזהרת עומק: האם לייצר חדש או לרכב על הקיים? (Aliasing)</h3>
-                            <p class="text-slate-800 text-sm mb-3">בשאלה 2, הדקדוק רומז לנו מה  מצפה שיקרה בזיכרון. שימו לב להבדל הקריטי:</p>
-                            
+                            <h3 class="font-bold text-amber-900 text-lg mb-2"><i
+                                    class="fa-solid fa-people-arrows ml-2"></i> אזהרת עומק: האם לייצר חדש או לרכב על
+                                הקיים? (Aliasing)</h3>
+                            <p class="text-slate-800 text-sm mb-3">בשאלה 2, הדקדוק רומז לנו מה מצפה שיקרה בזיכרון. שימו
+                                לב להבדל הקריטי:</p>
+
                             <ul class="space-y-4">
                                 <li class="bg-white p-3 rounded border-r-4 border-emerald-500 shadow-sm">
-                                    <strong class="block text-emerald-800">מצב 1: הדקדוק מכיל <code>Expression</code></strong>
-                                    <span class="text-xs text-slate-600 block mb-2">אנו מקבלים ביטוי שיש לחשב. התוצאה שלו צריכה תא חדש בזיכרון!</span>
-                                    <code class="bg-slate-100 text-emerald-700 px-2 py-1 rounded text-xs" dir="ltr">(extend-env var (newref (value-of exp1 env)) env)</code>
+                                    <strong class="block text-emerald-800">מצב 1: הדקדוק מכיל
+                                        <code>Expression</code></strong>
+                                    <span class="text-xs text-slate-600 block mb-2">אנו מקבלים ביטוי שיש לחשב. התוצאה
+                                        שלו צריכה תא חדש בזיכרון!</span>
+                                    <code class="bg-slate-100 text-emerald-700 px-2 py-1 rounded text-xs"
+                                        dir="ltr">(extend-env var (newref (value-of exp1 env)) env)</code>
                                 </li>
                                 <li class="bg-white p-3 rounded border-r-4 border-rose-500 shadow-sm">
-                                    <strong class="block text-rose-800">מצב 2: הדקדוק דורש מזהה ישיר <code>Identifier</code> (Call by Reference)</strong>
-                                    <span class="text-xs text-slate-600 block mb-2">אם מבקשים מזהה קיים, פעמים רבות המטרה היא <strong>כינוי (Alias)</strong> - להצביע לאותו תא זיכרון כדי ששינויים פנימיים יורגשו בחוץ. <strong>אסור לעשות newref!</strong></span>
-                                    <code class="bg-slate-100 text-rose-700 px-2 py-1 rounded text-xs" dir="ltr">(extend-env new-var (apply-env env old-var) env)</code>
+                                    <strong class="block text-rose-800">מצב 2: הדקדוק דורש מזהה ישיר
+                                        <code>Identifier</code> (Call by Reference)</strong>
+                                    <span class="text-xs text-slate-600 block mb-2">אם מבקשים מזהה קיים, פעמים רבות
+                                        המטרה היא <strong>כינוי (Alias)</strong> - להצביע לאותו תא זיכרון כדי ששינויים
+                                        פנימיים יורגשו בחוץ. <strong>אסור לעשות newref!</strong></span>
+                                    <code class="bg-slate-100 text-rose-700 px-2 py-1 rounded text-xs"
+                                        dir="ltr">(extend-env new-var (apply-env env old-var) env)</code>
                                 </li>
                             </ul>
                         </div>
@@ -4566,7 +4682,11 @@ Expression ::= switch Expression {
                                             2. <strong>החילוץ:</strong> קח את האיבר הראשון בעזרת
                                             <code>(car items)</code>.<br />
                                             3. <strong>הביצוע וקריאת ההמשך:</strong> בצע את הלוגיקה (למשל הרחבת הסביבה
-                                            עם <code>extend-env</code> - <span class="text-red-600 font-bold underline">שימו לב: אם מדובר ב-IMPLICIT-REFS, חובה לעטוף את הערך ב-newref. אם מדובר ב-EXPLICIT-REFS, מעבירים את הערך נקי!</span>), ומיד קרא שוב לפונקציה הרקורסיבית עם שאר הרשימה
+                                            עם <code>extend-env</code> - <span
+                                                class="text-red-600 font-bold underline">שימו לב: אם מדובר
+                                                ב-IMPLICIT-REFS, חובה לעטוף את הערך ב-newref. אם מדובר ב-EXPLICIT-REFS,
+                                                מעבירים את הערך נקי!</span>), ומיד קרא שוב לפונקציה הרקורסיבית עם שאר
+                                            הרשימה
                                             <code>(cdr items)</code> תחת הסביבה החדשה.
                                         </div>
                                     </div>
@@ -4646,39 +4766,51 @@ Expression ::= switch Expression {
             <div class="tab-content" id="tab-q2-7">
                 <header class="mb-12 border-b pb-6">
                     <h2 class="text-3xl md:text-5xl font-black text-slate-800 mb-4 flex items-center gap-4">
-                        <span class="bg-indigo-600 text-white px-6 py-2 rounded-2xl shadow-lg shadow-indigo-200 border-2 border-indigo-700 font-mono">2.7</span>
+                        <span
+                            class="bg-indigo-600 text-white px-6 py-2 rounded-2xl shadow-lg shadow-indigo-200 border-2 border-indigo-700 font-mono">2.7</span>
                         מעבדת המוטציות והזיכרון
                     </h2>
                     <p class="text-slate-600 text-lg">סימולטור אינטראקטיבי של מנוע ההרצה בסביבת IMPLICIT-REFS.</p>
                 </header>
-                
-                <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 rounded-2xl p-6 md:p-10 shadow-[0_0_40px_rgba(79,70,229,0.15)] border border-indigo-500/30 relative overflow-hidden" id="mutation-lab-container">
+
+                <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 rounded-2xl p-6 md:p-10 shadow-[0_0_40px_rgba(79,70,229,0.15)] border border-indigo-500/30 relative overflow-hidden"
+                    id="mutation-lab-container">
                     <!-- Decoration -->
-                    <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-amber-500"></div>
-                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    
+                    <div
+                        class="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-amber-500">
+                    </div>
+                    <div
+                        class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+                    </div>
+
                     <header class="mb-10 text-center relative z-10">
-                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-xs font-bold font-mono border border-indigo-500/30 mb-4">
+                        <span
+                            class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-xs font-bold font-mono border border-indigo-500/30 mb-4">
                             <i class="fa-solid fa-flask"></i> 2.7 Mutation Lab
                         </span>
-                        <h2 class="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-md">מעבדת המוטציות והזיכרון</h2>
-                        <p class="text-indigo-200 text-lg max-w-2xl mx-auto">בואו נראה איך באמת מבצעים שינויים בעולם ה-IMPLICIT-REFS. הפקודה שלנו למעבדה: <code>swap(x, y)</code>.</p>
+                        <h2 class="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-md">מעבדת
+                            המוטציות והזיכרון</h2>
+                        <p class="text-indigo-200 text-lg max-w-2xl mx-auto">בואו נראה איך באמת מבצעים שינויים בעולם
+                            ה-IMPLICIT-REFS. הפקודה שלנו למעבדה: <code>swap(x, y)</code>.</p>
                     </header>
 
                     <!-- Timeline / Progress -->
-                    <div class="flex justify-center items-center mb-8 relative z-10 w-full max-w-md mx-auto" id="mut-timeline">
+                    <div class="flex justify-center items-center mb-8 relative z-10 w-full max-w-md mx-auto"
+                        id="mut-timeline">
                         <!-- Dynamically populated -->
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
                         <!-- Sidebar: Information & Feedback -->
                         <div class="lg:col-span-4 flex flex-col gap-4">
-                            <div class="bg-slate-900/80 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 shadow-inner flex-1">
+                            <div
+                                class="bg-slate-900/80 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 shadow-inner flex-1">
                                 <div class="flex items-center gap-3 mb-4 border-b border-slate-700/50 pb-3">
                                     <i class="fa-solid fa-terminal text-indigo-400 text-xl"></i>
                                     <h3 class="font-bold text-white">יומן מערכת</h3>
                                 </div>
-                                <div id="mut-feedback-content" class="text-sm leading-relaxed min-h-[150px] text-slate-200">
+                                <div id="mut-feedback-content"
+                                    class="text-sm leading-relaxed min-h-[150px] text-slate-200">
                                     <span class="text-slate-400">>> המערכת מוכנה. ממתין לקלט...</span>
                                 </div>
                             </div>
@@ -4686,34 +4818,45 @@ Expression ::= switch Expression {
 
                         <!-- Main Interactive Area -->
                         <div class="lg:col-span-8">
-                            <div class="bg-slate-900/90 backdrop-blur-xl rounded-xl border border-slate-700 shadow-2xl overflow-hidden flex flex-col h-full">
-                                <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
+                            <div
+                                class="bg-slate-900/90 backdrop-blur-xl rounded-xl border border-slate-700 shadow-2xl overflow-hidden flex flex-col h-full">
+                                <div
+                                    class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
                                     <div class="flex gap-2">
                                         <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
-                                        <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
-                                        <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                                        <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50">
+                                        </div>
+                                        <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50">
+                                        </div>
                                     </div>
-                                    <div class="font-mono text-xs text-slate-500" id="mut-filename"><i class="fa-solid fa-code"></i> mutation.scm</div>
+                                    <div class="font-mono text-xs text-slate-500" id="mut-filename"><i
+                                            class="fa-solid fa-code"></i> mutation.scm</div>
                                 </div>
-                                
-                                <div class="p-6 md:p-8 flex-1 flex flex-col justify-center min-h-[400px]" id="mut-challenge-content">
+
+                                <div class="p-6 md:p-8 flex-1 flex flex-col justify-center min-h-[400px]"
+                                    id="mut-challenge-content">
                                     <!-- Dynamic content injected here -->
                                 </div>
-                                
+
                                 <!-- Navigation -->
-                                <div class="bg-slate-950/50 px-6 py-4 border-t border-slate-800 flex justify-between items-center flex-wrap gap-4">
-                                    <button onclick="mutSim.prev()" id="mut-btn-prev" class="px-4 py-2 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors text-sm font-bold disabled:opacity-30 disabled:cursor-not-allowed">
+                                <div
+                                    class="bg-slate-950/50 px-6 py-4 border-t border-slate-800 flex justify-between items-center flex-wrap gap-4">
+                                    <button onclick="mutSim.prev()" id="mut-btn-prev"
+                                        class="px-4 py-2 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors text-sm font-bold disabled:opacity-30 disabled:cursor-not-allowed">
                                         <i class="fa-solid fa-chevron-right ml-1"></i> שלב קודם
                                     </button>
-                                    
+
                                     <div class="flex items-center gap-4">
-                                        <div class="font-mono text-indigo-500/50 text-xs hidden md:block" id="mut-step-counter">שאלה 1/5</div>
-                                        
-                                        <button onclick="mutSim.revealSolution()" id="mut-btn-reveal" class="px-4 py-2 rounded border border-amber-500/50 text-amber-400 hover:bg-amber-500/10 transition-colors text-sm font-bold shadow-[0_0_10px_rgba(245,158,11,0.1)]">
+                                        <div class="font-mono text-indigo-500/50 text-xs hidden md:block"
+                                            id="mut-step-counter">שאלה 1/5</div>
+
+                                        <button onclick="mutSim.revealSolution()" id="mut-btn-reveal"
+                                            class="px-4 py-2 rounded border border-amber-500/50 text-amber-400 hover:bg-amber-500/10 transition-colors text-sm font-bold shadow-[0_0_10px_rgba(245,158,11,0.1)]">
                                             <i class="fa-solid fa-lightbulb"></i> חשוף פיתרון
                                         </button>
-                                        
-                                        <button onclick="mutSim.next()" id="mut-btn-next" class="px-6 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white transition-colors text-sm font-bold disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(79,70,229,0.4)] disabled:shadow-none">
+
+                                        <button onclick="mutSim.next()" id="mut-btn-next"
+                                            class="px-6 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white transition-colors text-sm font-bold disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(79,70,229,0.4)] disabled:shadow-none">
                                             המשך לשלב הבא <i class="fa-solid fa-chevron-left mr-1"></i>
                                         </button>
                                     </div>
@@ -4722,23 +4865,23 @@ Expression ::= switch Expression {
                         </div>
                     </div>
                 </div>
-                
+
                 <script>
-                class MutationLabSimulator {
-                    constructor() {
-                        this.step = 1;
-                        this.maxStep = 5;
-                        this.unlocked = [false, false, false, false, false];
-                        this.clicks = [];
-                        
-                        this.data = {
-                            1: {
-                                title: "תחנת המיון",
-                                file: "lang.scm",
-                                html: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שלב 1: החוזה התחבירי</h3>" +
-                                    "<p class='text-slate-400 mb-6'>אנחנו רוצים להוסיף את פקודת ההחלפה <code class='text-fuchsia-300'>swap(var1, var2)</code> לשפה שלנו. סדר את הקוביות הלוגיות כדי להרכיב את הכלל התחבירי בצורה נכונה:</p>" +
-                                    "<div class='flex flex-wrap gap-2 mb-4 dir-ltr justify-center' id='mut-q1-options'>" +
+                    class MutationLabSimulator {
+                        constructor() {
+                            this.step = 1;
+                            this.maxStep = 5;
+                            this.unlocked = [false, false, false, false, false];
+                            this.clicks = [];
+
+                            this.data = {
+                                1: {
+                                    title: "תחנת המיון",
+                                    file: "lang.scm",
+                                    html:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שלב 1: החוזה התחבירי</h3>" +
+                                        "<p class='text-slate-400 mb-6'>אנחנו רוצים להוסיף את פקודת ההחלפה <code class='text-fuchsia-300'>swap(var1, var2)</code> לשפה שלנו. סדר את הקוביות הלוגיות כדי להרכיב את הכלל התחבירי בצורה נכונה:</p>" +
+                                        "<div class='flex flex-wrap gap-2 mb-4 dir-ltr justify-center' id='mut-q1-options'>" +
                                         "<button onclick='mutSim.clickLine(1, 4, this)' class='px-3 py-2 bg-indigo-900/50 border border-indigo-500/50 rounded font-mono text-indigo-300 hover:bg-indigo-800 transition-colors'>identifier</button>" +
                                         "<button onclick='mutSim.clickLine(1, 1, this)' class='px-3 py-2 bg-orange-900/50 border border-orange-500/50 rounded font-mono text-orange-300 hover:bg-orange-800 transition-colors'>\"swap\"</button>" +
                                         "<button onclick='mutSim.clickLine(1, 5, this)' class='px-3 py-2 bg-orange-900/50 border border-orange-500/50 rounded font-mono text-orange-300 hover:bg-orange-800 transition-colors'>\")\"</button>" +
@@ -4746,223 +4889,223 @@ Expression ::= switch Expression {
                                         "<button onclick='mutSim.clickLine(1, 2, this)' class='px-3 py-2 bg-orange-900/50 border border-orange-500/50 rounded font-mono text-orange-300 hover:bg-orange-800 transition-colors'>\"(\"</button>" +
                                         "<button onclick='mutSim.clickLine(1, -1, this)' class='px-3 py-2 bg-blue-900/50 border border-blue-500/50 rounded font-mono text-blue-300 hover:bg-blue-800 transition-colors'>expression</button>" +
                                         "<button onclick='mutSim.clickLine(1, 6, this)' class='px-3 py-2 bg-indigo-900/50 border border-indigo-500/50 rounded font-mono text-indigo-300 hover:bg-indigo-800 transition-colors'>identifier</button>" +
-                                    "</div>" +
-                                    "<div class='flex gap-1 justify-center min-h-[40px] p-2 bg-slate-900 rounded-lg border border-slate-700 dir-ltr flex-wrap' id='mut-q1-answers'></div>" +
-                                    "<div class='mt-4 flex justify-center'><button onclick='mutSim.resetClicks(1)' class='text-xs text-slate-500 hover:text-white underline transition-colors'>אפס הרכבה</button></div>",
-                                success: "<span class='text-green-400 font-bold'>[SUCCESS]</span> חוק דקדוק מושלם!<br><br>שים לב שבחרת ב-<code>identifier</code> (שם משתנה) ולא ב-<code>expression</code> (ביטוי לחישוב). זה קריטי! אי אפשר להחליף ערך בתוך ביטוי מתמטי כמו <code>(5+3)</code>, אפשר לשנות רק מגירות בזיכרון שמיוצגות על ידי שמות משתנים.",
-                                error: "<span class='text-red-400 font-bold'>[ERROR]</span> סדר שגוי או בחירה שגויה.<br><br>אם בחרת ב-expression, נורת אזהרה כתומה מהבהבת! האם באמת אפשר להחליף מקום של חישוב? נסה שוב להרכיב את הפקודה <code>swap(id, id)</code>."
-                            },
-                            2: {
-                                title: "קריסת הפיגומים",
-                                file: "data-structures.scm",
-                                html: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שלב 2: שאיבת ה-AST</h3>" +
-                                    "<p class='text-slate-400 mb-6'>העץ התחבירי הגיע לתא הואקום. איזה מידע <b>באמת</b> נארז ונשמר בתוך ה-Variant <code class='text-indigo-400'>swap-exp</code> שישמש את המנוע בהמשך?</p>" +
-                                    "<div class='flex flex-col gap-3'>" +
+                                        "</div>" +
+                                        "<div class='flex gap-1 justify-center min-h-[40px] p-2 bg-slate-900 rounded-lg border border-slate-700 dir-ltr flex-wrap' id='mut-q1-answers'></div>" +
+                                        "<div class='mt-4 flex justify-center'><button onclick='mutSim.resetClicks(1)' class='text-xs text-slate-500 hover:text-white underline transition-colors'>אפס הרכבה</button></div>",
+                                    success: "<span class='text-green-400 font-bold'>[SUCCESS]</span> חוק דקדוק מושלם!<br><br>שים לב שבחרת ב-<code>identifier</code> (שם משתנה) ולא ב-<code>expression</code> (ביטוי לחישוב). זה קריטי! אי אפשר להחליף ערך בתוך ביטוי מתמטי כמו <code>(5+3)</code>, אפשר לשנות רק מגירות בזיכרון שמיוצגות על ידי שמות משתנים.",
+                                    error: "<span class='text-red-400 font-bold'>[ERROR]</span> סדר שגוי או בחירה שגויה.<br><br>אם בחרת ב-expression, נורת אזהרה כתומה מהבהבת! האם באמת אפשר להחליף מקום של חישוב? נסה שוב להרכיב את הפקודה <code>swap(id, id)</code>."
+                                },
+                                2: {
+                                    title: "קריסת הפיגומים",
+                                    file: "data-structures.scm",
+                                    html:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שלב 2: שאיבת ה-AST</h3>" +
+                                        "<p class='text-slate-400 mb-6'>העץ התחבירי הגיע לתא הואקום. איזה מידע <b>באמת</b> נארז ונשמר בתוך ה-Variant <code class='text-indigo-400'>swap-exp</code> שישמש את המנוע בהמשך?</p>" +
+                                        "<div class='flex flex-col gap-3'>" +
                                         "<button onclick='mutSim.answer(2, false)' class='text-left dir-ltr p-4 bg-slate-800/80 hover:bg-slate-700 border-2 border-slate-700 rounded-lg font-mono text-sm text-slate-300 transition-colors'>(swap-exp (\"swap\" \"(\" var1 \",\" var2 \")\"))</button>" +
                                         "<button onclick='mutSim.answer(2, true)' class='text-left dir-ltr p-4 bg-slate-800/80 hover:bg-slate-700 border-2 border-slate-700 hover:border-indigo-500 rounded-lg font-mono text-sm text-slate-300 transition-colors'>(swap-exp (var1 var2))</button>" +
                                         "<button onclick='mutSim.answer(2, false)' class='text-left dir-ltr p-4 bg-slate-800/80 hover:bg-slate-700 border-2 border-slate-700 rounded-lg font-mono text-sm text-slate-300 transition-colors'>(swap-exp (exp1 exp2))</button>" +
-                                    "</div>",
-                                success: "<span class='text-green-400 font-bold'>[SUCCESS]</span> אריזה מדוייקת!<br><br>הפסיקים והסוגריים (הפיגומים התחביריים) מתפוררים ונעלמים. בתוך קופסת ה-AST נשארים רק שני פתקים עם שמות המשתנים (var1 ו-var2). אין ביטויים (Expressions), רק זיהוי למקומות בזיכרון (Call-by-Reference).",
-                                error: "<span class='text-red-400 font-bold'>[ERROR]</span> שגוי!<br><br>או שהכנסת סוכר תחבירי (מילים שמורות) לתוך ה-AST, או שהגדרת ביטויים לחישוב (exp) במקום מצביעים למשתנים בזיכרון."
-                            },
-                            3: {
-                                title: "מלכודת החישוב",
-                                file: "interp.scm",
-                                html: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שלב 3: חדר המצב</h3>" +
-                                    "<p class='text-slate-400 mb-6'>אנו נמצאים בתוך מנוע ההרצה. משמאלנו ה\"החסן\" (Store) עם מגירות כבדות (במגירה 4 יש כדור עם 10, במגירה 7 יש כדור עם 20). מימיננו \"הסביבה\" (Env) שמחזיקה מפתחות מתכת למגירות.</p>" +
-                                    "<p class='text-slate-300 mb-4 font-bold'>איזו פעולה עליך להריץ כדי שתוכל להחליף את תוכנן של המגירות?</p>" +
-                                    "<div class='flex gap-4'>" +
+                                        "</div>",
+                                    success: "<span class='text-green-400 font-bold'>[SUCCESS]</span> אריזה מדוייקת!<br><br>הפסיקים והסוגריים (הפיגומים התחביריים) מתפוררים ונעלמים. בתוך קופסת ה-AST נשארים רק שני פתקים עם שמות המשתנים (var1 ו-var2). אין ביטויים (Expressions), רק זיהוי למקומות בזיכרון (Call-by-Reference).",
+                                    error: "<span class='text-red-400 font-bold'>[ERROR]</span> שגוי!<br><br>או שהכנסת סוכר תחבירי (מילים שמורות) לתוך ה-AST, או שהגדרת ביטויים לחישוב (exp) במקום מצביעים למשתנים בזיכרון."
+                                },
+                                3: {
+                                    title: "מלכודת החישוב",
+                                    file: "interp.scm",
+                                    html:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שלב 3: חדר המצב</h3>" +
+                                        "<p class='text-slate-400 mb-6'>אנו נמצאים בתוך מנוע ההרצה. משמאלנו ה\"החסן\" (Store) עם מגירות כבדות (במגירה 4 יש כדור עם 10, במגירה 7 יש כדור עם 20). מימיננו \"הסביבה\" (Env) שמחזיקה מפתחות מתכת למגירות.</p>" +
+                                        "<p class='text-slate-300 mb-4 font-bold'>איזו פעולה עליך להריץ כדי שתוכל להחליף את תוכנן של המגירות?</p>" +
+                                        "<div class='flex gap-4'>" +
                                         "<button onclick='mutSim.answer(3, false)' class='flex-1 p-6 bg-amber-900/30 hover:bg-amber-800/50 border-2 border-amber-600/50 rounded-xl flex flex-col items-center gap-3 group transition-all'>" +
-                                            "<i class='fa-solid fa-coins text-4xl text-amber-400 group-hover:scale-110 transition-transform'></i>" +
-                                            "<code class='text-amber-200 font-bold text-center'>(value-of var1 env)</code>" +
-                                            "<span class='text-xs text-amber-200/70 text-center leading-tight mt-2'>מביא לך כדורי זהב (ערכים מוחלטים)</span>" +
+                                        "<i class='fa-solid fa-coins text-4xl text-amber-400 group-hover:scale-110 transition-transform'></i>" +
+                                        "<code class='text-amber-200 font-bold text-center'>(value-of var1 env)</code>" +
+                                        "<span class='text-xs text-amber-200/70 text-center leading-tight mt-2'>מביא לך כדורי זהב (ערכים מוחלטים)</span>" +
                                         "</button>" +
                                         "<button onclick='mutSim.answer(3, true)' class='flex-1 p-6 bg-indigo-900/30 hover:bg-indigo-800/50 border-2 border-indigo-600/50 rounded-xl flex flex-col items-center gap-3 group transition-all'>" +
-                                            "<i class='fa-solid fa-key text-4xl text-indigo-400 group-hover:scale-110 transition-transform'></i>" +
-                                            "<code class='text-indigo-200 font-bold text-center'>(apply-env env var1)</code>" +
-                                            "<span class='text-xs text-indigo-200/70 text-center leading-tight mt-2'>מביא לך מפתחות מתכת (References)</span>" +
+                                        "<i class='fa-solid fa-key text-4xl text-indigo-400 group-hover:scale-110 transition-transform'></i>" +
+                                        "<code class='text-indigo-200 font-bold text-center'>(apply-env env var1)</code>" +
+                                        "<span class='text-xs text-indigo-200/70 text-center leading-tight mt-2'>מביא לך מפתחות מתכת (References)</span>" +
                                         "</button>" +
-                                    "</div>",
-                                success: "<span class='text-indigo-400 font-bold'>[SUCCESS]</span> הבאת את המפתחות!<br><br>הבנת את הסוד של פרק 4. במקום להשתמש ב-<code>value-of</code> (שמביא כדור זהב - העתק קשיח של המספר שלא ניתן לשינוי), השתמשת ב-<code>apply-env</code> כדי לשלוף את <b>המצביע לזיכרון</b> (Ref(4)). רק עם המפתח הזה תוכל לפתוח את המגירה ולשנות את הקיים בה.",
-                                error: "<span class='text-red-500 font-bold text-lg'><i class='fa-solid fa-triangle-exclamation'></i> שגיאה לוגית קטלנית!</span><br><br>לחצת על <code>value-of</code>. הזרוע הרובוטית חילצה עבורך את כדורי הזהב (10 ו-20). כעת אתה מנסה לדחוף את כדור ה-10 לתוך כדור ה-20 - אך הם מוצקים! אי אפשר 'להכניס' ערך לתוך ערך. כדי לשנות את העולם, אתה חייב מפתחות למגירות (References), לא את התוכן הסופי שלהן."
-                            },
-                            4: {
-                                title: "המוטציה",
-                                file: "The Store",
-                                html: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שלב 4: המוטציה במחסן</h3>" +
-                                    "<p class='text-slate-400 mb-6'>הגעת לקיר המגירות עם המפתחות. עכשיו עליך לפתוח אותן ו<b>לדרוס</b> את התוכן הקודם בעזרת פעולות זיכרון. בחר את הרצף המדויק לביצוע ההחלפה:</p>" +
-                                    "<div class='flex flex-col gap-3'>" +
+                                        "</div>",
+                                    success: "<span class='text-indigo-400 font-bold'>[SUCCESS]</span> הבאת את המפתחות!<br><br>הבנת את הסוד של פרק 4. במקום להשתמש ב-<code>value-of</code> (שמביא כדור זהב - העתק קשיח של המספר שלא ניתן לשינוי), השתמשת ב-<code>apply-env</code> כדי לשלוף את <b>המצביע לזיכרון</b> (Ref(4)). רק עם המפתח הזה תוכל לפתוח את המגירה ולשנות את הקיים בה.",
+                                    error: "<span class='text-red-500 font-bold text-lg'><i class='fa-solid fa-triangle-exclamation'></i> שגיאה לוגית קטלנית!</span><br><br>לחצת על <code>value-of</code>. הזרוע הרובוטית חילצה עבורך את כדורי הזהב (10 ו-20). כעת אתה מנסה לדחוף את כדור ה-10 לתוך כדור ה-20 - אך הם מוצקים! אי אפשר 'להכניס' ערך לתוך ערך. כדי לשנות את העולם, אתה חייב מפתחות למגירות (References), לא את התוכן הסופי שלהן."
+                                },
+                                4: {
+                                    title: "המוטציה",
+                                    file: "The Store",
+                                    html:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שלב 4: המוטציה במחסן</h3>" +
+                                        "<p class='text-slate-400 mb-6'>הגעת לקיר המגירות עם המפתחות. עכשיו עליך לפתוח אותן ו<b>לדרוס</b> את התוכן הקודם בעזרת פעולות זיכרון. בחר את הרצף המדויק לביצוע ההחלפה:</p>" +
+                                        "<div class='flex flex-col gap-3'>" +
                                         "<button onclick='mutSim.answer(4, false)' class='text-left dir-ltr p-4 bg-slate-800/80 hover:bg-slate-700 border-2 border-slate-700 rounded-lg font-mono text-[13px] text-slate-300 transition-colors'>(let ((v1 var1) (v2 var2))<br>&nbsp;&nbsp;(extend-env var1 v2 (extend-env var2 v1 env)))</button>" +
                                         "<button onclick='mutSim.answer(4, true)' class='text-left dir-ltr p-4 bg-slate-800/80 hover:bg-slate-700 border-2 border-slate-700 hover:border-indigo-500 rounded-lg font-mono text-[13px] text-slate-300 transition-colors'>(let ((val1 (deref ref1)) (val2 (deref ref2)))<br>&nbsp;&nbsp;(begin<br>&nbsp;&nbsp;&nbsp;&nbsp;(setref! ref1 val2)<br>&nbsp;&nbsp;&nbsp;&nbsp;(setref! ref2 val1)))</button>" +
                                         "<button onclick='mutSim.answer(4, false)' class='text-left dir-ltr p-4 bg-slate-800/80 hover:bg-slate-700 border-2 border-slate-700 rounded-lg font-mono text-[13px] text-slate-300 transition-colors'>(let ((val1 (deref ref1)))<br>&nbsp;&nbsp;(begin<br>&nbsp;&nbsp;&nbsp;&nbsp;(setref! ref1 (deref ref2))<br>&nbsp;&nbsp;&nbsp;&nbsp;(setref! ref2 val1)))</button>" +
-                                    "</div>",
-                                success: "<span class='text-green-400 font-bold'>[SUCCESS]</span> המוטציה הושלמה באלימות הראויה!<br><br>1. פתחת מגירות בעזרת <code>deref</code> וחילצת את המספרים (10 ו-20).<br>2. דרסת את המגירות הישנות בעזרת <code>setref!</code>. הערכים הישנים הושמדו.<br>מעכשיו והלאה, מי שייגש למשתנה x, יקבל את הערך של y ולהפך.",
-                                error: "<span class='text-red-400 font-bold'>[ERROR] Mutation Failure</span><br><br>או שניסית ליצור סביבה חדשה (extend-env) שזו פעולה פונקציונלית טהורה (שאלה 1) שאינה מעדכנת את הזיכרון הגלובלי (החסן), או שדרסת את המידע בסדר לא נכון בלי לשמור העתקים של שני הערכים קודם. זכור - setref! משמיד מידע."
-                            },
-                            5: {
-                                title: "חוק המס",
-                                file: "The Toll",
-                                html: 
-                                    "<h3 class='text-2xl font-bold text-white mb-2'>שלב 5: \"תשלום המס\" למפרש</h3>" +
-                                    "<p class='text-slate-400 mb-4'>ההחלפה בוצעה במחסן, אך המפרש חוסם את הדלת! הפקודה <code class='text-indigo-300'>setref!</code> אינה מחזירה ערך בסקים, אך החוזה דורש ש-<code>value-of</code> יחזיר תמיד <code>ExpVal</code>.</p>" +
-                                    "<p class='text-xs text-indigo-300 mb-6'>איך 'משלמים את המס' למפרש כדי שישחרר אותנו וירכיב את התוצאה?</p>" +
-                                    "<div class='flex flex-col gap-3'>" +
+                                        "</div>",
+                                    success: "<span class='text-green-400 font-bold'>[SUCCESS]</span> המוטציה הושלמה באלימות הראויה!<br><br>1. פתחת מגירות בעזרת <code>deref</code> וחילצת את המספרים (10 ו-20).<br>2. דרסת את המגירות הישנות בעזרת <code>setref!</code>. הערכים הישנים הושמדו.<br>מעכשיו והלאה, מי שייגש למשתנה x, יקבל את הערך של y ולהפך.",
+                                    error: "<span class='text-red-400 font-bold'>[ERROR] Mutation Failure</span><br><br>או שניסית ליצור סביבה חדשה (extend-env) שזו פעולה פונקציונלית טהורה (שאלה 1) שאינה מעדכנת את הזיכרון הגלובלי (החסן), או שדרסת את המידע בסדר לא נכון בלי לשמור העתקים של שני הערכים קודם. זכור - setref! משמיד מידע."
+                                },
+                                5: {
+                                    title: "חוק המס",
+                                    file: "The Toll",
+                                    html:
+                                        "<h3 class='text-2xl font-bold text-white mb-2'>שלב 5: \"תשלום המס\" למפרש</h3>" +
+                                        "<p class='text-slate-400 mb-4'>ההחלפה בוצעה במחסן, אך המפרש חוסם את הדלת! הפקודה <code class='text-indigo-300'>setref!</code> אינה מחזירה ערך בסקים, אך החוזה דורש ש-<code>value-of</code> יחזיר תמיד <code>ExpVal</code>.</p>" +
+                                        "<p class='text-xs text-indigo-300 mb-6'>איך 'משלמים את המס' למפרש כדי שישחרר אותנו וירכיב את התוצאה?</p>" +
+                                        "<div class='flex flex-col gap-3'>" +
                                         "<button onclick='mutSim.answer(5, false)' class='text-left dir-ltr p-4 bg-slate-800/80 hover:bg-slate-700 border-2 border-slate-700 rounded-lg font-mono text-sm text-slate-300 transition-colors'>לא צריך. מספיק להריץ setref! והמערכת תסיים לבד.</button>" +
                                         "<button onclick='mutSim.answer(5, true)' class='text-left dir-ltr p-4 bg-slate-800/80 hover:bg-slate-700 border-2 border-slate-700 hover:border-indigo-500 rounded-lg font-mono text-sm text-slate-300 transition-colors'>עוטפים ב-(begin ...) ומוסיפים בסוף ערך דמה: (num-val 27).</button>" +
                                         "<button onclick='mutSim.answer(5, false)' class='text-left dir-ltr p-4 bg-slate-800/80 hover:bg-slate-700 border-2 border-slate-700 rounded-lg font-mono text-sm text-slate-300 transition-colors'>מריצים את הפקודה (return 27) מיד אחרי שורות ה-setref!.</button>" +
-                                    "</div>",
-                                success: "<span class='text-emerald-400 font-bold'>[SUCCESS]</span> שילמת את המס. המחסום נפתח!<br><br>בלוק ה-<code>begin</code> נועד בדיוק לזה: לבצע שרשרת של פעולות 'תופעת לוואי' (כמו עדכון מגירות), ולהחזיר בסוף ערך אחד חוקי (כמו המספר 27 מטיפוס ExpVal) שירצה את החוזה של המפרש.<br><br><span class='text-emerald-400 font-black text-xl mt-4 block'>מעבדת המוטציות הושלמה בהצלחה! 🧬</span>",
-                                error: "<span class='text-red-400 font-bold'>[ERROR] Contract Violation</span><br><br>השומר סירב. ב-Scheme אין מילת 'return'. הדרך היחידה לבצע רצף פעולות ולהחזיר ערך היא שימוש ב-<code>begin</code> שמעריך ביטויים לפי הסדר ומחזיר את הערך של האחרון שבהם (ערך הדמה)."
-                            }
-                        };
-                    }
-
-                    render() {
-                        const d = this.data[this.step];
-                        document.getElementById('mut-filename').innerHTML = "<i class='fa-solid fa-code'></i> " + d.file;
-                        document.getElementById('mut-challenge-content').innerHTML = d.html;
-                        
-                        let defaultMsg = ">> מערכת לומדת. נושא הפעולה: " + d.title;
-                        if(this.unlocked[this.step - 1] && this.step < this.maxStep) {
-                            defaultMsg = "<span class='text-emerald-400'>[SOLVED] הגנה נפרצה. המשך לשלב הבא.</span>";
-                        }
-                        document.getElementById('mut-feedback-content').innerHTML = "<span class='text-indigo-400'>" + defaultMsg + "</span>";
-                        
-                        document.getElementById('mut-step-counter').innerText = "שלב " + this.step + "/" + this.maxStep;
-                        
-                        document.getElementById('mut-btn-prev').disabled = this.step === 1;
-                        document.getElementById('mut-btn-next').disabled = !this.unlocked[this.step - 1] || this.step === this.maxStep;
-
-                        const revealBtn = document.getElementById('mut-btn-reveal');
-                        if(revealBtn) {
-                            revealBtn.style.display = this.unlocked[this.step - 1] ? 'none' : 'inline-block';
+                                        "</div>",
+                                    success: "<span class='text-emerald-400 font-bold'>[SUCCESS]</span> שילמת את המס. המחסום נפתח!<br><br>בלוק ה-<code>begin</code> נועד בדיוק לזה: לבצע שרשרת של פעולות 'תופעת לוואי' (כמו עדכון מגירות), ולהחזיר בסוף ערך אחד חוקי (כמו המספר 27 מטיפוס ExpVal) שירצה את החוזה של המפרש.<br><br><span class='text-emerald-400 font-black text-xl mt-4 block'>מעבדת המוטציות הושלמה בהצלחה! 🧬</span>",
+                                    error: "<span class='text-red-400 font-bold'>[ERROR] Contract Violation</span><br><br>השומר סירב. ב-Scheme אין מילת 'return'. הדרך היחידה לבצע רצף פעולות ולהחזיר ערך היא שימוש ב-<code>begin</code> שמעריך ביטויים לפי הסדר ומחזיר את הערך של האחרון שבהם (ערך הדמה)."
+                                }
+                            };
                         }
 
-                        this.clicks = []; // Reset for step 1
-                        this.renderTimeline();
-                    }
+                        render() {
+                            const d = this.data[this.step];
+                            document.getElementById('mut-filename').innerHTML = "<i class='fa-solid fa-code'></i> " + d.file;
+                            document.getElementById('mut-challenge-content').innerHTML = d.html;
 
-                    renderTimeline() {
-                        let html = "";
-                        for(let i=1; i<=this.maxStep; i++) {
-                            let cl = "bg-slate-800 text-slate-500 border-slate-700";
-                            let cont = i;
-                            if(i < this.step || this.unlocked[i-1]) {
-                                cl = "bg-indigo-600 text-white border-indigo-400 shadow-lg shadow-indigo-500/30";
-                                cont = "<i class='fa-solid fa-check'></i>";
+                            let defaultMsg = ">> מערכת לומדת. נושא הפעולה: " + d.title;
+                            if (this.unlocked[this.step - 1] && this.step < this.maxStep) {
+                                defaultMsg = "<span class='text-emerald-400'>[SOLVED] הגנה נפרצה. המשך לשלב הבא.</span>";
                             }
-                            if(i === this.step) {
-                                cl = "bg-fuchsia-600 text-white border-fuchsia-400 scale-110 shadow-lg shadow-fuchsia-500/50 z-10 relative";
-                                cont = i;
-                            }
-                            html += "<div class='w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center border-2 transition-all font-bold text-[10px] md:text-xs shrink-0 " + cl + "'>" + cont + "</div>";
-                            if(i < this.maxStep) {
-                                html += "<div class='flex-1 h-1 " + (i < this.step ? "bg-indigo-600" : "bg-slate-800") + " min-w-[20px]'></div>";
-                            }
-                        }
-                        document.getElementById('mut-timeline').innerHTML = html;
-                    }
+                            document.getElementById('mut-feedback-content').innerHTML = "<span class='text-indigo-400'>" + defaultMsg + "</span>";
 
-                    answer(step, isCorrect) {
-                        if(isCorrect) {
-                            document.getElementById('mut-feedback-content').innerHTML = this.data[step].success;
-                            this.unlocked[step-1] = true;
-                            if(step < this.maxStep) {
-                                document.getElementById('mut-btn-next').disabled = false;
+                            document.getElementById('mut-step-counter').innerText = "שלב " + this.step + "/" + this.maxStep;
+
+                            document.getElementById('mut-btn-prev').disabled = this.step === 1;
+                            document.getElementById('mut-btn-next').disabled = !this.unlocked[this.step - 1] || this.step === this.maxStep;
+
+                            const revealBtn = document.getElementById('mut-btn-reveal');
+                            if (revealBtn) {
+                                revealBtn.style.display = this.unlocked[this.step - 1] ? 'none' : 'inline-block';
                             }
+
+                            this.clicks = []; // Reset for step 1
                             this.renderTimeline();
-                        } else {
-                            document.getElementById('mut-feedback-content').innerHTML = this.data[step].error;
-                            if(step === 1) {
-                                setTimeout(() => this.resetClicks(1), 3000);
+                        }
+
+                        renderTimeline() {
+                            let html = "";
+                            for (let i = 1; i <= this.maxStep; i++) {
+                                let cl = "bg-slate-800 text-slate-500 border-slate-700";
+                                let cont = i;
+                                if (i < this.step || this.unlocked[i - 1]) {
+                                    cl = "bg-indigo-600 text-white border-indigo-400 shadow-lg shadow-indigo-500/30";
+                                    cont = "<i class='fa-solid fa-check'></i>";
+                                }
+                                if (i === this.step) {
+                                    cl = "bg-fuchsia-600 text-white border-fuchsia-400 scale-110 shadow-lg shadow-fuchsia-500/50 z-10 relative";
+                                    cont = i;
+                                }
+                                html += "<div class='w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center border-2 transition-all font-bold text-[10px] md:text-xs shrink-0 " + cl + "'>" + cont + "</div>";
+                                if (i < this.maxStep) {
+                                    html += "<div class='flex-1 h-1 " + (i < this.step ? "bg-indigo-600" : "bg-slate-800") + " min-w-[20px]'></div>";
+                                }
+                            }
+                            document.getElementById('mut-timeline').innerHTML = html;
+                        }
+
+                        answer(step, isCorrect) {
+                            if (isCorrect) {
+                                document.getElementById('mut-feedback-content').innerHTML = this.data[step].success;
+                                this.unlocked[step - 1] = true;
+                                if (step < this.maxStep) {
+                                    document.getElementById('mut-btn-next').disabled = false;
+                                }
+                                this.renderTimeline();
+                            } else {
+                                document.getElementById('mut-feedback-content').innerHTML = this.data[step].error;
+                                if (step === 1) {
+                                    setTimeout(() => this.resetClicks(1), 3000);
+                                }
                             }
                         }
-                    }
 
-                    clickLine(step, id, btn) {
-                        if(step !== 1) return;
-                        if(btn.disabled) return;
-                        
-                        btn.disabled = true;
-                        btn.classList.add('opacity-30', 'scale-90');
-                        
-                        this.clicks.push(id);
-                        const content = btn.innerText;
-                        
-                        const ansBox = document.getElementById('mut-q1-answers');
-                        ansBox.innerHTML += "<span class='px-2 py-1 bg-indigo-900/40 text-indigo-200 border border-indigo-500/30 rounded text-xs'>" + content + "</span>";
-                        
-                        if(this.clicks.length === 6) {
-                            let isCorrect = true;
-                            const correctOrder = [1, 2, 4, 3, 6, 5];
-                            for(let i=0; i<6; i++) {
-                                if(this.clicks[i] !== correctOrder[i]) {
-                                    isCorrect = false;
-                                    if(this.clicks.includes(-1)) {
-                                        // Hit the expression trap
+                        clickLine(step, id, btn) {
+                            if (step !== 1) return;
+                            if (btn.disabled) return;
+
+                            btn.disabled = true;
+                            btn.classList.add('opacity-30', 'scale-90');
+
+                            this.clicks.push(id);
+                            const content = btn.innerText;
+
+                            const ansBox = document.getElementById('mut-q1-answers');
+                            ansBox.innerHTML += "<span class='px-2 py-1 bg-indigo-900/40 text-indigo-200 border border-indigo-500/30 rounded text-xs'>" + content + "</span>";
+
+                            if (this.clicks.length === 6) {
+                                let isCorrect = true;
+                                const correctOrder = [1, 2, 4, 3, 6, 5];
+                                for (let i = 0; i < 6; i++) {
+                                    if (this.clicks[i] !== correctOrder[i]) {
                                         isCorrect = false;
+                                        if (this.clicks.includes(-1)) {
+                                            // Hit the expression trap
+                                            isCorrect = false;
+                                        }
                                     }
                                 }
+                                this.answer(1, isCorrect);
                             }
-                            this.answer(1, isCorrect);
                         }
-                    }
 
-                    resetClicks(step) {
-                        this.render(); // Re-render the whole step
-                    }
+                        resetClicks(step) {
+                            this.render(); // Re-render the whole step
+                        }
 
-                    revealSolution() {
-                        if(this.step === 1) {
-                            this.answer(1, true);
-                            const ansBox = document.getElementById('mut-q1-answers');
-                            if(ansBox) {
-                                ansBox.innerHTML = 
-                                    "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>\"swap\"</span>" +
-                                    "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>\"(\"</span>" +
-                                    "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>identifier</span>" +
-                                    "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>\",\"</span>" +
-                                    "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>identifier</span>" +
-                                    "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>\")\"</span>";
-                            }
-                        } else {
-                            this.answer(this.step, true);
-                            // Highlight the correct option
-                            const btns = document.querySelectorAll('#mut-challenge-content button');
-                            btns.forEach(b => {
-                                if(b.getAttribute('onclick') && b.getAttribute('onclick').includes('true')) {
-                                    b.classList.add('border-green-500', 'bg-green-900/20');
+                        revealSolution() {
+                            if (this.step === 1) {
+                                this.answer(1, true);
+                                const ansBox = document.getElementById('mut-q1-answers');
+                                if (ansBox) {
+                                    ansBox.innerHTML =
+                                        "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>\"swap\"</span>" +
+                                        "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>\"(\"</span>" +
+                                        "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>identifier</span>" +
+                                        "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>\",\"</span>" +
+                                        "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>identifier</span>" +
+                                        "<span class='px-2 py-1 bg-green-900/40 text-green-200 border border-green-500/30 rounded text-xs'>\")\"</span>";
                                 }
-                            });
+                            } else {
+                                this.answer(this.step, true);
+                                // Highlight the correct option
+                                const btns = document.querySelectorAll('#mut-challenge-content button');
+                                btns.forEach(b => {
+                                    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes('true')) {
+                                        b.classList.add('border-green-500', 'bg-green-900/20');
+                                    }
+                                });
+                            }
+
+                            // Hide reveal button
+                            const revealBtn = document.getElementById('mut-btn-reveal');
+                            if (revealBtn) revealBtn.style.display = 'none';
                         }
-                        
-                        // Hide reveal button
-                        const revealBtn = document.getElementById('mut-btn-reveal');
-                        if(revealBtn) revealBtn.style.display = 'none';
+
+                        next() {
+                            if (this.step < this.maxStep && this.unlocked[this.step - 1]) {
+                                this.step++;
+                                this.render();
+                            }
+                        }
+
+                        prev() {
+                            if (this.step > 1) {
+                                this.step--;
+                                this.render();
+                            }
+                        }
                     }
 
-                    next() {
-                        if(this.step < this.maxStep && this.unlocked[this.step-1]) {
-                            this.step++;
-                            this.render();
-                        }
-                    }
-
-                    prev() {
-                        if(this.step > 1) {
-                            this.step--;
-                            this.render();
-                        }
-                    }
-                }
-
-                const mutSim = new MutationLabSimulator();
-                document.addEventListener("DOMContentLoaded", () => {
-                    if(document.getElementById('mut-challenge-content')) mutSim.render();
-                });
+                    const mutSim = new MutationLabSimulator();
+                    document.addEventListener("DOMContentLoaded", () => {
+                        if (document.getElementById('mut-challenge-content')) mutSim.render();
+                    });
                 </script>
             </div>
             <!-- ==========================================
