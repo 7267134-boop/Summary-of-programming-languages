@@ -622,20 +622,41 @@
                 filterPanel.style.maxHeight = '1000px';
                 filterPanel.style.opacity = '1';
                 filterPanel.style.transform = 'scaleY(1)';
-                filterPanel.style.margin = '0 0 2rem 0';
-                filterPanel.style.padding = '1.5rem';
-                toggleFiltersBtn.querySelector('span').innerText = 'הסתר סינונים';
-                toggleFiltersIcon.classList.remove('rotate-180');
-            } else {
-                filterPanel.style.maxHeight = '0';
-                filterPanel.style.opacity = '0';
-                filterPanel.style.transform = 'scaleY(0)';
-                filterPanel.style.margin = '0';
-                filterPanel.style.padding = '0';
-                toggleFiltersBtn.querySelector('span').innerText = 'הצג סינונים';
+                         toggleFiltersBtn.querySelector('span').innerText = 'הצג סינונים';
                 toggleFiltersIcon.classList.add('rotate-180');
             }
         });
+
+        // Parse URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterParam = urlParams.get('filter');
+        if (filterParam) {
+            const btn = document.querySelector(`.filter-btn[data-filter="\${filterParam}"]`);
+            if (btn) {
+                setTimeout(() => btn.click(), 50);
+            }
+        }
+
+        // Initial Render
+        renderCards();
+
+    </script>
+</body>
+
+</html>elector('span').innerText = 'הצג סינונים';
+                toggleFiltersIcon.classList.add('rotate-180');
+            }
+        });
+
+        // Parse URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterParam = urlParams.get('filter');
+        if (filterParam) {
+            const btn = document.querySelector(`.filter-btn[data-filter="${filterParam}"]`);
+            if (btn) {
+                setTimeout(() => btn.click(), 50);
+            }
+        }
 
         // Initial Render
         renderCards();

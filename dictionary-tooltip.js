@@ -172,6 +172,9 @@
                     token.dataset.dictId = item.id;
                 }
             });
+            
+            // Wrap file names inside the code block (e.g. comments)
+            wrapFileLinks(env.element);
         });
     }
 
@@ -186,6 +189,64 @@
                 openModal(item);
             }
         }
+    });
+
+    // 6. Wrap .scm file references with dictionary links
+    const fileMappings = {
+        'interp.scm': 'interp',
+        'lang.scm': 'lang',
+        'data-structures.scm': 'data-structures'
+    };
+
+    function wrapFileLinks(element) {
+        if (!element) return;
+        const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        const nodesToReplace = [];
+        while (node = walk.nextNode()) {
+            if (node.parentNode && node.parentNode.tagName === 'A') continue; // skip already linked
+            if (node.nodeValue.match(/\b(interp\.scm|lang\.scm|data-structures\.scm)\b/i)) {
+                nodesToReplace.push(node);
+            }
+        }
+        
+        nodesToReplace.forEach(node => {
+            const span = document.createElement('span');
+            span.innerHTML = node.nodeValue.replace(/\b(interp\.scm|lang\.scm|data-structures\.scm)\b/gi, match => {
+                const filter = fileMappings[match.toLowerCase()] || 'all';
+                return \`<a href="functions_dictionary.html?filter=\${filter}" target="_blank" class="text-sky-500 font-bold hover:text-sky-400 hover:underline transition-colors" title="פתח מילון מסונן לקובץ זה">\${match}</a>\`;
+            });
+            while (span.firstChild) {
+                node.parentNode.insertBefore(span.firstChild, node);
+            }
+            node.parentNode.removeChild(node);
+        });
+    }
+
+    // Observe step-explanation changes
+    const observer = new MutationObserver(mutations => {
+        let shouldProcess = false;
+        mutations.forEach(m => {
+            if (m.addedNodes.length > 0 || m.type === 'characterData') shouldProcess = true;
+        });
+        
+        if (shouldProcess) {
+            observer.disconnect();
+            const exp = document.getElementById('step-explanation');
+            if (exp) wrapFileLinks(exp);
+            observeChanges();
+        }
+    });
+    
+    function observeChanges() {
+        const exp = document.getElementById('step-explanation');
+        if (exp) observer.observe(exp, { childList: true, subtree: true, characterData: true });
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const exp = document.getElementById('step-explanation');
+        if (exp) wrapFileLinks(exp);
+        observeChanges();
     });
 
 })();

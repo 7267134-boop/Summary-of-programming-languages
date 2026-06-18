@@ -929,7 +929,7 @@ const dictionaryData = [
     id: "expval-to-num",
     title: "expval->num",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "expval",
     model: "חולץ מספר טהור מקופסה, מתריע אם זו אינה קופסת מספרית.",
     code: `(define expval->num
   (lambda (v)
@@ -943,7 +943,7 @@ const dictionaryData = [
     id: "expval-to-bool",
     title: "expval->bool",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "expval",
     model: "חולץ בוליאני אמיתי מתוך קופסת bool-val.",
     code: `(define expval->bool
   (lambda (v)
@@ -957,7 +957,7 @@ const dictionaryData = [
     id: "expval-to-proc",
     title: "expval->proc",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "expval",
     model: "חולץ פרוצדורה ארוזה (Closure).",
     code: `(define expval->proc
   (lambda (v)
@@ -971,7 +971,7 @@ const dictionaryData = [
     id: "expval-to-list",
     title: "expval->list",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "expval",
     model: "פותח קופסת רשימה (במידה והוספת list-val במבחן).",
     code: `(define expval->list
   (lambda (v)
@@ -985,7 +985,7 @@ const dictionaryData = [
     id: "expval-to-tuple-list",
     title: "expval->tuple-list",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "expval",
     model: "פותחן קופסאות ייעודי לשאלות מילונים או Tuples.",
     code: `(define expval->tuple-list
   (lambda (v)
@@ -999,7 +999,7 @@ const dictionaryData = [
     id: "expval-to-ref",
     title: "expval->ref",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "expval",
     model: "חולץ כתובת/הפניה בזיכרון (Reference) מתוך קופסת ref-val.",
     code: `(define expval->ref
   (lambda (v)
@@ -1013,7 +1013,7 @@ const dictionaryData = [
     id: "expval-extractor-error",
     title: "expval-extractor-error",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "expval",
     model: "זורק הודעת שגיאה מסודרת על אי התאמת קופסאות.",
     code: `(define expval-extractor-error
   (lambda (variant value)
@@ -1030,7 +1030,7 @@ const dictionaryData = [
     id: "empty-env",
     title: "empty-env",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "env",
     model: "יצירת סביבה ראשונית וריקה.",
     code: `(define-datatype environment environment?
   (empty-env)
@@ -1055,7 +1055,7 @@ const dictionaryData = [
     id: "extend-env",
     title: "extend-env",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "env",
     model: "הנחת 'פתק' משתנה בסביבה נוכחית (מסתיר פתקים ישנים בעלי אותו שם).",
     code: `(define-datatype environment environment?
   (empty-env)
@@ -1080,7 +1080,7 @@ const dictionaryData = [
     id: "extend-env-rec",
     title: "extend-env-rec",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "env",
     model: "מרחיב סביבה באופן רקורסיבי, מאפשר לפונקציות להכיר את שמן.",
     code: `(define-datatype environment environment?
   (empty-env)
@@ -1105,7 +1105,7 @@ const dictionaryData = [
     id: "apply-env",
     title: "apply-env",
     category: "data-structures",
-    subCategory: "common-templates",
+    subCategory: "env",
     model: "מחפש ומושך ערך השייך למשתנה מסוים מהסביבה.",
     code: `(define-datatype environment environment?
   (empty-env)
@@ -1192,7 +1192,7 @@ const dictionaryData = [
     id: "num-val",
     title: "num-val",
     category: "interp",
-    subCategory: "common-templates",
+    subCategory: "constructors",
     model: "אורז מספר אמיתי לקופסת ExpVal.",
     code: `(define-datatype expval expval?
   (num-val (value number?))
@@ -1208,7 +1208,7 @@ const dictionaryData = [
     id: "bool-val",
     title: "bool-val",
     category: "interp",
-    subCategory: "common-templates",
+    subCategory: "constructors",
     model: "אורז #t או #f לקופסת ExpVal.",
     code: `(define-datatype expval expval?
   (num-val (value number?))
@@ -1224,7 +1224,7 @@ const dictionaryData = [
     id: "list-val",
     title: "list-val",
     category: "interp",
-    subCategory: "common-templates",
+    subCategory: "constructors",
     model: "אורז רשימת ExpVal לטיפוס מרכזי (אם נתבקש במבחן).",
     code: `(define-datatype expval expval?
   (num-val (value number?))
@@ -1240,7 +1240,7 @@ const dictionaryData = [
     id: "tuple-val",
     title: "tuple-val",
     category: "interp",
-    subCategory: "common-templates",
+    subCategory: "constructors",
     model: "אורז רשימת ערכי expval לקופסת Tuple ייעודית.",
     code: `(define-datatype expval expval?
   (num-val (value number?))
@@ -1256,7 +1256,7 @@ const dictionaryData = [
     id: "proc-val",
     title: "proc-val",
     category: "interp",
-    subCategory: "common-templates",
+    subCategory: "constructors",
     model: "אורז פרוצדורה מחושבת (closure) בתוך קופסת ExpVal.",
     code: `(define-datatype expval expval?
   (num-val (value number?))
