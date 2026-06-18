@@ -312,9 +312,9 @@ guard ::= break : Expression
                     </ul>
                 `,
                 code: `(expression
-  ("for/sum" "{" identifier "}"
-   (separated-list expression ",") ")" "}"
-   "{" (arbno "{" guard "}")
+  ("for/sum" "[" identifier "("
+   (separated-list expression ",") ")" "]"
+   "(" (arbno "<" guard ">")
    expression "for/end")
   forsum-exp)
 
