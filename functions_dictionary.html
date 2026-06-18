@@ -218,17 +218,17 @@
                 <button
                     class="filter-btn py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
                     data-filter="lang">
-                    עדכון lang.scm
+                     lang.scm
                 </button>
                 <button
                     class="filter-btn py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
                     data-filter="data-structures">
-                    עדכון data-structures.scm
+                     data-structures.scm
                 </button>
                 <button
                     class="filter-btn py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
                     data-filter="interp">
-                    עדכון interp.scm
+                     interp.scm
                 </button>
                 <button
                     class="filter-btn py-3 px-5 bg-white/40 hover:bg-white/70 backdrop-blur-md rounded-xl border border-white/60 hover:border-sky-400/60 hover:bg-white/60 text-slate-800 font-bold text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer shadow-sm"
@@ -385,19 +385,16 @@
                 { id: 'all', label: 'הכל ב-data-structures' },
                 { id: 'datatype', label: 'מערכת טיפוסים' },
                 { id: 'expval', label: 'פותחני קופסאות' },
-                { id: 'common-templates', label: 'Common Templates / \u05ea\u05d1\u05e0\u05d9\u05d5\u05ea \u05de\u05d1\u05d7\u05e0\u05d9\u05dd' },
                 { id: 'env', label: 'מערכת הזיכרון (Env)' }
             ],
             'interp': [
                 { id: 'all', label: 'הכל ב-interp' },
                 { id: 'eval', label: 'מנוע ראשי' },
-                { id: 'common-templates', label: 'Common Templates / \u05ea\u05d1\u05e0\u05d9\u05d5\u05ea \u05de\u05d1\u05d7\u05e0\u05d9\u05dd' },
                 { id: 'constructors', label: 'אריזה מחדש' }
             ],
             'q2': [
                 { id: 'all', label: 'הכל ב-Q2' },
                 { id: 'store', label: 'ניהול מחסן (Store)' },
-                { id: 'common-templates', label: 'Common Templates / \u05ea\u05d1\u05e0\u05d9\u05d5\u05ea \u05de\u05d1\u05d7\u05e0\u05d9\u05dd' },
                 { id: 'ast-q2', label: 'ביטויים משני מצב' },
                 { id: 'infra', label: 'תשתיות הרצה מדורגות' }
             ]
@@ -643,25 +640,4 @@
     </script>
 </body>
 
-</html>elector('span').innerText = 'הצג סינונים';
-                toggleFiltersIcon.classList.add('rotate-180');
-            }
-        });
 
-        // Parse URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        const filterParam = urlParams.get('filter');
-        if (filterParam) {
-            const btn = document.querySelector(`.filter-btn[data-filter="${filterParam}"]`);
-            if (btn) {
-                setTimeout(() => btn.click(), 50);
-            }
-        }
-
-        // Initial Render
-        renderCards();
-
-    </script>
-</body>
-
-</html>

@@ -930,201 +930,141 @@ const dictionaryData = [
     title: "expval->num",
     category: "data-structures",
     subCategory: "expval",
-    model: "חולץ מספר טהור מקופסה, מתריע אם זו אינה קופסת מספרית.",
+    model: "שולף את הערך המספרי הגולמי (Scheme number) מתוך עטיפת num-val. אם הקופסה מכילה טיפוס אחר, תיזרק שגיאת זמן ריצה.",
     code: `(define expval->num
   (lambda (v)
     (cases expval v
       (num-val (num) num)
       (else (expval-extractor-error 'num v)))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש לפני כל פעולה אריתמטית ב-interp, למשל diff-exp, sum-exp, for/sum או בדיקת אינדקס מערך.",
-    detailed: "<strong>מקור מבחנים:</strong> תבנית הרחבה שחוזרת בשאלות שבהן מוסיפים טיפוסי ערכים חדשים למפרש, למשל Tuples במועד 57, מערכים/מצביעים במועד 98, ולולאות או Guards שדורשים חילוץ מספרים ובוליאנים.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> בשפת המקור של המפרש אין פקודה בשם expval-&gt;...; זו שכבת תשתית שאנחנו מוסיפים ב-data-structures.scm כדי לגשר בין ערכי Scheme רגילים לבין קופסאות expval של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> פונקציות Scheme כמו +, zero?, if או list-ref אינן יודעות לעבוד על num-val, bool-val או ref-val. החולץ הוא Guard: הוא פותח את הקופסה, בודק בזמן ריצה שה-variant מתאים, ורק אז מחזיר את הערך הגולמי.<br><strong>איך משתמשים במבחן:</strong> בכל מקום ב-interp שבו צריך לבצע פעולה אמיתית על הערך, קודם מפעילים את החולץ המתאים, ורק לאחר מכן מפעילים את הפעולה של Scheme. אם הטיפוס לא מתאים, נזרקת שגיאה קריאה במקום קריסה לא ברורה."
+    usage: "לפני ביצוע פעולות אריתמטיות במפרש (כמו חיבור או חיסור) על ערכים שהתקבלו מחישוב ביטויים בתוכנית.",
+    detailed: "<strong>מקור מבחנים:</strong> תבנית יסוד שחוזרת בשאלות בהן מוסיפים אופרטורים מתמטיים חדשים, פעולות על אינדקסים או הרחבות הדורשות חישוב.<br><strong>הבעיה התאורטית:</strong> שפת ה-Host (Scheme) לא מכירה את הטיפוס המופשט של שפת ה-Guest (קופסת ה-num-val). החולץ מתפקד כ-Guard: הוא מוודא בזמן ריצה שהערך הוא אכן מספר, מסיר את העטיפה, ורק אז מאפשר לפונקציות ה-Scheme הרגילות (כמו +, zero?) לפעול עליו בבטחה."
   },
   {
     id: "expval-to-bool",
     title: "expval->bool",
     category: "data-structures",
     subCategory: "expval",
-    model: "חולץ בוליאני אמיתי מתוך קופסת bool-val.",
+    model: "שולף את הערך הבוליאני הגולמי (#t או #f) מתוך עטיפת bool-val, כדי לאפשר למפרש לקבל החלטות מותנות.",
     code: `(define expval->bool
   (lambda (v)
     (cases expval v
       (bool-val (bool) bool)
       (else (expval-extractor-error 'bool v)))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש לפני תנאים כמו if-exp, while-exp, guard או כל הרחבה שמצפה לערך אמת/שקר אמיתי של Scheme.",
-    detailed: "<strong>מקור מבחנים:</strong> תבנית הרחבה שחוזרת בשאלות שבהן מוסיפים טיפוסי ערכים חדשים למפרש, למשל Tuples במועד 57, מערכים/מצביעים במועד 98, ולולאות או Guards שדורשים חילוץ מספרים ובוליאנים.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> בשפת המקור של המפרש אין פקודה בשם expval-&gt;...; זו שכבת תשתית שאנחנו מוסיפים ב-data-structures.scm כדי לגשר בין ערכי Scheme רגילים לבין קופסאות expval של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> פונקציות Scheme כמו +, zero?, if או list-ref אינן יודעות לעבוד על num-val, bool-val או ref-val. החולץ הוא Guard: הוא פותח את הקופסה, בודק בזמן ריצה שה-variant מתאים, ורק אז מחזיר את הערך הגולמי.<br><strong>איך משתמשים במבחן:</strong> בכל מקום ב-interp שבו צריך לבצע פעולה אמיתית על הערך, קודם מפעילים את החולץ המתאים, ורק לאחר מכן מפעילים את הפעולה של Scheme. אם הטיפוס לא מתאים, נזרקת שגיאה קריאה במקום קריסה לא ברורה."
+    usage: "הכרחי למימוש מבני בקרה כמו if-exp או while-exp, שבהם המפרש עצמו צריך לדעת לאיזה ענף להמשיך.",
+    detailed: "<strong>מקור מבחנים:</strong> נדרש כאשר מממשים לולאות חדשות, Guards או פקודות התניה מורכבות במבחן.<br><strong>הבעיה התאורטית:</strong> פקודת ה-if של Scheme מצפה לקבל #t או #f. אם נעביר לה קופסת bool-val שלמה, השפה המארחת תמיד תתייחס אליה כאל ערך אמת (כי הקופסה עצמה קיימת בזיכרון, גם אם בתוכה יש #f). החולץ מבטיח שאנו בודקים את הערך הלוגי האמיתי שמאוחסן בפנים."
   },
   {
     id: "expval-to-proc",
     title: "expval->proc",
     category: "data-structures",
     subCategory: "expval",
-    model: "חולץ פרוצדורה ארוזה (Closure).",
+    model: "שולף את ייצוג הפרוצדורה (Closure) מתוך קופסת proc-val, לקראת הפעלתה עם ארגומנטים חדשים.",
     code: `(define expval->proc
   (lambda (v)
     (cases expval v
       (proc-val (proc) proc)
       (else (expval-extractor-error 'proc v)))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש לפני apply-procedure כדי לוודא שהערך שהתקבל באמת מייצג Closure ולא מספר, רשימה או מצביע.",
-    detailed: "<strong>מקור מבחנים:</strong> תבנית הרחבה שחוזרת בשאלות שבהן מוסיפים טיפוסי ערכים חדשים למפרש, למשל Tuples במועד 57, מערכים/מצביעים במועד 98, ולולאות או Guards שדורשים חילוץ מספרים ובוליאנים.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> בשפת המקור של המפרש אין פקודה בשם expval-&gt;...; זו שכבת תשתית שאנחנו מוסיפים ב-data-structures.scm כדי לגשר בין ערכי Scheme רגילים לבין קופסאות expval של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> פונקציות Scheme כמו +, zero?, if או list-ref אינן יודעות לעבוד על num-val, bool-val או ref-val. החולץ הוא Guard: הוא פותח את הקופסה, בודק בזמן ריצה שה-variant מתאים, ורק אז מחזיר את הערך הגולמי.<br><strong>איך משתמשים במבחן:</strong> בכל מקום ב-interp שבו צריך לבצע פעולה אמיתית על הערך, קודם מפעילים את החולץ המתאים, ורק לאחר מכן מפעילים את הפעולה של Scheme. אם הטיפוס לא מתאים, נזרקת שגיאה קריאה במקום קריסה לא ברורה."
+    usage: "במימוש call-exp, מיד לאחר הערכת ה-rator ולפני העברתו לפונקציית apply-procedure.",
+    detailed: "<strong>מקור מבחנים:</strong> קריטי בשאלות הנוגעות להעברת פונקציות כארגומנטים, יצירת מבני נתונים המכילים פונקציות (כמו אובייקטים), או הרחבת אופן הקריאה לפונקציות.<br><strong>הבעיה התאורטית:</strong> לא כל ביטוי הניתן להערכה הוא אכן פונקציה. החולץ הזה מאבטח את נקודת הקריאה (Call) בכך שהוא מוודא שהמשתמש אינו מנסה להפעיל מספר או רשימה כאילו היו פרוצדורה, ומחלץ את ה-Closure שמכיל את הקוד וסביבת השמירה."
   },
   {
     id: "expval-to-list",
     title: "expval->list",
     category: "data-structures",
     subCategory: "expval",
-    model: "פותח קופסת רשימה (במידה והוספת list-val במבחן).",
+    model: "פותח קופסת list-val ומחזיר את רשימת הערכים שבתוכה, במידה ושפת היעד תומכת ברשימות.",
     code: `(define expval->list
   (lambda (v)
     (cases expval v
       (list-val (lst) lst)
       (else (expval-extractor-error 'list v)))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש כאשר הרחבת שפה מוסיפה list-val וצריך להפעיל map, length, append או list-ref על הרשימה שבתוך הקופסה.",
-    detailed: "<strong>מקור מבחנים:</strong> תבנית הרחבה שחוזרת בשאלות שבהן מוסיפים טיפוסי ערכים חדשים למפרש, למשל Tuples במועד 57, מערכים/מצביעים במועד 98, ולולאות או Guards שדורשים חילוץ מספרים ובוליאנים.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> בשפת המקור של המפרש אין פקודה בשם expval-&gt;...; זו שכבת תשתית שאנחנו מוסיפים ב-data-structures.scm כדי לגשר בין ערכי Scheme רגילים לבין קופסאות expval של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> פונקציות Scheme כמו +, zero?, if או list-ref אינן יודעות לעבוד על num-val, bool-val או ref-val. החולץ הוא Guard: הוא פותח את הקופסה, בודק בזמן ריצה שה-variant מתאים, ורק אז מחזיר את הערך הגולמי.<br><strong>איך משתמשים במבחן:</strong> בכל מקום ב-interp שבו צריך לבצע פעולה אמיתית על הערך, קודם מפעילים את החולץ המתאים, ורק לאחר מכן מפעילים את הפעולה של Scheme. אם הטיפוס לא מתאים, נזרקת שגיאה קריאה במקום קריסה לא ברורה."
+    usage: "כאשר מוסיפים פעולות על רשימות (כמו car, cdr, null?) וצריך לעבוד עליהן ברמת ה-Scheme.",
+    detailed: "<strong>מקור מבחנים:</strong> הרחבה נפוצה מאוד במבחנים המשלבים מבני נתונים דינמיים, כגון הוספת תמיכה מובנית במערכים, רשימות או עצים.<br><strong>הבעיה התאורטית:</strong> כדי לבצע פעולות רקורסיביות על רשימה בשפת היעד, המפרש חייב לפרק את הקופסה, לבצע את הפעולה (למשל car) על הרשימה הגולמית ב-Scheme, ולרוב לארוז שוב את התוצאה בחזרה לתוך קופסת expval חדשה."
   },
   {
     id: "expval-to-tuple-list",
     title: "expval->tuple-list",
     category: "data-structures",
     subCategory: "expval",
-    model: "פותחן קופסאות ייעודי לשאלות מילונים או Tuples.",
+    model: "שולף רשימת ערכים מתוך קופסת tuple-val, המייצגת אוסף מאוגד של נתונים תחת מבנה אחד.",
     code: `(define expval->tuple-list
   (lambda (v)
     (cases expval v
       (tuple-val (lst) lst)
       (else (expval-extractor-error 'tuple v)))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש בהרחבות Tuple, פירוק ערכים או החזרת כמה ערכים יחד, במיוחד לפני התאמת מספר משתנים למספר ערכי tuple.",
-    detailed: "<strong>מקור מבחנים:</strong> תבנית הרחבה שחוזרת בשאלות שבהן מוסיפים טיפוסי ערכים חדשים למפרש, למשל Tuples במועד 57, מערכים/מצביעים במועד 98, ולולאות או Guards שדורשים חילוץ מספרים ובוליאנים.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> בשפת המקור של המפרש אין פקודה בשם expval-&gt;...; זו שכבת תשתית שאנחנו מוסיפים ב-data-structures.scm כדי לגשר בין ערכי Scheme רגילים לבין קופסאות expval של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> פונקציות Scheme כמו +, zero?, if או list-ref אינן יודעות לעבוד על num-val, bool-val או ref-val. החולץ הוא Guard: הוא פותח את הקופסה, בודק בזמן ריצה שה-variant מתאים, ורק אז מחזיר את הערך הגולמי.<br><strong>איך משתמשים במבחן:</strong> בכל מקום ב-interp שבו צריך לבצע פעולה אמיתית על הערך, קודם מפעילים את החולץ המתאים, ורק לאחר מכן מפעילים את הפעולה של Scheme. אם הטיפוס לא מתאים, נזרקת שגיאה קריאה במקום קריסה לא ברורה."
+    usage: "בהרחבות שפה הדורשות השמות מרובות (Multiple Assignment) או פונקציות המחזירות מספר ערכים במקביל.",
+    detailed: "<strong>מקור מבחנים:</strong> מופיע בשאלות ספציפיות על Tuples (כמו מועד 57), מילונים, או מנגנוני פירוק מבנים (Destructuring).<br><strong>הבעיה התאורטית:</strong> Tuple מייצג רצף של ערכים (המאוחסן לרוב כרשימה) שמתנהג כיחידה אחת בשפת היעד. החולץ מאפשר למפרש לחשוף את רצף הערכים הפנימי כדי להתאים אותם לרשימת משתנים חדשה, למשל בזמן יצירת סביבה (Environment) חדשה."
   },
   {
     id: "expval-to-ref",
     title: "expval->ref",
     category: "data-structures",
     subCategory: "expval",
-    model: "חולץ כתובת/הפניה בזיכרון (Reference) מתוך קופסת ref-val.",
+    model: "שולף את הכתובת בזיכרון (Reference) מתוך עטיפת ref-val, כדי לגשת למיקום הפיזי ב-Store.",
     code: `(define expval->ref
   (lambda (v)
     (cases expval v
       (ref-val (ref) ref)
       (else (expval-extractor-error 'reference v)))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש כאשר expval מחזיק כתובת זיכרון, ורוצים להעביר אותה ל-deref או setref! בלי לאבד בדיקת טיפוסים.",
-    detailed: "<strong>מקור מבחנים:</strong> תבנית הרחבה שחוזרת בשאלות שבהן מוסיפים טיפוסי ערכים חדשים למפרש, למשל Tuples במועד 57, מערכים/מצביעים במועד 98, ולולאות או Guards שדורשים חילוץ מספרים ובוליאנים.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> בשפת המקור של המפרש אין פקודה בשם expval-&gt;...; זו שכבת תשתית שאנחנו מוסיפים ב-data-structures.scm כדי לגשר בין ערכי Scheme רגילים לבין קופסאות expval של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> פונקציות Scheme כמו +, zero?, if או list-ref אינן יודעות לעבוד על num-val, bool-val או ref-val. החולץ הוא Guard: הוא פותח את הקופסה, בודק בזמן ריצה שה-variant מתאים, ורק אז מחזיר את הערך הגולמי.<br><strong>איך משתמשים במבחן:</strong> בכל מקום ב-interp שבו צריך לבצע פעולה אמיתית על הערך, קודם מפעילים את החולץ המתאים, ורק לאחר מכן מפעילים את הפעולה של Scheme. אם הטיפוס לא מתאים, נזרקת שגיאה קריאה במקום קריסה לא ברורה."
+    usage: "חובה לפני קריאה ל-deref או setref!, המצפות לקבל כתובת חוקית לזיכרון המנוהל (ה-Store).",
+    detailed: "<strong>מקור מבחנים:</strong> מופיע באופן קבוע בשאלות עבודה עם מצביעים (Pointers), העברת ארגומנטים לפי הפניה (Call by Reference) או מערכים דינמיים (כמו מועד 98).<br><strong>הבעיה התאורטית:</strong> כתובת זיכרון במפרש מיוצגת בפועל כמספר (אינדקס במערך ה-Store). החולץ הזה מספק בטיחות זיכרון בסיסית: הוא מוודא שהערך שאנו מנסים לקרוא ממנו או לכתוב אליו הוא אכן מצביע חוקי (ref-val) ולא סתם מספר אקראי."
   },
   {
     id: "expval-extractor-error",
     title: "expval-extractor-error",
     category: "data-structures",
     subCategory: "expval",
-    model: "זורק הודעת שגיאה מסודרת על אי התאמת קופסאות.",
+    model: "פונקציית עזר המייצרת ומדפיסה הודעת שגיאת טיפוס אחידה וברורה כשחילוץ נכשל.",
     code: `(define expval-extractor-error
   (lambda (variant value)
     (eopl:error 'expval-extractor
       "Expected ~s but got ~s"
       variant
       value)))`,
-    usage: "תבנית מבחנים פנימית: להשתמש בכל extractor בענף else כדי לקבל הודעת שגיאת טיפוס אחידה וברורה.",
-    detailed: "<strong>מקור מבחנים:</strong> תבנית עזר שמופיעה כמעט בכל הרחבת expval רצינית, במיוחד כשמוסיפים Tuples, Lists, References או טיפוסים חדשים במועדי מבחן.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> המשתמש בשפת ה-Guest לא קורא לפונקציה הזו. היא קיימת רק עבור המימוש הפנימי של המפרש.<br><strong>הבעיה התאורטית:</strong> בלי שגיאת חילוץ אחידה, כל חולץ יקרוס בצורה אחרת או יחזיר הודעה לא עקבית. התבנית מרכזת את בדיקת הטיפוסים ומייצרת חוזה ברור: ביקשת num וקיבלת list-val? זו שגיאת טיפוס של המפרש.<br><strong>איך משתמשים במבחן:</strong> שמים אותה בתחתית כל extractor תחת ענף else של cases, ומעבירים לה את שם הטיפוס המצופה ואת הערך שנכשל."
+    usage: "נקראת תמיד מתוך ענף ה-else בכל פונקציות ה-expval->... כדי למנוע קריסה פתאומית של המפרש.",
+    detailed: "<strong>מקור מבחנים:</strong> חלק מתשתית הקוד של eopl שנועדה להקל על דיבוג בזמן כתיבת מבחנים או פתרון בעיות מורכבות.<br><strong>הבעיה התאורטית:</strong> מערכת הטיפוסים הדינמית מחייבת אותנו לבדוק תקינות בזמן ריצה. ללא פונקציה זו, ניסיון לחלץ מספר מרשימה יגרום למפרש לקרוס בשגיאת Scheme פנימית קשה להבנה. פונקציה זו מייצרת 'חוזה' שקוף: היא עוצרת את הריצה מיידית ומדווחת בדיוק איזה טיפוס התבקש לעומת איזה טיפוס התקבל בפועל."
   },
 
   // ENV
-  {
+{
     id: "empty-env",
     title: "empty-env",
     category: "data-structures",
     subCategory: "env",
-    model: "יצירת סביבה ראשונית וריקה.",
-    code: `(define-datatype environment environment?
-  (empty-env)
-  (extend-env
-    (bvar symbol?)
-    (bval expval?)
-    (saved-env environment?)))
-
-(define apply-env
-  (lambda (env search-var)
-    (cases environment env
-      (empty-env ()
-        (eopl:error 'apply-env "No binding for ~s" search-var))
-      (extend-env (bvar bval saved-env)
-        (if (eqv? search-var bvar)
-            bval
-            (apply-env saved-env search-var))))))`,
-    usage: "תבנית מבחנים פנימית: בסיס הסביבה של המפרש; מופיעה באתחול init-env ובבדיקת גבול של apply-env.",
-    detailed: "<strong>מקור מבחנים:</strong> תשתית סביבתית שמורחבת במועדים כמו 78 עבור Multiple Extend ו-87 עבור Overloading, מודולים או שמירת כמה משמעויות לאותו שם.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> env אינו אובייקט שהמשתמש כותב בקוד המקור. זו טבלת שמות פנימית של המפרש שמדמה Scope לקסיקלי.<br><strong>הבעיה התאורטית:</strong> שמות כמו x או f אינם ערכים בפני עצמם. צריך מבנה שמקשר Symbol לערך שלו או למצביע שלו, ושיודע לחפש קודם בסביבה הקרובה ואז בסביבות החיצוניות.<br><strong>איך משתמשים במבחן:</strong> ב-let, proc, letrec או קריאה לפונקציה, מרחיבים את הסביבה עם bind חדש. ב-var-exp מפעילים apply-env כדי למצוא את הערך. בשאלה 2 חשוב לזכור שלפעמים הסביבה מחזירה Reference ולא expval ישיר."
+    model: "מייצג את תחתית שרשרת הסביבות (Lexical Scope) – סביבה ריקה ללא משתנים כלל. מהווה את תנאי העצירה בחיפוש.",
+    code: `(empty-env)`,
+    usage: "משמש לאתחול הסביבה הגלובלית הריקה (ב-init-env), וכעוגן העצירה הרקורסיבי ב-apply-env שזורק שגיאת 'משתנה לא מוגדר'.",
+    detailed: "<strong>מקור מבחנים:</strong> תשתית ליבה המשתנה רבות במבחנים – למשל הוספת שמירת מספר משתנים יחד (Multiple Extend), תמיכה במודולים או סביבות לטיפול ב-Overloading.<br><strong>הבעיה התאורטית:</strong> משתנים בשפת היעד (Guest) הם רק שמות (Symbols). כדי להעניק להם משמעות, המפרש זקוק למבנה נתונים הממפה שם לערך (או לכתובת). מודל הסביבה הזה מממש Scope לקסיקלי כמעין רשימה מקושרת של 'שכבות', כאשר empty-env הוא סוף הרשימה."
   },
   {
     id: "extend-env",
     title: "extend-env",
     category: "data-structures",
     subCategory: "env",
-    model: "הנחת 'פתק' משתנה בסביבה נוכחית (מסתיר פתקים ישנים בעלי אותו שם).",
-    code: `(define-datatype environment environment?
-  (empty-env)
-  (extend-env
-    (bvar symbol?)
-    (bval expval?)
-    (saved-env environment?)))
-
-(define apply-env
-  (lambda (env search-var)
-    (cases environment env
-      (empty-env ()
-        (eopl:error 'apply-env "No binding for ~s" search-var))
-      (extend-env (bvar bval saved-env)
-        (if (eqv? search-var bvar)
-            bval
-            (apply-env saved-env search-var))))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש בכל יצירת Binding חדש, למשל let, פרמטר של proc, או הרחבת סביבה נקודתית.",
-    detailed: "<strong>מקור מבחנים:</strong> תשתית סביבתית שמורחבת במועדים כמו 78 עבור Multiple Extend ו-87 עבור Overloading, מודולים או שמירת כמה משמעויות לאותו שם.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> env אינו אובייקט שהמשתמש כותב בקוד המקור. זו טבלת שמות פנימית של המפרש שמדמה Scope לקסיקלי.<br><strong>הבעיה התאורטית:</strong> שמות כמו x או f אינם ערכים בפני עצמם. צריך מבנה שמקשר Symbol לערך שלו או למצביע שלו, ושיודע לחפש קודם בסביבה הקרובה ואז בסביבות החיצוניות.<br><strong>איך משתמשים במבחן:</strong> ב-let, proc, letrec או קריאה לפונקציה, מרחיבים את הסביבה עם bind חדש. ב-var-exp מפעילים apply-env כדי למצוא את הערך. בשאלה 2 חשוב לזכור שלפעמים הסביבה מחזירה Reference ולא expval ישיר."
+    model: "יוצר שכבת סביבה חדשה המקשרת שם משתנה לערך ועוטפת סביבה קיימת. מסתירה משתנים בעלי אותו שם מהסביבות הקודמות.",
+    code: `(extend-env 'x (num-val 5) saved-env)`,
+    usage: "בזמן הערכת let-exp (יצירת משתנה מקומי) או בעת הפעלת פונקציה דרך apply-procedure (קישור הארגומנט לפרמטר).",
+    detailed: "<strong>מקור מבחנים:</strong> תשתית שמורחבת במבחנים לשמירת מספר משתנים יחד (כמו extend-env* במועד 78) או לתמיכה בסוגי משתנים שונים.<br><strong>הבעיה התאורטית:</strong> כדי לממש Scope לקסיקלי שמאפשר 'הסתרת משתנים' (Shadowing), המפרש לא מוחק ערכים קודמים. הוא פשוט יוצר 'חוליה' חדשה בראש הרשימה של הסביבות. כשנחפש את המשתנה, תמיד נמצא את העדכני ביותר."
   },
   {
     id: "extend-env-rec",
     title: "extend-env-rec",
     category: "data-structures",
     subCategory: "env",
-    model: "מרחיב סביבה באופן רקורסיבי, מאפשר לפונקציות להכיר את שמן.",
-    code: `(define-datatype environment environment?
-  (empty-env)
-  (extend-env
-    (bvar symbol?)
-    (bval expval?)
-    (saved-env environment?)))
-
-(define apply-env
-  (lambda (env search-var)
-    (cases environment env
-      (empty-env ()
-        (eopl:error 'apply-env "No binding for ~s" search-var))
-      (extend-env (bvar bval saved-env)
-        (if (eqv? search-var bvar)
-            bval
-            (apply-env saved-env search-var))))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש ב-letrec, פונקציות רקורסיביות, או הרחבות שמחייבות שהשם יהיה זמין כבר בתוך הגוף שלו.",
-    detailed: "<strong>מקור מבחנים:</strong> תשתית סביבתית שמורחבת במועדים כמו 78 עבור Multiple Extend ו-87 עבור Overloading, מודולים או שמירת כמה משמעויות לאותו שם.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> env אינו אובייקט שהמשתמש כותב בקוד המקור. זו טבלת שמות פנימית של המפרש שמדמה Scope לקסיקלי.<br><strong>הבעיה התאורטית:</strong> שמות כמו x או f אינם ערכים בפני עצמם. צריך מבנה שמקשר Symbol לערך שלו או למצביע שלו, ושיודע לחפש קודם בסביבה הקרובה ואז בסביבות החיצוניות.<br><strong>איך משתמשים במבחן:</strong> ב-let, proc, letrec או קריאה לפונקציה, מרחיבים את הסביבה עם bind חדש. ב-var-exp מפעילים apply-env כדי למצוא את הערך. בשאלה 2 חשוב לזכור שלפעמים הסביבה מחזירה Reference ולא expval ישיר."
+    model: "מרחיב את הסביבה באופן שמייצר הפניה מעגלית, כך שהפונקציה תכיר את השם של עצמה ותוכל לבצע רקורסיה.",
+    code: `(extend-env-rec 'factorial 'n body-exp saved-env)`,
+    usage: "קריטי למימוש פקודת letrec-exp או בלוקים המאפשרים הגדרת פונקציות המזמנות את עצמן.",
+    detailed: "<strong>מקור מבחנים:</strong> נדרש לרוב להרחבה במבחנים בהם מוסיפים פונקציות רקורסיביות הדדיות (Mutual Recursion) או תמיכה במספר פרמטרים ברקורסיה.<br><strong>הבעיה התאורטית:</strong> ב-let רגיל, הפונקציה נוצרת בסביבה החיצונית <b>לפני</b> שהשם שלה מקושר אליה, ולכן אינה מזהה את עצמה. הסביבה הרקורסיבית פותרת זאת: כאשר apply-env מחלץ את הפונקציה מכאן, הוא אורז אותה בתוך Closure שמצביע חזרה לאותה סביבה בדיוק, וכך 'סוגר את המעגל' הרקורסיבי."
   },
   {
     id: "apply-env",
     title: "apply-env",
     category: "data-structures",
     subCategory: "env",
-    model: "מחפש ומושך ערך השייך למשתנה מסוים מהסביבה.",
-    code: `(define-datatype environment environment?
-  (empty-env)
-  (extend-env
-    (bvar symbol?)
-    (bval expval?)
-    (saved-env environment?)))
-
-(define apply-env
-  (lambda (env search-var)
-    (cases environment env
-      (empty-env ()
-        (eopl:error 'apply-env "No binding for ~s" search-var))
-      (extend-env (bvar bval saved-env)
-        (if (eqv? search-var bvar)
-            bval
-            (apply-env saved-env search-var))))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש ב-var-exp ובכל מקום שבו Symbol צריך להפוך לערך או למצביע לפי מודל השאלה.",
-    detailed: "<strong>מקור מבחנים:</strong> תשתית סביבתית שמורחבת במועדים כמו 78 עבור Multiple Extend ו-87 עבור Overloading, מודולים או שמירת כמה משמעויות לאותו שם.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> env אינו אובייקט שהמשתמש כותב בקוד המקור. זו טבלת שמות פנימית של המפרש שמדמה Scope לקסיקלי.<br><strong>הבעיה התאורטית:</strong> שמות כמו x או f אינם ערכים בפני עצמם. צריך מבנה שמקשר Symbol לערך שלו או למצביע שלו, ושיודע לחפש קודם בסביבה הקרובה ואז בסביבות החיצוניות.<br><strong>איך משתמשים במבחן:</strong> ב-let, proc, letrec או קריאה לפונקציה, מרחיבים את הסביבה עם bind חדש. ב-var-exp מפעילים apply-env כדי למצוא את הערך. בשאלה 2 חשוב לזכור שלפעמים הסביבה מחזירה Reference ולא expval ישיר."
+    model: "סורק את שרשרת הסביבות (מהפנימית לחיצונית) כדי לחלץ את הערך המקושר לשם המשתנה המבוקש.",
+    code: `(apply-env env 'x)`,
+    usage: "השימוש המרכזי הוא ב-var-exp – ברגע שהמפרש נתקל בשם של משתנה בקוד התוכנית, הוא מפעיל את פונקציית החיפוש הזו.",
+    detailed: "<strong>מקור מבחנים:</strong> פונקציה שמשתנה מהותית במבחנים של 'העברה לפי הפניה' (Call by Reference) כגון במועד 98, או במבחני מודולים.<br><strong>מנגנון הפעולה:</strong> הפונקציה מבצעת חיפוש לינארי מבוסס רקורסיה. היא בודקת את השכבה הנוכחית, ואם השם לא תואם היא יורדת ל-saved-env. חשוב להבין שבשפות מתקדמות עם Store (זיכרון מנוהל), apply-env מחזירה לרוב <b>כתובת בזיכרון</b> (Reference) ולא את הערך עצמו, ולכן לאחר מכן נידרש להפעיל deref."
   },
 
   // --- INTERP ---
@@ -1188,184 +1128,120 @@ const dictionaryData = [
   },
 
   // CONSTRUCTORS
-  {
+{
     id: "num-val",
     title: "num-val",
     category: "interp",
     subCategory: "constructors",
-    model: "אורז מספר אמיתי לקופסת ExpVal.",
-    code: `(define-datatype expval expval?
-  (num-val (value number?))
-  (bool-val (boolean boolean?))
-  (proc-val (proc proc?))
-  (list-val (lst (list-of expval?)))
-  (tuple-val (lst (list-of expval?)))
-  (ref-val (ref reference?)))`,
-    usage: "תבנית מבחנים פנימית: לעטוף כל תוצאה מספרית שיוצאת מ-value-of כדי לשמור על חוזה החזרה אחיד של expval.",
-    detailed: "<strong>מקור מבחנים:</strong> הבנאים נוצרים על ידי define-datatype, אבל במבחנים מוסיפים להם variants חדשים כמו tuple-val, list-val או ref-val כדי לתמוך בהרחבות שלא קיימות בשפת הליבה.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> המשתמש לא אמור לכתוב num-val או tuple-val בתוכנית המקור. אלו קופסאות פנימיות של המפרש, לא Syntax של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> value-of חייב להחזיר תמיד ערך מטיפוס expval. אם נחזיר פעם מספר Scheme רגיל, פעם רשימה רגילה ופעם closure, המפרש יאבד אחידות והמשך החישוב לא ידע מה הוא מקבל.<br><strong>איך משתמשים במבחן:</strong> בכל case של value-of, אחרי שמחשבים תוצאה גולמית, עוטפים אותה בבנאי המתאים. למשל תוצאה מספרית חוזרת כ-num-val, תוצאת תנאי כ-bool-val, וכתובת זיכרון כ-ref-val."
+    model: "אורז מספר גולמי של Scheme לתוך 'קופסה' המייצגת ערך מספרי בשפת היעד (Guest), לשמירה על אחידות טיפוסים.",
+    code: `(num-val 5)`,
+    usage: "מופעל בסוף ההערכה של ביטויים מתמטיים (כמו const-exp או diff-exp) לפני שהמפרש מחזיר את התוצאה.",
+    detailed: "<strong>מקור מבחנים:</strong> בנאי בסיס הקיים בכל המפרשים, שעליו נשענות כל פעולות החישוב.<br><strong>הבעיה התאורטית:</strong> הפונקציה value-of חייבת להחזיר תמיד ערך מטיפוס אחד אחיד: expval. אם נחזיר פעם אחת מספר של Scheme ופעם אחת Closure, המפרש לא ידע איך להמשיך לעבוד עם התוצאות (למשל, לשמור אותן בסביבה או להעביר אותן לפונקציה). האריזה ב-num-val מגשרת על הפער הזה והופכת את המספר ל'אזרח' חוקי בשפת היעד."
   },
   {
     id: "bool-val",
     title: "bool-val",
     category: "interp",
     subCategory: "constructors",
-    model: "אורז #t או #f לקופסת ExpVal.",
-    code: `(define-datatype expval expval?
-  (num-val (value number?))
-  (bool-val (boolean boolean?))
-  (proc-val (proc proc?))
-  (list-val (lst (list-of expval?)))
-  (tuple-val (lst (list-of expval?)))
-  (ref-val (ref reference?)))`,
-    usage: "תבנית מבחנים פנימית: לעטוף תוצאות של השוואות, zero?, guards ותנאים כדי שהמפרש יחזיר expval ולא Boolean גולמי של Scheme.",
-    detailed: "<strong>מקור מבחנים:</strong> הבנאים נוצרים על ידי define-datatype, אבל במבחנים מוסיפים להם variants חדשים כמו tuple-val, list-val או ref-val כדי לתמוך בהרחבות שלא קיימות בשפת הליבה.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> המשתמש לא אמור לכתוב num-val או tuple-val בתוכנית המקור. אלו קופסאות פנימיות של המפרש, לא Syntax של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> value-of חייב להחזיר תמיד ערך מטיפוס expval. אם נחזיר פעם מספר Scheme רגיל, פעם רשימה רגילה ופעם closure, המפרש יאבד אחידות והמשך החישוב לא ידע מה הוא מקבל.<br><strong>איך משתמשים במבחן:</strong> בכל case של value-of, אחרי שמחשבים תוצאה גולמית, עוטפים אותה בבנאי המתאים. למשל תוצאה מספרית חוזרת כ-num-val, תוצאת תנאי כ-bool-val, וכתובת זיכרון כ-ref-val."
+    model: "אורז ערך אמת/שקר של Scheme (#t או #f) לתוך קופסה המייצגת ערך בוליאני בשפת היעד.",
+    code: `(bool-val #t)`,
+    usage: "מופעל בסוף הערכת ביטויי תנאי והשוואה (כמו zero?-exp או פעולות יחס) כדי שהמפרש יחזיר expval תקין.",
+    detailed: "<strong>מקור מבחנים:</strong> קריטי בכל הרחבה הדורשת פעולות לוגיות חדשות או בקרת זרימה (Guards).<br><strong>הבעיה התאורטית:</strong> ב-Scheme, כל דבר שאינו #f נחשב כ-True. לכן, אם המפרש יעביר קופסה שלמה (אפילו כזו שמכילה שקר) להערכת תנאי ב-Scheme, היא תמיד תתפרש כאמת. השימוש ב-bool-val מפריד בצורה מוחלטת בין הלוגיקה הפנימית של המפרש (שפת ה-Host) לבין הערך הלוגי שמקבלת התוכנית שרצה (שפת ה-Guest)."
   },
   {
     id: "list-val",
     title: "list-val",
     category: "interp",
     subCategory: "constructors",
-    model: "אורז רשימת ExpVal לטיפוס מרכזי (אם נתבקש במבחן).",
-    code: `(define-datatype expval expval?
-  (num-val (value number?))
-  (bool-val (boolean boolean?))
-  (proc-val (proc proc?))
-  (list-val (lst (list-of expval?)))
-  (tuple-val (lst (list-of expval?)))
-  (ref-val (ref reference?)))`,
-    usage: "תבנית מבחנים פנימית: לעטוף רשימות שהן ערכים של שפת ה-Guest, לא רשימות עזר של Scheme.",
-    detailed: "<strong>מקור מבחנים:</strong> הבנאים נוצרים על ידי define-datatype, אבל במבחנים מוסיפים להם variants חדשים כמו tuple-val, list-val או ref-val כדי לתמוך בהרחבות שלא קיימות בשפת הליבה.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> המשתמש לא אמור לכתוב num-val או tuple-val בתוכנית המקור. אלו קופסאות פנימיות של המפרש, לא Syntax של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> value-of חייב להחזיר תמיד ערך מטיפוס expval. אם נחזיר פעם מספר Scheme רגיל, פעם רשימה רגילה ופעם closure, המפרש יאבד אחידות והמשך החישוב לא ידע מה הוא מקבל.<br><strong>איך משתמשים במבחן:</strong> בכל case של value-of, אחרי שמחשבים תוצאה גולמית, עוטפים אותה בבנאי המתאים. למשל תוצאה מספרית חוזרת כ-num-val, תוצאת תנאי כ-bool-val, וכתובת זיכרון כ-ref-val."
+    model: "אורז רשימה של ערכי expval לתוך קופסה מרכזית המייצגת רשימה בשפת היעד.",
+    code: `(list-val (list (num-val 1) (num-val 2)))`,
+    usage: "בניית רשימות מקושרות בשפת ה-Guest. יש לשים לב שאיברי הרשימה עצמם חייבים להיות קופסאות expval.",
+    detailed: "<strong>מקור מבחנים:</strong> נפוץ מאוד במבחנים המבקשים להוסיף רשימות (Lists) כאזרחים מסוג ראשון בשפה.<br><strong>הבעיה התאורטית:</strong> רשימה בשפת היעד אינה סתם רשימה של מספרי Scheme, אלא מבנה רקורסיבי של ערכי התוכנית. list-val עוטף את המבנה הזה כך שיהיה ניתן לשמור אותו במשתנה רגיל בסביבה או להחזיר אותו מפונקציה, בדיוק כמו שמחזירים מספר."
   },
   {
     id: "tuple-val",
     title: "tuple-val",
     category: "interp",
     subCategory: "constructors",
-    model: "אורז רשימת ערכי expval לקופסת Tuple ייעודית.",
-    code: `(define-datatype expval expval?
-  (num-val (value number?))
-  (bool-val (boolean boolean?))
-  (proc-val (proc proc?))
-  (list-val (lst (list-of expval?)))
-  (tuple-val (lst (list-of expval?)))
-  (ref-val (ref reference?)))`,
-    usage: "תבנית מבחנים פנימית: לעטוף רצף ערכים כאשר המבחן מוסיף Tuple או החזרת כמה ערכים כערך יחיד.",
-    detailed: "<strong>מקור מבחנים:</strong> הבנאים נוצרים על ידי define-datatype, אבל במבחנים מוסיפים להם variants חדשים כמו tuple-val, list-val או ref-val כדי לתמוך בהרחבות שלא קיימות בשפת הליבה.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> המשתמש לא אמור לכתוב num-val או tuple-val בתוכנית המקור. אלו קופסאות פנימיות של המפרש, לא Syntax של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> value-of חייב להחזיר תמיד ערך מטיפוס expval. אם נחזיר פעם מספר Scheme רגיל, פעם רשימה רגילה ופעם closure, המפרש יאבד אחידות והמשך החישוב לא ידע מה הוא מקבל.<br><strong>איך משתמשים במבחן:</strong> בכל case של value-of, אחרי שמחשבים תוצאה גולמית, עוטפים אותה בבנאי המתאים. למשל תוצאה מספרית חוזרת כ-num-val, תוצאת תנאי כ-bool-val, וכתובת זיכרון כ-ref-val."
+    model: "אורז רצף קבוע של ערכים מאוגדים לתוך קופסת Tuple ייעודית, המייצגת מבנה נתונים יחיד.",
+    code: `(tuple-val (list val1 val2))`,
+    usage: "שימושי כששפת היעד תומכת בהחזרת מספר ערכים במקביל או במבנים סטטיים (כמו רשומות/מילונים).",
+    detailed: "<strong>מקור מבחנים:</strong> מופיע בשאלות ספציפיות המבקשות להוסיף טיפוסי Tuple (למשל מועד 57) או מערכות Destructuring.<br><strong>הבעיה התאורטית:</strong> בניגוד לרשימה שגודלה דינמי ויש עליה פעולות car/cdr, Tuple נועד לרוב לאריזה מהירה של מספר ערכים שיפורקו מיד לאחר מכן למספר משתנים. הקופסה הזו מאפשרת ל-value-of להחזיר את כל המקבץ כערך expval בודד מבלי לשבור את חתימת הפונקציה."
   },
   {
     id: "proc-val",
     title: "proc-val",
     category: "interp",
     subCategory: "constructors",
-    model: "אורז פרוצדורה מחושבת (closure) בתוך קופסת ExpVal.",
-    code: `(define-datatype expval expval?
-  (num-val (value number?))
-  (bool-val (boolean boolean?))
-  (proc-val (proc proc?))
-  (list-val (lst (list-of expval?)))
-  (tuple-val (lst (list-of expval?)))
-  (ref-val (ref reference?)))`,
-    usage: "תבנית מבחנים פנימית: לעטוף Closure שנוצר מ-proc-exp כדי שניתן יהיה להעביר פונקציות כערכים.",
-    detailed: "<strong>מקור מבחנים:</strong> הבנאים נוצרים על ידי define-datatype, אבל במבחנים מוסיפים להם variants חדשים כמו tuple-val, list-val או ref-val כדי לתמוך בהרחבות שלא קיימות בשפת הליבה.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> המשתמש לא אמור לכתוב num-val או tuple-val בתוכנית המקור. אלו קופסאות פנימיות של המפרש, לא Syntax של ה-Guest Language.<br><strong>הבעיה התאורטית:</strong> value-of חייב להחזיר תמיד ערך מטיפוס expval. אם נחזיר פעם מספר Scheme רגיל, פעם רשימה רגילה ופעם closure, המפרש יאבד אחידות והמשך החישוב לא ידע מה הוא מקבל.<br><strong>איך משתמשים במבחן:</strong> בכל case של value-of, אחרי שמחשבים תוצאה גולמית, עוטפים אותה בבנאי המתאים. למשל תוצאה מספרית חוזרת כ-num-val, תוצאת תנאי כ-bool-val, וכתובת זיכרון כ-ref-val."
+    model: "אורז פונקציה מחושבת (Closure - הכוללת קוד וסביבה) בתוך קופסת ExpVal.",
+    code: `(proc-val (procedure bvar body env))`,
+    usage: "מופעל בסוף הערכת proc-exp (הגדרת פונקציה אנונימית), והופך אותה לערך שניתן לשמור במשתנה.",
+    detailed: "<strong>מקור מבחנים:</strong> לב הליבה של שפות מבוססות פונקציות. נדרש בכל שינוי שמשפיע על אופן יצירת פונקציות.<br><strong>הבעיה התאורטית:</strong> זו בדיוק המשמעות של 'פונקציות כאזרחיות מסוג ראשון' (First-Class Citizens). ברגע שאנו לוקחים את ה-Closure ומכניסים אותו לתוך proc-val, הוא הופך לערך expval שווה זכויות לחלוטין ל-num-val. בזכות זה, אפשר להעביר פונקציה כארגומנט לפונקציה אחרת, להחזיר אותה, או לשמור אותה במערך."
   },
-
   // --- Q2 (STORE & REFS) ---
   // STORE
-  {
+{
     id: "newref",
     title: "newref",
     category: "q2",
-    subCategory: "common-templates",
-    model: "מקצה תא פיזי בזיכרון הפיקטיבי, דוחף אליו ערך ומחזיר מצביע (Pointer).",
-    code: `(define the-store 'uninitialized)
-
-(define empty-store
-  (lambda () '()))
-
-(define initialize-store!
-  (lambda ()
-    (set! the-store (empty-store))))
-
-(define newref
-  (lambda (val)
-    (let ((next-ref (length the-store)))
-      (set! the-store (append the-store (list val)))
-      next-ref)))`,
-    usage: "תבנית מבחנים פנימית: להשתמש בכל הקצאת תא חדש ב-store, בעיקר ב-let, פרמטרים, מערכים או יצירת אובייקטים משתנים.",
-    detailed: "<strong>מקור מבחנים:</strong> תשתית מרכזית לשאלות Q2, למשל מערכים משתנים במועד 78, Events במועד 87 ו-Multidimensional Pointers במועד 98.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> המשתמש לא רואה את the-store ולא מנהל רשימת תאים בעצמו. זו סימולציה פנימית של RAM שהמפרש מפעיל מאחורי הקלעים.<br><strong>הבעיה התאורטית:</strong> כדי לאפשר Mutation אי אפשר להסתפק בסביבה שמחזיקה ערכים קבועים. צריך להפריד בין שם המשתנה לבין התא שבו הערך נמצא: env מחזיק מצביע, ו-store מחזיק את הערך המשתנה.<br><strong>איך משתמשים במבחן:</strong> newref מקצה תא חדש, deref קורא מתא קיים, ו-setref! דורס תא קיים. ב-Implicit Refs כמעט כל let או parameter צריך newref, ו-var-exp צריך deref אחרי apply-env."
+    subCategory: "store",
+    model: "מקצה תא חדש בזיכרון הפיזי המדומה (Store), מאחסן בו את הערך המבוקש, ומחזיר את הכתובת (Pointer) לאותו תא.",
+    code: `(newref val)`,
+    usage: "מבוצע כמעט תמיד בזמן אתחול משתנים (let), העברת פרמטרים לפונקציות (Implicit Refs), או יצירת תאים למערכים דינמיים.",
+    detailed: "<strong>מקור מבחנים:</strong> תשתית מרכזית לשאלות Q2 ולכל מנגנון של State ו-Mutation (למשל מועד 78).<br><strong>הבעיה התאורטית:</strong> בסביבה רגילה (ללא State), משתנה פשוט שווה לערך. אבל כדי לאפשר השמה (עדכון ערך של משתנה קיים), המפרש זקוק לניהול זיכרון עקיף (Indirection). מודל ה-Store מייצר מנגנון של RAM מדומה: אנחנו 'קונים' תא בזיכרון עם newref, מקבלים מספר (האינדקס של התא), ואת המספר הזה בלבד אנו שומרים בסביבה הלקסיקלית תחת שם המשתנה."
   },
   {
     id: "deref",
     title: "deref",
     category: "q2",
-    subCategory: "common-templates",
-    model: "ניגש לזיכרון הפיקטיבי לפי המצביע ושולף את הערך ששמור שם.",
-    code: `(define deref
-  (lambda (ref)
-    (list-ref the-store ref)))`,
-    usage: "תבנית מבחנים פנימית: להשתמש כשיש Reference ורוצים את הערך שבתא, למשל ב-var-exp של Implicit Refs.",
-    detailed: "<strong>מקור מבחנים:</strong> תשתית מרכזית לשאלות Q2, למשל מערכים משתנים במועד 78, Events במועד 87 ו-Multidimensional Pointers במועד 98.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> המשתמש לא רואה את the-store ולא מנהל רשימת תאים בעצמו. זו סימולציה פנימית של RAM שהמפרש מפעיל מאחורי הקלעים.<br><strong>הבעיה התאורטית:</strong> כדי לאפשר Mutation אי אפשר להסתפק בסביבה שמחזיקה ערכים קבועים. צריך להפריד בין שם המשתנה לבין התא שבו הערך נמצא: env מחזיק מצביע, ו-store מחזיק את הערך המשתנה.<br><strong>איך משתמשים במבחן:</strong> newref מקצה תא חדש, deref קורא מתא קיים, ו-setref! דורס תא קיים. ב-Implicit Refs כמעט כל let או parameter צריך newref, ו-var-exp צריך deref אחרי apply-env."
+    subCategory: "store",
+    model: "ניגש לזיכרון המנוהל (Store) באמצעות הכתובת (Reference) שסופקה, ושולף את הערך השמור באותו תא.",
+    code: `(deref ref)`,
+    usage: "שימושי בעיקר ב-var-exp: כאשר שולפים כתובת של משתנה מתוך הסביבה (apply-env), מפעילים deref כדי לקבל את הערך האמיתי.",
+    detailed: "<strong>מקור מבחנים:</strong> חלק מובנה מפתרון Q2 ושאלות מערכים/מצביעים. קריטי להבנה בהעברה לפי הפניה (Call by Reference) מועד 98.<br><strong>הבעיה התאורטית:</strong> מכיוון שהסביבה (env) מחזיקה רק מצביעים לתאים בזיכרון ולא את הערכים עצמם, חילוץ ערך של משתנה הופך לפעולה דו-שלבית: השלב הראשון הוא apply-env שמחזיר את המצביע, והשלב השני הוא deref שלוקח את המצביע, 'קופץ' למיקום הפיזי ב-Store, ומביא משם את התוכן."
   },
   {
     id: "setref",
     title: "setref!",
     category: "q2",
-    subCategory: "common-templates",
-    model: "ניגש למצביע קיים במחסן, ודורס את הערך הישן ששם בערך חדש.",
-    code: `(define setref!
-  (lambda (ref val)
-    (letrec ((setref-inner
-               (lambda (store1 ref1)
-                 (cond
-                   ((null? store1)
-                    (eopl:error 'setref! "Invalid reference ~s" ref))
-                   ((zero? ref1)
-                    (cons val (cdr store1)))
-                   (else
-                    (cons (car store1)
-                          (setref-inner (cdr store1) (- ref1 1)))))))))
-      (set! the-store (setref-inner the-store ref)))))`,
-    usage: "תבנית מבחנים פנימית: להשתמש בהשמות, עדכון מערך, Events או כל פעולה שדורסת תא קיים ב-store.",
-    detailed: "<strong>מקור מבחנים:</strong> תשתית מרכזית לשאלות Q2, למשל מערכים משתנים במועד 78, Events במועד 87 ו-Multidimensional Pointers במועד 98.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> המשתמש לא רואה את the-store ולא מנהל רשימת תאים בעצמו. זו סימולציה פנימית של RAM שהמפרש מפעיל מאחורי הקלעים.<br><strong>הבעיה התאורטית:</strong> כדי לאפשר Mutation אי אפשר להסתפק בסביבה שמחזיקה ערכים קבועים. צריך להפריד בין שם המשתנה לבין התא שבו הערך נמצא: env מחזיק מצביע, ו-store מחזיק את הערך המשתנה.<br><strong>איך משתמשים במבחן:</strong> newref מקצה תא חדש, deref קורא מתא קיים, ו-setref! דורס תא קיים. ב-Implicit Refs כמעט כל let או parameter צריך newref, ו-var-exp צריך deref אחרי apply-env."
+    subCategory: "store",
+    model: "ניגש לתא קיים בזיכרון (Store) באמצעות הכתובת שלו, ודורס את הערך הישן בערך חדש (Side Effect).",
+    code: `(setref! ref new-val)`,
+    usage: "מופעל במימוש פעולות השמה כמו set-exp (למשל set x = 5) או עדכון אינדקסים במערכים (begin/set).",
+    detailed: "<strong>מקור מבחנים:</strong> לב הליבה של תכנות אימפרטיבי. נדרש בכל מבחן שבו משנים מצב קיים בזמן ריצה.<br><strong>הבעיה התאורטית:</strong> זוהי הפעולה היחידה שבאמת משנה את המצב הגלובלי של התוכנית (Mutation). שים לב: הסביבה (env) לא משתנה כלל! המשתנה x ימשיך להצביע לאותה כתובת בדיוק, אבל התוכן שיושב בכתובת הזו בתוך ה-Store יתחלף. פעולה זו גורמת לפונקציות להחזיר תוצאות שונות בכל קריאה גם אם קיבלו את אותם קלטים."
   },
   {
     id: "ref-val",
     title: "ref-val",
     category: "q2",
-    subCategory: "common-templates",
-    model: "אורז כתובת/הפנייה בזיכרון (Reference) בתוך קופסת ExpVal.",
-    code: `(define-datatype expval expval?
-  (num-val (value number?))
-  (bool-val (boolean boolean?))
-  (proc-val (proc proc?))
-  (list-val (lst (list-of expval?)))
-  (tuple-val (lst (list-of expval?)))
-  (ref-val (ref reference?)))`,
-    usage: "תבנית מבחנים פנימית: לעטוף Reference כאשר הכתובת עצמה צריכה לעבור דרך מערכת expval, למשל index-exp או getref.",
-    detailed: "<strong>מקור מבחנים:</strong> ref-val מופיע בהרחבות שבהן Reference עצמו הופך לערך שניתן להעביר, למשל Explicit Refs, מערכים, index-exp ו-Multidimensional Pointers במועד 98.<br><strong>למה זה לא חלק רשמי מהשפה:</strong> זה לא ביטוי שהמשתמש בהכרח כותב, אלא עטיפה פנימית שמאפשרת למפרש להתייחס לכתובת זיכרון כאילו היא expval רגיל.<br><strong>הבעיה התאורטית:</strong> לפעמים לא רוצים את הערך שבתא אלא את הכתובת של התא עצמו, כדי לבצע עליה deref או setref! מאוחר יותר. בלי ref-val הכתובת הגולמית תברח ממערכת הטיפוסים של expval.<br><strong>איך משתמשים במבחן:</strong> כשביטוי מחזיר מצביע במקום ערך, עוטפים אותו ב-ref-val. כאשר רוצים לעבוד עם המצביע עצמו, משתמשים ב-expval-&gt;ref כדי לחלץ אותו בחזרה."
+    subCategory: "store",
+    model: "אורז כתובת זיכרון גולמית (Reference) לתוך קופסת expval, כך שניתן יהיה להתייחס למצביע עצמו כאל ערך בשפה.",
+    code: `(ref-val ref)`,
+    usage: "שימושי כששפת היעד חושפת מצביעים במפורש (Explicit Refs) ומאפשרת לפונקציות להחזיר כתובות זיכרון.",
+    detailed: "<strong>מקור מבחנים:</strong> מופיע בהרחבות בהן מצביע הוא אזרח מסוג ראשון (למשל הפעלת & או * כמו ב-C), ומערכים רב-ממדיים.<br><strong>הבעיה התאורטית:</strong> בשפה עם הפניות סמויות (Implicit), המשתמש אף פעם לא רואה את הכתובת עצמה (הוא רואה רק את הערך שחולץ עם deref). אך בשפות המאפשרות למשתמש להתעסק עם מצביעים ישירות, הכתובת עצמה (המספר של ה-ref) חייבת לחזור אל המשתמש כערך חוקי של השפה. אריזתה ב-ref-val מאפשרת למפרש להתייחס למצביע כמו לכל משתנה אחר – לשמור אותו ברשימה, להחזיר אותו מפונקציה או להעביר אותו הלאה."
   },
 
   // AST-Q2
-  {
+{
     id: "assign-exp",
     title: "assign-exp",
     category: "q2",
     subCategory: "ast-q2",
-    model: "ביטוי ה-AST המבצע השמה (x = 5). מחפש את המצביע ב-env ומשנה אותו ב-Store.",
+    model: "ביטוי ה-AST המבצע השמה (Mutation) למשתנה קיים. מפריד בין איתור המצביע בסביבה לבין דריסת הערך בזיכרון.",
     code: `(assign-exp (var exp1)
   (let ((val (value-of exp1 env)))
     (begin
       (setref! (apply-env env var) val)
       (num-val 27))))`,
-    usage: "הצומת הבסיסית להכנסת נתונים בשאלה 2.",
-    detailed: ""
+    usage: "שימוש מובהק כאשר נדרשת השמה (למשל x = 5). זהו הבסיס לכל פעולת Side-Effect (תופעת לוואי) במפרש.",
+    detailed: "<strong>המנגנון התיאורטי:</strong> פעולת ההשמה מוכיחה מדוע אנו חייבים להפריד בין הסביבה (env) לזיכרון (Store). תחילה, הביטוי החדש (exp1) מחושב כדי לקבל את ערכו הגולמי. לאחר מכן, `apply-env` מחפש את המשתנה, אך הוא מחזיר את <strong>הכתובת</strong> שלו בזיכרון, לא את הערך הישן. הפקודה `setref!` פונה ישירות לכתובת הזו ודורסת את התא. <strong>שים לב: הסביבה לא משתנה כלל!</strong> המצביע נשאר אותו מצביע, אבל התוכן בזיכרון התחלף.<br><strong>למה מחזירים 27?</strong> בשפות מסוימות (כמו ב-EOPL), לפעולת השמה אין ערך חזרה שימושי, ולכן מוחזר ערך שרירותי (כמו 27) שרק מסמן שהפעולה הסתיימה. במבחנים, יש לעקוב אחרי דרישות השאלה – לעיתים יבקשו להחזיר את הערך שהושם."
   },
   {
     id: "begin-exp",
     title: "begin-exp",
     category: "q2",
     subCategory: "ast-q2",
-    model: "ביטוי לביצוע מספר פקודות המייצרות Mutation ברצף.",
+    model: "ביטוי לביצוע רצף פקודות (Block). הפקודות מבוצעות בזו אחר זו לשם השפעתן על הזיכרון, והאחרונה קובעת את ערך החזרה.",
     code: `(begin-exp (exps)
   (let loop ((exps exps))
     (if (null? (cdr exps))
@@ -1373,45 +1249,43 @@ const dictionaryData = [
         (begin
           (value-of (car exps) env)
           (loop (cdr exps))))))`,
-    usage: "הרצת בלוקים שמכילים השמות רבות.",
-    detailed: ""
+    usage: "מופעל כשרוצים להריץ גוש פקודות יחד. קריטי למימוש לולאות, או פונקציות המבצעות גם חישוב וגם עדכון משתנים (כמו קידום מונה).",
+    detailed: "<strong>המנגנון התיאורטי:</strong> בשפה פונקציונלית טהורה (ללא Store), בלוק begin הוא חסר משמעות, משום שביטוי שלא שומרים את תוצאתו פשוט מתאדה. לעומת זאת, בסביבה הכוללת State (כמו שפת היעד שלנו), כל שורה בבלוק עשויה לשנות את הזיכרון הגלובלי מאחורי הקלעים. הלולאה הרקורסיבית `loop` עוברת על כל הביטויים: היא מחשבת כל ביטוי (מעוררת את ה-Side Effect שלו), זורקת את התוצאה לפח, וכאשר היא מגיעה לביטוי האחרון ברשימה – היא מחשבת אותו ומחזירה אותו כערך המייצג את כל הבלוק."
   },
   {
     id: "var-exp-q2",
     title: "var-exp",
     category: "q2",
     subCategory: "ast-q2",
-    model: "משיכת משתנה בסביבת Implicit Refs (דורשת deref).",
+    model: "משיכת ערכו של משתנה בסביבת הפניות סמויות (Implicit Refs), הכוללת חילוץ המצביע מהסביבה וקריאת הערך מהזיכרון.",
     code: `(var-exp (var) (deref (apply-env env var)))`,
-    usage: "ההבדל הכי קריטי בין שאלה 1 לשאלה 2.",
-    detailed: ""
+    usage: "מופעל בכל פעם שהמפרש נתקל בשם של משתנה (כמו x או y) וצריך להפוך אותו לערך שהוא מייצג בפועל.",
+    detailed: "<strong>המנגנון התיאורטי:</strong> זהו הציר שעליו סובבת שפת ה-Implicit Refs וההבדל הקריטי ביותר בין מפרש ללא State למפרש עם State. בשפה פונקציונלית, `apply-env` מחזיר ישירות את ערך ה-expval. כאן, מכיוון שמשתנים עשויים להשתנות (Mutation), הסביבה שומרת רק <strong>כתובות זיכרון</strong> (References). לכן, חובה להשתמש ב-deref! הפעולה היא דו-שלבית: השלב הראשון (`apply-env`) אומר למפרש 'היכן המשתנה הזה נמצא', והשלב השני (`deref`) ניגש פיזית למחסן ושולף את הערך העדכני. שכחת deref? המפרש יקרוס כי הוא ינסה לבצע פעולות על כתובת במקום על ערך."
   },
-
-  // INFRA
   {
     id: "let-exp-implicit",
     title: "let-exp (Implicit)",
     category: "q2",
     subCategory: "infra",
-    model: "יצירת משתנה זמני מקומי המצריך שימוש ב-newref לפני extend-env.",
+    model: "יצירת משתנה זמני. מקצה תא פיזי חדש בזיכרון, ומקשר את שם המשתנה למצביע לתא זה בסביבה המורחבת.",
     code: `(let-exp (var exp1 body)
   (let ((val (value-of exp1 env)))
     (value-of body 
       (extend-env var (newref val) env))))`,
-    usage: "בשאלה 2, משתני let שמורים במחסן הפיזי ולכן חובה להעביר pointer ל-Env.",
-    detailed: ""
+    usage: "מבוצע כשהתוכנית מגדירה משתנה מקומי. הכרחי כדי לאפשר שינוי עתידי (set!) של אותו משתנה בתוך גוף ה-let.",
+    detailed: "<strong>המנגנון התיאורטי:</strong> ב-let פשוט (ללא State), הסביבה מורחבת על ידי קשירת השם ישירות לערך. אך ברגע שאנו תומכים בהשמות, כל משתנה מקומי <strong>חייב להיות ניתן לשינוי</strong> (Mutable). הדרך היחידה לאפשר זאת היא לקנות עבורו 'נדלן' בזיכרון: המפרש מחשב את הערך של exp1, מקצה עבורו תא חדש ב-Store (`newref`), ומייצר סביבה חדשה שבה השם מקושר ל<strong>מצביע</strong> החדש. בזכות הארכיטקטורה הזו, פקודות כמו `assign-exp` בתוך ה-body ידעו בדיוק לאיזה תא לפנות מבלי לדרוס משתנים אחרים."
   },
   {
     id: "apply-procedure-implicit",
     title: "apply-procedure (Implicit)",
     category: "q2",
     subCategory: "infra",
-    model: "המנגנון להעברת פרמטרים. דורש newref (Pass by value) בסביבת Implicit.",
+    model: "מנגנון העברת פרמטרים לפונקציה (Call). מיישם 'העברה לפי ערך' (Pass-by-Value) באמצעות יצירת תא זיכרון חדש לארגומנט.",
     code: `(let ((new-env (extend-env var (newref val) saved-env)))
   (value-of body new-env))`,
-    usage: "בשאלה 2, הארגומנטים הופכים למשתנים פיזיים במחסן.",
-    detailed: ""
-  }
+    usage: "חלק ממימוש Call-exp, ברגע שהפונקציה עצמה מתחילה לרוץ עם הארגומנט שהועבר אליה.",
+    detailed: "<strong>המנגנון התיאורטי (העברה לפי ערך):</strong> כשאנו מעבירים ארגומנט לפונקציה, המפרש לוקח את הערך שכבר חושב (`val`) ומייצר עבורו תא זיכרון <strong>חדש לחלוטין</strong> (`newref`). הסביבה החדשה של הפונקציה תכיר את הפרמטר רק כמצביע לתא החדש הזה. המשמעות המעשית היא שהפונקציה מקבלת <strong>עותק מבודד</strong>. אם הפונקציה תבצע השמה (`set!`) לפרמטר שלה, הפעולה תשפיע רק על התא החדש ולא תשנה את המשתנה המקורי שנמצא בסביבת הקריאה (Caller). <br><strong>הקשר למבחן:</strong> כאשר נדרשים לממש 'העברה לפי הפניה' (Call-by-Reference), מנגנון זה משתנה מן היסוד: המפרש מדלג על ה-`newref`, ומעביר את הכתובת המקורית של המשתנה ישירות לתוך ה-`extend-env`, כך שהפונקציה והקוד הקורא חולקים את אותו תא זיכרון."
+  },
 ];
 
 window.dictionaryData = dictionaryData;
