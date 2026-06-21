@@ -452,7 +452,20 @@
             "step4_4": `<p>כאן מתחילה הריצה האמיתית בזמן הריצה (Runtime). אנחנו משתמשים ב-<code>let*</code> כדי לבצע סדרת פעולות מדורגת:</p><ol class="list-decimal list-inside ml-4 space-y-2 mb-4"><li><code>(value-of exp1 saved-env)</code>: אנחנו שולחים את ביטוי הפונקציה לחישוב. שים לב שאנחנו מעריכים אותו <strong>בתוך הסביבה השמורה (<code>saved-env</code>)</strong> ולא בסביבה הנוכחית של השפה עכשיו! זה מבטיח שאם הפונקציה הסתמכה על משתנים חסומים מהעבר, הם יילקחו בחשבון.</li><li><code>expval-&gt;proc</code>: אנחנו מחלצים את הפרוצדורה האמיתית מתוך קופסת ה-<code>expval</code> שחזרה אלינו, ושומרים אותה תחת השם <code>proc1</code>.</li></ol>`,
             "step4_5": `<p>עכשיו צריך לטפל באיברי הרשימה. המשתנה <code>exps</code> מחזיק רשימה של <em>ביטויים גולמיים</em> (למשל, התרגיל <code>(+ 1 1)</code>). בשורה הזו, אנחנו משתמשים בפונקציית ה-<code>map</code> המובנית של שפת Scheme כדי לעבור על כל ביטוי <code>e</code> ברשימה, ולהריץ עליו את <code>value-of</code> בתוך הסביבה השמורה. בסוף השורה הזו, המשתנה <code>eval-exps</code> יחזיק רשימה של ערכים מחושבים סופית (למשל, המספר <code>2</code>).</p>`,
             "step4_6": `<p>זהו שלב הקיפול הסופי והגשת המנה.</p><ol class="list-decimal list-inside ml-4 space-y-2 mb-4"><li>אנחנו משתמשים שוב ב-<code>map</code> של Scheme כדי לקחת את הפרוצדורה המוכנה שלנו <code>proc1</code>, ולהפעיל אותה על כל אחד מהערכים המחושבים ב-<code>eval-exps</code> בעזרת הפונקציה <code>apply-procedure</code>.</li><li>את רשימת התוצאות שמתקבלת, אנחנו אורזים בתוך הקופסה הרשמית של השפה לרשימות: <code>list-val</code> (אותה קופסה שהגדרנו בקובץ מבני הנתונים בשלב 2). זה הערך הטהור שיוחזר לתוכנית.</li></ol>`,
-            "step4_7": `<p>סגירת ה-<code>cases</code> החיצוני. מה קורה אם מישהו שלח לפונקציה הזו ערך שכבר עבר הפשרה בעבר, או מספר פשוט כמו <code>5</code>? התנאי מגיע ל-<code>else</code>, ומחזיר את <code>uneval</code> בדיוק כפי שהוא, בלי לגעת בו ובלי לבצע שום חישוב מיותר. זהו מנגנון הגנה חיוני שמונע חישוב כפול.</p>`
+            "step4_7": `<p>סגירת ה-<code>cases</code> החיצוני. מה קורה אם מישהו שלח לפונקציה הזו ערך שכבר עבר הפשרה בעבר, או מספר פשוט כמו <code>5</code>? התנאי מגיע ל-<code>else</code>, ומחזיר את <code>uneval</code> בדיוק כפי שהוא, בלי לגעת בו ובלי לבצע שום חישוב מיותר. זהו מנגנון הגנה חיוני שמונע חישוב כפול.</p>`,
+
+            "step5_1": `<p>שוב, אנחנו בתוך פונקציית <code>value-of</code>. המפרש מטייל על עץ התחביר ונתקל בקופסת הנתונים של פעולת השליפה – <code>list-ref-exp</code> (זו ששומר הסף יצר בשלב הראשון). הוא שולף מתוכה את שני תתי-הביטויים: <code>e1</code> (שאמור לייצר את הרשימה) ו-<code>e2</code> (שאמור לייצר את האינדקס).</p>`,
+            "step5_2": `<p>המפרש מבקש להעריך את הביטוי <code>e1</code>. שים לב: אם <code>e1</code> הוא פעולת <code>map</code>, הרי שבשלב הזה <code>eval1</code> יקבל את ערך ה-<code>unevaluated-val</code> העצלן שיצרנו קודם! בשלב הזה, בזיכרון של המפרש, <code>eval1</code> הוא עדיין ארוחה קפואה.</p>`,
+            "step5_3": `<p>המפרש מעריך את הביטוי השני <code>e2</code> (האינדקס). הפעם הוא לא יכול להיות סלחן. כדי לשלוף איבר אנחנו צריכים מספר אמיתי. לכן, הוא מיד עוטף את התוצאה בפונקציה <code>expval-&gt;num</code>, שקורעת את קופסת ה-<code>expval</code> ומשאירה למפרש מספר טהור של שפת Scheme ביד (למשל, 2).</p>`,
+            "step5_4": `<p><strong>זהו רגע הקסם וחיבור המערכות!</strong> המפרש לוקח את <code>eval1</code> וזורק אותו לתוך <code>evaluate-map</code> (מנגנון ההפשרה מההודעה הקודמת).</p><ul class="list-disc list-inside ml-4 space-y-2 mb-4"><li>אם <code>eval1</code> היה עצל - הוא יחושב כעת במלואו ויהפוך ל-<code>list-val</code>.</li><li>אם הוא כבר היה רשימה רגילה - הוא פשוט יוחזר כמו שהוא.</li></ul><p>לאחר מכן, הפונקציה <code>expval-&gt;list</code> קורעת את עטיפת ה-<code>list-val</code> ומעבירה למשתנה <code>lst</code> רשימה טהורה ואמיתית של ערכים מוכנים.</p>`,
+            "step5_5": `<p>הסלקטור של המערכת (Bounds Checking). המפרש מגן על עצמו מקריסה (Crash) לא מבוקרת. הוא בודק שני תנאים של שגיאה (שימוש ב-<code>or</code>):</p><ol class="list-decimal list-inside ml-4 space-y-2 mb-4"><li><code>(negative? eval2)</code>: אינדקס לא יכול להיות במינוס (אי אפשר לבקש איבר במיקום 1-).</li><li><code>(&gt;= eval2 (length lst))</code>: חריגה מהאורך (אינדקסים מתחילים מ-0 ולכן האינדקס המקסימלי האפשרי קטן באחד מאורך הרשימה).</li></ol>`,
+            "step5_6": `<p>אם עברנו את בדיקת הגבולות בשלום, מתבצעת המסירה. המפרש משתמש בפקודת <code>list-ref</code> המובנית של שפת הרקע (Scheme) כדי לשלוף מתוך הרשימה הטהורה <code>lst</code> את האיבר שנמצא במיקום <code>eval2</code>. מכיוון שהאיברים בתוך <code>lst</code> כבר ארוזים בקופסאות <code>expval</code>, התוצאה שחוזרת היא <code>expval</code> חוקי ומוכן.</p>`,
+
+            "step6_1": `<p><strong>תחנת המכס של המשתנים.</strong> המפרש ניגש לסביבה (<code>env</code>), מחפש את המשתנה <code>var</code>, ושולף את הערך שלו מתוך הזיכרון בעזרת <code>deref</code>. אבל רגע! בגלל שאנחנו תומכים בעצלנות ב-<code>map</code>, יכול להיות שהערך ששמור שם הוא בכלל קופסה קפואה (<code>unevaluated-val</code>). אנחנו עוטפים את השליפה ב-<code>evaluate-map</code>.</p><ul class="list-disc list-inside ml-4 space-y-2 mb-4"><li>אם זה ערך רגיל (כמו מספר 5), <code>evaluate-map</code> יחזיר אותו מיד.</li><li>אם זה שובר קפוא של <code>map</code>, הוא יופשר כעת ורק התוצאה המחושבת תחזור.</li></ul>`,
+            "step6_2": `<p><strong>תחנת המכס של בלוק ה-<code>let</code>.</strong> המפרש מחשב את המשתנה החדש, מרחיב את הסביבה, ומריץ את ה-<code>body</code>. אבל מה קורה אם ה-<code>body</code> עצמו מחזיר פעולת <code>map</code> עצלה? אנחנו לא רוצים שבלוק ה-<code>let</code> "ידליף" שוברים החוצה. לכן, על התוצאה הסופית של ה-<code>body</code>, אנחנו מפעילים <code>evaluate-map</code> כדי להבטיח שהבלוק יחזיר נתון מוגמר ואמיתי.</p>`,
+            "step6_3": `<p><strong>תחנת המכס של פיצולי הדרך (<code>if</code>).</strong><br>המפרש בודק את התנאי <code>exp1</code>. לאחר שהוא מחליט לאיזה ענף ללכת, הוא מחשב את הענף הרלוונטי (<code>exp2</code> או <code>exp3</code>). שוב, עטפנו כל אחד מהענפים ב-<code>evaluate-map</code>. זה מבטיח שלא משנה באיזה מסלול התוכנית בחרה, משפט ה-<code>if</code> יפלוט החוצה אך ורק נתון מחושב ולא הבטחה לחישוב.</p>`,
+            "step6_4": `<p><strong>תחנת המכס של הפונקציות.</strong> פונקציות הן קופסאות שחורות: אתה מכניס קלט, ומקבל פלט. אם הפונקציה הזו במקרה מחזירה <code>map</code> כתוצאה שלה, הקריאה לפונקציה (<code>apply-procedure</code>) תחזיר לנו ארוחה קפואה. העטיפה ב-<code>evaluate-map</code> מוודאת שכל קריאה לפונקציה בשפה שלנו תסתיים תמיד כשהערך מופשר ומוכן לעבודה.</p>`,
+            "step6_5": `<p>זוהי תחנת המכס <strong>החשובה ביותר במערכת</strong>, והסיבה שהבוחן הדגיש אותה בדיו אדום.<br>הפונקציה <code>value-of-program</code> היא "המעטפת החיצונית" של המפרש. היא זו שלוקחת את הקוד של המשתמש, מתחילה את הריצה מהסביבה הריקה, ובסוף <strong>מדפיסה את התוצאה למסך</strong>.<br>תאר לעצמך שמתכנת כתב תוכנית שלמה, והשורה האחרונה בתוכנית שלו הייתה בקשה לעשות <code>map</code>. אם לא היינו שמים כאן <code>evaluate-map</code>, התוכנית הייתה מסתיימת, והמפרש היה מדפיס למסך של המתכנת: <code>&lt;unevaluated-val&gt;</code>.<br>מבחינת המתכנת – זו שגיאה נוראית או באג. הוא ציפה לראות רשימה של מספרים! לכן, ההוראה כאן היא קריטית: רגע לפני שאתה מגיש את הפלט הסופי של התוכנית כולה בחזרה למתכנת, אתה <strong>חייב</strong> לפדות את כל השוברים ולהציג לו את התוצאה האמיתית והמוחשית.</p>`
 
         };
 
@@ -561,6 +574,74 @@
       uneval)))</mark>`,
                 mentalModelAfter: `
 <h4 class="font-bold text-slate-800 mb-2">מבט על הארכיטקטורה השלמה (ממילים לקוד חי)</h4><p class="mb-4">עכשיו אתה יכול לראות את השרשרת הלוגית השלמה של הקורס בעיניים:</p><ol class="list-decimal list-inside ml-4 space-y-2 mb-4"><li><strong>הדקדוק (<code>the-grammar</code>):</strong> לימד את המפרש לזהות את המילה <code>"map"</code> ולייצר מבנה בשם <code>map-exp</code>.</li><li><strong>מבני הנתונים (<code>data-structures</code>):</strong> סיפקו לנו את הכלים: קופסה עצלה (<code>unevaluated-val</code>) שמחזיקה בתוכה תבנית הקפאה (<code>laziness</code>).</li><li><strong>המפרש (<code>value-of</code>):</strong> כשנתקל ב-<code>map-exp</code>, פעל בעצלנות מוחלטת: הוא לא חישב דבר, אלא רק דחף את הביטויים והסביבה לתוך קופסת ההקפאה והחזיר אותה.</li><li><strong>ההפעלה הכפויה (<code>evaluate-map</code>):</strong> הקוד הנוכחי. ברגע שהשפה "נדחקת לפינה" וחייבת את הערך האמיתי, הפונקציה הזו מופעלת, פותחת את קופסת ההקפאה, מעריכה את הפונקציה והאיברים בסביבה המקורית שלהם, ומחזירה ערך רשימה רגיל ומחושב (<code>list-val</code>).</li></ol>
+                `
+            },
+            {
+                id: 5,
+                title: "שלב 5: list-ref-exp (שליפת איבר מתוך רשימה)",
+                filename: "interp.scm",
+                mentalModelBefore: `
+<p class="mb-4">הקוד הזה כמעט וסוגר לנו את המעגל הגדול שהתחלנו. ראינו את המנתח התחבירי, ראינו את המבנה של הארוחה הקפואה, וראינו את מנגנון ההפשרה (<code>evaluate-map</code>). עכשיו אנחנו רואים את <strong>הלקוח הדורש</strong> – המקום בקוד שבו המפרש נדחק לפינה ופשוט חייב לקבל את הנתונים האמיתיים כדי להמשיך לעבוד.</p>
+<p class="mb-4">הקוד הזה מטפל בפעולת שליפת איבר מתוך רשימה (אינדקס). מכיוון שאי אפשר לשלוף איבר מספר 2 מתוך "שובר זיכוי" קפוא, המפרש מוכרח להפעיל פה כוח.</p>
+<h4 class="font-bold text-slate-800 mb-2">המודל המנטלי: הקופאי וסלקטור הכניסה</h4>
+<p class="mb-4">תאר לעצמך שאתה מגיע לדוכן חלוקת חבילות. ביד אחת אתה מחזיק שובר זיכוי שכתוב עליו "זכאי לקבלת ארגז המכיל רשימת פריטים" (זהו <code>e1</code>), וביד השנייה פתק עם מספר הפריט שאתה רוצה לשלוף מתוך הארגז, נניח פריט מספר 5 (זהו <code>e2</code>).</p>
+<p class="mb-4">הקופאי עושה שלושה דברים:</p><ol class="list-decimal list-inside ml-4 space-y-2 mb-4"><li><strong>הפשרה ופדיון:</strong> הקופאי לא יכול להוציא את פריט 5 מתוך פתק. הוא מפעיל על השובר את חוק פדיון השוברים (<code>evaluate-map</code>), וחוזר עם ארגז אמיתי ומלא בפריטים.</li><li><strong>הסלקטור (בדיקת גבולות):</strong> לפני המסירה, הוא שואל: האם הלקוח ביקש פריט שלילי? האם חרג מהכמות? אם חרג, הוא זורק אותך עם שגיאה.</li><li><strong>המסירה:</strong> אם חוקי, הוא שולף את הפריט הספציפי ונותן לך אותו.</li></ol>
+                `,
+                code: `<mark class="interactive-tooltip" data-key="step5_1">(list-ref-exp (e1 e2)</mark>
+<mark class="interactive-tooltip" data-key="step5_2">  (let* ((eval1 (value-of e1 env))</mark>
+<mark class="interactive-tooltip" data-key="step5_3">         (eval2 (expval->num (value-of e2 env)))</mark>
+<mark class="interactive-tooltip" data-key="step5_4">         ;; כפיית החישוב של e1 במידה והוא map עצל, וחילוץ הרשימה
+         (lst (expval->list (evaluate-map eval1))))</mark>
+<mark class="interactive-tooltip" data-key="step5_5">    ;; בדיקת גבולות מערך מקיפה 
+    (if (or (negative? eval2) (>= eval2 (length lst)))
+        (eopl:error 'list-ref-exp "Listref Expression expects valid index for list")</mark>
+<mark class="interactive-tooltip" data-key="step5_6">        (list-ref lst eval2))))</mark>`,
+                mentalModelAfter: `
+<h4 class="font-bold text-slate-800 mb-2">סיכום התהליך</h4><p class="mb-4">ראינו איך "העצלנות" נשברת. כל עוד יכולנו להעביר את הפונקציות והרשימות מצד לצד (כמו בשלב האריזה), עשינו זאת בלי לחשב דבר. אבל ברגע שפקודת ה-<code>list-ref-exp</code> דרשה לפעול על נתון קונקרטי (לשלוף איבר ספציפי), המערכת כפתה את ההפשרה, בדקה בזהירות שהדרישה חוקית, ורק אז סיפקה את התוצאה. המעגל הושלם.</p>
+                `
+            },
+            {
+                id: 6,
+                title: "שלב 6: תחנות המכס (Strictness Points)",
+                filename: "interp.scm",
+                mentalModelBefore: `
+<p class="mb-4">הקוד הזה חושף את "אפקט הדומינו" של הוספת מנגנון ההערכה העצלה לשפה שלנו. ברגע שהרשינו למפרש לייצר "שוברי זיכוי" (Thunks קפואים מסוג <code>unevaluated-val</code>), יצרנו לעצמנו בעיה חדשה: השוברים האלה מתחילים להסתובב בחופשיות ברחבי התוכנית.</p>
+<p class="mb-4">הקוד הנוכחי הוא מערכת הבלמים שלנו. הוא מגדיר את נקודות הקצה שבהן המפרש אומר: "עד כאן. פה אני לא מוכן לקבל שוברים, אני דורש את הערך האמיתי".</p>
+<h4 class="font-bold text-slate-800 mb-2">המודל המנטלי: תחנות המכס</h4>
+<p class="mb-4">תאר לעצמך שאתה טס למדינה זרה. בדיוטי פרי, אתה יכול לקנות מוצרים בעזרת שוברי מתנה. אבל בתחנת המכס ביציאה מהשדה, הפקיד דורש לראות את התכולה <em>האמיתית</em> של המזוודה שלך, ולא פתק שכתוב עליו "זכאי למוצר".</p>
+<p class="mb-4">בשפות תכנות, הנקודות האלו נקראות "נקודות קשיחות" (Strictness Points). אלו המקומות שבהם המפרש חייב לעבור מ"עצלנות" ל"נלהבות", ולכפות את החישוב (לפדות את השובר) כדי שהתוכנית לא תשבר או תחזיר תוצאה חסרת משמעות למשתמש. הקוד מפזר את תחנות המכס האלו בכל צמתי הפלט המרכזיים של השפה.</p>
+                `,
+                code: `;; בגישה למשתנה מהסביבה - ייתכן שהוא מחזיק ערך עצל!
+<mark class="interactive-tooltip" data-key="step6_1">(var-exp (var) 
+  (evaluate-map (deref (apply-env env var))))</mark>
+
+;; בהשמה ל-let - כופים חישוב לפני החזרת הערך הסופי
+<mark class="interactive-tooltip" data-key="step6_2">(let-exp (var exp1 body)       
+  (let ((val (value-of exp1 env)))
+    (evaluate-map (value-of body (extend-env var (newref val) env)))))</mark>
+
+;; בהתניות - כופים על ענפי הביצוע
+<mark class="interactive-tooltip" data-key="step6_3">(if-exp (exp1 exp2 exp3)
+  (let ((val1 (value-of exp1 env)))
+    (if (expval->bool val1)
+        (evaluate-map (value-of exp2 env))
+        (evaluate-map (value-of exp3 env)))))</mark>
+
+;; בקריאה לפונקציה מכל סוג
+<mark class="interactive-tooltip" data-key="step6_4">(call-exp (rator rand)
+  (let ((proc (expval->proc (value-of rator env)))
+        (arg (value-of rand env)))
+    (evaluate-map (apply-procedure proc arg))))</mark>
+
+;; --- התייחסות להערת הבוחן (דיו אדום) ---
+<mark class="interactive-tooltip" data-key="step6_5">(define value-of-program 
+  (lambda (pgm)
+    (cases program pgm
+      (a-program (exp1)
+        ;; מחייב הרצה סופית של התוכנית כדי למנוע החזרת "Unevaluated" למסך
+        (evaluate-map (value-of exp1 (init-env)))))))</mark>`,
+                mentalModelAfter: `
+<h4 class="font-bold text-slate-800 mb-2">סיכום התהליך</h4><p class="mb-4">האסטרטגיה של המפרש שהרכבת ברורה ועקבית:</p><ol class="list-decimal list-inside ml-4 space-y-2 mb-4"><li><strong>ייצור עצלן:</strong> רק פקודת ה-<code>map</code> רשאית לייצר "שוברים קפואים" ולדחות את החישוב.</li><li><strong>צריכה קפדנית:</strong> בכל פעם שהשפה מנסה באמת להשתמש במידע (לחלץ משתנה, לסיים בלוק של <code>let</code>, לצאת מ-<code>if</code>, לסיים קריאת פונקציה, או להדפיס למסך) – המערכת כופה עליו את החישוב (Forcing) באמצעות <code>evaluate-map</code>.</li></ol><p class="mb-4">כך אתה נהנה משני העולמות: השפה חוסכת חישובים היכן שרק אפשר בעזרת הערכה עצלה, אבל מבטיחה תמיד תוצאות קונקרטיות היכן שהן באמת נדרשות.</p>
                 `
             },
             {
