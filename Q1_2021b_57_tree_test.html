@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור שפות תכנות - 2021ב מועד א (57) - עץ פתרון</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Nav styles */
+        .nav-group {
+            margin-top: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            color: #cbd5e1;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+            padding-right: 1.5rem;
+        }
+
+        .nav-btn.active-nav {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            border-right: 4px solid #60a5fa;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .dark-scroll::-webkit-scrollbar-track {
+            background: #020617;
+        }
+
+        .dark-scroll::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+
+        /* Animation */
+        .step-transition {
+            transition: all 0.3s ease-out;
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Accordion Styles */
+        .accordion-btn {
+            width: 100%;
+            text-align: right;
+            transition: all 0.2s;
+        }
+
+        /* MacOS Code Window Styles (Matching User Image) */
+        .code-window {
+            background-color: #282c34;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #3e4451;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-window-header {
+            background-color: #21252b;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #181a1f;
+        }
+
+        .mac-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .mac-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .mac-close {
+            background-color: #ff5f56;
+        }
+
+        .mac-min {
+            background-color: #ffbd2e;
+        }
+
+        .mac-max {
+            background-color: #27c93f;
+        }
+
+        .code-filename {
+            color: #98c379;
+            font-family: monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            flex: 1;
+            text-align: right;
+            padding-right: 1rem;
+        }
+
+        .code-body {
+            padding: 1.25rem;
+            overflow-x: auto;
+        }
+
+        pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: transparent !important;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            text-shadow: none !important;
+        }
+
+        /* Interactive Code Tooltips - CLEAN and SUBTLE */
+        .interactive-tooltip {
+            transition: all 0.2s;
+            border-radius: 4px;
+            color: inherit;
+            background-color: transparent;
+            padding: 2px 0;
+        }
+
+        .interactive-tooltip.tooltip-active-style {
+            cursor: pointer;
+        }
+
+        /* Very subtle gray background only on hover */
+        .interactive-tooltip.tooltip-active-style:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+        }
+
+        /* Premium Cycler Button Animation */
+        @keyframes pulse-soft {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(0.98);
+            }
+        }
+
+        .cycler-anim {
+            animation: pulse-soft 0.3s ease-in-out;
+        }
+
+        /* Sidebar collapse transition & styles */
+        aside {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .sidebar-collapsed aside {
+            width: 0 !important;
+            min-width: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        #sidebar-toggle-btn {
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            width: 24px;
+            height: 72px;
+            background-color: #0f172a;
+            border: 1px solid #1e293b;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            cursor: pointer;
+            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+        }
+        #sidebar-toggle-btn:hover {
+            background-color: #1e293b;
+            color: #fff;
+        }
+
+        body:not(.sidebar-collapsed) #sidebar-toggle-btn {
+            right: 20rem;
+        }
+
+        body.sidebar-collapsed #sidebar-toggle-btn {
+            right: 0;
+        }
+    </style>
+    <!-- Removed functions_data.js and dictionary-tooltip.js as they conflict and crash without Tippy -->
+
+    <style>
+        @keyframes dashAnim {
+            to { stroke-dashoffset: 0; }
+        }
+        .dark-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+        .dark-scroll::-webkit-scrollbar-track { background: transparent; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        .dark-scroll::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        
+        @keyframes shimmerTree {
+            100% { transform: translateX(100%); }
+        }
+        @keyframes pulseRingTree {
+            0% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(79, 70, 229, 0); }
+            100% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+        }
+    </style>
+    
+</head>
+
+<body class="text-slate-800 h-screen flex overflow-hidden relative">
+
+    <!-- Sidebar Navigation -->
+    <aside
+        class="w-80 bg-darker text-slate-300 flex flex-col h-full shadow-2xl z-20 flex-shrink-0 border-l border-slate-800 relative overflow-hidden">
+
+        <div
+            class="absolute top-[-50px] right-[-50px] w-32 h-32 bg-primary/20 rounded-full blur-3xl pointer-events-none">
+        </div>
+
+        <!-- Premium Tooltip Cycler -->
+        <div
+            class="p-6 border-b border-slate-800 bg-slate-900/50 backdrop-blur-md relative z-10 flex flex-col justify-center min-h-[140px]">
+            <div
+                class="text-[11px] text-slate-400 font-bold px-1 uppercase tracking-widest mb-3 text-center opacity-80">
+                הסברי קוד (Tooltips)</div>
+
+            <button onclick="cycleTooltipState()" id="tooltip-cycler"
+                class="w-full relative group overflow-hidden rounded-xl border border-slate-700 bg-slate-800/80 p-5 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] flex flex-col items-center justify-center gap-3">
+                <i id="cycler-icon"
+                    class="fa-solid fa-mouse-pointer text-3xl text-primary transition-transform group-hover:scale-110 drop-shadow-[0_0_8px_rgba(37,99,235,0.5)]"></i>
+                <span id="cycler-text" class="text-white font-bold tracking-wide text-lg text-shadow">מופעל -
+                    בריחוף</span>
+                <div id="cycler-glow"
+                    class="absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-70 transition-all duration-300">
+                </div>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto dark-scroll p-4 pb-20">
+            <div class="nav-group">
+                <div class="nav-group-title">תחנות הפתרון</div>
+                <div id="step-list">
+                    <!-- Nav buttons injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Next/Prev buttons moved to bottom of page -->
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto scroll-smooth bg-slate-50 relative">
+        <div class="max-w-4xl mx-auto p-10 lg:p-16 pb-32 step-transition fade-enter-active" id="content-container">
+            <header class="mb-10 border-b border-slate-200 pb-6 relative">
+            <div class="absolute top-4 left-6 z-50">
+                <div class="absolute inset-0 rounded-full animate-[pulseRingTree_3s_infinite] pointer-events-none"></div>
+                <button id="tree-modal-btn" onclick="openTreeModal()" class="relative w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 shadow-[0_8px_25px_-5px_rgba(79,70,229,0.7)] hover:shadow-[0_15px_35px_-5px_rgba(79,70,229,0.9)] hover:scale-105 transition-all duration-300 flex items-center justify-center text-white border-2 border-white/40 group overflow-hidden" title="מפת הפתרון (DAG)">
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-[shimmerTree_1.2s_ease-in-out_infinite]"></div>
+                    <i class="fa-solid fa-sitemap text-[26px] drop-shadow-md group-hover:scale-110 group-hover:-translate-y-0.5 transition-transform relative z-10"></i>
+                </button>
+            </div>
+    
+                <div id="step-number-badge"
+                    class="inline-block px-4 py-1 bg-primary text-white rounded-full font-bold text-sm mb-4 tracking-wider uppercase">
+                    תחנה 0</div>
+                <h2 id="step-title" class="text-4xl font-black text-slate-800 tracking-tight mb-4"></h2>
+            </header>
+
+            <div id="step-explanation" class="mb-6">
+                <!-- Content injected by JS -->
+            </div>
+
+            <!-- Custom Code Window -->
+            <div id="code-container" class="code-window hidden">
+                <div class="code-window-header ltr" dir="ltr">
+                    <div class="mac-buttons">
+                        <div class="mac-btn mac-close"></div>
+                        <div class="mac-btn mac-min"></div>
+                        <div class="mac-btn mac-max"></div>
+                    </div>
+                    <div id="file-name" class="code-filename"><i class="fa-solid fa-code mr-2"></i>filename</div>
+                </div>
+                <div class="code-body ltr text-left" dir="ltr">
+                    <pre><code id="code-block" class="language-scheme"></code></pre>
+                </div>
+            </div>
+
+            <div id="step-after-explanation">
+                <!-- Content injected by JS -->
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="mt-8 flex justify-between items-center gap-4 border-t border-slate-200 pt-8">
+                <button id="prev-btn" onclick="prevStep()"
+                    class="px-6 py-3 border border-slate-300 hover:bg-slate-100 text-slate-600 rounded-xl transition font-bold disabled:opacity-40 shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-right"></i> חזור
+                </button>
+                <span id="step-counter" class="text-sm font-bold text-slate-500 bg-slate-100 px-4 py-2 rounded-full border border-slate-200"></span>
+                <button id="next-btn" onclick="nextStep()"
+                    class="px-6 py-3 bg-primary hover:bg-blue-700 text-white rounded-xl shadow-md transition font-bold flex items-center gap-2">
+                    המשך <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Detailed Explanation Modal -->
+    <div id="explanation-modal"
+        class="fixed inset-0 z-[100] bg-slate-900/5 hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300 pointer-events-none">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh] pointer-events-auto border border-slate-200/60"
+            id="modal-card" onmouseenter="clearCloseTimer()"
+            onmouseleave="if(tooltipState === 3) closeModal(null, true)">
+
+            <div class="p-4 overflow-y-auto dark-scroll flex-1">
+
+                <!-- Code Snippet Section -->
+                <div class="bg-[#282c34] rounded-t-2xl p-5 border border-[#3e4451] overflow-x-auto shadow-inner">
+                    <pre dir="ltr"
+                        style="margin:0; padding:0; background:transparent;"><code id="modal-code" class="language-scheme text-[0.95rem] font-mono text-slate-300 leading-relaxed block text-left w-full" style="text-shadow: none;"></code></pre>
+                </div>
+
+                <!-- Explanation Section -->
+                <div
+                    class="bg-blue-50/50 border border-t-0 border-blue-100 rounded-b-2xl p-6 text-slate-700 leading-relaxed text-[1.1rem]">
+                    <p id="modal-explanation"></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Prism JS and KeepMarkup Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scheme.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/keep-markup/prism-keep-markup.min.js"></script>
+
+    <script>
+        let hoverCloseTimer = null;
+
+        function clearCloseTimer() {
+            if (hoverCloseTimer) {
+                clearTimeout(hoverCloseTimer);
+                hoverCloseTimer = null;
+            }
+        }
+
+        function startCloseTimer() {
+            if (tooltipState !== 3) return;
+            clearCloseTimer();
+            hoverCloseTimer = setTimeout(() => {
+                closeModal(null, true);
+            }, 300); // 300ms delay to allow mouse movement to modal
+        }
+
+        // Global click listener to close modal when clicking outside in click mode
+        document.addEventListener('click', (event) => {
+            const modal = document.getElementById('explanation-modal');
+            const modalCard = document.getElementById('modal-card');
+
+            if (!modal.classList.contains('hidden')) {
+                // If the click is NOT inside the modal-card, and NOT on an interactive tooltip
+                if (!modalCard.contains(event.target) && !event.target.closest('.interactive-tooltip')) {
+                    closeModal(null, true);
+                }
+            }
+        });
+        const explanationsDict = {
+            
+            "step1_1": `<div class="space-y-3"><p>אנחנו משדרגים את פקודת ה-<code>let</code> המוכרת. במקום לכתוב <code>let identifier = expression</code>, שמאפשר רק משתנה אחד, החלפנו את המילה <code>identifier</code> במושג חדש שקראנו לו <code>temps</code> (קיצור של זמניים - temporaries). זה אומר למפרש: "בצד השמאלי של ההשמה, אל תצפה בהכרח רק למילה אחת, אלא למה שמוגדר תחת המושג <code>temps</code>". המבנה הזה יישמר בעץ בתור צומת מסוג <code>let-exp</code>.</p></div>`,
+            "step1_2": `<div class="space-y-3"><p>כאן אנחנו מגדירים יצירה של אובייקט חדש בשפה – הטאפל (ה"מגש"). המפרש לומד שאם הוא רואה סוגר שמאלי עוקצני <code>&lt;</code> , ואחריו רשימה של ביטויים שמופרדים בפסיקים, ואז סוגר ימני <code>&gt;</code>, עליו לארוז את כולם יחד. בעץ התחביר שלנו (AST), הדבר הזה ייוצג על ידי קופסה שנקראת <code>tuple-exp</code>.</p></div>`,
+            "step1_3": `<div class="space-y-3"><p>עכשיו אנחנו מסבירים למפרש מה זה ה-<code>temps</code> הזה שביקשנו ממנו לחפש ב-<code>let</code>. זוהי האפשרות הראשונה: קבלת משלוח רגיל. אם מתכנת פשוט כותב שם של משתנה (מזהה - <code>identifier</code>), כמו <code>x</code>, המפרש מזהה את זה כמקרה הבסיסי ומייצר קופסת AST מסוג <code>one-temp</code>.</p></div>`,
+            "step1_4": `<div class="space-y-3"><p>זוהי האפשרות השנייה והמתקדמת עבור <code>temps</code> – <strong>הפירוק (Destructuring)</strong>. אם המפרש רואה סוגריים מרובעים <code>[</code>, ובתוכם רשימה מופרדת בפסיקים, הוא מבין שהמתכנת רוצה לחלץ נתונים מתוך טאפל. במקרה כזה, נוצרת קופסת AST מסוג <code>many-temp</code>.</p></div>`,
+            "step1_5": `<div class="space-y-3"><p>מה קורה כשיש לנו טאפל עם הרבה איברים, אבל אנחנו צריכים רק חלק מהם? כדי לא לזהם את הזיכרון, הוספנו את "המגרסה". אם המפרש רואה קו תחתון <code>_</code>, הוא מייצר קופסה מסוג <code>ignore</code> שמנחה אותו לדלג על הערך הזה.</p></div>`,
+            "step1_6": `<div class="space-y-3"><p>זוהי האפשרות הרגילה בתוך רשימת פירוק. אם זה משתנה אמיתי (כמו <code>x</code> או <code>my-val</code>), המפרש ייצר קופסה מסוג <code>id</code>.</p></div>`,
+
+            "step2_1": `<div class="space-y-3"><p>כאן אנחנו ממנים את "מפקח האיכות" שלנו, הפונקציה (פרדיקט) <code>tuple?</code>. תפקידה הוא לקבל נתון ולוודא שהוא אכן טאפל חוקי של השפה שלנו.</p></div>`,
+            "step2_2": `<div class="space-y-3"><p>המפקח שואל קודם כל: "האם קיבלתי זוג (Pair)?" אם לא, זה בטוח לא טאפל חוקי והוא יחזיר שקר.</p></div>`,
+            "step2_3": `<div class="space-y-3"><p>אם זה כן זוג, המפקח שולף את האיבר הראשון ובודק שהוא ארוז ב-<code>expval</code> תקני.</p></div>`,
+            "step2_4": `<div class="space-y-3"><p>לאחר מכן הוא בודק את שאר האיברים ברקורסיה כדי לוודא שכל איבר בשרשרת הוא <code>expval</code> חוקי.</p></div>`,
+            "step2_5": `<div class="space-y-3"><p>אנחנו מוסיפים טיפוס חדש ל-<code>expval</code>: <code>tuple-val</code>, שישמור בזיכרון את הטאפל בזמן ריצה.</p></div>`,
+            "step2_6": `<div class="space-y-3"><p>כעת אנו מייצרים את "הפותחן" (פונקציית חילוץ - Extractor). המפרש מקבל קופסה ושואל איזה סוג קופסה זו.</p></div>`,
+            "step2_7": `<div class="space-y-3"><p>אם הקופסה היא <code>tuple-val</code>, פותחים אותה ומשולפים את הרשימה הפנימית (ה-<code>tuple</code>).</p></div>`,
+            "step2_8": `<div class="space-y-3"><p>מערכת הגנה: אם המפרש ציפה לטאפל אבל קיבל מספר, תזרק שגיאה.</p></div>`,
+
+            "step3_1": `<div class="space-y-3"><p>זמן הריצה של <code>tuple-exp</code>: מקבלים רשימה של ביטויים שטרם חושבו.</p></div>`,
+            "step3_2": `<div class="space-y-3"><p>מפעילים <code>value-of</code> על כל ביטוי בנפרד ואוספים לתוך רשימת הערכים <code>vals</code>.</p></div>`,
+            "step3_3": `<div class="space-y-3"><p>בדיקת תקינות - טאפל ריק לא חוקי בשפה.</p></div>`,
+            "step3_4": `<div class="space-y-3"><p>אורזים את הכל לתוך <code>tuple-val</code> חדש ושומרים בזיכרון.</p></div>`,
+            "step3_5": `<div class="space-y-3"><p>זמן הריצה של <code>let-exp</code>.</p></div>`,
+            "step3_6": `<div class="space-y-3"><p>מחשבים את הביטוי בצד ימין ושומרים ב-<code>val1</code>.</p></div>`,
+            "step3_7": `<div class="space-y-3"><p>בודקים מאיזה סוג ה-<code>var</code> (צד שמאל) שהתקבל.</p></div>`,
+            "step3_8": `<div class="space-y-3"><p>אם זה משתנה בודד (<code>one-temp</code>), שומרים את כל המגש תחת המשתנה הזה (extend-env).</p></div>`,
+            "step3_9": `<div class="space-y-3"><p>אם זה <code>many-temp</code> (רשימת פירוק), מחלצים את הערכים עם פותחן הקופסאות (<code>expval->tuple</code>) ושולחים ל-<code>apply-let</code> שיבצע השמות מדויקות.</p></div>`,
+            "step3_10": `<div class="space-y-3"><p>בסוף מריצים את ה-<code>body</code> בתוך סביבת הזיכרון החדשה.</p></div>`,
+
+            "step4_1": `<div class="space-y-3"><p>הפונקציה <code>apply-let</code> מקבלת את רשימת השמות, רשימת הערכים, ואת סביבת הזיכרון.</p></div>`,
+            "step4_2": `<div class="space-y-3"><p>פונקציית העזר מנהלת גם את ה-<code>count</code> - הקליקר שסופר כמה משתנים שמרנו.</p></div>`,
+            "step4_3": `<div class="space-y-3"><p>בדיקה שיש התאמה בין מספר השמות למספר הערכים.</p></div>`,
+            "step4_4": `<div class="space-y-3"><p>תנאי העצירה - כשהרשימה נגמרת.</p></div>`,
+            "step4_5": `<div class="space-y-3"><p>בדיקה שאכן שמרנו לפחות משתנה אחד, אחרת זורקים שגיאה.</p></div>`,
+            "step4_6": `<div class="space-y-3"><p>בדיקת האיבר הנוכחי מתוך רשימת המשתנים.</p></div>`,
+            "step4_7": `<div class="space-y-3"><p>אם זה <code>ignore</code> - קוראים לרקורסיה עם שארית הרשימה ללא שינוי בסביבה (לא שומרים כלום).</p></div>`,
+            "step4_8": `<div class="space-y-3"><p>אם זה משתנה אמיתי (<code>id</code>), מתבצע <code>extend-env</code> שמרחיב את הסביבה והקליקר מקודם ב-1.</p></div>`,
+            "step4_9": `<div class="space-y-3"><p>זריקת שגיאת ההתאמה באורכים.</p></div>`,
+            "step4_10": `<div class="space-y-3"><p>קריאה ראשונה לפונקציית הרקורסיה עם קליקר שמאופס ל-0.</p></div>`
+
+        };
+
+        const steps = [
+            
+            {
+                id: 0,
+                title: "שלב 0: שאלת המבחן",
+                isImageOnly: true
+            },
+            {
+                id: 1,
+                title: "שלב 1: lang.scm (התחביר)",
+                filename: "lang.scm",
+                code: `(expression
+  <mark class="interactive-tooltip" data-key="step1_1">("let" temps "=" expression "in" expression)</mark>
+  let-exp)
+
+(expression
+  <mark class="interactive-tooltip" data-key="step1_2">("<" (separated-list expression ",") ">")</mark>
+  tuple-exp)
+
+(temps
+  <mark class="interactive-tooltip" data-key="step1_3">(identifier)</mark>
+  one-temp)
+
+(temps
+  <mark class="interactive-tooltip" data-key="step1_4">("[" (separated-list optional-identifier ",") "]")</mark>
+  many-temp)
+
+(optional-identifier
+  <mark class="interactive-tooltip" data-key="step1_5">("_")</mark>
+  ignore)
+
+(optional-identifier
+  <mark class="interactive-tooltip" data-key="step1_6">(identifier)</mark>
+  id)`
+            },
+            {
+                id: 2,
+                title: "שלב 2: data-structures.scm (מבני נתונים)",
+                filename: "data-structures.scm",
+                code: `<mark class="interactive-tooltip" data-key="step2_1">(define (tuple? lst)</mark>
+  <mark class="interactive-tooltip" data-key="step2_2">(if (pair? lst)</mark>
+      <mark class="interactive-tooltip" data-key="step2_3">(and (expval? (car lst))</mark> 
+           <mark class="interactive-tooltip" data-key="step2_4">(if (null? (cdr lst)) #t (tuple? (cdr lst))))</mark>
+      #f))
+
+<mark class="interactive-tooltip" data-key="step2_5">(define-datatype expval expval?
+  (tuple-val
+    (tuple tuple?)))</mark>
+
+<mark class="interactive-tooltip" data-key="step2_6">(define expval->tuple
+  (lambda (v)
+    (cases expval v</mark>
+      <mark class="interactive-tooltip" data-key="step2_7">(tuple-val (tuple) tuple)</mark>
+      <mark class="interactive-tooltip" data-key="step2_8">(else (expval-extractor-error 'tuple v)))))</mark>`
+            },
+            {
+                id: 3,
+                title: "שלב 3: interp.scm (זמן הריצה - חלק א')",
+                filename: "interp.scm",
+                code: `<mark class="interactive-tooltip" data-key="step3_1">(tuple-exp (exps)</mark>
+  <mark class="interactive-tooltip" data-key="step3_2">(let ((vals (map (lambda (x) (value-of x env)) exps)))</mark>
+    <mark class="interactive-tooltip" data-key="step3_3">(if (= (length vals) 0)
+        (eopl:error 'value-of "tuple can't be empty")</mark>
+        <mark class="interactive-tooltip" data-key="step3_4">(tuple-val vals))))</mark> 
+
+<mark class="interactive-tooltip" data-key="step3_5">(let-exp (var exp1 body)</mark>
+  <mark class="interactive-tooltip" data-key="step3_6">(let* ((val1 (value-of exp1 env))</mark>
+         <mark class="interactive-tooltip" data-key="step3_7">(body-env (cases temps var</mark>
+                     <mark class="interactive-tooltip" data-key="step3_8">(one-temp (id) (extend-env id val1 env))</mark>
+                     <mark class="interactive-tooltip" data-key="step3_9">(many-temp (opt-ids) (apply-let opt-ids (expval->tuple val1) env)))))</mark>
+    <mark class="interactive-tooltip" data-key="step3_10">(value-of body body-env)))</mark>`
+            },
+            {
+                id: 4,
+                title: "שלב 4: interp.scm (זמן הריצה - חלק ב')",
+                filename: "interp.scm",
+                code: `<mark class="interactive-tooltip" data-key="step4_1">(define (apply-let vars vals env)</mark>
+  <mark class="interactive-tooltip" data-key="step4_2">(define (apply-let-impl vars vals env count)</mark>
+    <mark class="interactive-tooltip" data-key="step4_3">(if (= (length vars) (length vals))</mark>
+        <mark class="interactive-tooltip" data-key="step4_4">(if (null? vars)</mark>
+            <mark class="interactive-tooltip" data-key="step4_5">(if (zero? count)
+                (eopl:error 'apply-let "Empty tmps in let is disallowed")
+                env)</mark>
+            <mark class="interactive-tooltip" data-key="step4_6">(cases optional-identifier (car vars)</mark>
+              <mark class="interactive-tooltip" data-key="step4_7">(ignore () (apply-let-impl (cdr vars) (cdr vals) env count))</mark>
+              <mark class="interactive-tooltip" data-key="step4_8">(id (var) (apply-let-impl (cdr vars) (cdr vals) 
+                                       (extend-env var (car vals) env) 
+                                       (+ count 1)))))</mark>
+        <mark class="interactive-tooltip" data-key="step4_9">(eopl:error 'apply-let "mismatch between amount of identifiers and values")))</mark>
+  <mark class="interactive-tooltip" data-key="step4_10">(apply-let-impl vars vals env 0)</mark>`
+            },
+            {
+                id: "final",
+                title: "הפתרון המלא ברצף",
+                isFinal: true
+            }
+
+        ];
+
+        let currentStep = 0;
+        let tooltipState = 3; // 1 = none, 2 = click, 3 = hover
+
+        const tooltipConfig = {
+            1: { icon: "fa-code", text: "ללא הסברים", color: "text-slate-400", glow: "via-slate-500", glowOp: "opacity-30" },
+            2: { icon: "fa-hand-pointer", text: "מופעל - בלחיצה", color: "text-emerald-400", glow: "via-emerald-400", glowOp: "opacity-70" },
+            3: { icon: "fa-mouse-pointer", text: "מופעל - בריחוף", color: "text-primary", glow: "via-primary", glowOp: "opacity-70" }
+        };
+
+        const stepTitle = document.getElementById('step-title');
+        const stepNumberBadge = document.getElementById('step-number-badge');
+        const stepExplanation = document.getElementById('step-explanation');
+        const codeContainer = document.getElementById('code-container');
+        const codeBlock = document.getElementById('code-block');
+        const fileName = document.getElementById('file-name');
+        const stepAfterExplanation = document.getElementById('step-after-explanation');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const stepList = document.getElementById('step-list');
+        const stepCounter = document.getElementById('step-counter');
+        const contentContainer = document.getElementById('content-container');
+
+        // Handle custom image upload for step 0
+        document.addEventListener('change', function (e) {
+            if (e.target && e.target.id === 'image-upload-input') {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        const img = document.getElementById('step-0-image');
+                        img.src = event.target.result;
+                        img.style.display = 'block';
+                        document.getElementById('image-upload-fallback').style.display = 'none';
+                        localStorage.setItem('q1_2021b_57_image', event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        function updateCyclerUI() {
+            const config = tooltipConfig[tooltipState];
+
+            const btn = document.getElementById('tooltip-cycler');
+            const icon = document.getElementById('cycler-icon');
+            const text = document.getElementById('cycler-text');
+            const glow = document.getElementById('cycler-glow');
+
+            // Animation reset
+            btn.classList.remove('cycler-anim');
+            void btn.offsetWidth; // trigger reflow
+            btn.classList.add('cycler-anim');
+
+            icon.className = `fa-solid ${config.icon} text-3xl ${config.color} transition-transform group-hover:scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]`;
+            text.textContent = config.text;
+
+            glow.className = `absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent ${config.glow} to-transparent ${config.glowOp} transition-all duration-300`;
+
+            initTooltips();
+        }
+
+        function cycleTooltipState() {
+            tooltipState = tooltipState === 3 ? 1 : tooltipState + 1;
+            localStorage.setItem('globalTooltipState', tooltipState);
+            updateCyclerUI();
+        }
+
+        // Modal Functions
+        function openModal(codeText, explanationHtml) {
+            const modal = document.getElementById('explanation-modal');
+            const modalCard = document.getElementById('modal-card');
+            const modalCode = document.getElementById('modal-code');
+            const modalExplanation = document.getElementById('modal-explanation');
+
+            modalCode.textContent = codeText.replace(/^\n+|\n+$/g, '');
+            Prism.highlightElement(modalCode);
+            modalExplanation.innerHTML = explanationHtml;
+
+            modal.classList.remove('hidden');
+            // Trigger reflow for animation
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+            modalCard.classList.remove('scale-95');
+            modal.classList.add('flex');
+        }
+
+        function closeModal(event, force = false) {
+            if (event && !force) {
+                // If they clicked directly on the modal backdrop, close it.
+                if (event.target !== document.getElementById('explanation-modal')) {
+                    return;
+                }
+            }
+
+            const modal = document.getElementById('explanation-modal');
+            const modalCard = document.getElementById('modal-card');
+
+            modal.classList.add('opacity-0');
+            modalCard.classList.add('scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function initTooltips() {
+            // Reset state
+            const marks = document.querySelectorAll('mark.interactive-tooltip');
+
+            marks.forEach(m => {
+                m.classList.remove('tooltip-active-style');
+                m.style.pointerEvents = 'none';
+
+                // Remove old listeners by cloning
+                const newMark = m.cloneNode(true);
+                m.parentNode.replaceChild(newMark, m);
+            });
+
+            if (tooltipState === 1) return;
+
+            const freshMarks = document.querySelectorAll('mark.interactive-tooltip');
+            freshMarks.forEach(m => {
+                m.classList.add('tooltip-active-style');
+                m.style.pointerEvents = 'auto';
+
+                const explanationKey = m.getAttribute('data-key');
+                const explanation = explanationsDict[explanationKey] || "הסבר חסר";
+                const codeText = m.textContent;
+
+                if (tooltipState === 2) {
+                    m.addEventListener('click', () => openModal(codeText, explanation));
+                } else if (tooltipState === 3) {
+                    m.addEventListener('mouseenter', () => {
+                        clearCloseTimer();
+                        openModal(codeText, explanation);
+                    });
+                    m.addEventListener('mouseleave', () => {
+                        startCloseTimer();
+                    });
+                }
+            });
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById('acc-content-' + id);
+            const icon = document.getElementById('acc-icon-' + id);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function renderSidebar() {
+            stepList.innerHTML = '';
+            steps.forEach((step, index) => {
+                const btn = document.createElement('button');
+                btn.className = `nav-btn ${index === currentStep ? 'active-nav' : ''}`;
+                btn.onclick = () => goToStep(index);
+                btn.innerHTML = `<span>${step.id === 'final' ? '<i class="fa-solid fa-flag-checkered mr-2"></i> ' : (index) + ': '}${step.title}</span>`;
+                stepList.appendChild(btn);
+            });
+        }
+
+        
+        const graphNodes = {
+            'tagnode_0': { title: "Destructuring", desc: "המשימה המרכזית", icon: "fa-rocket", step: 0,
+                        location: "הבנת הבעיה הכוללת (Concepts)",
+                        code: ``, details: "המטרה שלנו: הוספת טאפלים (Tuples) ויכולת פירוק מבנים (Destructuring) לשפה.\nבעץ זה נתחקה אחר המסלול המדויק של כל שורת קוד שכתבנו, משלב הגדרות התחביר עד למימוש בזיכרון, ונראה איך כל הפונקציות מתחברות יחד למערכת אחת עובדת. לחץ על הצמתים בעץ כדי לראות בדיוק אילו פונקציות קוראות לפונקציות אחרות (הקווים הכחולים יאירו את המסלול), ואת ההסבר המלא והקוד עבור כל אחת מהן." },
+            
+            // Level 1: lang.scm
+            'tagnode_1_1': { title: "tuple-exp", desc: "תבנית תחבירית לטאפל", icon: "fa-box-open", step: 1,
+                        location: "lang.scm -> שלב הניתוח התחבירי (Parsing)",
+                        code: `(expression\n  ("<" (separated-list expression ",") ">")\n  tuple-exp)`, 
+                        details: "תפקיד הפונקציה הוא ללמד את המפרש את חוקי הדקדוק החדשים שלנו. כאן אנחנו מסבירים לו איך נראה 'טאפל' בקוד המקור: הוא חייב להתחיל בסוגר שמאלי עוקצני, להכיל רשימה של ביטויים שמופרדים בפסיק, ולהיסגר. ברגע שהמפרש יזהה את התבנית הזו בטקסט, הוא ייצר בעץ התחביר המופשט (AST) קופסה (צומת) שתקרא 'tuple-exp'." },
+            'tagnode_1_2': { title: "let-exp", desc: "שדרוג צד שמאל בהשמה", icon: "fa-pen-to-square", step: 1,
+                        location: "lang.scm -> שלב הניתוח התחבירי (Parsing)",
+                        code: `(expression\n  ("let" temps "=" expression "in" expression)\n  let-exp)`, 
+                        details: "עד עכשיו, פקודת let התירה רק למשתנה אחד צנוע לקבל ערך. שינינו את צד שמאל של ההשמה שיקבל מעתה מונח תחבירי חדש שקראנו לו 'temps' (זמניים). זה אומר למפרש שכאשר הוא מנתח פקודת let, עליו לצפות לתבנית רחבה ומורכבת יותר של הגדרת משתנים (כמו רשימת משתנים בסוגריים), שתאפשר לנו בהמשך לעשות את חלוקת השלל - פירוק המבנים." },
+            'tagnode_1_3': { title: "one-temp", desc: "משתנה בודד", icon: "fa-cube", step: 1,
+                        location: "lang.scm -> שלב הניתוח התחבירי (Parsing)",
+                        code: `(temps\n  (identifier)\n  one-temp)`, 
+                        details: "זהו מקרה הבסיס של המונח החדש 'temps'. כאן אנחנו שומרים על תאימות לאחור (Backward Compatibility). אנחנו מגדירים שאם המתכנת מעביר פשוט שם של משתנה יחיד (identifier), הוא יאוחסן בתבנית שנקראת 'one-temp'. במקרה זה (בזמן ריצה) הטאפל כולו יישמר בשלמותו בתוך משתנה אחד ללא שום פירוק." },
+            'tagnode_1_4': { title: "many-temp", desc: "רשימת פירוק משתנים", icon: "fa-boxes-stacked", step: 1,
+                        location: "lang.scm -> שלב הניתוח התחבירי (Parsing)",
+                        code: `(temps\n  ("[" (separated-list optional-identifier ",") "]")\n  many-temp)`, 
+                        details: "כאן קורה הקסם האמיתי של פירוק המבנים! אנחנו מגדירים תבנית מתקדמת עבור המונח 'temps'. אם המתכנת משתמש בסוגריים מרובעים [ ] ובתוכם רשימה של מזהים מופרדים בפסיקים, המפרש יזהה שזו בקשה מפורשת לפירוק הטאפל, וייצור עץ 'many-temp' שיחזיק את כל רשימת המזהים (השמות) אליהם אנחנו רוצים לשפוך את הערכים." },
+            'tagnode_1_5': { title: "ignore", desc: "המגרסה (_)", icon: "fa-trash-can", step: 1,
+                        location: "lang.scm -> שלב הניתוח התחבירי (Parsing)",
+                        code: `(optional-identifier\n  ("_")\n  ignore)`, 
+                        details: "הגדרת ה'מגרסה'. כחלק מרשימת הפירוק של הטאפל, לא תמיד נרצה לשמור את כל הערכים שהוא מכיל. על ידי הגדרת קו תחתון (_), אנחנו מאותתים למפרש ליצור אובייקט מסוג 'ignore', שיסמן לו בהמשך (בזמן הריצה) לדלג על הערך הספציפי במיקום הזה ולא לזהם סתם את סביבת הזיכרון (ה-Environment) עם משתני זבל." },
+            'tagnode_1_6': { title: "id", desc: "משתנה רגיל", icon: "fa-tag", step: 1,
+                        location: "lang.scm -> שלב הניתוח התחבירי (Parsing)",
+                        code: `(optional-identifier\n  (identifier)\n  id)`, 
+                        details: "הגדרה פשוטה למשתנה רגיל וחוקי בתוך רשימת הפירוק של הטאפל. כאשר המתכנת יכתוב שם משתנה אותנטי (כמו x או myVal) בתוך הסוגריים המרובעים, המפרש יעטוף אותו בקופסת 'id' שתשמש כתגית הרשמית למשתנה הזה שישמור את הערך החולץ בזיכרון." },
+
+            // Level 2: data-structures.scm
+            'tagnode_2_1': { title: "tuple?", desc: "מפקח תקינות", icon: "fa-user-shield", step: 2,
+                        location: "data-structures.scm -> הגדרת מבני הנתונים (Data Types)",
+                        code: `(define (tuple? lst)\n  (if (pair? lst)\n      (and (expval? (car lst)) \n           (if (null? (cdr lst)) #t (tuple? (cdr lst))))\n      #f))`, 
+                        details: "עברנו לשלב מבני הנתונים! כדי שנוכל לאחסן טאפל בזיכרון באופן רשמי, אנחנו חייבים לוודא שהנתונים בו תקינים ועומדים בתקן. הפונקציה הזו היא 'מפקח איכות'. היא רצה ברקורסיה על כל האיברים בשרשרת, ומוודאת שכל איבר בה הוא אך ורק 'expval' חוקי (קופסת אחסון מוכרת של המפרש, ולא סתם מספר ערטילאי בשפת Scheme)." },
+            'tagnode_2_2': { title: "tuple-val", desc: "קופסת אחסון במחסן", icon: "fa-box-archive", step: 2,
+                        location: "data-structures.scm -> הגדרת מבני הנתונים (Data Types)",
+                        code: `(define-datatype expval expval?\n  (tuple-val\n    (tuple tuple?)))`, 
+                        details: "רישום הטאפל במחסן הנתונים של המפרש. אנחנו מוסיפים למבנה ה-datatype של ה-'expval' את האופציה החדשה 'tuple-val'. מעכשיו, כשהמפרש ירצה לשמור טאפל בזיכרון בזמן הריצה, הוא יארוז אותו פיזית בתוך הקופסה הייעודית הזו, יחד עם התחייבות חוזית שהרשימה הפנימית עברה בהצלחה את מפקח האיכות (tuple?)." },
+            'tagnode_2_3': { title: "expval->tuple", desc: "פותחן קופסאות", icon: "fa-unlock-keyhole", step: 2,
+                        location: "data-structures.scm -> הגדרת מבני הנתונים (Data Types)",
+                        code: `(define expval->tuple\n  (lambda (v)\n    (cases expval v\n      (tuple-val (tuple) tuple)\n      (else (expval-extractor-error 'tuple v)))))`, 
+                        details: "יצירת 'פותחן הקופסאות' הייעודי עבור טאפלים. בדיוק כפי שיש לנו פונקציות חילוץ למספרים (expval->num) בזיכרון, זו הפונקציה שמקבלת ערך מסוים מזיכרון הריצה, פותחת את קופסת ה-'tuple-val' המגנה, ושולפת מתוכה את הרשימה הפנימית במידה והיא אכן טאפל. פונקציה זו היא כלי חיוני לשלב פירוק המבנים בהמשך." },
+
+            // Level 3: interp.scm (A)
+            'tagnode_3_1': { title: "tuple-exp", desc: "אריזת הטאפל בזיכרון", icon: "fa-microchip", step: 3,
+                        location: "interp.scm -> פונקציית הערכת הביטויים (value-of)",
+                        code: `(tuple-exp (exps)\n  (let ((vals (map (lambda (x) (value-of x env)) exps)))\n    (if (= (length vals) 0)\n        (eopl:error 'value-of "tuple can't be empty")\n        (tuple-val vals))))`, 
+                        details: "הגענו לזמן הריצה (Runtime). כאן אנחנו מגדירים איך המפרש מבצע בפועל את יצירת הטאפל. הפונקציה מקבלת את רשימת הביטויים שטרם חושבו. היא עוברת עליהם במקביל (עם map), מפעילה עליהם באופן רקורסיבי את 'value-of' כדי לחשב כל אחד לערך סופי, ואוספת את התוצאות. אם הטאפל לא ריק, היא אורזת הכל במרוכז לתוך 'tuple-val' ומוחזרת אובייקט רשמי שיישמר בזיכרון." },
+            'tagnode_3_2': { title: "let-exp (one)", desc: "השמת משתנה בודד", icon: "fa-arrow-right-to-bracket", step: 3,
+                        location: "interp.scm -> פונקציית הערכת הביטויים (value-of)",
+                        code: `(let-exp (var exp1 body)\n  (let* ((val1 (value-of exp1 env))\n         (body-env (cases temps var\n                     (one-temp (id) (extend-env id val1 env))\n                     ;; ...\n                     )))\n    (value-of body body-env)))`, 
+                        details: "החצי הראשון של שדרוג ה-let (פקודת ההשמה) בזמן ריצה. לאחר שהמפרש מחשב את הביטוי בצד ימין (הטאפל שלנו), הוא מסתכל מה כתוב לו בצד השמאלי. אם הצד השמאלי זוהה כתבנית 'one-temp' (כלומר משתנה בודד ורגיל), הוא פשוט קורא ל-extend-env המסורתי ושומר את קופסת הטאפל בשלמותה לתוך אותו משתנה בודד בזיכרון (ה-Environment)." },
+            'tagnode_3_3': { title: "let-exp (many)", desc: "השמת פירוק", icon: "fa-network-wired", step: 3,
+                        location: "interp.scm -> פונקציית הערכת הביטויים (value-of)",
+                        code: `(let-exp (var exp1 body)\n  (let* ((val1 (value-of exp1 env))\n         (body-env (cases temps var\n                     ;; ...\n                     (many-temp (opt-ids) (apply-let opt-ids (expval->tuple val1) env)))))\n    (value-of body body-env)))`, 
+                        details: "החצי השני והסופר-מתקדם של פקודת ה-let! במידה וצד שמאל זוהה כתבנית פירוק מרובה ('many-temp' עם סוגריים מרובעים), המפרש לוקח את הערך שחושב, מפעיל עליו מיד את 'פותחן הקופסאות' (expval->tuple) כדי לשלוף מתוכו את רשימת הערכים הטהורה, ואז משגר את רשימת השמות יחד עם רשימת הערכים לפונקציית העזר 'apply-let' - שמטרתה לחלק את השלל אחד-אחד." },
+
+            // Level 4: interp.scm (B)
+            'tagnode_4_1': { title: "apply-let", desc: "לולאת הרוכסן", icon: "fa-file-zipper", step: 4,
+                        location: "interp.scm -> פונקציית עזר להשמה (Helper function)",
+                        code: `(define (apply-let vars vals env)\n  (define (apply-let-impl vars vals env count)\n    (if (= (length vars) (length vals))\n        (if (null? vars)\n            (if (zero? count)\n                (eopl:error 'apply-let "Empty tmps in let is disallowed")\n                env)\n            (cases optional-identifier (car vars)\n              (ignore () (apply-let-impl (cdr vars) (cdr vals) env count))\n              (id (var) (apply-let-impl (cdr vars) (cdr vals) \n                                       (extend-env var (car vals) env) \n                                       (+ count 1)))))\n        (eopl:error 'apply-let "mismatch")))\n  (apply-let-impl vars vals env 0))`, 
+                        details: "לב ליבו של מנגנון פירוק המבנים (Destructuring). זוהי פונקציית העזר (ה'רוכסן') שעוברת בלולאה במקביל על רשימת המשתנים הנדרשים (vars) ועל רשימת הערכים שבפועל יש בטאפל (vals). היא מדלגת באלגנטיות על ערכים שסומנו במגרסה ('ignore'), שומרת בעזרת 'extend-env' אך ורק משתנים רגילים ('id') לסביבת הזיכרון, מתחזקת 'קליקר' (count) כדי לוודא שלפחות השמה אחת בוצעה בפועל, וזורקת שגיאות במקרים של אי-התאמה באורכי הרשימות." }
+        };
+
+        let isModalOpen = false;
+
+        function openTreeModal() {
+            try {
+                if(!isModalOpen) {
+                    renderGraphNodes();
+                    isModalOpen = true;
+                }
+                const modal = document.getElementById('tree-modal');
+                const modalCard = document.getElementById('tree-modal-card');
+                modal.classList.remove('hidden');
+                void modal.offsetWidth; 
+                modal.classList.remove('opacity-0');
+                modalCard.classList.remove('scale-95');
+                modal.classList.add('flex');
+                
+                // Draw lines initially
+                setTimeout(drawLines, 350); 
+            } catch(e) {
+                console.error("openTreeModal failed", e);
+            }
+        }
+
+        function closeTreeModal() {
+            closeNodeModal(); // Close child modal if open
+            const modal = document.getElementById('tree-modal');
+            const modalCard = document.getElementById('tree-modal-card');
+            modal.classList.add('opacity-0');
+            modalCard.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function renderGraphNodes() {
+            try {
+                const pane = document.getElementById('graph-pane');
+                const oldLevels = pane.querySelectorAll('.graph-level-wrapper');
+                oldLevels.forEach(e => e.remove());
+                
+                const levels = [
+                    { label: "", nodes: ['tagnode_0'] },
+                    { label: "1. lang.scm (התחביר / Parsing)", nodes: ['tagnode_1_1', 'tagnode_1_2', 'tagnode_1_3', 'tagnode_1_4', 'tagnode_1_5', 'tagnode_1_6'] },
+                    { label: "2. data-structures.scm (מבני הנתונים / Data Types)", nodes: ['tagnode_2_1', 'tagnode_2_2', 'tagnode_2_3'] },
+                    { label: "3. interp.scm חלק א (אריזה והכנה להשמה)", nodes: ['tagnode_3_1', 'tagnode_3_2', 'tagnode_3_3'] },
+                    { label: "4. interp.scm חלק ב (ביצוע ההשמה בפועל)", nodes: ['tagnode_4_1'] }
+                ];
+                                
+                levels.forEach((levelObj) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'graph-level-wrapper w-full flex flex-col items-center mb-12 relative z-10';
+                    
+                    if (levelObj.label) {
+                        const labelEl = document.createElement('div');
+                        labelEl.className = 'text-slate-500 font-bold text-[12px] uppercase tracking-widest mb-4 bg-white/90 px-4 py-1.5 rounded-full border border-slate-200 shadow-sm backdrop-blur-sm';
+                        labelEl.textContent = levelObj.label;
+                        wrapper.appendChild(labelEl);
+                    }
+
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-center w-full gap-4';
+                    
+                    levelObj.nodes.forEach(nodeId => {
+                        const data = graphNodes[nodeId];
+                        if(!data) return;
+                        
+                        const nodeEl = document.createElement('div');
+                        nodeEl.id = nodeId;
+                        nodeEl.className = 'node-container relative group cursor-pointer';
+                        
+                        nodeEl.addEventListener('click', function() {
+                            showNodeDetails(nodeId);
+                        });
+                        
+                        let cardClass = 'bg-white border shadow-sm rounded-[1rem] p-3 w-[140px] h-[120px] flex flex-col items-center text-center relative z-10 transition-all hover:-translate-y-1 hover:shadow-lg border-slate-200';
+                        let iconColorClass = 'text-slate-500 bg-slate-50 border-slate-100';
+                        let titleClass = 'font-black text-[14px] text-slate-800 leading-tight mt-3 mb-1.5';
+                        let descClass = 'text-slate-500 text-[11px] font-medium leading-tight px-1';
+
+                        if (nodeId === 'tagnode_0') {
+                            cardClass = 'bg-slate-800 border-slate-700 shadow-md rounded-[1.2rem] p-4 w-[180px] h-[125px] flex flex-col items-center text-center relative z-10 transition-all hover:-translate-y-1 hover:shadow-lg text-white';
+                            iconColorClass = 'text-slate-800 bg-white border-white';
+                            titleClass = 'font-black text-[16px] text-white leading-tight mt-3 mb-1.5';
+                            descClass = 'text-slate-300 text-[12px] font-medium leading-tight';
+                        }
+
+                        nodeEl.innerHTML = `
+                            <div class="graph-card-el ${cardClass}">
+                                <div class="selection-ring absolute -inset-1 border-[2px] border-transparent rounded-[1.2rem] transition-colors pointer-events-none"></div>
+                                <div class="w-10 h-10 min-h-[40px] rounded-full ${iconColorClass} shadow-inner flex items-center justify-center border">
+                                    <i class="fa-solid ${data.icon} text-[15px]"></i>
+                                </div>
+                                <h3 class="${titleClass}" dir="ltr">${data.title}</h3>
+                                <span class="${descClass}">${data.desc}</span>
+                            </div>
+                        `;
+                        row.appendChild(nodeEl);
+                    });
+                    wrapper.appendChild(row);
+                    pane.appendChild(wrapper);
+                });
+            } catch(e) {
+                console.error("renderGraphNodes failed", e);
+            }
+        }
+
+        let activeSelectedNode = null;
+
+        function showNodeDetails(nodeId) {
+            try {
+                const data = graphNodes[nodeId];
+                if(!data) return;
+                
+                if (activeSelectedNode) {
+                    const prev = document.getElementById(activeSelectedNode);
+                    if(prev) {
+                        const ring = prev.querySelector('.selection-ring');
+                        if(ring) ring.classList.remove('border-blue-500', 'bg-blue-50/50');
+                    }
+                }
+                activeSelectedNode = nodeId;
+                const currentEl = document.getElementById(nodeId);
+                if(currentEl) {
+                    const ring = currentEl.querySelector('.selection-ring');
+                    if(ring) ring.classList.add('border-blue-500', 'bg-blue-50/50');
+                }
+                
+                try { drawLines(); } catch(e) {}
+                
+                // Open Popup Modal
+                const modal = document.getElementById('node-details-modal');
+                const modalCard = document.getElementById('node-details-card');
+                modal.classList.remove('hidden');
+                void modal.offsetWidth;
+                modal.classList.remove('opacity-0');
+                modalCard.classList.remove('scale-95');
+                modal.classList.add('flex');
+                
+                document.getElementById('ndm-title').textContent = data.title;
+                document.getElementById('ndm-location').textContent = data.location;
+                document.getElementById('ndm-details').textContent = data.details;
+                
+                const iconEl = document.getElementById('ndm-icon');
+                iconEl.className = `fa-solid ${data.icon} text-xl`;
+                
+                const codeEl = document.getElementById('ndm-code');
+                codeEl.textContent = data.code;
+                if (window.Prism) {
+                    Prism.highlightElement(codeEl);
+                }
+                
+                const btn = document.getElementById('ndm-jump-btn');
+                if (data.step !== undefined && data.step >= 0) {
+                    btn.classList.remove('hidden');
+                    btn.onclick = () => {
+                        goToStep(data.step);
+                        closeNodeModal();
+                        closeTreeModal();
+                    };
+                } else {
+                    btn.classList.add('hidden');
+                }
+                
+            } catch(e) {
+                console.error("showNodeDetails failed", e);
+            }
+        }
+
+        function closeNodeModal(e) {
+            if (e && e.target.id !== 'node-details-modal' && e.target.id !== 'close-btn') return;
+            const modal = document.getElementById('node-details-modal');
+            const modalCard = document.getElementById('node-details-card');
+            modal.classList.add('opacity-0');
+            modalCard.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function drawLines() {
+            try {
+                const svg = document.getElementById('lines-svg');
+                if(!svg) return;
+                
+                svg.innerHTML = `
+                    <defs>
+                        <marker id="arrowhead" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                            <polygon points="0 0, 6 2, 0 4" fill="#cbd5e1" />
+                        </marker>
+                        <marker id="arrowhead-active" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                            <polygon points="0 0, 6 2, 0 4" fill="#3b82f6" />
+                        </marker>
+                    </defs>
+                `;
+                const pane = document.getElementById('graph-pane');
+                const svgRect = svg.getBoundingClientRect();
+                
+                if (svgRect.width === 0 || svgRect.height === 0) return;
+                
+                const edges = [
+                    ['tagnode_0', 'tagnode_1_1'], ['tagnode_0', 'tagnode_1_2'], ['tagnode_0', 'tagnode_1_3'], ['tagnode_0', 'tagnode_1_4'], ['tagnode_0', 'tagnode_1_5'], ['tagnode_0', 'tagnode_1_6'],
+                    ['tagnode_1_1', 'tagnode_2_1'], ['tagnode_1_1', 'tagnode_3_1'],
+                    ['tagnode_2_1', 'tagnode_2_2'], 
+                    ['tagnode_2_2', 'tagnode_3_1'], ['tagnode_2_2', 'tagnode_2_3'],
+                    ['tagnode_1_2', 'tagnode_3_2'], ['tagnode_1_2', 'tagnode_3_3'],
+                    ['tagnode_1_3', 'tagnode_3_2'],
+                    ['tagnode_1_4', 'tagnode_3_3'],
+                    ['tagnode_2_3', 'tagnode_3_3'],
+                    ['tagnode_1_5', 'tagnode_4_1'], ['tagnode_1_6', 'tagnode_4_1'],
+                    ['tagnode_3_3', 'tagnode_4_1']
+                ];
+                
+                edges.forEach(([id1, id2]) => {
+                    const el1 = document.getElementById(id1);
+                    const el2 = document.getElementById(id2);
+                    if (!el1 || !el2) return;
+                    
+                    const card1 = el1.querySelector('.graph-card-el');
+                    const card2 = el2.querySelector('.graph-card-el');
+                    if (!card1 || !card2) return;
+                    
+                    const rect1 = card1.getBoundingClientRect();
+                    const rect2 = card2.getBoundingClientRect();
+                    
+                    if (rect1.width === 0 || rect2.width === 0) return;
+                    
+                    const x1 = rect1.left - svgRect.left + (rect1.width / 2);
+                    const y1 = rect1.bottom - svgRect.top;
+                    
+                    const x2 = rect2.left - svgRect.left + (rect2.width / 2);
+                    const y2 = rect2.top - svgRect.top;
+                    
+                    const dy = y2 - y1;
+                    
+                    const cp1x = x1;
+                    const cp1y = y1 + dy * 0.45;
+                    const cp2x = x2;
+                    const cp2y = y2 - dy * 0.45;
+                    
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`);
+                    path.setAttribute('fill', 'none');
+                    
+                    let isActiveEdge = false;
+                    if (activeSelectedNode && (activeSelectedNode === id1 || activeSelectedNode === id2)) {
+                        isActiveEdge = true;
+                    }
+                    
+                    path.setAttribute('stroke', isActiveEdge ? '#3b82f6' : '#cbd5e1');
+                    path.setAttribute('stroke-width', isActiveEdge ? '3' : '2');
+                    path.setAttribute('marker-end', isActiveEdge ? 'url(#arrowhead-active)' : 'url(#arrowhead)');
+                    
+                    if (isActiveEdge) {
+                        path.style.strokeDasharray = '1000';
+                        path.style.strokeDashoffset = '1000';
+                        path.style.animation = 'dashAnim 0.8s ease-out forwards';
+                        svg.appendChild(path);
+                    } else {
+                        if (svg.firstChild) {
+                            svg.insertBefore(path, svg.firstChild);
+                        } else {
+                            svg.appendChild(path);
+                        }
+                    }
+                });
+            } catch(e) {
+                console.error("drawLines failed", e);
+            }
+        }
+        
+        window.addEventListener('resize', () => { if(isModalOpen) drawLines(); });
+        document.getElementById('graph-scroll-container').addEventListener('scroll', () => { if(isModalOpen) drawLines(); });
+    
+        function updateUI() {
+            const step = steps[currentStep];
+
+            stepNumberBadge.textContent = step.isFinal ? "שלב סופי" : ("תחנה " + currentStep);
+            stepTitle.textContent = step.title;
+            stepExplanation.innerHTML = '';
+            stepAfterExplanation.innerHTML = '';
+            codeContainer.classList.add('hidden');
+
+            if (step.isImageOnly) {
+                let imagesHtml = '';
+                if (Array.isArray(step.imageSrc)) {
+                    imagesHtml = step.imageSrc.map((src, i) => `<img id="step-0-image-${i}" src="${src}" class="max-w-full h-auto rounded-xl shadow-lg border border-slate-200 mx-auto mb-4">`).join('');
+                } else {
+                    const savedImg = localStorage.getItem('q1_2021b_57_image') || localStorage.getItem('q1_2025c_83_image');
+                    const imgSrc = savedImg ? savedImg : step.imageSrc;
+                    imagesHtml = `<img id="step-0-image" src="${imgSrc}" class="max-w-full h-auto rounded-xl shadow-lg border border-slate-200 mx-auto" onerror="this.style.display='none'; document.getElementById('image-upload-fallback').style.display='block';">`;
+                }
+
+                stepExplanation.innerHTML = `
+                <div class="text-center">
+                    ${imagesHtml}
+                    <div id="image-upload-fallback" class="hidden mt-4 p-8 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50">
+                        <i class="fa-regular fa-image text-4xl text-slate-400 mb-3"></i>
+                        <p class="text-slate-500 mb-4 font-bold text-lg">תמונת השאלה חסרה</p>
+                        <p class="text-slate-400 mb-6 text-sm">אנא בחר את קובץ התמונה שהורדת כדי להציג אותו כאן. (התמונה תישמר בדפדפן שלך לתמיד!)</p>
+                        <input type="file" id="image-upload-input" accept="image/*" class="block w-full max-w-xs mx-auto text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-blue-50 file:text-primary hover:file:bg-blue-100 cursor-pointer">
+                    </div>
+                </div>`;
+            } else if (step.isFinal) {
+                let html = '<div class="space-y-12">';
+                steps.forEach(s => {
+                    if (s.code && !s.isFinal) {
+                        html += `
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">${s.title}</h3>
+                            <div class="code-window">
+                                <div class="code-window-header ltr" dir="ltr">
+                                    <div class="mac-buttons">
+                                        <div class="mac-btn mac-close"></div>
+                                        <div class="mac-btn mac-min"></div>
+                                        <div class="mac-btn mac-max"></div>
+                                    </div>
+                                    <div class="code-filename"><i class="fa-solid fa-code mr-2"></i>${s.filename}</div>
+                                </div>
+                                <div class="code-body ltr text-left" dir="ltr">
+                                    <pre><code class="language-scheme">${s.code}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+                stepExplanation.innerHTML = html;
+                Prism.highlightAllUnder(stepExplanation);
+            } else {
+                if (step.mentalModelBefore) {
+                    stepExplanation.innerHTML = `
+                    <button onclick="toggleAccordion('before')" class="accordion-btn rounded-xl bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100 flex items-center justify-between p-4 w-full font-bold mb-6 border border-dashed border-purple-300 shadow-sm">
+                       <span><i class="fa-solid fa-brain mr-2 ml-2"></i> מודל מנטלי לפני הקוד</span>
+                       <i id="acc-icon-before" class="fa-solid fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div id="acc-content-before" class="hidden bg-white border border-purple-100 p-6 rounded-xl shadow-sm mb-6 text-slate-700 leading-relaxed text-[1.05rem]">
+                        ${step.mentalModelBefore}
+                    </div>`;
+                }
+
+                if (step.code) {
+                    codeContainer.classList.remove('hidden');
+                    fileName.innerHTML = `<i class="fa-solid fa-code mr-2"></i>${step.filename}`;
+                    codeBlock.innerHTML = step.code;
+                    Prism.highlightElement(codeBlock);
+
+                    if (step.mentalModelAfter) {
+                        stepAfterExplanation.innerHTML = `
+                        <button onclick="toggleAccordion('after')" class="accordion-btn rounded-xl bg-indigo-50 text-indigo-900 border-indigo-200 hover:bg-indigo-100 flex items-center justify-between p-4 w-full font-bold mb-4 mt-8 border border-dashed border-indigo-300 shadow-sm">
+                           <span><i class="fa-solid fa-lightbulb mr-2 ml-2"></i> סיכום לאחר הקוד</span>
+                           <i id="acc-icon-after" class="fa-solid fa-chevron-down transition-transform"></i>
+                        </button>
+                        <div id="acc-content-after" class="hidden bg-white border border-indigo-100 p-6 rounded-xl shadow-sm mb-6 text-slate-700 leading-relaxed text-[1.05rem]">
+                            ${step.mentalModelAfter}
+                        </div>`;
+                    }
+                }
+            }
+
+            prevBtn.disabled = currentStep === 0;
+            stepCounter.textContent = `${currentStep + 1} / ${steps.length}`;
+
+            if (currentStep === steps.length - 1) {
+                nextBtn.innerHTML = 'סיום <i class="fa-solid fa-flag-checkered mr-2"></i>';
+            } else {
+                nextBtn.innerHTML = 'המשך <i class="fa-solid fa-arrow-left mr-2"></i>';
+            }
+
+            renderSidebar();
+
+            setTimeout(() => {
+                initTooltips();
+            }, 50);
+
+            contentContainer.classList.remove('fade-enter');
+            contentContainer.classList.add('fade-enter-active');
+        }
+
+        function nextStep() { if (currentStep < steps.length - 1) { currentStep++; updateUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateUI(); } }
+        function goToStep(index) { currentStep = index; updateUI(); }
+
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-collapsed');
+            const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+
+            // Update icon direction
+            const icon = document.getElementById('sidebar-toggle-icon');
+            if (isCollapsed) {
+                icon.className = 'fa-solid fa-chevron-left text-lg transition-transform duration-300';
+            } else {
+                icon.className = 'fa-solid fa-chevron-right text-lg transition-transform duration-300';
+            }
+        }
+
+        function init() {
+            // Restore tooltip state from localStorage
+            const savedState = localStorage.getItem('globalTooltipState');
+            if (savedState) {
+                tooltipState = parseInt(savedState);
+            }
+            updateCyclerUI();
+
+            // Create and inject sidebar toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.id = 'sidebar-toggle-btn';
+            toggleBtn.onclick = toggleSidebar;
+            toggleBtn.innerHTML = '<i id="sidebar-toggle-icon" class="fa-solid fa-chevron-right text-lg transition-transform duration-300"></i>';
+            document.body.appendChild(toggleBtn);
+
+            // Load sidebar collapsed state from localStorage
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                document.body.classList.add('sidebar-collapsed');
+                document.getElementById('sidebar-toggle-icon').className = 'fa-solid fa-chevron-left text-lg transition-transform duration-300';
+            }
+
+            updateUI();
+        }
+
+        init();
+    </script>
+
+    <!-- Tree Modal -->
+    <div id="tree-modal" class="fixed inset-0 z-[110] bg-slate-900/60 hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300 backdrop-blur-md" dir="rtl">
+        <div class="bg-slate-50 rounded-[2rem] shadow-2xl w-full h-full max-w-7xl max-h-[95vh] relative transform scale-95 transition-transform duration-300 flex flex-col overflow-hidden border border-slate-300/50" id="tree-modal-card">
+            
+            <div class="absolute top-0 left-0 right-0 p-5 z-50 flex justify-between items-center pointer-events-none">
+                <div class="bg-white/80 backdrop-blur-md px-5 py-2 rounded-xl shadow-sm border border-slate-200 pointer-events-auto">
+                    <h3 class="font-black text-slate-800"><i class="fa-solid fa-sitemap text-blue-500 ml-2"></i> מפת הקשרים הלוגיים - פירוק מבנים (DAG)</h3>
+                </div>
+                <button onclick="closeTreeModal()" class="pointer-events-auto text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors w-12 h-12 flex items-center justify-center rounded-full text-2xl bg-white shadow-md border border-slate-200"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Full Width Graph Pane -->
+            <div class="w-full h-full overflow-auto relative dark-scroll bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px]" id="graph-scroll-container">
+                <div id="graph-pane" class="relative min-w-max min-h-max flex flex-col items-center py-24 px-16">
+                    <svg id="lines-svg" class="absolute inset-0 w-full h-full pointer-events-none z-0"></svg>
+                    <!-- Render Levels here via JS -->
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Node Details Popup Modal -->
+    <div id="node-details-modal" class="fixed inset-0 z-[120] bg-slate-900/40 hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300 backdrop-blur-sm" onclick="closeNodeModal(event)" dir="rtl">
+        <div class="bg-white rounded-[1.5rem] shadow-2xl w-full max-w-2xl transform scale-95 transition-transform duration-300 flex flex-col overflow-hidden border border-slate-200" id="node-details-card" onclick="event.stopPropagation()">
+            
+            <div class="p-6 pb-4 bg-slate-50 border-b border-slate-200 flex justify-between items-start">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 min-w-[48px] rounded-xl bg-white text-blue-600 flex items-center justify-center shadow-sm border border-slate-200">
+                        <i id="ndm-icon" class="fa-solid fa-cube text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 id="ndm-title" class="text-2xl font-black text-slate-800" dir="ltr"></h2>
+                        <p id="ndm-location" class="text-blue-700 font-bold text-[11px] tracking-wide bg-blue-100/50 inline-block px-3 py-1 rounded-full border border-blue-200 mt-2 font-mono uppercase"></p>
+                    </div>
+                </div>
+                <button onclick="closeNodeModal()" class="text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-100 transition-colors w-8 h-8 flex items-center justify-center rounded-full border border-slate-200 shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="p-6 flex flex-col gap-5 overflow-auto max-h-[70vh]">
+                <div class="bg-blue-50/50 p-5 rounded-xl border border-blue-100 shadow-inner">
+                    <h3 class="text-[13px] font-bold text-blue-800 mb-2 flex items-center gap-2 uppercase tracking-wide"><i class="fa-solid fa-lightbulb text-blue-500"></i> ההסבר הרעיוני המורחב</h3>
+                    <p id="ndm-details" class="text-slate-700 leading-relaxed font-medium text-[14px]"></p>
+                </div>
+                
+                <div class="bg-[#282c34] rounded-xl flex-1 overflow-hidden border border-[#3e4451] shadow-lg flex flex-col">
+                    <div class="bg-[#21252b] border-b border-[#3e4451] px-4 py-2 flex items-center justify-between">
+                        <span class="text-slate-400 text-[11px] font-mono uppercase tracking-wider font-bold">הקוד הספציפי שהוסף:</span>
+                    </div>
+                    <div dir="ltr" class="text-left overflow-auto p-5 dark-scroll max-h-72">
+                        <pre style="margin:0; padding:0; background:transparent;"><code id="ndm-code" class="language-scheme text-[13px] font-mono leading-relaxed"></code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <button id="ndm-jump-btn" class="bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-bold px-5 py-2.5 rounded-xl shadow-sm transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> קפוץ לשלב הרלוונטי
+                </button>
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+</html>
