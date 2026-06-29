@@ -186,54 +186,153 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-8" data-tooltip-mode="1">
-<div class="max-w-5xl mx-auto">
-<header class="relative mb-14 pt-4 md:pt-0 flex flex-col md:flex-row items-center justify-between gap-8">
+<body class="bg-slate-50 min-h-screen relative flex flex-col" data-tooltip-mode="1">
     
-    <!-- Huge Glassmorphism Premium Button (Right side in RTL) -->
-    <div class="w-full md:w-72 relative order-1">
-        <button onclick="document.getElementById('structure-modal').classList.remove('hidden')" 
-            class="group text-right relative overflow-hidden block bg-gradient-to-br from-white/40 to-white/10 hover:from-sky-400/30 hover:to-indigo-500/30 rounded-[24px] p-[2px] transition-all duration-500 hover:shadow-2xl hover:shadow-sky-300/30 hover:-translate-y-2 hover:scale-[1.02] cursor-pointer w-full z-10">
-            <div class="bg-white/70 backdrop-blur-xl rounded-[22px] p-6 h-full relative z-10 flex flex-col border border-white/50 hover:bg-white/80 transition-all duration-500 shadow-sm overflow-hidden min-h-[140px]">
-                
-                <!-- Background peeking icon -->
-                <svg class="absolute bottom-[-15%] left-[-10%] w-32 h-32 text-indigo-500 opacity-5 group-hover:opacity-15 group-hover:-rotate-12 transition-all duration-700 pointer-events-none z-0" fill="currentColor" viewBox="0 0 24 24">
-                     <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
-                </svg>
-
-                <div class="flex items-start justify-between mb-3 relative z-10">
-                    <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-gradient-to-br group-hover:from-sky-400 group-hover:to-indigo-500 group-hover:text-white transition-all duration-500 group-hover:scale-110 shadow-inner">
-                        <i class="fa-solid fa-book-open text-2xl"></i>
-                    </div>
-                    <span class="bg-white/80 border border-slate-200 text-[11px] px-3 py-1.5 rounded-full text-slate-600 font-bold tracking-wide group-hover:bg-sky-50 group-hover:text-sky-700 group-hover:border-sky-200 transition-colors shadow-sm">EOPL</span>
-                </div>
-                <h2 class="text-2xl font-black text-slate-800 mb-1 group-hover:text-sky-600 transition-colors relative z-10">קצת על הספר</h2>
-                <p class="text-slate-500 text-[13px] leading-relaxed font-medium relative z-10 mt-1">מבנה הפרקים, הליבה, ואיך הכל מתחבר לקראת המבחן.</p>
+    <!-- Sticky Top Navigation Bar -->
+    <header dir="rtl" class="sticky top-0 w-full bg-white/80 backdrop-blur-md border-b border-slate-200/50 z-50 px-6 py-4 flex flex-col md:flex-row items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3 mb-4 md:mb-0">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
+                <i class="fa-solid fa-graduation-cap text-lg"></i>
             </div>
-        </button>
-    </div>
+            <div>
+                <h1 class="text-lg font-black text-slate-800 tracking-tight leading-none font-sans">הכנה לבחינה</h1>
+                <p class="text-[10px] text-slate-500 mt-1 font-medium">© כל הזכויות על המבחנים והשאלות שמורות לאוניברסיטה הפתוחה</p>
+            </div>
+        </div>
 
-    <!-- Title and Subtitle (Left side in RTL) -->
-    <div class="text-center md:text-left flex-1 order-2">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-3 relative z-10">EOPL - קטעי קוד מלאים</h1>
-        <p class="text-slate-500 text-lg relative z-10 max-w-2xl mr-auto ml-0">מאגר קטעי הקוד מהספר (מקיף והרמטי), מסודרים לפי עמודים. לחץ על שורה להרחבה.</p>
+        <nav class="flex flex-wrap items-center justify-center gap-1 sm:gap-3">
+            <a href="5.html" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-table-columns ml-1.5"></i>הכנה לבחינה
+            </a>
+            <a href="general_algorithms.html" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-gears ml-1.5"></i> יחידת פתיחה
+            </a>
+            <a href="functions_dictionary.html" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-book-open ml-1.5"></i>מילון פונקציות
+            </a>
+            <a href="5.html" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-circle-question ml-1.5"></i>שאלות ותשובות
+            </a>
+            <a href="5.html" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-file-invoice ml-1.5"></i> מאגר מבחנים
+            </a>
+            <a href="eopl_snippets_full.html" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-sky-50 text-sky-700 border border-sky-200/50 shadow-sm">
+                <i class="fa-solid fa-laptop-code ml-1.5"></i> EOPL
+            </a>
+            <a href="index.html" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-transparent hover:border-slate-200/50">
+                <i class="fa-solid fa-house ml-1.5"></i>אתר הקורס
+            </a>
+        </nav>
+    </header>
+
+<div class="max-w-5xl mx-auto flex flex-col justify-center gap-8 py-10 px-4 md:px-8" id="landing-container">
+
+    <!-- Introduction Section (Moved from Modal) -->
+    <div class="w-full px-4 mb-4">
+        <div class="bg-indigo-50/80 backdrop-blur-md border border-indigo-100/50 rounded-[24px] p-6 md:p-8 shadow-sm text-right" dir="rtl">
+            <p class="text-indigo-800 font-medium leading-relaxed mb-5 text-lg">
+                <i class="fa-solid fa-lightbulb text-yellow-500 mr-2"></i>
+                אני יודע שהספר ארוך, מסובך ובאנגלית, ואף אחד לא באמת קורא אותו. אבל בעיקר בעקבות המבחן האחרון (2026), נראה שיש צורך בהכרה לפחות בסיסית של הספר והמבנה שלו, מה שיכול לחסוך הרבה זמן ומאמץ במבחן בעזרה של התמצאות ומציאת קטעי קוד במהירות. בחלק שלפניכם יש הסבר מהיר על מבנה הספר שכדאי להכיר, ובנוסף את כל קטעי הקוד המלאים מהספר ואיפה הם מופיעים, שמומלץ להעתיק לפי הצורך למדריך למידה על מנת שבמבחן יהיה ניתן להתמצא בקלות.
+            </p>
+            <div class="bg-white/70 rounded-xl p-5 border border-indigo-100">
+                <h3 class="font-bold text-indigo-900 mb-4 text-lg"><i class="fa-solid fa-sort-amount-down text-indigo-500 mr-2"></i> קטעי הקוד מוינו לפי שלוש רמות חשיבות:</h3>
+                <ul class="space-y-4 text-indigo-800/90 text-base">
+                    <li class="flex items-start gap-4">
+                        <span class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center font-bold shrink-0 mt-0.5 shadow-sm text-lg">3</span>
+                        <span><strong>רמה 3:</strong> הסברים ישירים על השפות המופיעות במבחן של LET, PROC, IMPLICIT ו-EXPLICIT. (קריטי למבחן).</span>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <span class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center font-bold shrink-0 mt-0.5 shadow-sm text-lg">2</span>
+                        <span><strong>רמה 2:</strong> מכיל כל מיני פונקציות עזר ופונקציות שיכולות לחסוך הרבה זמן במבחן (כמו שראינו במועד האחרון).</span>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center font-bold shrink-0 mt-0.5 shadow-sm text-lg">1</span>
+                        <span><strong>רמה 1:</strong> פונקציות המופיעות בשאר הנושאים שלא בחומר. כדאי להכיר שהם קיימים למקרה שפתאום דני יחליט לשאול על איך מממשים Mutexים בעזרת Scheme, אבל ממש אין צורך לשלוט בהם לעומק.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-</header>
+    
+    <div class="flex flex-col md:flex-row items-center justify-center gap-8 w-full px-4">
+        
+        <!-- Right Square: About the Book (Modal) -->
+        <div class="w-full md:w-80 h-80 relative order-1">
+            <button onclick="document.getElementById('structure-modal').classList.remove('hidden')" 
+                class="group relative overflow-hidden block bg-gradient-to-br from-white/40 to-white/10 hover:from-sky-400/30 hover:to-indigo-500/30 rounded-[32px] p-[2px] transition-all duration-500 hover:shadow-2xl hover:shadow-sky-300/30 hover:-translate-y-2 hover:scale-[1.02] cursor-pointer w-full h-full z-10">
+                <div class="bg-white/70 backdrop-blur-xl rounded-[30px] p-8 h-full relative z-10 flex flex-col items-center justify-center text-center border border-white/50 hover:bg-white/80 transition-all duration-500 shadow-sm overflow-hidden">
+                    
+                    <!-- Background peeking icon -->
+                    <svg class="absolute bottom-[-15%] right-[-10%] w-48 h-48 text-indigo-500 opacity-5 group-hover:opacity-15 group-hover:rotate-12 transition-all duration-700 pointer-events-none z-0" fill="currentColor" viewBox="0 0 24 24">
+                         <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+                    </svg>
+
+                    <div class="w-20 h-20 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-gradient-to-br group-hover:from-sky-400 group-hover:to-indigo-500 group-hover:text-white transition-all duration-500 group-hover:scale-110 shadow-inner mb-6 relative z-10">
+                        <i class="fa-solid fa-book-open text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-2 group-hover:text-sky-600 transition-colors relative z-10">קצת על הספר</h2>
+                    <p class="text-slate-500 text-base leading-relaxed font-medium relative z-10 mt-1">מבנה הפרקים, הליבה והסילבוס לקראת המבחן.</p>
+                </div>
+            </button>
+        </div>
+
+        <!-- Left Square: Full Code Snippets -->
+        <div class="w-full md:w-80 h-80 relative order-2">
+            <button onclick="revealSnippets()" 
+                class="group relative overflow-hidden block bg-gradient-to-br from-white/40 to-white/10 hover:from-teal-400/30 hover:to-emerald-500/30 rounded-[32px] p-[2px] transition-all duration-500 hover:shadow-2xl hover:shadow-teal-300/30 hover:-translate-y-2 hover:scale-[1.02] cursor-pointer w-full h-full z-10">
+                <div class="bg-white/70 backdrop-blur-xl rounded-[30px] p-8 h-full relative z-10 flex flex-col items-center justify-center text-center border border-white/50 hover:bg-white/80 transition-all duration-500 shadow-sm overflow-hidden">
+                    
+                    <!-- Background peeking icon -->
+                    <i class="fa-solid fa-code absolute bottom-[-10%] left-[-10%] text-[150px] text-teal-500 opacity-5 group-hover:opacity-15 group-hover:-rotate-12 transition-all duration-700 pointer-events-none z-0"></i>
+
+                    <div class="w-20 h-20 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600 group-hover:bg-gradient-to-br group-hover:from-teal-400 group-hover:to-emerald-500 group-hover:text-white transition-all duration-500 group-hover:scale-110 shadow-inner mb-6 relative z-10">
+                        <i class="fa-solid fa-laptop-code text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-2 group-hover:text-teal-600 transition-colors relative z-10">קטעי קוד מלאים</h2>
+                    <p class="text-slate-500 text-base leading-relaxed font-medium relative z-10 mt-1">מאגר של כ-168 סניפטים המסודרים לפי עמודים.</p>
+                </div>
+            </button>
+        </div>
+        
+    </div>
+</div>
+
+
+<script>
+function revealSnippets() {
+    const landing = document.getElementById('landing-container');
+    const main = document.getElementById('snippets-main-container');
+    
+    // Fade out landing
+    landing.style.transition = "opacity 0.5s ease";
+    landing.style.opacity = "0";
+    
+    setTimeout(() => {
+        landing.classList.add('hidden');
+        main.classList.remove('hidden');
+        main.style.opacity = "0";
+        main.style.transition = "opacity 0.5s ease";
+        // Trigger reflow
+        void main.offsetWidth;
+        main.style.opacity = "1";
+    }, 500);
+}
+</script>
 
 <!-- Book Structure Modal (Accordion Style with Layman Explanations) -->
 <div id="structure-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity" onclick="if(event.target === this) this.classList.add('hidden')">
     <div class="bg-white rounded-[24px] shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col text-right" dir="rtl">
         <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-slate-50 to-white">
-            <h2 class="text-2xl font-black text-slate-800 tracking-tight"><i class="fa-solid fa-layer-group text-indigo-500 mr-2"></i> מבנה הספר (EOPL)</h2>
+            <h2 class="text-2xl font-black text-slate-800 tracking-tight"><i class="fa-solid fa-layer-group text-indigo-500 mr-2"></i> מבנה הספר (EOPL 3rd Ed)</h2>
             <button onclick="document.getElementById('structure-modal').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors">
                 <i class="fa-solid fa-times text-lg"></i>
             </button>
         </div>
         <div class="p-6 overflow-y-auto dark-scroll bg-slate-50/50">
-            <div class="bg-indigo-50/80 border border-indigo-100/50 rounded-2xl p-5 mb-8 shadow-sm">
+            <div class="bg-indigo-50/80 border border-indigo-100/50 rounded-2xl p-4 mb-6 shadow-sm">
                 <p class="text-indigo-800 font-medium leading-relaxed">
-                    <i class="fa-solid fa-lightbulb text-yellow-500 mr-2"></i>
-                    אני יודע שהספר ארוך, מסובך ובאנגלית, ואף אחד לא באמת קורא אותו... אבל עדיין חשוב להכיר את המבנה שלו, כי יש לכם אותו איתכם במבחן! לפניכם הסבר פשוט וברור למי שלא מכיר את המושגים.
+                    <i class="fa-solid fa-list-ol text-indigo-500 mr-2"></i>
+                    לפניכם פירוט תמציתי של מבנה הספר והנושאים המרכזיים. לחצו על כל פרק כדי להרחיב.
                 </p>
             </div>
             
@@ -243,16 +342,20 @@
                         <div class="flex items-center gap-3">
                             <span class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-base"><i class="fa-solid fa-1"></i></span>
                             <div class="flex flex-col">
-                                <span class="text-lg">פרק 1: מושגי יסוד (Inductive Sets)</span>
-                                <span class="text-sm text-slate-500 font-normal">מבוא לרקורסיה, רשימות וקבוצות אינדוקטיביות.</span>
+                                <span class="text-lg">פרק 1: מושגי יסוד (Inductive Sets of Data)</span>
+                                <span class="text-sm text-slate-500 font-normal">מבוא לרקורסיה, רשימות וקבוצות אינדוקטיביות (BNF).</span>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 shadow-sm" dir="rtl">עמ' 1-30</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </div>
                     </summary>
-                    <div class="p-6 pt-0 border-t border-slate-100 text-slate-600 leading-relaxed bg-slate-50/50 text-base">
-                        <p class="mt-4 font-bold text-slate-700 mb-2"><i class="fa-solid fa-book-open-reader text-sky-500 mr-1"></i> צוללים פנימה:</p>
+                    <div class="p-6 pt-0 border-t border-slate-100 text-slate-700 leading-relaxed bg-white text-base">
+                        <p class="mt-4 font-bold text-indigo-800 mb-2"><i class="fa-solid fa-book-open-reader text-indigo-500 mr-1"></i> צוללים פנימה:</p>
                         <p class="mb-3">תארו לעצמכם שאתם מנסים להסביר לילד איך לבנות מגדל אינסופי מלגו. אתם לא יכולים להסביר לו על כל קובייה וקובייה עד אינסוף, נכון? במקום זה, אתם נותנים לו שני חוקים פשוטים: הראשון - איך שמים את הקובייה הראשונה על הרצפה (מקרה הבסיס). השני - אם כבר יש לך מגדל, איך מוסיפים לו בדיוק עוד קובייה אחת למעלה (צעד האינדוקציה). ברגע שהילד מבין את שני החוקים האלה, הוא יכול לבנות מגדל בכל גובה שירצה!</p>
-                        <p>זה בדיוק מה שלומדים בפרק 1: איך להגדיר קבוצות ענק של נתונים (כמו רשימות ארוכות או עצים של מידע) בעזרת מספר מצומצם של חוקים. לומדים כאן גם איך לכתוב פונקציות "רקורסיביות" - פונקציות שקוראות לעצמן שוב ושוב עד שהן מסיימות את העבודה. זהו הבסיס שעליו נשען כל עולם מדעי המחשב והתכנות, והוא קריטי כדי להבין איך מחשב מסוגל להתמודד עם בעיות מורכבות על ידי פירוקן לבעיות קטנות ופשוטות יותר.</p>
+                        <p class="mb-3">זה בדיוק מה שלומדים בפרק 1: איך להגדיר קבוצות ענק של נתונים (כמו רשימות ארוכות או עצים של מידע) בעזרת שפת ה-BNF (Backus-Naur Form) המאפשרת הגדרה רקורסיבית מבוססת כללים.</p>
+                        <p>הפרק גם מסביר את מושג הרקורסיה על נתונים (כמו פונקציות שרצות על רשימות ועצים כגון <code>list-length</code> ו-<code>nth-element</code>), כבסיס לחשיבה של בניית קוד מקטעי בסיס. זהו הבסיס שעליו נשען כל עולם מדעי המחשב והתכנות, והוא קריטי להבנת כל הפרקים הבאים.</p>
                     </div>
                 </details>
 
@@ -265,12 +368,16 @@
                                 <span class="text-sm text-slate-500 font-normal">הסתרת מידע, עצי תחביר מופשטים (AST), וסריקת טקסט.</span>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 shadow-sm" dir="rtl">עמ' 31-56</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </div>
                     </summary>
                     <div class="p-6 pt-0 border-t border-slate-100 text-slate-600 leading-relaxed bg-slate-50/50 text-base">
                         <p class="mt-4 font-bold text-slate-700 mb-2"><i class="fa-solid fa-book-open-reader text-sky-500 mr-1"></i> צוללים פנימה:</p>
                         <p class="mb-3">דמיינו שאתם נוהגים ברכב. אתם לוחצים על דוושת הגז, והרכב מאיץ. אתם לא צריכים לדעת בדיוק כמה דלק מוזרק למנוע, איך הבוכנות זזות, או איך תיבת ההילוכים מעבירה את הכוח לגלגלים. יש לכם 'ממשק' פשוט (הדוושה), והמכניקה הפנימית 'מוסתרת' מכם.</p>
-                        <p>בפרק 2 אנחנו לומדים בדיוק את זה - הפשטת נתונים (Data Abstraction). אנחנו לומדים איך לבנות מערכות שבהן החלק שמשתמש במידע לא צריך לדעת איך המידע הזה שמור בזיכרון. זה מאפשר לנו לשנות את המנוע של התוכנה שלנו מאחורי הקלעים מבלי שהמשתמשים ירגישו. בנוסף, בפרק הזה לומדים איך המחשב קורא טקסט שאנחנו כותבים (כמו קוד) והופך אותו למבנה שהוא מסוגל להבין ולנתח (מה שנקרא 'עץ תחביר').</p>
+                        <p class="mb-3">בפרק 2 אנחנו לומדים בדיוק את זה - הפשטת נתונים (Data Abstraction). המטרה היא להגדיר מידע לפי הממשק (Interface) שלו, ולא לפי הייצוג שלו בזיכרון. למשל, ניישם סביבות משתנים (Environments) בדרכים שונות - פעם כרשימות צמודות (a-lists) ופעם כפונקציות המייצגות זיכרון.</p>
+                        <p>בנוסף, והכי חשוב - לומדים על תהליך ה-Parsing: איך הופכים טקסט רגיל שהמתכנת מקליד (כמו מחרוזת של קוד) לעץ תחביר מופשט (AST) בעזרת הכלים הפנימיים שלנו. העץ הזה הוא המבנה שהמפרש שלנו יקרא ויריץ.</p>
                     </div>
                 </details>
 
@@ -280,17 +387,24 @@
                         <div class="flex items-center gap-3">
                             <span class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-base"><i class="fa-solid fa-3"></i></span>
                             <div class="flex flex-col">
-                                <span class="text-lg">פרק 3: שפות LET ו-PROC (חומר ליבה!)</span>
-                                <span class="text-sm text-indigo-600/80 font-normal">הבסיס למפרש: בניית משתנים מקומיים (LET) ופונקציות (PROC).</span>
+                                <span class="text-lg">פרק 3: ביטויים (Expressions) - הלב של המפרש!</span>
+                                <span class="text-sm text-indigo-600/80 font-normal">שפות LET, PROC, ו-LETREC כולל Scoping דינמי ולקסיקלי.</span>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-down text-indigo-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-indigo-400 bg-indigo-100/50 px-3 py-1 rounded-full border border-indigo-200 shadow-sm" dir="rtl">עמ' 57-104</span>
+                            <i class="fa-solid fa-chevron-down text-indigo-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </div>
                     </summary>
                     <div class="p-6 pt-0 border-t border-indigo-100 text-slate-700 leading-relaxed bg-white text-base">
                         <p class="mt-4 font-bold text-indigo-800 mb-2"><i class="fa-solid fa-book-open-reader text-indigo-500 mr-1"></i> צוללים פנימה (חומר מרכזי במבחן!):</p>
-                        <p class="mb-3">כאן מתחיל האקשן האמיתי! אנחנו מתחילים לבנות את ה'מוח' של שפת התכנות שלנו, מה שנקרא 'מפרש' (Interpreter). המפרש הוא התוכנה שלוקחת את הקוד שאנחנו כותבים ומבצעת אותו.</p>
-                        <p class="mb-3">בתחילת הפרק בונים שפה בסיסית שמאפשרת לעשות פעולות חשבון ולהגדיר משתנים (כמו להגיד 'X שווה 5'). אבל מהר מאוד מגלים שזה לא מספיק. לכן, אנחנו משדרגים את השפה ומלמדים אותה להבין 'פונקציות' - חתיכות קוד שאפשר לשמור ולהפעיל מתי שרוצים.</p>
-                        <p>המושג המרכזי כאן הוא ה'קלוז'ר' (Closure): תחשבו על זה כמו תיק גב שהפונקציה לוקחת איתה כשהיא נוצרת, ובתיק הזה יש את כל המידע והמשתנים שהיו קיימים באותו רגע. בזכות התיק הזה, הפונקציה תמיד תזכור מאיפה היא באה ומה היה סביבה, אפילו אם נפעיל אותה הרבה יותר מאוחר באזור אחר לגמרי של התוכנית.</p>
+                        <p class="mb-3">זהו הפרק שבו אנחנו בונים את ליבת המפרש שלב אחר שלב:</p>
+                        <ul class="list-disc list-inside mb-4 space-y-2 text-slate-600">
+                            <li><b>שפת LET:</b> מתחילים משפה בסיסית ומוסיפים לה משתנים מקומיים (Scope) ויצירת סביבות מקומיות, כך שנוכל לכתוב דברים כמו <code>let x = 5 in +(x, 3)</code>.</li>
+                            <li><b>שפת PROC:</b> מוסיפים פונקציות מסדר ראשון. הכלל החשוב כאן הוא המצאת ה-Closure (ה"תיק גב"). פונקציה חייבת לשמור את הסביבה המדויקת שבה היא *נוצרה*, ולא רק איפה היא מופעלת. התיק הזה מבטיח שהפונקציה תזכור את המשתנים מהסביבה שלה לנצח.</li>
+                            <li><b>שפת LETREC:</b> מוסיפים את היכולת ליצור פונקציות רקורסיביות! פונקציות שיכולות לקרוא לעצמן. בשביל זה אנחנו בונים טריקים עמוקים בסביבה (Environment) כדי שהפונקציה תכיר את שמה שלה.</li>
+                        </ul>
+                        <p>בנוסף, הפרק עוסק רבות בהבדלי Scoping (לקסיקלי מול דינמי - כלומר מה קורה אם פונקציה לוקחת משתנים מסביבת היצירה שלה, לעומת סביבת הקריאה שלה) וכן לומדים על <b>Lexical Addresses</b>. הטריק של הכתובות הלקסיקליות מאפשר למפרש לוותר לגמרי על חיפוש שמות של משתנים בזיכרון, ובמקום זאת לתרגם כל משתנה לקואורדינטה מספרית (Nameless Variables), מה שמשפר משמעותית את המהירות.</p>
                     </div>
                 </details>
 
@@ -301,20 +415,23 @@
                             <span class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-base"><i class="fa-solid fa-4"></i></span>
                             <div class="flex flex-col">
                                 <span class="text-lg">פרק 4: מצב וזיכרון (State) - שפות הרפרנסים!</span>
-                                <span class="text-sm text-indigo-600/80 font-normal">הוספת זיכרון מפורש, IMPLICIT-REFS והעברות פרמטרים.</span>
+                                <span class="text-sm text-indigo-600/80 font-normal">הוספת זיכרון, IMPLICIT/EXPLICIT-REFS, Statements והעברות פרמטרים.</span>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-down text-indigo-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-indigo-400 bg-indigo-100/50 px-3 py-1 rounded-full border border-indigo-200 shadow-sm" dir="rtl">עמ' 105-136</span>
+                            <i class="fa-solid fa-chevron-down text-indigo-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </div>
                     </summary>
                     <div class="p-6 pt-0 border-t border-indigo-100 text-slate-700 leading-relaxed bg-white text-base">
                         <p class="mt-4 font-bold text-indigo-800 mb-2"><i class="fa-solid fa-book-open-reader text-indigo-500 mr-1"></i> צוללים פנימה (חומר מרכזי במבחן!):</p>
-                        <p class="mb-3">עד עכשיו, התוכנות שלנו היו 'טהורות'. ברגע שהגדרנו ש-X שווה 5, הוא נשאר 5 לנצח. אי אפשר היה לשנות אותו. בפרק 4 אנחנו מכניסים לעולם שלנו את מימד ה'זמן' וה'שינוי' - אנחנו מוסיפים למחשב 'זיכרון'.</p>
-                        <p class="mb-3">תחשבו על זיכרון כמו על שורת תאי דואר. כל פעם שאנחנו יוצרים משתנה, אנחנו שמים פתק בתוך אחד התאים ויכולים תמיד לחזור לאותו תא ולהחליף את הפתק (למשל, לשנות את הערך מ-5 ל-10). הפרק חוקר שתי גישות מנוגדות לניהול התאים האלה:</p>
-                        <ul class="list-disc list-inside mb-3 space-y-1 text-slate-600">
-                            <li><b>הגישה הראשונה (EXPLICIT-REFS):</b> היא כמו עבודת כפיים - המתכנת חייב לבקש במפורש מפתח לתא, לגשת לתא, ולהחליף את התוכן ידנית (כמו בשפות תכנות ישנות יותר כגון C).</li>
-                            <li><b>הגישה השנייה (IMPLICIT-REFS):</b> היא כמו קסם - המערכת מנהלת את תאי הדואר בעצמה מאחורי הקלעים, והמתכנת רק אומר "תשנה לי את הערך של X", והמערכת כבר יודעת לאיזה תא ללכת.</li>
+                        <p class="mb-3">עד עכשיו, התוכנות שלנו היו 'טהורות' (Functional). ברגע שהגדרנו ש-X שווה 5, הוא נשאר 5. בפרק 4 אנחנו מכניסים לעולם שלנו את מימד ה'שינוי' וניהול מצב - אנחנו מוסיפים למחשב 'זיכרון' גלובלי (Store). תחשבו על הזיכרון כמו על שורת תאי דואר שאפשר להחליף את הפתק שבתוכם.</p>
+                        <ul class="list-disc list-inside mb-4 space-y-2 text-slate-600">
+                            <li><b>הגישה הראשונה (EXPLICIT-REFS):</b> ניהול זיכרון כפיים. המתכנת מבקש במפורש מפתח לתא בזיכרון (<code>newref</code>), קורא את תוכנו (<code>deref</code>), ומחליף את הערך (<code>setref</code>). כמו מצביעים (Pointers) ב-C.</li>
+                            <li><b>הגישה השנייה (IMPLICIT-REFS):</b> המערכת עושה קסם והופכת כל משתנה באופן אוטומטי למצביע לתא זיכרון. המתכנת רק אומר "תשנה לי את הערך של X" (באמצעות פעולת <code>set</code>), והמערכת הולכת לתא הנכון ומעדכנת אותו - כמו ב-Java או Python.</li>
+                            <li><b>Statements:</b> בשפה האימפרטיבית החדה שלנו אנחנו עוזבים ביטויים שמחזירים ערך ועוברים לפקודות שמשנות מצב. אנו מוסיפים לולאות <code>while</code>, פקודות בלוק <code>begin-end</code> והדפסות מפורשות (<code>print</code>).</li>
                         </ul>
-                        <p>זה פרק חובה וקריטי להבנת איך שפות מודרניות פועלות מאחורי הקלעים. בסוף הפרק לומדים גם על שיטות שונות להעברת מידע לפונקציה (Call by Reference / Name / Need).</p>
+                        <p>הפרק נחתם בנושא הקריטי של שיטות שונות להעברת מידע לפונקציות: אנחנו חוקרים את ההבדלים בין <b>Call by Reference</b> (העברת המצביע לזיכרון עצמו), <b>Call by Value</b> (העתקת הערך), <b>Call by Name</b> (החלפת הביטוי כמו מאקרו) ו-<b>Call by Need</b> (הערכה עצלה שזוכרת את התוצאה למניעת חישובים חוזרים - שידוע בשם Memoization).</p>
                     </div>
                 </details>
 
@@ -323,16 +440,43 @@
                         <div class="flex items-center gap-3">
                             <span class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-base"><i class="fa-solid fa-5"></i></span>
                             <div class="flex flex-col">
-                                <span class="text-lg">פרק 5: המשכיות (Continuation-Passing Style)</span>
-                                <span class="text-sm text-slate-500 font-normal">שליטה מתקדמת בזרימת תוכנית, חריגים ותהליכונים (Threads).</span>
+                                <span class="text-lg">פרק 5: מפרשי המשכיות (Continuation-Passing Interpreters)</span>
+                                <span class="text-sm text-slate-500 font-normal">שליטה מתקדמת בזרימת תוכנית, חריגים (Exceptions) ותהליכונים (Threads).</span>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 shadow-sm" dir="rtl">עמ' 137-200</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </div>
                     </summary>
                     <div class="p-6 pt-0 border-t border-slate-100 text-slate-600 leading-relaxed bg-slate-50/50 text-base">
                         <p class="mt-4 font-bold text-slate-700 mb-2"><i class="fa-solid fa-book-open-reader text-sky-500 mr-1"></i> צוללים פנימה:</p>
                         <p class="mb-3">דמיינו שאתם קוראים ספר נהדר, אבל לפתע הטלפון מצלצל. מה תעשו? תשימו סימניה בספר כדי לזכור בדיוק איפה עצרתם, תלכו לענות לטלפון, וכשתסיימו תחזרו בדיוק לאותה נקודה. "סימניה" כזו במדעי המחשב נקראת 'המשכיות' (Continuation) - היא שומרת את המצב המדויק של התוכנית ואת השאלה "מה נשאר לי לעשות כשאסיים את המשימה הנוכחית?".</p>
-                        <p>בפרק הזה אנחנו משכתבים את כל המפרש שלנו כך שיעבוד עם הסימניות האלו. למה שנעשה דבר כזה מסובך? כי ברגע שיש לנו שליטה מלאה על 'הסימניות', אנחנו יכולים לעשות דברים מדהימים: למשל, אם קורית שגיאה חמורה, אפשר לקפוץ מיד לסימניה שמטפלת בשגיאות (מה שנקרא Exceptions). או שאפשר לנהל מספר משימות במקביל (תהליכונים/Threads) על ידי כך שקוראים קצת ממשימה אחת, שמים סימניה, עוברים למשימה השנייה, וכן הלאה - והמחשב נראה כאילו הוא עושה הכל בו-זמנית!</p>
+                        <p class="mb-3">בפרק הזה אנחנו משכתבים את כל המפרש שלנו כך שיעבוד עם הסימניות האלו. למה שנעשה דבר כזה מסובך? התשובה נגלית מיד: כשיש שליטה מלאה על 'הסימניות', אפשר לשלוט על בקרת הזרימה באופן מוחלט!</p>
+                        <p class="mb-3">אנו לומדים לבנות פונקציות שמבטלות את בעיית גלישת המחסנית (Stack Overflow) בטכניקת <b>Trampolining</b>. בנוסף, אם קורית שגיאה חמורה, אפשר לקפוץ מיד לסימניה שמטפלת בשגיאות (מה שנקרא <b>Exceptions</b> עם <code>try-catch</code>).</p>
+                        <p>הקפיצה הגדולה בסוף הפרק היא בניית <b>Threads</b> (תהליכונים) - המערכת מנהלת מספר משימות במקביל על ידי מעבר סימניות מהיר ביניהן בעזרת קוצב זמן (Time Slicer) המקצה תור של משימות למעבד ומדמה מקביליות מלאה.</p>
+                    </div>
+                </details>
+
+                <details class="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-sky-300 transition-colors shadow-sm opacity-90">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer select-none outline-none font-bold text-slate-700 group-hover:bg-slate-50 transition-colors list-none [&::-webkit-details-marker]:hidden">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-base"><i class="fa-solid fa-6"></i></span>
+                            <div class="flex flex-col">
+                                <span class="text-lg">פרק 6: המרה ל-CPS (Continuation-Passing Style)</span>
+                                <span class="text-sm text-slate-500 font-normal">המרת תוכניות אוטומטית לסגנון CPS.</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 shadow-sm" dir="rtl">עמ' 201-238</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </div>
+                    </summary>
+                    <div class="p-6 pt-0 border-t border-slate-100 text-slate-600 leading-relaxed bg-slate-50/50 text-base">
+                        <p class="mt-4 font-bold text-slate-700 mb-2"><i class="fa-solid fa-book-open-reader text-sky-500 mr-1"></i> צוללים פנימה:</p>
+                        <p class="mb-3">בפרק 5 למדנו לכתוב את <em>המפרש</em> שלנו בסגנון CPS. בפרק 6 אנחנו לוקחים צעד קדימה: במקום שהמפרש יהיה כתוב ב-CPS, אנחנו בונים מתרגם (Translator) שלוקח כל תוכנית רגילה בשפת המקור (כמו LETREC) וממיר אותה <strong>אוטומטית</strong> לתוכנית המקבילה לה ב-CPS.</p>
+                        <p class="mb-3">זהו שלב מרכזי בקומפילציה מודרנית: כשהתוכנית מומרת ל-CPS, סדר הביצוע הופך למוחלט ומפורש (ללא תלות בסדר ההערכה של שפת האם), ואין קריאות שחוזרות (Returns) אלא רק קריאות זנב (Tail Calls).</p>
+                        <p>הפרק מציג את תהליך ההמרה (CPS-IN / CPS-OUT) שמטפל בכל סוגי הביטויים, תוך הפרדה בין ביטויים פשוטים (Simple Expressions) שניתן לחשב מיד, לביטויים מורכבים הדורשים המתנה ויצירת Continuation חדש. לבסוף מוצגות אופטימיזציות למניעת יצירת Continuations מיותרים לקוד נקי ויעיל יותר.</p>
                     </div>
                 </details>
 
@@ -342,15 +486,19 @@
                             <span class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-base"><i class="fa-solid fa-7"></i></span>
                             <div class="flex flex-col">
                                 <span class="text-lg">פרק 7: טיפוסים (Types)</span>
-                                <span class="text-sm text-slate-500 font-normal">אימות סוגי נתונים סטטי והסקת טיפוסים.</span>
+                                <span class="text-sm text-slate-500 font-normal">אימות סוגי נתונים סטטי (CHECKED) והסקת טיפוסים (INFERRED).</span>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 shadow-sm" dir="rtl">עמ' 239-282</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </div>
                     </summary>
                     <div class="p-6 pt-0 border-t border-slate-100 text-slate-600 leading-relaxed bg-slate-50/50 text-base">
                         <p class="mt-4 font-bold text-slate-700 mb-2"><i class="fa-solid fa-book-open-reader text-sky-500 mr-1"></i> צוללים פנימה:</p>
-                        <p class="mb-3">איך המחשב יודע שאי אפשר לחבר תפוח עם המספר 5? בעזרת מערכת טיפוסים (Types)! בפרק זה אנחנו לומדים איך המחשב בודק שהקוד שלנו הגיוני לפני שהוא בכלל מנסה להריץ אותו. זה כמו בודק דקדוק אוטומטי.</p>
-                        <p>בהתחלה אנחנו מלמדים את המחשב לבדוק תוכניות שבהן המתכנת הצהיר במפורש על סוגי הנתונים ("המשתנה הזה הוא מספר", "הפונקציה הזו מחזירה מילה"). אבל הקסם האמיתי מגיע בחלק השני של הפרק: אנחנו בונים מערכת ש"מסיקה" לבד את סוגי הנתונים (Type Inference). המערכת מסתכלת על הקוד כמו בלש שמפענח תעלומה, מרכיבה משוואות מסובכות (למשל, "אם איקס מחובר ל-5, אז איקס חייב להיות מספר!"), ופותרת אותן בעצמה באמצעות אלגוריתם חכם. כך המתכנת לא צריך לכתוב כמעט כלום, והמחשב עדיין מוודא שאין טעויות.</p>
+                        <p class="mb-3">איך המחשב יודע שאי אפשר לחבר תפוח עם המספר 5? בעזרת מערכת טיפוסים (Types)! בפרק זה אנחנו לומדים איך המחשב בודק שהקוד שלנו הגיוני סטטית - לפני שהוא בכלל מנסה להריץ אותו. זה כמו בודק דקדוק אוטומטי לתוכנה שעוצר באגים עוד בשלב כתיבת הקוד.</p>
+                        <p class="mb-3">תחילה, אנחנו מלמדים את המפרש את שפת <b>CHECKED</b> - תוכניות שבהן המתכנת הצהיר במפורש על סוגי הנתונים שלו ("המשתנה הזה הוא <code>int</code>", "הפונקציה הזו מחזירה <code>bool</code>"). המפרש עובר על ה-AST ומוודא שהטיפוסים כולם חוקיים ותואמים.</p>
+                        <p>אבל הקסם האמיתי מגיע בחלק השני של הפרק, <b>שפת INFERRED</b>: אנחנו בונים מערכת ש"מסיקה" לבד את סוגי הנתונים (Type Inference). המערכת מסתכלת על הקוד, מרכיבה אלפי משוואות אילוצים (למשל, "אם איקס מחובר ל-5, אז איקס חייב להיות מספר!"), ופותרת אותן בעצמה באמצעות אלגוריתם מפורסם בשם <b>האחדה (Unification)</b> וסביבות החלפה חכמות (Substitutions). כך המתכנת לא כותב כמעט אף טיפוס, והמחשב עדיין מוודא שאין טעויות.</p>
                     </div>
                 </details>
                 
@@ -360,15 +508,19 @@
                             <span class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-base"><i class="fa-solid fa-8"></i></span>
                             <div class="flex flex-col">
                                 <span class="text-lg">פרק 8: מודולים (Modules)</span>
-                                <span class="text-sm text-slate-500 font-normal">חלוקת הקוד לחבילות גדולות והסתרת מידע על ידי ממשקים.</span>
+                                <span class="text-sm text-slate-500 font-normal">חלוקת הקוד לחבילות גדולות והסתרת מידע מוחלטת.</span>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 shadow-sm" dir="rtl">עמ' 283-332</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </div>
                     </summary>
                     <div class="p-6 pt-0 border-t border-slate-100 text-slate-600 leading-relaxed bg-slate-50/50 text-base">
                         <p class="mt-4 font-bold text-slate-700 mb-2"><i class="fa-solid fa-book-open-reader text-sky-500 mr-1"></i> צוללים פנימה:</p>
-                        <p class="mb-3">כשבונים תוכנות ענקיות (כמו של גוגל או פייסבוק), אי אפשר לכתוב הכל בקובץ אחד ענק. חייבים לחלק את העבודה למחלקות או צוותים שונים, וכל צוות בונה 'מודול' (קובייה עצמאית של קוד).</p>
-                        <p>אבל איך הצוותים עובדים ביחד מבלי להרוס אחד לשני? הפתרון הוא 'חוזים' או 'ממשקים' (Interfaces). כל מודול מפרסם החוצה רק את מה שהצוותים האחרים חייבים לדעת (למשל "יש לי פונקציה שעושה חיבור"), אבל מסתיר לחלוטין את *איך* הוא עושה את זה (הקוד הפנימי). זה מאפשר לכל צוות לשנות ולשדרג את המודול שלו מבלי לפחד שזה ישבור חלקים אחרים בתוכנה. בפרק הזה אנחנו מוסיפים לשפה שלנו את היכולת להגדיר מודולים, לאכוף את ההסתרות האלו, ואפילו לבנות "מפעלי מודולים" שלוקחים מודול ישן ומייצרים ממנו מודול חדש לגמרי.</p>
+                        <p class="mb-3">כשבונים תוכנות ענקיות אי אפשר לכתוב הכל בקובץ אחד ענק. יש לחלק את העבודה למחלקות שונות, וכל צוות בונה 'מודול' (קובייה עצמאית של קוד עם אחריות מוגדרת).</p>
+                        <p class="mb-3">אבל איך הצוותים עובדים ביחד מבלי להרוס אחד לשני? הפתרון הוא <b>ממשקים (Interfaces)</b>. כל מודול מפרסם החוצה רק את החוזה שלו (מה שנקרא Module Declaration) - למשל "יש לי פונקציה שעושה חיבור", אבל מסתיר לחלוטין את *איך* הוא עשה את זה (המימוש הפנימי - Module Implementation). זה מאפשר לשנות ולשדרג את המודול שלנו מבלי לפחד שזה ישבור חלקים אחרים במערכת.</p>
+                        <p>בפרק אנחנו מוסיפים לשפה יכולת להגדיר מודולים, לאכוף את ההסתרות בעזרת סביבות מיוחדות, להגדיר טיפוסים אטומים לחלוטין שמסווים את צורתם המקורית (Opaque Types), ואפילו לחקור כיצד מודול יכול לקבל מודול אחר כפרמטר!</p>
                     </div>
                 </details>
                 
@@ -378,15 +530,19 @@
                             <span class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-base"><i class="fa-solid fa-9"></i></span>
                             <div class="flex flex-col">
                                 <span class="text-lg">פרק 9: אובייקטים (Classes / OOP)</span>
-                                <span class="text-sm text-slate-500 font-normal">תכנות מונחה עצמים, מחלקות, וירושה.</span>
+                                <span class="text-sm text-slate-500 font-normal">תכנות מונחה עצמים, מחלקות, וירושה עמוקה.</span>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 shadow-sm" dir="rtl">עמ' 333-366</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </div>
                     </summary>
                     <div class="p-6 pt-0 border-t border-slate-100 text-slate-600 leading-relaxed bg-slate-50/50 text-base">
                         <p class="mt-4 font-bold text-slate-700 mb-2"><i class="fa-solid fa-book-open-reader text-sky-500 mr-1"></i> צוללים פנימה:</p>
-                        <p class="mb-3">במקום לחשוב על תוכנות כרשימה של פקודות חישוב משעממות, תכנות מונחה עצמים (OOP) מציע דרך חדשה: לחשוב על התוכנה כעל עולם מלא ב'יצורים' (אובייקטים). כל אובייקט יודע משהו (יש לו נתונים) ויודע לעשות משהו (יש לו פעולות/מתודות). למשל, אפשר ליצור אובייקט מסוג "כלב" שיודע את שמו, ויודע לנבוח.</p>
-                        <p>בפרק האחרון אנחנו מלמדים את המפרש שלנו את שפת היצורים הזו. אנחנו בונים מערכת שבה אפשר להגדיר סוגים של יצורים (מחלקות/Classes), לאפשר להם לרשת תכונות אחד מהשני (למשל 'כלב נחייה' הוא סוג מיוחד של 'כלב'), ולהפעיל עליהם פעולות. אנחנו גם לומדים איך המערכת יודעת בדיוק איזו פעולה לבצע כשאנחנו מבקשים מאובייקט לעשות משהו, ומה המשמעות של המילה הקסומה "אני" (self) שמאפשרת לאובייקט להתייחס לעצמו ולמתודות שלו מבפנים.</p>
+                        <p class="mb-3">במקום לחשוב על תוכנות כרשימה של פקודות חישוב משעממות, <b>תכנות מונחה עצמים (OOP)</b> מציע פרדיגמה חדשה: לחשוב על התוכנה כעל עולם מלא בישויות (אובייקטים). כל אובייקט מחזיק נתונים משל עצמו ופעולות משלו (מתודות/Methods).</p>
+                        <p class="mb-3">בפרק האחרון אנחנו מלמדים את המפרש שלנו את שפת היצורים הזו מאפס - אנחנו בונים מערכת שבה אפשר להגדיר תבניות (מחלקות/Classes) של אובייקטים, ולאפשר להם <b>לרשת (Inheritance)</b> תכונות ופונקציות זה מזה (למשל 'כלב ים' יורש מהתבנית 'חיה כללית').</p>
+                        <p>אנו גם מפענחים לעומק מונחים מתקדמים ומורכבים כגון ניתוב שיטות דינמי (<b>Method Dispatch</b>) - איך המערכת יודעת בדיוק איזו מתודה לבצע כשאנחנו מבקשים מאובייקט פעולה בעולם של ירושות מסובכות, ומה המשמעות העמוקה של המילה <code>self</code> בסביבה (המאפשרת לאובייקט לקרוא לפעולות של עצמו) וכן בניית מתודות <code>super</code>.</p>
                     </div>
                 </details>
 
@@ -399,6 +555,8 @@
         </div>
     </div>
 </div>
+
+<div id="snippets-main-container" class="hidden max-w-5xl mx-auto py-8">
 <!-- Tooltip Cycler Button (Floating or Top) -->
 <div class="bg-slate-900 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center mb-6 shadow-lg border border-slate-700">
 <div class="text-slate-300 font-bold mb-3 md:mb-0">
@@ -9637,6 +9795,8 @@ Expression ::= instanceof Expression Identifier
 </details>
 </div>
 </div>
+</div> <!-- End of snippets-main-container -->
+
 <!-- Detailed Explanation Modal -->
 <div class="fixed inset-0 z-[100] bg-slate-900/5 hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300 pointer-events-none" id="explanation-modal">
 <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh] pointer-events-auto border border-slate-200/60" id="modal-card">
