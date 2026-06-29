@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור הקשת טיפוסים (Type Inference) - שאלת מבחן</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+        body { 
+            font-family: 'Rubik', sans-serif; 
+            background-color: #f8fafc; 
+        }
+        .code-hl { 
+            transition: all 0.3s ease; 
+            padding: 0.125rem 0.25rem; 
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+        }
+        .code-hl.active {
+            background-color: rgba(59, 130, 246, 0.25);
+            border-color: #60a5fa;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.1);
+        }
+        /* Custom scrollbar for equations panel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 p-4 md:p-8 selection:bg-blue-200">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>
+                הקשת טיפוסים (Type Inference)
+            </h1>
+            <p class="text-slate-500 mt-2 font-medium">פתרון מודרך לשאלה 3 - אלגוריתם משוואות מסודר (פרק 7)</p>
+        </div>
+        <div class="hidden md:flex bg-blue-50 text-blue-700 px-4 py-2 rounded-lg items-center gap-2 font-semibold border border-blue-100">
+            INFERRED Language
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Code Viewer & Type Variables -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+            <div class="bg-[#0f172a] text-slate-300 rounded-xl shadow-xl border border-slate-800 overflow-hidden relative flex-grow flex flex-col">
+                <!-- Top Bar -->
+                <div class="bg-slate-800 px-4 py-2 flex items-center gap-2 border-b border-slate-700">
+                    <div class="flex gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono ml-auto mr-4" dir="ltr">program.inferred</span>
+                </div>
+
+                <div class="p-6 overflow-x-auto flex-grow flex flex-col">
+                    <!-- Code Block -->
+                    <div id="code-block" class="font-mono text-lg space-y-2 relative leading-loose" dir="ltr">
+                        <div>
+                            <span class="code-hl" id="kw-if"><span class="font-bold text-blue-400">if</span></span>
+                            <span class="code-hl" id="exp-cond">(<span class="code-hl" id="exp-rator"><span class="font-bold text-purple-400">proc</span> (<span class="code-hl text-orange-300" id="var-x">x</span> : ?) <span class="code-hl" id="body-x">x</span></span> <span class="code-hl" id="exp-rand"><span class="text-blue-300">zero?</span>(<span class="code-hl text-green-300" id="const-9">9</span>)</span>)</span>
+                        </div>
+                        <div><span class="font-bold text-blue-400">then</span></div>
+                        <div class="ml-8"><span class="code-hl" id="exp-then"><span class="font-bold text-purple-400">proc</span> (<span class="code-hl text-orange-300" id="var-a">a</span> : ?) <span class="code-hl" id="body-a">a</span></span></div>
+                        <div><span class="font-bold text-blue-400">else</span></div>
+                        <div class="ml-8"><span class="code-hl" id="exp-else"><span class="font-bold text-purple-400">proc</span> (<span class="code-hl text-orange-300" id="var-b">b</span> : ?) <span class="code-hl" id="body-b">b</span></span></div>
+                    </div>
+
+                    <!-- Types Grid -->
+                    <div id="types-table" class="mt-auto pt-8 hidden">
+                        <div class="border border-slate-700 rounded-lg bg-slate-800/80 p-4 shadow-inner">
+                            <h4 class="text-white font-bold mb-3 border-b border-slate-600 pb-2 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                משתני טיפוס (Type Variables) - סעיף א'
+                            </h4>
+                            <div id="types-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm text-slate-300 font-mono" dir="ltr">
+                                <!-- Generated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Explanations & Equations Panel -->
+        <div class="lg:col-span-5 flex flex-col gap-4">
+            <!-- Instruction Panel -->
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 p-6 flex-shrink-0 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-2 h-full bg-blue-500"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 id="step-title" class="text-xl font-bold text-slate-800 border-b pb-2 border-slate-100 flex-grow">כותרת שלב</h2>
+                    <span id="step-counter" class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full mr-3 border border-blue-200 shadow-sm"></span>
+                </div>
+                <div id="step-text" class="text-slate-600 leading-relaxed min-h-[4.5rem]">טקסט הסבר</div>
+
+                <!-- Navigation Controls -->
+                <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-100">
+                    <button id="btn-prev" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        קודם
+                    </button>
+                    <button id="btn-start" class="px-3 py-1.5 rounded-md text-sm bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 transition-colors">
+                        התחל מחדש
+                    </button>
+                    <button id="btn-next" class="px-6 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-md shadow-blue-200 transition-all transform hover:-translate-y-0.5">
+                        הבא
+                    </button>
+                </div>
+            </div>
+
+            <!-- Equations Panel -->
+            <div id="equations-panel" class="bg-[#1e293b] rounded-xl shadow-xl border border-slate-700 p-6 flex-grow hidden flex-col">
+                <h3 class="text-blue-400 font-bold text-lg mb-4 border-b border-slate-600 pb-2 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M4 17h16"></path><path d="M12 2v20"></path></svg>
+                    מערכת משוואות (סעיף ב' ו-ג')
+                </h3>
+                <ul id="eq-list" class="space-y-2.5 font-mono text-base md:text-lg flex-grow overflow-y-auto max-h-[350px] pr-2" dir="ltr">
+                    <!-- Generated by JS -->
+                </ul>
+
+                <!-- Final Conclusion -->
+                <div id="final-conclusion" class="hidden mt-6 bg-gradient-to-r from-emerald-900/40 to-green-900/40 border border-emerald-500/50 rounded-lg p-5 text-center shadow-inner relative overflow-hidden">
+                    <div class="absolute -top-4 -right-4 w-12 h-12 bg-emerald-500/20 rounded-full blur-xl"></div>
+                    <h3 class="text-emerald-400 font-bold text-sm mb-2 uppercase tracking-widest flex justify-center items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        טיפוס התוכנית שהוקש
+                    </h3>
+                    <p class="text-3xl font-mono font-bold text-white tracking-widest">t<sub>1</sub> &rarr; t<sub>1</sub></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Data for Type Variables mapping
+        const varsData = [
+            { id: 'T_prog', text: 'T<sub>prog</sub>', desc: 'if-exp (Whole)' },
+            { id: 'T_cond', text: 'T<sub>cond</sub>', desc: 'Condition' },
+            { id: 'T_then', text: 'T<sub>then</sub>', desc: 'proc a' },
+            { id: 'T_else', text: 'T<sub>else</sub>', desc: 'proc b' },
+            { id: 'T_rator', text: 'T<sub>rator</sub>', desc: 'proc x' },
+            { id: 'T_rand', text: 'T<sub>rand</sub>', desc: 'zero?(9)' },
+            { id: 'T_x', text: 'T<sub>x</sub>', desc: 'var x' },
+            { id: 'T_body_x', text: 'T<sub>body_x</sub>', desc: 'body x' },
+            { id: 'T_9', text: 'T<sub>9</sub>', desc: 'const 9' },
+            { id: 'T_a', text: 'T<sub>a</sub>', desc: 'var a' },
+            { id: 'T_body_a', text: 'T<sub>body_a</sub>', desc: 'body a' },
+            { id: 'T_b', text: 'T<sub>b</sub>', desc: 'var b' },
+            { id: 'T_body_b', text: 'T<sub>body_b</sub>', desc: 'body b' }
+        ];
+
+        // Steps Logic
+        const steps = [
+            {
+                title: "מבוא - ניתוח עץ התחביר",
+                text: "בשאלת הקשת טיפוסים (Type Inference) מפרק 7, אנו נדרשים לגלות את טיפוס התוכנית צעד אחר צעד על סמך חוקי השפה.<br><br>התוכנית שלנו מכילה משפט <code>if</code>. התנאי שלו הוא <strong>קריאה לפונקציה</strong> <code>(proc(x) zero?(9))</code>, וענפי ה-then וה-else מכילים פונקציות פשוטות שמחזירות את הפרמטר שלהן.",
+                ui: { showTypes: false, showEquations: false, activeVars: [], highlights: [] }
+            },
+            {
+                title: "סעיף א' (1/4) - משתני ה-IF",
+                text: "נקצה משתני טיפוס (Type Variables) למבנה העליון. נקצה משתנה לכל התוכנית, משתנה לביטוי התנאי, ומשתנים לענפים.",
+                ui: {
+                    showTypes: true, showEquations: false,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else'],
+                    highlights: ['kw-if', 'exp-cond', 'exp-then', 'exp-else']
+                }
+            },
+            {
+                title: "סעיף א' (2/4) - משתני קריאה (App)",
+                text: "התנאי של ה-if הוא קריאה (Application). נצלול פנימה ונקצה משתנה לפונקציה המופעלת (rator) ולפרמטר שנשלח אליה (rand).",
+                ui: {
+                    showTypes: true, showEquations: false,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand'],
+                    highlights: ['exp-rator', 'exp-rand']
+                }
+            },
+            {
+                title: "סעיף א' (3/4) - משתני הפונקציה x",
+                text: "בתוך ה-rator, נגדיר משתנים לפרמטר <code>x</code> ולגוף <code>x</code>. בתוך ה-rand נגדיר משתנה לקבוע המספרי <code>9</code>.",
+                ui: {
+                    showTypes: true, showEquations: false,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9'],
+                    highlights: ['var-x', 'body-x', 'const-9']
+                }
+            },
+            {
+                title: "סעיף א' (4/4) - משתני ענפי ה-IF",
+                text: "לסיום שלב א', נקצה משתנים לפרמטרים ולגופים של הפונקציות הנמצאות בענף ה-then ובענף ה-else.",
+                ui: {
+                    showTypes: true, showEquations: false,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['var-a', 'body-a', 'var-b', 'body-b']
+                }
+            },
+            {
+                title: "סעיף ב' (1/5) - משוואות ה-IF",
+                text: "עוברים לסעיף ב': הרכבת משוואות. ממשפט if נובעים שלושה אילוצים: התנאי חייב להיות בוליאני, וטיפוס התוכנית כולה זהה לטיפוס ענף ה-then ולטיפוס ענף ה-else.",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['kw-if', 'exp-cond'],
+                    eqUpdates: [
+                        {action: 'add', id: 'eq1', text: 'T<sub>cond</sub> = bool'},
+                        {action: 'add', id: 'eq2', text: 'T<sub>prog</sub> = T<sub>then</sub>'},
+                        {action: 'add', id: 'eq3', text: 'T<sub>prog</sub> = T<sub>else</sub>'}
+                    ]
+                }
+            },
+            {
+                title: "סעיף ב' (2/5) - משוואת הקריאה",
+                text: "הקריאה (Application) דורשת שה-rator יהיה פונקציה תקינה. משוואתה: טיפוס הפונקציה שווה למיפוי מטיפוס הארגומנט לטיפוס תוצאת התנאי כולו.",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['exp-cond', 'exp-rator', 'exp-rand'],
+                    eqUpdates: [
+                        {action: 'add', id: 'eq4', text: 'T<sub>rator</sub> = T<sub>rand</sub> &rarr; T<sub>cond</sub>'}
+                    ]
+                }
+            },
+            {
+                title: "סעיף ב' (3/5) - משוואות הפונקציה x",
+                text: "הפונקציה מניבה שתי משוואות: טיפוס הפונקציה הוא מיפוי מהפרמטר x אל גופה, וטיפוס הגוף שווה במקרה זה לטיפוס הפרמטר (משום שהגוף מורכב רק מהמשתנה x).",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['exp-rator', 'var-x', 'body-x'],
+                    eqUpdates: [
+                        {action: 'add', id: 'eq5', text: 'T<sub>rator</sub> = T<sub>x</sub> &rarr; T<sub>body_x</sub>'},
+                        {action: 'add', id: 'eq6', text: 'T<sub>body_x</sub> = T<sub>x</sub>'}
+                    ]
+                }
+            },
+            {
+                title: "סעיף ב' (4/5) - משוואות ה-rand",
+                text: "הביטוי <code>zero?(9)</code> מייצר לנו שתי משוואות בסיסיות: תוצאת הפונקציה zero? היא תמיד <code>bool</code>, והקבוע המספרי שלנו הוא תמיד מטיפוס <code>int</code>.",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['exp-rand', 'const-9'],
+                    eqUpdates: [
+                        {action: 'add', id: 'eq7', text: 'T<sub>rand</sub> = bool'},
+                        {action: 'add', id: 'eq8', text: 'T<sub>9</sub> = int'}
+                    ]
+                }
+            },
+            {
+                title: "סעיף ב' (5/5) - משוואות הפונקציות a ו-b",
+                text: "לסיום שלב ב', נרשום את האילוצים לפונקציות בענפי ה-then וה-else בדומה לפונקציה הקודמת. גם כאן, הגוף שווה לפרמטר שאותו הוא מחזיר.",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['exp-then', 'exp-else'],
+                    eqUpdates: [
+                        {action: 'add', id: 'eq9', text: 'T<sub>then</sub> = T<sub>a</sub> &rarr; T<sub>body_a</sub>'},
+                        {action: 'add', id: 'eq10', text: 'T<sub>body_a</sub> = T<sub>a</sub>'},
+                        {action: 'add', id: 'eq11', text: 'T<sub>else</sub> = T<sub>b</sub> &rarr; T<sub>body_b</sub>'},
+                        {action: 'add', id: 'eq12', text: 'T<sub>body_b</sub> = T<sub>b</sub>'}
+                    ]
+                }
+            },
+            {
+                title: "סעיף ג' (1/5) - מתחילים לפתור!",
+                text: "מתחילים את שלב פתרון המשוואות. נבצע סדרת הצבות (Substitutions). נציב את טיפוסי הגופים אל תוך משוואות הפונקציות המתאימות וניפטר ממשוואות כפולות.",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['body-x', 'body-a', 'body-b'],
+                    eqUpdates: [
+                        {action: 'strike', id: 'eq6'},
+                        {action: 'update', id: 'eq5', text: 'T<sub>rator</sub> = T<sub>x</sub> &rarr; T<sub>x</sub>'},
+                        {action: 'strike', id: 'eq10'},
+                        {action: 'update', id: 'eq9', text: 'T<sub>then</sub> = T<sub>a</sub> &rarr; T<sub>a</sub>'},
+                        {action: 'strike', id: 'eq12'},
+                        {action: 'update', id: 'eq11', text: 'T<sub>else</sub> = T<sub>b</sub> &rarr; T<sub>b</sub>'}
+                    ]
+                }
+            },
+            {
+                title: "סעיף ג' (2/5) - איחוד ענפי ה-IF",
+                text: "מתוך המשוואות 2 ו-3 ניתן להסיק ש-<code>T_then = T_else</code>. נשווה ביניהם (T_a&rarr;T_a = T_b&rarr;T_b) ונגלה ש-T_a שווה ל-T_b. נעדכן את המשוואה הראשית עבור T_prog.",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['exp-then', 'exp-else'],
+                    eqUpdates: [
+                        {action: 'strike', id: 'eq3'},
+                        {action: 'strike', id: 'eq9'},
+                        {action: 'strike', id: 'eq11'},
+                        {action: 'update', id: 'eq2', text: 'T<sub>prog</sub> = T<sub>a</sub> &rarr; T<sub>a</sub>'}
+                    ]
+                }
+            },
+            {
+                title: "סעיף ג' (3/5) - הצבות בתנאי",
+                text: "כעת נטפל בקריאה לפונקציה בתנאי ה-if. נציב את הטיפוסים הידועים של תוצאת התנאי (bool ממשוואה 1) והארגומנט (bool ממשוואה 7) לתוך המשוואה של T_rator.",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['exp-cond', 'exp-rand'],
+                    eqUpdates: [
+                        {action: 'strike', id: 'eq1'},
+                        {action: 'strike', id: 'eq7'},
+                        {action: 'update', id: 'eq4', text: 'T<sub>rator</sub> = bool &rarr; bool'}
+                    ]
+                }
+            },
+            {
+                title: "סעיף ג' (4/5) - אימות קריאת הפונקציה",
+                text: "נשארו לנו שתי משוואות נפרדות עבור T_rator. אם נשווה ביניהן (<code>bool&rarr;bool = T_x&rarr;T_x</code>), נגלה שהטיפוס של x אולץ להיות bool. הקריאה תקנית ואין התנגשויות טיפוסים (Type Errors)!",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['exp-rator', 'var-x'],
+                    eqUpdates: [
+                        {action: 'update', id: 'eq5', text: 'T<sub>x</sub> = bool'}
+                    ]
+                }
+            },
+            {
+                title: "סעיף ג' (5/5) - סיום! התוצאה הסופית",
+                text: "המשוואה היחידה שנותרה עבור הטיפוס הראשי היא <code>T<sub>prog</sub> = T<sub>a</sub> &rarr; T<sub>a</sub></code>.<br><br>מאחר ולא נגזרו אילוצים נוספים על המשתנה a, התוכנית שלנו היא <strong>פולימורפית</strong>, והטיפוס המוקש במערכת של INFERRED הוא <code>t<sub>1</sub> &rarr; t<sub>1</sub></code>.",
+                ui: {
+                    showTypes: true, showEquations: true,
+                    activeVars: ['T_prog', 'T_cond', 'T_then', 'T_else', 'T_rator', 'T_rand', 'T_x', 'T_body_x', 'T_9', 'T_a', 'T_body_a', 'T_b', 'T_body_b'],
+                    highlights: ['kw-if', 'exp-then', 'exp-else'],
+                    eqUpdates: [],
+                    finalConclusion: true
+                }
+            }
+        ];
+
+        // State
+        let currentStep = 0;
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // Text & Titles
+            document.getElementById('step-title').innerHTML = step.title;
+            document.getElementById('step-text').innerHTML = step.text;
+            document.getElementById('step-counter').innerText = `${currentStep + 1} / ${steps.length}`;
+
+            // Buttons state
+            document.getElementById('btn-prev').disabled = currentStep === 0;
+            document.getElementById('btn-next').disabled = currentStep === steps.length - 1;
+
+            // Types Grid
+            const typesTable = document.getElementById('types-table');
+            if (step.ui.showTypes) {
+                typesTable.classList.remove('hidden');
+                let html = '';
+                step.ui.activeVars.forEach(vid => {
+                    const v = varsData.find(vd => vd.id === vid);
+                    html += `
+                        <div class="bg-slate-900 border border-slate-700 p-2 rounded-md flex justify-between items-center shadow-sm">
+                            <span class="text-blue-300 font-bold">${v.text}</span>
+                            <span class="text-slate-500 text-xs truncate ml-2" title="${v.desc}">${v.desc}</span>
+                        </div>`;
+                });
+                document.getElementById('types-grid').innerHTML = html;
+            } else {
+                typesTable.classList.add('hidden');
+            }
+
+            // Code Highlights
+            document.querySelectorAll('.code-hl').forEach(el => el.classList.remove('active'));
+            if (step.ui.highlights) {
+                step.ui.highlights.forEach(hid => {
+                    const el = document.getElementById(hid);
+                    if (el) el.classList.add('active');
+                });
+            }
+
+            // Equations Panel
+            const eqPanel = document.getElementById('equations-panel');
+            if (step.ui.showEquations) {
+                eqPanel.classList.remove('hidden');
+                
+                // Calculate accumulated equations
+                let currentEqs = {};
+                for (let i = 0; i <= currentStep; i++) {
+                    if (steps[i].ui.eqUpdates) {
+                        steps[i].ui.eqUpdates.forEach(upd => {
+                            const isCurrentStep = (i === currentStep);
+                            if (upd.action === 'add') {
+                                currentEqs[upd.id] = { text: upd.text, strike: false, highlight: isCurrentStep };
+                            } else if (upd.action === 'strike') {
+                                if(currentEqs[upd.id]) {
+                                    currentEqs[upd.id].strike = true;
+                                    currentEqs[upd.id].highlight = isCurrentStep;
+                                }
+                            } else if (upd.action === 'update') {
+                                if(currentEqs[upd.id]) {
+                                    currentEqs[upd.id].text = upd.text;
+                                    currentEqs[upd.id].strike = false;
+                                    currentEqs[upd.id].highlight = isCurrentStep;
+                                }
+                            }
+                        });
+                    }
+                }
+
+                // Render equations list
+                let eqHtml = '';
+                Object.keys(currentEqs).forEach(k => {
+                    const eq = currentEqs[k];
+                    // Visual styling based on state
+                    let bgClass = eq.highlight ? 'bg-blue-900/60 border-blue-500' : 'bg-slate-800 border-slate-700';
+                    let textClass = eq.strike ? 'line-through text-slate-500 opacity-50' : 'text-slate-200';
+                    
+                    eqHtml += `
+                        <li class="${bgClass} ${textClass} px-3 py-2 rounded-lg border shadow-sm transition-all duration-300 flex items-center gap-3">
+                            <span class="text-xs font-bold ${eq.strike ? 'text-slate-600' : 'text-blue-400'} w-8">[${k.replace('eq','')}]</span>
+                            <span>${eq.text}</span>
+                        </li>`;
+                });
+                document.getElementById('eq-list').innerHTML = eqHtml;
+            } else {
+                eqPanel.classList.add('hidden');
+            }
+
+            // Final Conclusion
+            const finalDiv = document.getElementById('final-conclusion');
+            if (step.ui.finalConclusion) {
+                finalDiv.classList.remove('hidden');
+            } else {
+                finalDiv.classList.add('hidden');
+            }
+            
+            // Auto-scroll equations to bottom smoothly
+            setTimeout(() => {
+                const list = document.getElementById('eq-list');
+                list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
+            }, 50);
+        }
+
+        // Initialize UI
+        updateUI();
+
+        // Event Listeners
+        document.getElementById('btn-next').addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateUI();
+            }
+        });
+
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateUI();
+            }
+        });
+
+        document.getElementById('btn-start').addEventListener('click', () => {
+            currentStep = 0;
+            updateUI();
+        });
+    </script>
+</body>
+</html>

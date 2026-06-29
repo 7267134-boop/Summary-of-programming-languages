@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מנגנון Memoization ו-LRU Cache - שאלה 1 (2025ב)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* עיצוב הקוד וההיילייטס */
+        .code-block {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            direction: ltr;
+            text-align: left;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.8;
+            font-size: 0.9rem;
+        }
+        .highlight-zone {
+            display: block; /* כל שורה היא בלוק כדי שהריחוף יתפוס את כולה */
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            padding: 0 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease-in-out;
+            color: #cbd5e1; /* צבע טקסט ברירת מחדל בהיר */
+        }
+        .highlight-zone:hover, .highlight-zone.active {
+            background-color: rgba(59, 130, 246, 0.2);
+            border-bottom: 1px dashed #60a5fa;
+            color: #ffffff; /* טקסט לבן בהיר כשמרחפים */
+        }
+        .scheme-comment { color: #4ade80; font-style: italic; opacity: 0.9; display: block; padding: 0 0.5rem; }
+        
+        /* ניהול טאבים */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* עיצוב כפתורי טאבים */
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            color: #475569;
+            background-color: transparent;
+        }
+        .tab-btn:hover { background-color: #f1f5f9; color: #0f172a; }
+        .tab-btn.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        /* עיצוב דרישת השאלה */
+        .req-box {
+            background-color: #eff6ff;
+            border-right: 4px solid #3b82f6;
+            padding: 1rem;
+            border-top-left-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: #1e3a8a;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .req-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 p-4 md:p-8 selection:bg-blue-200">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>
+                מנגנון Memoization ו-LRU Cache
+            </h1>
+            <p class="text-slate-500 mt-2 font-medium">פתרון מודרך ומפורט (שורת קוד אחר שורת קוד) - מבחן 2025ב (שאלה 1)</p>
+        </div>
+        <div class="hidden md:flex bg-blue-50 text-blue-700 px-4 py-2 rounded-lg items-center gap-2 font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            שפת PROC + EOPL
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Code & Tabs -->
+        <div class="lg:col-span-8 flex flex-col gap-4">
+            
+            <!-- Tab Buttons -->
+            <div id="tabs-container" class="flex flex-wrap gap-2 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                <button class="tab-btn active" onclick="switchTab('tab-overview', this)">0. מבוא</button>
+                <button class="tab-btn" onclick="switchTab('tab-init', this)">1. init-cache</button>
+                <button class="tab-btn" onclick="switchTab('tab-search', this)">2. search-cache</button>
+                <button class="tab-btn" onclick="switchTab('tab-rearrange', this)">3. rearrange</button>
+                <button class="tab-btn" onclick="switchTab('tab-add', this)">4. add-cache</button>
+                <button class="tab-btn" onclick="switchTab('tab-call', this)">5. call-exp</button>
+                <button class="tab-btn bg-emerald-50 text-emerald-700" onclick="switchTab('tab-final', this)">הפתרון המלא</button>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="bg-[#0f172a] text-slate-300 rounded-xl shadow-xl border border-slate-800 overflow-hidden relative min-h-[450px] flex flex-col">
+                <div class="bg-slate-800 px-4 py-2 flex items-center gap-2 border-b border-slate-700">
+                    <div class="flex gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono ml-auto mr-4" dir="ltr">solution.scm</span>
+                </div>
+
+                <div class="p-6 flex-grow">
+                    
+                    <!-- Tab 0: Overview -->
+                    <div id="tab-overview" class="tab-content active" dir="rtl">
+                        <div class="bg-white text-slate-800 p-6 rounded-lg shadow-inner">
+                            <h3 class="text-xl font-bold border-b pb-2 mb-4">מבוא למנגנון Memoization ב-PROC</h3>
+                            <p class="leading-relaxed mb-4">
+                                שאלה זו דורשת שדרוג של שפת "ייינגור" (PROC - פרק 3, עמ' 74-81) כך שהפעלות של פרוצדורות (<code>call-exp</code>) יעשו שימוש בזיכרון מטמון גלובלי.
+                            </p>
+                            <ul class="list-disc list-inside space-y-2 mb-6 text-slate-700">
+                                <li><strong>עקרונות השפה:</strong> שפת PROC היא שפה פונקציונלית טהורה. אין בה מנגנון של זיכרון (Store). לכן, המטמון מיושם "מאחורי הקלעים" ברמת מפרש השפה (Scheme) על ידי משתנה גלובלי.</li>
+                                <li><strong>המטמון (the-cache):</strong> שומר רשימה של תתי-רשימות במבנה מדויק: <code class="bg-slate-100 px-1 rounded text-blue-600">(proc arg result)</code>.</li>
+                                <li><strong>ניהול (LRU):</strong> בכל קריאה לפרוצדורה, המפרש בודק קודם במטמון. מציאה תגרום לשליפה מהירה ולקידום הרשומה לראש התור. כישלון יוביל לחישוב ההפעלה ושמירת התוצאה במטמון למען קריאות עתידיות.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Tab 1: init-cache -->
+                    <div id="tab-init" class="tab-content" dir="rtl">
+                        <div class="req-box">
+                            <div class="req-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                דרישת השאלה:
+                            </div>
+                            "ממשו את <code>init-cache</code> – פרוצדורה ללא פרמטרים המאתחלת את זיכרון המטמון לראשונה להיות ריק."
+                        </div>
+                        <div class="code-block" dir="ltr">
+<span class="scheme-comment">; init-cache: () -> update the-cache to empty cache</span>
+<span class="highlight-zone" data-expl="init_define" onmouseenter="showExpl(this)" onclick="showExpl(this)">(define init-cache</span>
+<span class="highlight-zone" data-expl="init_lambda" onmouseenter="showExpl(this)" onclick="showExpl(this)">  (lambda ()</span>
+<span class="highlight-zone" data-expl="init_set" onmouseenter="showExpl(this)" onclick="showExpl(this)">    (set! the-cache '())))</span></div>
+                    </div>
+
+                    <!-- Tab 2: search-cache -->
+                    <div id="tab-search" class="tab-content" dir="rtl">
+                        <div class="req-box">
+                            <div class="req-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                דרישת השאלה:
+                            </div>
+                            "ממשו את <code>search-cache</code> – המקבלת פרוצדורה (proc) וארגומנט (arg) ומחפשת האם קיימת תוצאת הפעלה שלהם במטמון. אם כן, מוחזר האינדקס של מיקומם. אחרת, מוחזר #f."
+                        </div>
+                        <div class="code-block" dir="ltr">
+<span class="scheme-comment">; search-cache : return #f if prc,arg not in cache
+;                or index (from 0) found in the cache</span>
+<span class="highlight-zone" data-expl="search_define" onmouseenter="showExpl(this)" onclick="showExpl(this)">(define search-cache</span>
+<span class="highlight-zone" data-expl="search_lambda" onmouseenter="showExpl(this)" onclick="showExpl(this)">  (lambda (prc arg)</span>
+<span class="highlight-zone" data-expl="search_letrec" onmouseenter="showExpl(this)" onclick="showExpl(this)">    (letrec ((search-inner</span>
+<span class="highlight-zone" data-expl="search_inner_lambda" onmouseenter="showExpl(this)" onclick="showExpl(this)">               (lambda (lst idx)</span>
+<span class="highlight-zone" data-expl="search_cond" onmouseenter="showExpl(this)" onclick="showExpl(this)">                 (cond</span>
+<span class="highlight-zone" data-expl="search_null" onmouseenter="showExpl(this)" onclick="showExpl(this)">                   ((null? lst) #f)</span>
+<span class="highlight-zone" data-expl="search_match_prc" onmouseenter="showExpl(this)" onclick="showExpl(this)">                   ((and (equal? (car (car lst)) prc)</span>
+<span class="highlight-zone" data-expl="search_match_arg" onmouseenter="showExpl(this)" onclick="showExpl(this)">                         (equal? (cadr (car lst)) arg))</span>
+<span class="highlight-zone" data-expl="search_return_idx" onmouseenter="showExpl(this)" onclick="showExpl(this)">                    idx)</span>
+<span class="highlight-zone" data-expl="search_else" onmouseenter="showExpl(this)" onclick="showExpl(this)">                   (else (search-inner (cdr lst) (+ idx 1)))))))</span>
+<span class="highlight-zone" data-expl="search_call" onmouseenter="showExpl(this)" onclick="showExpl(this)">      (search-inner the-cache 0))))</span></div>
+                    </div>
+
+                    <!-- Tab 3: rearrange -->
+                    <div id="tab-rearrange" class="tab-content" dir="rtl">
+                        <div class="req-box">
+                            <div class="req-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                דרישת השאלה:
+                            </div>
+                            "ממשו את פעולת העזר <code>remove-at</code> המוחקת איבר מאינדקס מסוים, ואת <code>rearrange-cache</code> המעדכנת את זיכרון המטמון כך שהאיבר מהאינדקס הנתון מועבר לתחילתו (מנגנון LRU)."
+                        </div>
+                        <div class="code-block" dir="ltr">
+<span class="scheme-comment">; remove-at: removing element at index n from list lst</span>
+<span class="highlight-zone" data-expl="remove_define" onmouseenter="showExpl(this)" onclick="showExpl(this)">(define (remove-at lst n)</span>
+<span class="highlight-zone" data-expl="remove_if_zero" onmouseenter="showExpl(this)" onclick="showExpl(this)">  (if (zero? n)</span>
+<span class="highlight-zone" data-expl="remove_skip" onmouseenter="showExpl(this)" onclick="showExpl(this)">      (cdr lst)</span>
+<span class="highlight-zone" data-expl="remove_cons" onmouseenter="showExpl(this)" onclick="showExpl(this)">      (cons (car lst) (remove-at (cdr lst) (- n 1)))))</span>
+
+<span class="scheme-comment">; rearrange-cache: move element at idx to beginning</span>
+<span class="highlight-zone" data-expl="rearrange_define" onmouseenter="showExpl(this)" onclick="showExpl(this)">(define rearrange-cache</span>
+<span class="highlight-zone" data-expl="rearrange_lambda" onmouseenter="showExpl(this)" onclick="showExpl(this)">  (lambda (idx)</span>
+<span class="highlight-zone" data-expl="rearrange_let" onmouseenter="showExpl(this)" onclick="showExpl(this)">    (let ((item (list-ref the-cache idx)))</span>
+<span class="highlight-zone" data-expl="rearrange_set" onmouseenter="showExpl(this)" onclick="showExpl(this)">      (set! the-cache (cons item (remove-at the-cache idx))))))</span></div>
+                    </div>
+
+                    <!-- Tab 4: add-cache -->
+                    <div id="tab-add" class="tab-content" dir="rtl">
+                        <div class="req-box">
+                            <div class="req-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                דרישת השאלה:
+                            </div>
+                            "ממשו את <code>add-cache</code> – המקבלת פרוצדורה, ארגומנט ותוצאה, ומוסיפה אותם כאיבר חדש לתחילת המטמון. הפרוצדורה בודקת קודם אם יש מקום, ואם לא – מפנה מקום על ידי מחיקת האיבר האחרון."
+                        </div>
+                        <div class="code-block" dir="ltr">
+<span class="scheme-comment">; add-cache: add new procedure call result to the cache</span>
+<span class="highlight-zone" data-expl="add_define" onmouseenter="showExpl(this)" onclick="showExpl(this)">(define add-cache</span>
+<span class="highlight-zone" data-expl="add_lambda" onmouseenter="showExpl(this)" onclick="showExpl(this)">  (lambda (prc arg result)</span>
+<span class="highlight-zone" data-expl="add_check_size" onmouseenter="showExpl(this)" onclick="showExpl(this)">    (if (= (length the-cache) cache-size)</span>
+<span class="highlight-zone" data-expl="add_evict" onmouseenter="showExpl(this)" onclick="showExpl(this)">        (set! the-cache (remove-at the-cache (- cache-size 1)))</span>
+<span class="highlight-zone" data-expl="add_falsy" onmouseenter="showExpl(this)" onclick="showExpl(this)">        #f)</span>
+<span class="highlight-zone" data-expl="add_insert" onmouseenter="showExpl(this)" onclick="showExpl(this)">    (set! the-cache (cons (list prc arg result) the-cache))))</span></div>
+                    </div>
+
+                    <!-- Tab 5: call-exp -->
+                    <div id="tab-call" class="tab-content" dir="rtl">
+                        <div class="req-box">
+                            <div class="req-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                דרישת השאלה:
+                            </div>
+                            "ממשו עדכון להתנהגות הביטוי <code>call-exp</code> – תחילה יש לבדוק אם קיימת במטמון תוצאה מאותה פונקציה וארגומנט. אם כן – להחזירה, לקדמה ולהדפיס הודעה. אחרת – לחשב, להוסיף למטמון ולהחזיר את התוצאה."
+                        </div>
+                        <div class="code-block" dir="ltr">
+<span class="scheme-comment">; new implementation for call-exp with memoization</span>
+<span class="highlight-zone" data-expl="call_pattern" onmouseenter="showExpl(this)" onclick="showExpl(this)">(call-exp (rator rand)</span>
+<span class="highlight-zone" data-expl="call_eval_rator" onmouseenter="showExpl(this)" onclick="showExpl(this)">  (let ((prc-val (value-of rator env))</span>
+<span class="highlight-zone" data-expl="call_eval_rand" onmouseenter="showExpl(this)" onclick="showExpl(this)">        (arg (value-of rand env)))</span>
+<span class="highlight-zone" data-expl="call_extract_proc" onmouseenter="showExpl(this)" onclick="showExpl(this)">    (let ((prc (expval->proc prc-val)))</span>
+<span class="highlight-zone" data-expl="call_search" onmouseenter="showExpl(this)" onclick="showExpl(this)">      (let ((idx (search-cache prc arg)))</span>
+<span class="highlight-zone" data-expl="call_if_idx" onmouseenter="showExpl(this)" onclick="showExpl(this)">        (if idx</span>
+<span class="highlight-zone" data-expl="call_hit_caddr" onmouseenter="showExpl(this)" onclick="showExpl(this)">            (let ((result (caddr (list-ref the-cache idx))))</span>
+<span class="highlight-zone" data-expl="call_hit_rearrange" onmouseenter="showExpl(this)" onclick="showExpl(this)">              (rearrange-cache idx)</span>
+<span class="highlight-zone" data-expl="call_hit_print" onmouseenter="showExpl(this)" onclick="showExpl(this)">              (eopl:printf "procedure call result ~s found in cache :-)~%" result)</span>
+<span class="highlight-zone" data-expl="call_hit_return" onmouseenter="showExpl(this)" onclick="showExpl(this)">              result)</span>
+<span class="highlight-zone" data-expl="call_miss_apply" onmouseenter="showExpl(this)" onclick="showExpl(this)">            (let ((result (apply-procedure prc arg)))</span>
+<span class="highlight-zone" data-expl="call_miss_add" onmouseenter="showExpl(this)" onclick="showExpl(this)">              (add-cache prc arg result)</span>
+<span class="highlight-zone" data-expl="call_miss_return" onmouseenter="showExpl(this)" onclick="showExpl(this)">              result))))))</span></div>
+                    </div>
+
+                    <!-- Tab Final: All Code -->
+                    <div id="tab-final" class="tab-content" dir="rtl">
+                        <div class="req-box mb-6 border-emerald-500 bg-emerald-50 text-emerald-800">
+                            <div class="req-title text-emerald-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                סיכום קוד הפתרון
+                            </div>
+                            הקוד המלא והרציף כפי שייכתב במחברת הבחינה.
+                        </div>
+                        <div class="code-block" dir="ltr">
+<span class="scheme-comment">; init-cache: () -> update the-cache to empty cache</span>
+(define init-cache
+  (lambda ()
+    (set! the-cache '())))
+
+<span class="scheme-comment">; search-cache : return #f if prc,arg not in cache
+;                or index (from 0) found in the cache</span>
+(define search-cache
+  (lambda (prc arg)
+    (letrec ((search-inner
+               (lambda (lst idx)
+                 (cond
+                   ((null? lst) #f)
+                   ((and (equal? (car (car lst)) prc)
+                         (equal? (cadr (car lst)) arg))
+                    idx)
+                   (else (search-inner (cdr lst) (+ idx 1)))))))
+      (search-inner the-cache 0))))
+
+<span class="scheme-comment">; remove-at: removing element at index n
+;            from list lst and return new list</span>
+(define (remove-at lst n)
+  (if (zero? n)
+      (cdr lst)
+      (cons (car lst) (remove-at (cdr lst) (- n 1)))))
+
+<span class="scheme-comment">; rearrange-cache: update the-cache by moving the element
+;                  at index idx to the beginning of the cache</span>
+(define rearrange-cache
+  (lambda (idx)
+    (let ((item (list-ref the-cache idx)))
+      (set! the-cache (cons item (remove-at the-cache idx))))))
+
+<span class="scheme-comment">; add-cache: update the-cache by adding
+;            new procedure call result to the cache</span>
+(define add-cache
+  (lambda (prc arg result)
+    (if (= (length the-cache) cache-size)
+        (set! the-cache (remove-at the-cache (- cache-size 1)))
+        #f)
+    (set! the-cache (cons (list prc arg result) the-cache))))
+
+<span class="scheme-comment">; new implementation for call-exp with memoization</span>
+(call-exp (rator rand)
+  (let ((prc-val (value-of rator env))
+        (arg (value-of rand env)))
+    (let ((prc (expval->proc prc-val)))
+      (let ((idx (search-cache prc arg)))
+        (if idx
+            (let ((result (caddr (list-ref the-cache idx))))
+              (rearrange-cache idx)
+              (eopl:printf "procedure call result ~s found in cache :-)~%" result)
+              result)
+            (let ((result (apply-procedure prc arg)))
+              (add-cache prc arg result)
+              result))))))</div>
+                    </div>
+
+                </div>
+
+                <div id="footer-hint" class="mt-auto bg-blue-900/40 text-blue-200 text-xs text-center py-2 border-t border-slate-700/50 flex justify-center items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"></path><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path><path d="M12 2v2"></path><path d="M12 22v-2"></path></svg>
+                    רחף או לחץ על השורות בקוד כדי לקרוא הסבר עומק עבור כל פעולה
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Explanations -->
+        <div class="lg:col-span-4">
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 p-6 h-full flex flex-col sticky top-6 transition-all duration-300" id="expl-panel">
+                <h2 class="text-xl font-bold text-slate-800 border-b pb-4 mb-4 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span id="expl-title">מנתח הקוד</span>
+                </h2>
+                
+                <div id="expl-content" class="flex-grow flex flex-col justify-center">
+                    <div id="expl-text" class="text-slate-600 leading-relaxed text-center opacity-70">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-slate-300"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                        המערכת ממתינה...<br>בחר שורת קוד בחלון השמאלי כדי לקרוא את ההיגיון שמאחוריה.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const explanations = {
+            // TAB 1: init-cache
+            "init_define": {
+                title: "הגדרת משתנה גלובלי",
+                text: "הפקודה <code>define</code> משמשת בשפת Scheme כדי לקשור שם לערך מסוים בסביבה הגלובלית. כאן אנו מגדירים את השם <code>init-cache</code> כדי שיהווה את פונקציית האתחול של המטמון שנוכל לקרוא לה מכל מקום במפרש."
+            },
+            "init_lambda": {
+                title: "פונקציה ללא פרמטרים",
+                text: "הפקודה <code>lambda</code> יוצרת פונקציה אנונימית. הסוגריים הריקים <code>()</code> מציינים שהפונקציה אינה דורשת אף פרמטר (ארגומנט) בעת הפעלתה, מאחר והיא פועלת רק על משתנה גלובלי קיים."
+            },
+            "init_set": {
+                title: "השמה וריקון המטמון",
+                text: "הפקודה <code>set!</code> משנה את ערכו של המשתנה הגלובלי <code>the-cache</code>. המפרש דורס את המצב הקודם של המטמון ומציב בו רשימה ריקה <code>'()</code>. חשוב להבין שזו פעולת שפת המימוש (Scheme) שמנהלת את המפרש, ולא פעולה שחשופה למתכנת בשפת PROC שממשיכה להיות חסרת-השמה לחלוטין."
+            },
+
+            // TAB 2: search-cache
+            "search_define": {
+                title: "הגדרת פונקציית החיפוש",
+                text: "אנו מגדירים פונקציה גלובלית חדשה בשם <code>search-cache</code>. מטרתה לסרוק את רשימת המטמון ולאתר תוצאות חישוב קודמות ששמורות בה."
+            },
+            "search_lambda": {
+                title: "חתימת הפונקציה",
+                text: "הפונקציה מצפה לקבל שני פרמטרים כדי לבצע את החיפוש: המבנה הטהור של הפונקציה (<code>prc</code>) והערך שאיתו הופעלה (<code>arg</code>)."
+            },
+            "search_letrec": {
+                title: "הגדרת פונקציית עזר רקורסיבית",
+                text: "הפקודה <code>letrec</code> מאפשרת להגדיר פונקציות מקומיות שמסוגלות לקרוא לעצמן. זהו כלי חיוני בסכמה (ששונה מ-<code>let</code> רגיל), המאפשר לבנות לולאת סריקה פנימית מבלי לזהם את המרחב הגלובלי בשמות נוספים."
+            },
+            "search_inner_lambda": {
+                title: "מנגנון הסריקה",
+                text: "פונקציית העזר <code>search-inner</code> מקבלת בכל קריאה את חלקה הנותר של הרשימה (<code>lst</code>) ואת האינדקס הנוכחי שבו אנו נמצאים (<code>idx</code>) כדי שנוכל להחזיר את מיקומו המדויק של הערך אם ימצא."
+            },
+            "search_cond": {
+                title: "תנאי מרובה הסתעפויות",
+                text: "המבנה <code>cond</code> בסכמה משמש לבדיקת סדרת תנאים אחד אחרי השני (בדומה ל-if-else if). ברגע שתנאי אחד מוגדר כ-true, הוא מבוצע ושאר התנאים נזנחים."
+            },
+            "search_null": {
+                title: "תנאי עצירה - לא נמצא (Miss)",
+                text: "הענף הראשון בודק את תנאי העצירה: אם הגענו לרשימה ריקה (<code>null? lst</code>), משמעות הדבר שסרקנו את כל המטמון ולא מצאנו התאמה. במקרה כזה מוחזר הערך <code>#f</code> שמסמן למפרש לבצע את החישוב בפועל."
+            },
+            "search_match_prc": {
+                title: "בדיקת התאמת הפונקציה",
+                text: "כל איבר ברשימה הוא תת-רשימה: <code>(proc arg result)</code>. <code>(car lst)</code> שולף את האיבר הנוכחי, וה-<code>car</code> הנוסף שולף את הראשון שבו (ה-proc). הפקודה <code>equal?</code> מבצעת השוואת עומק כדי לוודא שזהו בדיוק אותו מבנה פונקציה שמחפשים."
+            },
+            "search_match_arg": {
+                title: "בדיקת התאמת הארגומנט",
+                text: "באמצעות הפקודה <code>cadr</code> נשלף הרכיב השני בתת-הרשימה - הארגומנט שחושב בעבר. הפקודה <code>and</code> דואגת שרק אם גם הפונקציה וגם הארגומנט זהים לחלוטין לחיפוש שלנו, יתקיים תנאי ההצלחה."
+            },
+            "search_return_idx": {
+                title: "החזרת מיקום (Hit)",
+                text: "אם שני התנאים הקודמים התקיימו (גם הפונקציה וגם הארגומנט מתאימים), הפונקציה עוצרת מיד ומחזירה את הערך <code>idx</code> – המספר שמייצג את המיקום המדויק של התוצאה בתוך רשימת המטמון."
+            },
+            "search_else": {
+                title: "המשך סריקה (רקורסיה)",
+                text: "ענף ה-<code>else</code> מתבצע אם האיבר הנוכחי אינו תואם לחיפוש. הפונקציה קוראת לעצמה, מעבירה את שאר הרשימה להמשך סריקה בעזרת <code>(cdr lst)</code>, ומקדמת את המונה <code>idx</code> באחד."
+            },
+            "search_call": {
+                title: "התנעת החיפוש",
+                text: "לאחר שהגדרנו את פונקציית הסריקה הפנימית, זוהי קריאת ההתנעה שלה. אנו מעבירים אליה את המשתנה הגלובלי <code>the-cache</code> (המכיל את הרשימה המלאה) ומתחילים את ספירת האינדקס מהספרה 0."
+            },
+
+            // TAB 3: rearrange
+            "remove_define": {
+                title: "הגדרת פונקציית מחיקה",
+                text: "התחביר <code>(define (name args))</code> הוא דרך מקוצרת וקריאה יותר בסכמה להגדיר פונקציה ללא שימוש גלוי במילה <code>lambda</code>. הפונקציה מקבלת רשימה ואינדקס של איבר שיש להסיר."
+            },
+            "remove_if_zero": {
+                title: "זיהוי יעד המחיקה",
+                text: "הפונקציה בודקת בכל פסיעה רקורסיבית האם המונה <code>n</code> הגיע לאפס. הגעה לאפס משמעותה שהאיבר הראשון ברשימה הנוכחית הוא האיבר שאותו ברצוננו להשמיט מהרשימה החדשה."
+            },
+            "remove_skip": {
+                title: "השמטת האיבר (דילוג)",
+                text: "אם הגענו לאינדקס הנכון, אנו פשוט מחזירים את שאר הרשימה בעזרת <code>cdr lst</code>. האיבר שהיה בראש הרשימה לא נכלל בתוצאה, ולכן הוא הוסר הלכה למעשה מבלי לבצע מוטציה הרסנית בזיכרון."
+            },
+            "remove_cons": {
+                title: "הרכבה מחדש (Cons)",
+                text: "אם עדיין לא הגענו לאינדקס, אנו שומרים את האיבר הנוכחי <code>(car lst)</code> ומשתמשים בפעולת <code>cons</code> כדי לחבר אותו לתוצאת ההפעלה הרקורסיבית על המשך הרשימה, תוך הפחתת האינדקס באחד."
+            },
+            "rearrange_define": {
+                title: "פונקציית קידום למעלה (LRU)",
+                text: "זוהי הפונקציה האחראית על מנגנון ה-LRU. תפקידה לקחת איבר שנעשה בו שימוש לאחרונה, ולהקפיץ אותו לראש תור המטמון כדי שלא יימחק בקרוב."
+            },
+            "rearrange_lambda": {
+                title: "חתימת פונקציית הקידום",
+                text: "הפונקציה מקבלת פרמטר בודד <code>idx</code> – המייצג את המיקום המספרי של האיבר כפי שהוחזר מפונקציית החיפוש (search-cache)."
+            },
+            "rearrange_let": {
+                title: "שליפת האיבר",
+                text: "באמצעות הפקודה המובנית <code>list-ref</code>, אנו ניגשים לרשימת המטמון ושולפים ממנה את האיבר השלם (המכיל את ה-proc, arg ו-result) שנמצא באינדקס הרלוונטי. הערך נשמר זמנית במשתנה המקומי <code>item</code>."
+            },
+            "rearrange_set": {
+                title: "הרכבת המטמון מחדש",
+                text: "פעולה המשלבת שלוש משימות: מחיקת המופע הישן מהמטמון (בעזרת פונקציית ההסרה שכתבנו), צירוף האיבר ששלפנו (<code>item</code>) לתחילת הרשימה בעזרת <code>cons</code>, ודריסת המשתנה הגלובלי באמצעות <code>set!</code> כדי לקבע את השינוי."
+            },
+
+            // TAB 4: add-cache
+            "add_define": {
+                title: "הגדרת פונקציית הוספה",
+                text: "פונקציה זו נקראת אך ורק במקרה של <code>Cache Miss</code>. תפקידה לקבל תוצאה חדשה שחושבה זה עתה ולהכניס אותה באופן מאובטח אל תוך מנגנון המטמון הגלובלי."
+            },
+            "add_lambda": {
+                title: "פרמטרי רשומה",
+                text: "כדי לייצר רשומת מטמון תקנית, הפונקציה צריכה לקבל את כל שלושת החלקים: הפונקציה שהופעלה (<code>prc</code>), הארגומנט שנשלח אליה (<code>arg</code>), והתוצאה הסופית שחושבה עבורם (<code>result</code>)."
+            },
+            "add_check_size": {
+                title: "בדיקת מגבלת קיבולת",
+                text: "המטמון אינו יכול לגדול לנצח. הפקודה <code>length</code> בודקת את אורך הרשימה הנוכחי, ואנו משווים אותו למשתנה <code>cache-size</code> (שערכו 20) כדי לדעת האם הגענו לתפוסה המקסימלית."
+            },
+            "add_evict": {
+                title: "פינוי האיבר הישן ביותר (Eviction)",
+                text: "אם המטמון אכן מלא, עלינו לפנות מקום. מכיוון שמנגנון ה-LRU שלנו דוחף איברים חדשים לראש הרשימה, האיבר הישן ביותר נמצא תמיד בסופה. אנו מחשבים את האינדקס האחרון <code>(- cache-size 1)</code> ומוחקים אותו בעזרת הפונקציה <code>remove-at</code>."
+            },
+            "add_falsy": {
+                title: "ערך חלופי לתנאי",
+                text: "בשפת סכמה פונקציות חייבות להחזיר ערך, ומבנה ה-<code>if</code> הסטנדרטי דורש ענף אלטרנטיבי (else). הערך <code>#f</code> כאן הוא חסר משמעות ומשמש רק כסגירה תחבירית למקרה שהמטמון טרם התמלא."
+            },
+            "add_insert": {
+                title: "הוספת הרשומה לראש התור",
+                text: "פעולת ההכנסה הסופית: אנו אורזים את הנתונים לרשימה בעלת 3 איברים בעזרת פקודת <code>list</code>. לאחר מכן דוחפים את הרשימה החדשה אל ראש רשימת <code>the-cache</code> באמצעות פעולת <code>cons</code> ומבצעים השמה מחדש."
+            },
+
+            // TAB 5: call-exp
+            "call_pattern": {
+                title: "זיהוי ביטוי קריאה לפרוצדורה",
+                text: "בתוך מנגנון שערוך הביטויים (value-of), אנו מטפלים ב-<code>call-exp</code>. המבנה <code>(rator rand)</code> מפרק את הביטוי לשני חלקיו: ה-Operator (הפונקציה) וה-Operand (הארגומנט)."
+            },
+            "call_eval_rator": {
+                title: "שערוך ה-Operator",
+                text: "לפני שנוכל להפעיל את הפונקציה, המפרש חייב לשערך את ביטוי הפונקציה עצמו (למשל למשוך את הגדרתה מתוך המשתנים). הקריאה ל-<code>value-of</code> מחזירה לנו ערך אבסטרקטי מטיפוס <code>expval</code>."
+            },
+            "call_eval_rand": {
+                title: "שערוך ה-Operand",
+                text: "בדומה לפונקציה, גם הארגומנט (rand) משוערך קודם בתוך הסביבה הנוכחית כדי להפוך אותו מביטוי בקוד (למשל פעולת חיבור) לערך סופי ומוחלט שניתן להעביר לפונקציה."
+            },
+            "call_extract_proc": {
+                title: "חילוץ המבנה הפנימי של הפונקציה",
+                text: "הערך <code>prc-val</code> הוא קופסה שחורה מסוג <code>expval</code>. הטיפול במטמון מצריך השוואה של המבנה הפנימי (סביבה, משתנים וקוד). הפעולה <code>expval->proc</code> היא פונקציה מובנית של EOPL ה\"מקלפת\" את הקופסה וחושפת את טיפוס ה-<code>proc</code> הטהור לשימושנו."
+            },
+            "call_search": {
+                title: "חיפוש במטמון (Cache Query)",
+                text: "זהו הרגע שבו אנו מנצלים את מנגנון המטמון. הפונקציה <code>search-cache</code> נקראת עם מבנה הפונקציה והארגומנט החשופים. התוצאה שנשמרת במשתנה <code>idx</code> תהיה או אינדקס המיקום במטמון, או הערך השלילי <code>#f</code>."
+            },
+            "call_if_idx": {
+                title: "קבלת החלטה לוגית ב-Scheme",
+                text: "תנאי ה-if מסתמך על תכונה ייחודית של שפת Scheme: כל ערך שאינו <code>#f</code> מזוהה במפורש כ-True בוליאני (כולל המספר 0). לכן, אם החיפוש החזיר אינדקס (גם אם הוא 0), נכנס אל ענף ההצלחה."
+            },
+            "call_hit_caddr": {
+                title: "שליפת התוצאה המוכלת",
+                text: "מצאנו התאמה! הפקודה <code>list-ref</code> שולפת את תת-הרשימה המלאה <code>(proc arg result)</code>. כדי להוציא אך ורק את התוצאה השמורה, אנו מפעילים <code>caddr</code> (המקבילה לביצוע car על ה-cdr של ה-cdr) ובכך מדלגים אל האיבר השלישי ברשימה."
+            },
+            "call_hit_rearrange": {
+                title: "קידום הנתון ברשימה (LRU)",
+                text: "מאחר והערך נשלף ונעשה בו שימוש כעת, מנגנון ה-Least Recently Used דורש שנעדכן את מיקומו. הקריאה ל-<code>rearrange-cache</code> תזיז את הרשומה אל המקום הראשון במטמון."
+            },
+            "call_hit_print": {
+                title: "הדפסת חיווי למשתמש",
+                text: "על פי דרישת השאלה במבחן, בכל פעם שמבוצע שליפה מוצלחת מהמטמון יש להציג הודעה. הפקודה <code>eopl:printf</code> מדפיסה את ההודעה הייעודית אל המסך ומשבצת בה את התוצאה שנשלפה מהמטמון."
+            },
+            "call_hit_return": {
+                title: "החזרת הערך (יציאה מהירה)",
+                text: "סיום הטיפול במקרה ההצלחה. התוצאה שנשלפה ממנגנון הזיכרון פשוט מוחזרת החוצה בחזרה אל ריצת התוכנית, ובכך נחסך זמן החישוב היקר של ה-<code>apply-procedure</code>."
+            },
+            "call_miss_apply": {
+                title: "חישוב הפונקציה (Cache Miss)",
+                text: "זהו ענף ה-else של התנאי. הערך אינו שמור במטמון. בשלב זה אין מנוס אלא לבצע את החישוב בפועל באמצעות הפונקציה הרגילה של המפרש: <code>apply-procedure</code> המקבלת את הפונקציה ואת הארגומנטים ומריצה אותם."
+            },
+            "call_miss_add": {
+                title: "עדכון המטמון בתוצאה החדשה",
+                text: "כדי שבפעמים הבאות נחסוך את החישוב, אנו קוראים לפונקציה <code>add-cache</code>. אנו שולחים לה את הפונקציה, הארגומנט ואת התוצאה שזה עתה חישבנו, כדי שתיצור עבורם רשומה חדשה בראש המטמון."
+            },
+            "call_miss_return": {
+                title: "החזרת התוצאה שחושבה",
+                text: "הפעולה האחרונה היא להחזיר את הערך הסופי והמחושב להמשך הריצה של תוכנית ה-PROC המקורית, בדיוק כפי שהיה מתבצע לו מנגנון המטמון לא היה קיים כלל."
+            }
+        };
+
+        function switchTab(tabId, btn) {
+            // Update tabs
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active', 'bg-emerald-50', 'text-emerald-700');
+            });
+            
+            if (tabId === 'tab-final') {
+                btn.classList.add('bg-emerald-50', 'text-emerald-700', 'font-bold');
+            } else {
+                btn.classList.add('active');
+            }
+            
+            // Clear explanation panel
+            document.getElementById('expl-title').innerHTML = 'מנתח הקוד';
+            document.getElementById('expl-text').innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-slate-300"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                המערכת ממתינה...<br>בחר שורת קוד בחלון השמאלי כדי לקרוא את ההיגיון שמאחוריה.
+            `;
+            document.getElementById('expl-text').classList.add('opacity-70', 'text-center');
+            document.getElementById('expl-text').classList.remove('text-right');
+            
+            // Remove active highlights
+            document.querySelectorAll('.highlight-zone').forEach(hz => hz.classList.remove('active'));
+
+            // Toggle Footer Hint
+            const hint = document.getElementById('footer-hint');
+            if (tabId === 'tab-overview' || tabId === 'tab-final') {
+                hint.classList.add('hidden');
+            } else {
+                hint.classList.remove('hidden');
+            }
+        }
+
+        function showExpl(element) {
+            // Remove active from all
+            document.querySelectorAll('.highlight-zone').forEach(hz => hz.classList.remove('active'));
+            
+            // Add active to current
+            element.classList.add('active');
+            
+            // Fetch explanation
+            const explId = element.getAttribute('data-expl');
+            if (explanations[explId]) {
+                const titleEl = document.getElementById('expl-title');
+                const textEl = document.getElementById('expl-text');
+                
+                // Style updates
+                titleEl.innerHTML = `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-md text-lg">${explanations[explId].title}</span>`;
+                textEl.innerHTML = explanations[explId].text;
+                
+                textEl.classList.remove('opacity-70', 'text-center');
+                textEl.classList.add('text-right', 'text-slate-700');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>עדכון פרוצדורות (update-proc-exp) - IMPLICIT-REFS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* עיצוב הקוד וההיילייטס */
+        .code-block {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            direction: ltr;
+            text-align: left;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.8;
+            font-size: 0.9rem;
+        }
+        .highlight-zone {
+            display: block;
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            padding: 0 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease-in-out;
+            color: #cbd5e1;
+        }
+        .highlight-zone:hover, .highlight-zone.active {
+            background-color: rgba(59, 130, 246, 0.2);
+            border-bottom: 1px dashed #60a5fa;
+            color: #ffffff;
+        }
+        .scheme-comment { color: #4ade80; font-style: italic; opacity: 0.9; display: block; padding: 0 0.5rem; }
+        
+        /* ניהול טאבים */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* עיצוב כפתורי טאבים */
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            color: #475569;
+            background-color: transparent;
+        }
+        .tab-btn:hover { background-color: #f1f5f9; color: #0f172a; }
+        .tab-btn.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        /* עיצוב דרישת השאלה */
+        .req-box {
+            background-color: #eff6ff;
+            border-right: 4px solid #3b82f6;
+            padding: 1rem;
+            border-top-left-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: #1e3a8a;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .req-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 p-4 md:p-8 selection:bg-blue-200">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                שינוי פרוצדורות בזמן ריצה
+            </h1>
+            <p class="text-slate-500 mt-2 font-medium">פתרון שאלה 2 (IMPLICIT-REFS) - מועד 2020ב (73)</p>
+        </div>
+        <div class="hidden md:flex bg-blue-50 text-blue-700 px-4 py-2 rounded-lg items-center gap-2 font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            IMPLICIT-REFS
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Code & Tabs -->
+        <div class="lg:col-span-8 flex flex-col gap-4">
+            
+            <!-- Tab Buttons -->
+            <div id="tabs-container" class="flex flex-wrap gap-2 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                <button class="tab-btn active" onclick="switchTab('tab-overview', this)">0. מבוא לזיכרון</button>
+                <button class="tab-btn" onclick="switchTab('tab-grammar', this)">1. הדקדוק</button>
+                <button class="tab-btn" onclick="switchTab('tab-valueof', this)">2. value-of</button>
+                <button class="tab-btn bg-emerald-50 text-emerald-700" onclick="switchTab('tab-final', this)">הפתרון המלא</button>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="bg-[#0f172a] text-slate-300 rounded-xl shadow-xl border border-slate-800 overflow-hidden relative min-h-[450px] flex flex-col">
+                <div class="bg-slate-800 px-4 py-2 flex items-center gap-2 border-b border-slate-700">
+                    <div class="flex gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono ml-auto mr-4" dir="ltr">interp.scm</span>
+                </div>
+
+                <div class="p-6 flex-grow">
+                    
+                    <!-- Tab 0: Overview -->
+                    <div id="tab-overview" class="tab-content active" dir="rtl">
+                        <div class="bg-white text-slate-800 p-6 rounded-lg shadow-inner">
+                            <h3 class="text-xl font-bold border-b pb-2 mb-4">עדכון פרוצדורה ב-IMPLICIT-REFS</h3>
+                            <p class="leading-relaxed mb-4">
+                                בניגוד לפרק 3, בשפת IMPLICIT-REFS כל משתנה בסביבה מצביע לכתובת בזיכרון (Reference), ולא לערך הישיר. זה מה שמאפשר לנו מוטציות - לשנות את מה ששמור בזיכרון.
+                            </p>
+                            <ul class="list-disc list-inside space-y-2 mb-6 text-slate-700">
+                                <li><strong>עקרון השערוך הדחוי (Lazy Evaluation):</strong> השאלה דורשת להחליף את גוף הפונקציה בביטוי חדש <code>exp</code>. שים לב! הביטוי הזה יכול להכיל משתנים מקומיים של הפונקציה (כמו <code>w</code> בדוגמה). לכן, <strong>אסור</strong> להפעיל <code>value-of</code> על ה-<code>exp</code>. יש לשמור אותו כביטוי AST בתוך הפרוצדורה המעודכנת.</li>
+                                <li><strong>מבנה הפרוצדורה:</strong> פרוצדורה מיוצגת ע"י קופסה <code>proc-val</code> שבתוכה <code>procedure</code> עם 3 שדות: משתנה (var), גוף (body) וסביבה שמורה (saved-env).</li>
+                                <li><strong>תהליך העדכון:</strong> אנו נמצא את ההפניה (Ref) של הפרוצדורה, נפרק אותה, נרכיב פרוצדורה חדשה שבה ה-body התחלף ב-<code>exp</code>, ונדרוס את הזיכרון בעזרת <code>setref!</code>.</li>
+                            </ul>
+                            <div class="bg-amber-50 border-r-4 border-amber-500 p-4 rounded-l-md text-sm text-amber-900 font-medium">
+                                <strong>זיהוי שגיאות:</strong> השאלה דורשת להדפיס שגיאה ייעודית אם המשתנה הקיים בזיכרון איננו פונקציה. נוכל לראות זאת בדוגמה השנייה שבה המשתנה <code>p</code> קיבל את הערך 200, ואז נזרקה שגיאה <code>update-proc: p is not a procedure</code>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 1: Grammar -->
+                    <div id="tab-grammar" class="tab-content" dir="rtl">
+                        <div class="req-box">
+                            <div class="req-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                דרישת השאלה (10 נקודות):
+                            </div>
+                            "השלימו במחברת הבחינה את קטע הקוד הבא לעדכון דקדוק הביטוי החדש. <br><code>Expression ::= *( identifier ) = Expression</code>".
+                        </div>
+                        <div class="code-block" dir="ltr">
+<span class="scheme-comment">; 1. Grammar definition for the new expression</span>
+<span class="highlight-zone" data-expl="gram_def" onmouseenter="showExpl(this)" onclick="showExpl(this)">(expression</span>
+<span class="highlight-zone" data-expl="gram_rule" onmouseenter="showExpl(this)" onclick="showExpl(this)">  ("*" "(" identifier ")" "=" expression)</span>
+<span class="highlight-zone" data-expl="gram_name" onmouseenter="showExpl(this)" onclick="showExpl(this)">  update-proc-exp)</span></div>
+                    </div>
+
+                    <!-- Tab 2: value-of -->
+                    <div id="tab-valueof" class="tab-content" dir="rtl">
+                        <div class="req-box">
+                            <div class="req-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                דרישת השאלה (20 נקודות):
+                            </div>
+                            "מימוש התנהגות של הביטוי החדש update-proc-exp... מעדכן את גוף הפרוצדורה לביטוי חדש הנתון ע"י exp. במקרה ולא מוגדרת פרוצדורה, להדפיס שגיאה מתאימה."
+                        </div>
+                        <div class="code-block" dir="ltr">
+<span class="scheme-comment">; 2. Implementation in value-of</span>
+<span class="highlight-zone" data-expl="val_def" onmouseenter="showExpl(this)" onclick="showExpl(this)">(update-proc-exp (id exp)</span>
+<span class="highlight-zone" data-expl="val_apply_env" onmouseenter="showExpl(this)" onclick="showExpl(this)">  (let ((ref (apply-env env id)))</span>
+<span class="highlight-zone" data-expl="val_deref" onmouseenter="showExpl(this)" onclick="showExpl(this)">    (let ((val (deref ref)))</span>
+<span class="highlight-zone" data-expl="val_cases_expval" onmouseenter="showExpl(this)" onclick="showExpl(this)">      (cases expval val</span>
+<span class="highlight-zone" data-expl="val_proc_val" onmouseenter="showExpl(this)" onclick="showExpl(this)">        (proc-val (p)</span>
+<span class="highlight-zone" data-expl="val_cases_proc" onmouseenter="showExpl(this)" onclick="showExpl(this)">          (cases proc p</span>
+<span class="highlight-zone" data-expl="val_procedure" onmouseenter="showExpl(this)" onclick="showExpl(this)">            (procedure (var body saved-env)</span>
+<span class="highlight-zone" data-expl="val_setref" onmouseenter="showExpl(this)" onclick="showExpl(this)">              (setref! ref (proc-val (procedure var exp saved-env)))</span>
+<span class="highlight-zone" data-expl="val_return" onmouseenter="showExpl(this)" onclick="showExpl(this)">              (num-val 27))))</span>
+<span class="highlight-zone" data-expl="val_else" onmouseenter="showExpl(this)" onclick="showExpl(this)">        (else (eopl:error 'update-proc "~s is not a procedure" id))))))</span></div>
+                    </div>
+
+                    <!-- Tab Final: All Code -->
+                    <div id="tab-final" class="tab-content" dir="rtl">
+                        <div class="req-box mb-6 border-emerald-500 bg-emerald-50 text-emerald-800">
+                            <div class="req-title text-emerald-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                סיכום קוד הפתרון
+                            </div>
+                            הקוד המלא והרציף כפי שייכתב במחברת הבחינה.
+                        </div>
+                        <div class="code-block" dir="ltr">
+<span class="scheme-comment">; 1. Grammar implementation</span>
+(expression
+  ("*" "(" identifier ")" "=" expression)
+  update-proc-exp)
+
+<span class="scheme-comment">; 2. value-of implementation</span>
+(update-proc-exp (id exp)
+  (let ((ref (apply-env env id)))
+    (let ((val (deref ref)))
+      (cases expval val
+        (proc-val (p)
+          (cases proc p
+            (procedure (var body saved-env)
+              (setref! ref (proc-val (procedure var exp saved-env)))
+              (num-val 27))))
+        (else (eopl:error 'update-proc "~s is not a procedure" id))))))</div>
+                    </div>
+
+                </div>
+
+                <div id="footer-hint" class="mt-auto bg-blue-900/40 text-blue-200 text-xs text-center py-2 border-t border-slate-700/50 flex justify-center items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"></path><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path><path d="M12 2v2"></path><path d="M12 22v-2"></path></svg>
+                    רחף או לחץ על השורות בקוד כדי לקרוא הסבר עומק עבור כל פעולה
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Explanations -->
+        <div class="lg:col-span-4">
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 p-6 h-full flex flex-col sticky top-6 transition-all duration-300" id="expl-panel">
+                <h2 class="text-xl font-bold text-slate-800 border-b pb-4 mb-4 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span id="expl-title">מנתח הקוד</span>
+                </h2>
+                
+                <div id="expl-content" class="flex-grow flex flex-col justify-center">
+                    <div id="expl-text" class="text-slate-600 leading-relaxed text-center opacity-70">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-slate-300"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                        המערכת ממתינה...<br>בחר שורת קוד בחלון השמאלי כדי לקרוא את ההיגיון שמאחוריה.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const explanations = {
+            // Grammar
+            "gram_def": {
+                title: "הגדרת ביטוי בשפה",
+                text: "כדי להוסיף יכולת חדשה למפרש שלנו, הצעד הראשון הוא ללמד את ה-Parser להכיר את התחביר החדש. הפקודה <code>expression</code> אומרת ל-SLLGEN שאנחנו מרחיבים את רשימת הביטויים (Expressions) המותרים בשפה."
+            },
+            "gram_rule": {
+                title: "התאמה למחרוזות מדויקות",
+                text: "כאן אנו מתרגמים את מה שכתוב בשאלה <code>*( identifier ) = Expression</code> לכללים שה-Parser מבין. סמלים קבועים (כמו כוכבית, סוגריים וסימן שווה) מוקפים במירכאות כפולות, בעוד ש-<code>identifier</code> ו-<code>expression</code> הם טיפוסים מופשטים שה-Parser יחפש בקוד המקור."
+            },
+            "gram_name": {
+                title: "שם עץ התחביר (AST Node)",
+                text: "זהו השם של צומת ה-AST שה-Parser יפיק עבורנו ברגע שהוא יזהה את התבנית הקודמת. השם הזה (<code>update-proc-exp</code>) הוא מה שנחפש אחר כך בפונקציית השערוך <code>value-of</code>."
+            },
+
+            // value-of
+            "val_def": {
+                title: "קליטת צומת ה-AST",
+                text: "זהו ענף חדש בתוך ה-cases של פונקציית <code>value-of</code>. הוא קולט שני איברים מה-Parser: את ה-<code>id</code> (שם המשתנה) ואת ה-<code>exp</code> (עץ התחביר של הביטוי החדש שיהווה את גוף הפונקציה)."
+            },
+            "val_apply_env": {
+                title: "שליפת המצביע מהסביבה",
+                text: "כלל ברזל ב-IMPLICIT-REFS: פקודת <code>apply-env</code> אינה מחזירה את הערך הישיר, אלא מחזירה <strong>מצביע (Reference)</strong> למיקום של המשתנה בזיכרון (Store). זה בדיוק מה שאנחנו צריכים כדי שנוכל לדרוס את הזיכרון מאוחר יותר."
+            },
+            "val_deref": {
+                title: "קריאה מהזיכרון הפיזי",
+                text: "לאחר שמצאנו היכן המשתנה <code>id</code> יושב בזיכרון, אנו משתמשים בפקודת <code>deref</code> (Dereference) כדי לקרוא מתוך ה-Store את תוכנו האמיתי של תא הזיכרון לקראת בדיקתו."
+            },
+            "val_cases_expval": {
+                title: "בדיקת טיפוסים למשתנה",
+                text: "אנו חייבים לוודא שהמשתנה שאליו המשתמש מנסה לדחוף קוד חדש הוא אכן פרוצדורה. המבנה <code>cases expval</code> בודק את קופסת העטיפה הכללית שמכילה את הערך."
+            },
+            "val_proc_val": {
+                title: "זיהוי וקילוף מעטפת הפרוצדורה",
+                text: "אם קופסת ה-<code>expval</code> היא מסוג <code>proc-val</code>, זהו אכן המקרה התקין. אנו 'מקלפים' את העטיפה החיצונית וחושפים את האובייקט הפנימי (המסומן ב-<code>p</code>) שהוא מטיפוס <code>proc</code>."
+            },
+            "val_cases_proc": {
+                title: "כניסה למבנה הנתונים של ה-proc",
+                text: "כעת כשיש בידינו משתנה מטיפוס <code>proc</code>, אנו פותחים גם אותו בעזרת ה-cases הייעודי לטיפוסי פרוצדורות (שמוגדר ב-define-datatype proc)."
+            },
+            "val_procedure": {
+                title: "פירוק שדות הפרוצדורה",
+                text: "פרוצדורה סטנדרטית בשפות הללו בנויה תמיד משלושה שדות: המשתנה הקשור/הפרמטר (<code>var</code>), גוף הפונקציה המקורי (<code>body</code>), והסביבה שנשמרה בעת הגדרתה (<code>saved-env</code>)."
+            },
+            "val_setref": {
+                title: "דריסת הזיכרון בנתון המעודכן",
+                text: "זוהי ליבת הפתרון! בעזרת <code>setref!</code> אנו ניגשים לאותו תא זיכרון בדיוק שמצאנו בהתחלה (<code>ref</code>), וכותבים אליו פרוצדורה <strong>חדשה</strong>. שים לב! אנו משתמשים בפרמטר ובסביבה המקוריים (<code>var</code> ו-<code>saved-env</code>), אבל מחליפים את ה-body ב-<code>exp</code> החדש שקיבלנו מה-Parser, <strong>מבלי לשערך אותו (value-of)</strong>."
+            },
+            "val_return": {
+                title: "החזרת ערך סרק",
+                text: "ביטוי מוטציה בשפות האלו מיועד לשינוי מצב (Side Effect) ולא לחישוב מתמטי. דרישת השאלה ציינה במפורש: \"יש להחזיר ערך פיקטיבי\". בספר הלימוד נהוג להחזיר <code>(num-val 27)</code> אחרי פעולות מוטציה."
+            },
+            "val_else": {
+                title: "זריקת שגיאה (Error Handling)",
+                text: "ענף זה מופעל אם המשתנה אינו <code>proc-val</code> (כפי שראינו בדוגמה 2 במבחן שבה p=200). הפקודה <code>eopl:error</code> זורקת שגיאה קריטית ועוצרת את הריצה, עם טקסט התואם בדיוק לדוגמת המבחן (p is not a procedure)."
+            }
+        };
+
+        function switchTab(tabId, btn) {
+            // Update tabs
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active', 'bg-emerald-50', 'text-emerald-700');
+            });
+            
+            if (tabId === 'tab-final') {
+                btn.classList.add('bg-emerald-50', 'text-emerald-700', 'font-bold');
+            } else {
+                btn.classList.add('active');
+            }
+            
+            // Clear explanation panel
+            document.getElementById('expl-title').innerHTML = 'מנתח הקוד';
+            document.getElementById('expl-text').innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-slate-300"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                המערכת ממתינה...<br>בחר שורת קוד בחלון השמאלי כדי לקרוא את ההיגיון שמאחוריה.
+            `;
+            document.getElementById('expl-text').classList.add('opacity-70', 'text-center');
+            document.getElementById('expl-text').classList.remove('text-right');
+            
+            // Remove active highlights
+            document.querySelectorAll('.highlight-zone').forEach(hz => hz.classList.remove('active'));
+
+            // Toggle Footer Hint
+            const hint = document.getElementById('footer-hint');
+            if (tabId === 'tab-overview' || tabId === 'tab-final') {
+                hint.classList.add('hidden');
+            } else {
+                hint.classList.remove('hidden');
+            }
+        }
+
+        function showExpl(element) {
+            // Remove active from all
+            document.querySelectorAll('.highlight-zone').forEach(hz => hz.classList.remove('active'));
+            
+            // Add active to current
+            element.classList.add('active');
+            
+            // Fetch explanation
+            const explId = element.getAttribute('data-expl');
+            if (explanations[explId]) {
+                const titleEl = document.getElementById('expl-title');
+                const textEl = document.getElementById('expl-text');
+                
+                // Style updates
+                titleEl.innerHTML = `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-md text-lg">${explanations[explId].title}</span>`;
+                textEl.innerHTML = explanations[explId].text;
+                
+                textEl.classList.remove('opacity-70', 'text-center');
+                textEl.classList.add('text-right', 'text-slate-700');
+            }
+        }
+    </script>
+</body>
+</html>
