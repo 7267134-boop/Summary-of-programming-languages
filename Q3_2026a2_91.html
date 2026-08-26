@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימולטור - פתרון שאלת הקשת טיפוסים - 2026א2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        racket: '#9e0000',
+                        primary: '#1d4ed8',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        codebg: '#1e293b',
+                        highlight: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Assistant:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Heebo', 'Assistant', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .code-font {
+            font-family: 'Consolas', monospace;
+        }
+
+        #annotations-svg path,
+        #annotations-svg text,
+        #annotations-svg rect {
+            transition: stroke 0.3s, stroke-width 0.3s, fill 0.3s, opacity 0.3s, font-size 0.3s;
+        }
+
+        #code-container {
+            transition: font-size 0.3s ease, line-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .table-row-enter {
+            animation: fadeInRow 0.5s ease-out forwards;
+        }
+
+        .row-highlight {
+            background-color: #fef9c3 !important;
+            transition: background-color 0.5s ease;
+        }
+
+        @keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+                background-color: #dcfce7;
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                background-color: transparent;
+            }
+        }
+
+        .checkmark {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        @keyframes popIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 h-screen flex overflow-hidden bg-slate-50">
+
+    <!-- Floating Theme Toggle (Optional UI) -->
+    <button onclick="document.body.classList.toggle('dark');" title="Toggle Theme" class="fixed top-4 left-4 z-50 flex items-center justify-center p-2 rounded-2xl shadow-lg border border-white/20 bg-white/20 backdrop-blur-md text-slate-800 hidden">
+        <i class="w-5 h-5"></i>
+    </button>
+    
+    <!-- Main Content -->
+    <div class="flex-1 relative overflow-hidden bg-slate-100 flex h-full">
+
+        <!-- ================= EXAM PAPER OVERLAY (Step 0) ================= -->
+        <div id="exam-paper"
+            class="absolute inset-0 bg-slate-100 z-30 flex justify-center p-6 overflow-y-auto transition-all duration-500">
+            <div class="bg-white max-w-4xl w-full p-8 md:p-12 shadow-xl rounded-xl border border-slate-200 relative min-h-fit">
+                <div class="absolute right-6 top-0 bottom-0 w-px bg-red-400 opacity-20"></div>
+
+                <div class="pr-6 md:pr-10">
+                    <h2 class="text-2xl font-bold mb-4 border-b pb-2 text-slate-900">שאלה 3 - שפת "ויקיש" (INFERRED) -
+                        מועד א2 (2026)</h2>
+                    <div class="mb-4 text-right" dir="rtl">
+    <p>להלן נתונה תוכנית בשפת "ויקיש" (INFERRED):</p>
+    <pre class="bg-gray-100 p-4 rounded-lg my-4 text-left border-l-4 border-indigo-500 font-mono text-lg" dir="ltr">proc (x:?)
+  (proc (y:?) x 10)</pre>
+    <p>ברצוננו לקבוע מהו טיפוס התוכנית (אם קיים). לשם כך, עליכם להשתמש באלגוריתם שנלמד בפרק 7 להקשת הטיפוס.</p>
+</div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-slate-700 mb-8">
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-sm transition-shadow">
+                            <h3 class="text-base font-bold text-primary mb-2">סעיף א'</h3>
+                            <p class="text-xs leading-relaxed text-slate-600">הקצו לביטוי הנתון בשאלה ולתתי הביטויים שלו משתני-טיפוס (Type Variables) מתאימים.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-sm transition-shadow">
+                            <h3 class="text-base font-bold text-primary mb-2">סעיף ב'</h3>
+                            <p class="text-xs leading-relaxed text-slate-600">חברו משוואות מתאימות לביטוי הנתון ולתתי הביטויים שלו בהתאם לחוקי ההקשה.</p>
+                        </div>
+                        <div class="mb-8 p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+            <h3 class="font-bold mb-2">ג. (15 נקודות)</h3>
+            <p class="mb-4">פתרו את המשוואות שהרכבתם בסעיף ב' צעד אחר צעד, תוך שימוש באלגוריתם שנלמד בפרק 7 בדומה למתואר בספר בעמודים 252-258. בסיום פתרון המשוואות רשמו מהו הטיפוס שהוקש עבור התוכנית במידה וקיים.</p>
+            
+            <div id="q3_sub_ui"></div>
+        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="btn-start"
+                            class="px-8 py-3 bg-primary hover:bg-blue-600 text-white text-lg font-bold rounded-lg shadow transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            בואו נפתור במדויק!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= WORKBENCH (Steps 1+) ================= -->
+        <div id="workbench" class="flex-1 flex hidden">
+            <!-- Sidebar (Tutor) -->
+            <div
+                class="w-96 flex-shrink-0 bg-darker text-slate-300 border-l border-slate-800 flex flex-col shadow-lg z-20 relative">
+                <div class="w-full bg-slate-800 h-1.5">
+                    <div id="progress-bar" class="bg-primary h-1.5 transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="flex-1 p-6 overflow-y-auto flex flex-col justify-between">
+                    <div class="flex-shrink-0">
+                        <h2
+                            class="text-lg font-bold text-white mb-3 border-b pb-2 border-slate-800 flex justify-between">
+                            <span id="step-title">כותרת שלב</span>
+                        </h2>
+                        <div id="step-description" class="text-slate-300 leading-relaxed space-y-4 text-[1.02rem]">
+                            <!-- Dynamic text -->
+                        </div>
+                    </div>
+
+                    <!-- Sidebar AST Reference (visible in steps 5+) -->
+                    <div id="sidebar-ast-container"
+                        class="mt-6 hidden bg-slate-900 p-4 rounded-xl border border-slate-800 relative overflow-hidden flex-shrink-0 select-none text-left"
+                        style="font-size: 0.8rem; line-height: 2.2rem; font-family: 'Consolas', monospace; direction: ltr;">
+                        <svg id="annotations-svg-sidebar" class="absolute inset-0 pointer-events-none w-full h-full"
+                            style="z-index: 0;"></svg>
+
+                        <!-- Code Lines for proc (x:?) (proc (y:?) x 10) -->
+                        <div class="code-line relative pl-4 py-0.5 font-mono" style="z-index: 10; color: #cbd5e1;">
+                            <span id="side-t0-start"></span><span>proc (</span><span id="side-tx" class="relative px-0.5 font-bold rounded">x</span><span>:?)</span>
+                        </div>
+                        <div class="code-line relative pl-8 py-0.5 font-mono" style="z-index: 10; color: #cbd5e1;">
+                            <span id="side-t1-start"></span><span>(</span><span id="side-t2-start"></span><span>proc (</span><span id="side-ty" class="relative px-0.5 font-bold rounded">y</span><span>:?) </span><span id="side-t4-start"></span><span id="side-t4-end">x</span><span id="side-t2-end"></span><span> </span><span id="side-t3-start"></span><span id="side-t3-end">10</span><span>)</span><span id="side-t1-end"></span><span id="side-t0-end"></span>
+                        </div>
+                    </div>
+
+                    <div class="flex-shrink-0 mt-8 pt-4 border-t border-slate-800 flex justify-between">
+                        <button id="btn-prev"
+                            class="px-4 py-2 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed">קודם</button>
+                        <button id="btn-next"
+                            class="px-6 py-2 rounded bg-highlight text-slate-900 font-bold hover:bg-blue-400 shadow-[0_0_15px_rgba(56,189,248,0.4)] transition-all text-sm transform hover:-translate-y-0.5">הבא
+                            &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Panel (AST + Tables) -->
+            <div class="flex-1 bg-slate-100 flex flex-col p-6 overflow-y-auto gap-6 relative">
+
+                <!-- AST Box -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex-shrink-0 relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">עץ גזירה והקצאת טיפוסים (AST)</h3>
+                        <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono">proc-exp</span>
+                    </div>
+
+                    <div class="relative select-none text-left p-12 border border-slate-100 rounded-xl bg-slate-50/50"
+                        dir="ltr" id="code-container"
+                        style="line-height: 4.5rem; font-size: 1.5rem; font-family: 'Consolas', monospace;">
+                        <!-- SVG overlay for annotations -->
+                        <svg id="annotations-svg" class="absolute inset-0 pointer-events-none w-full h-full" style="z-index: 0;"></svg>
+
+                                                                        <!-- Code Lines for proc (x:?) (proc (y:?) x 10) -->
+                        <div class="code-line relative pl-16 py-1 font-mono" style="z-index: 10;">
+                            <span id="code-t0-start"></span><span>proc (</span><span id="code-tx" class="relative px-1 font-bold rounded">x</span><span>:?)</span>
+                        </div>
+                        <div class="code-line relative pl-24 py-1 font-mono" style="z-index: 10;">
+                            <span id="code-t1-start"></span><span>(</span><span id="code-t2-start"></span><span>proc (</span><span id="code-ty" class="relative px-1 font-bold rounded">y</span><span>:?) </span><span id="code-t4-start"></span><span id="code-t4-end">x</span><span id="code-t2-end"></span><span> </span><span id="code-t3-start"></span><span id="code-t3-end">10</span><span>)</span><span id="code-t1-end"></span><span id="code-t0-end"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part A: EQU Table -->
+                <div id="panel-a"
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 hidden flex-col overflow-hidden">
+                    <div class="p-4 border-b border-slate-200 bg-slate-50 flex gap-4">
+                        <h3 class="text-sm font-bold text-slate-800">טבלת משוואות</h3>
+                        <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold">סעיף א' ו-ב'</span>
+                    </div>
+                    <div class="p-0">
+                        <table class="w-full text-left border-collapse" dir="ltr">
+                            <thead class="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th class="py-1.5 px-2 font-semibold text-slate-600 w-2/5 text-[11px] uppercase tracking-wider">Expression</th>
+                                    <th class="py-1.5 px-2 font-semibold text-slate-600 w-1/5 text-center border-r border-slate-200 text-[11px] uppercase tracking-wider">Type Variable</th>
+                                    <th class="py-1.5 px-2 font-semibold text-slate-600 w-2/5 border-r border-slate-200 text-[11px] uppercase tracking-wider">Equations (AQ)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-a-body" class="code-font text-[11px] bg-white text-slate-800">
+                                <!-- Generated rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Part B: Substitutions Tables -->
+                <div id="panel-b"
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 hidden flex-col mb-10 relative overflow-hidden">
+                    <div class="p-4 border-b border-slate-200 bg-slate-50 flex gap-4 items-center">
+                        <h3 class="text-sm font-bold text-slate-800">אלגוריתם הצבות ואיחודים</h3>
+                        <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold">סעיף ג'</span>
+                    </div>
+
+                    <div id="b-content-area"
+                        class="flex flex-row flex-nowrap p-6 gap-2 bg-slate-50 items-stretch justify-start overflow-x-auto"
+                        dir="ltr">
+                        <!-- Tables -->
+                    </div>
+
+                    <div id="final-conclusion"
+                        class="hidden absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white px-8 py-4 border-2 border-green-500 rounded-2xl shadow-xl flex items-center gap-6 z-20">
+                        <div class="text-2xl font-bold text-slate-800" dir="rtl">מסקנה סופית: <span dir="ltr"
+                                class="font-mono text-green-700 ml-2">t0 = &alpha; &rarr; &alpha;</span></div>
+                        <div class="text-green-500 text-6xl font-black checkmark">✓</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic Engine -->
+    <script>
+        const t = (sub) => `t<sub style="font-size:0.7em">${sub}</sub>`;
+        const m = `<span class="font-bold text-red-600 mr-1 select-none">(*)</span>`;
+
+        // Expression rows
+        const rx = { exp: "x", tvar: t('4'), equ: `${t('4')} = ${t('x')}`, hl: false };
+        const r10 = { exp: "10", tvar: t('3'), equ: `${t('3')} = int`, hl: false };
+        const rproc_y = { exp: "proc (y:?) x", tvar: t('2'), equ: `${t('2')} = ${t('y')} &rarr; ${t('4')}`, hl: false };
+        const rapp = { exp: "(proc (y:?) x) 10", tvar: t('1'), equ: `${t('2')} = ${t('3')} &rarr; ${t('1')}`, hl: false };
+        const rproc_x = { exp: "proc (x:?) (proc (y:?) x 10)", tvar: t('0'), equ: `${t('0')} = ${t('x')} &rarr; ${t('1')}`, hl: false };
+
+        const empty = (r) => ({ ...r, equ: "" });
+        const highlight = (r) => ({ ...r, hl: true });
+
+        const steps = [
+            // PART A
+            {
+                title: "סעיף א': הקצאת t0",
+                text: "הביטוי החיצוני ביותר הוא הפרוצדורה הראשונה <code>proc (x:?) ...</code>. נקצה לביטוי זה את משתנה הטיפוס <b>t0</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t0' }
+            },
+            {
+                title: "סעיף א': גוף הפרוצדורה החיצונית",
+                text: "גוף הפרוצדורה הוא ביטוי הפעלה (Application) המוקף בסוגריים עגולים: <code>(proc (y:?) x 10)</code>. נקצה לגוף זה את המשתנה <b>t1</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t1' }
+            },
+            {
+                title: "סעיף א': מרכיבי ההפעלה (אופרטור)",
+                text: "האופרטור של ההפעלה הוא הפרוצדורה הפנימית <code>proc (y:?) x</code>. נקצה לו את המשתנה <b>t2</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t2' }
+            },
+            {
+                title: "סעיף א': מרכיבי ההפעלה (ארגומנט)",
+                text: "הארגומנט של ההפעלה הוא המספר <code>10</code>. נקצה לו את המשתנה <b>t3</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t3' }
+            },
+            {
+                title: "סעיף א': גוף הפרוצדורה הפנימית",
+                text: "גוף הפרוצדורה הפנימית הוא המשתנה <code>x</code>. נקצה לו את המשתנה <b>t4</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-t4' }
+            },
+            {
+                title: "סעיף א': משתני הפרמטרים",
+                text: "הפרמטרים המוצהרים בפרוצדורות <b>x</b> ו-<b>y</b> יקבלו משתני-עזר פנימיים: <b>tx</b> ו-<b>ty</b> בהתאמה. <br><br>בכך סיימנו את שלב הקצאת משתני הטיפוסים (סעיף א').",
+                ui: { panel: 'ast', activeBox: 'ast-tx' }
+            },
+
+            // PART B
+            {
+                title: "סעיף ב': הרכבת משוואות",
+                text: "נסדר את תתי-הביטויים בטבלה, מלמטה למעלה (מהפנימי ביותר החוצה), ונרכיב את משוואות ההקשה.",
+                ui: { panel: 'panel-a', aRows: [empty(rproc_x), empty(rapp), empty(rproc_y), empty(r10), empty(rx)] }
+            },
+            {
+                title: "סעיף ב': משוואות הבסיס (x ו-10)",
+                text: "עבור משתנה x הטיפוס שלו שווה לטיפוס המוצהר שלו, לכן <b>t4 = tx</b>.<br>עבור הקבוע 10, הטיפוס הוא בבירור <b>t3 = int</b>.",
+                ui: { panel: 'panel-a', aRows: [empty(rproc_x), empty(rapp), empty(rproc_y), highlight(r10), highlight(rx)] }
+            },
+            {
+                title: "סעיף ב': הפרוצדורה הפנימית",
+                text: "הפרוצדורה <code>proc (y:?) x</code> מקבלת את y ומחזירה את x (שטיפוסו t4). חוק הפרוצדורה אומר: <b>t2 = ty &rarr; t4</b>.",
+                ui: { panel: 'panel-a', aRows: [empty(rproc_x), empty(rapp), highlight(rproc_y), r10, rx] }
+            },
+            {
+                title: "סעיף ב': ביטוי ההפעלה",
+                text: "ביטוי ההפעלה <code>(proc (y:?) x) 10</code> גורס כי טיפוס האופרטור (t2) חייב לקבל את טיפוס הארגומנט (t3) ולהחזיר את טיפוס התוצאה (t1). לכן חוק ההפעלה מניב: <b>t2 = t3 &rarr; t1</b>.",
+                ui: { panel: 'panel-a', aRows: [empty(rproc_x), highlight(rapp), rproc_y, r10, rx] }
+            },
+            {
+                title: "סעיף ב': הפרוצדורה החיצונית",
+                text: "הפרוצדורה החיצונית <code>proc (x:?) ...</code> מקבלת את x ומחזירה את ביטוי ההפעלה (t1). לכן: <b>t0 = tx &rarr; t1</b>.<br><br>סיימנו את סעיף ב'!",
+                ui: { panel: 'panel-a', aRows: [highlight(rproc_x), rapp, rproc_y, r10, rx] }
+            },
+
+            // PART C
+            {
+                title: "סעיף ג': אלגוריתם איחוד (Unification)",
+                text: "נעבור לסעיף ג'. נרכז את כל המשוואות שיצרנו ונתחיל לפתור אותן בצד שמאל.",
+                ui: { panel: 'panel-b', bTransition: [0] }
+            },
+            {
+                title: "סעיף ג': פישוט והצבות (t4 ו-t3)",
+                text: "נשלוף את המשוואות המיידיות <code>t4 = tx</code> ו-<code>t3 = int</code>, ונעביר אותן לקבוצת ה-Substitutions.",
+                ui: { panel: 'panel-b', bTransition: [0, 1] }
+            },
+            {
+                title: "סעיף ג': הצבת t4 ו-t3",
+                text: "נציב את הערכים של t4 ו-t3 במשוואות שנותרו. <br><code>t2 = ty &rarr; t4</code> הופך ל-<code>t2 = ty &rarr; tx</code>. <br><code>t2 = t3 &rarr; t1</code> הופך ל-<code>t2 = int &rarr; t1</code>.",
+                ui: { panel: 'panel-b', bTransition: [1, 2] }
+            },
+            {
+                title: "סעיף ג': איחוד (Unify) עבור t2",
+                text: "אנו רואים ש-t2 שווה לשני ביטויים שונים: <code>ty &rarr; tx</code> ו-<code>int &rarr; t1</code>. כדי לאחד אותם, האגפים חייבים להיות שווים זה לזה: <code>ty &rarr; tx = int &rarr; t1</code>.",
+                ui: { panel: 'panel-b', bTransition: [2, 3] }
+            },
+            {
+                title: "סעיף ג': פירוק משוואת החץ",
+                text: "המשוואה <code>ty &rarr; tx = int &rarr; t1</code> מתפרקת לשתי משוואות קטנות יותר על בסיס התאמת אגפים: <br>1. <code>ty = int</code><br>2. <code>tx = t1</code>.",
+                ui: { panel: 'panel-b', bTransition: [3, 4] }
+            },
+            {
+                title: "סעיף ג': העברת ty ו-tx להצבות",
+                text: "נעביר את <code>ty = int</code> ואת <code>t1 = tx</code> (הפכנו צדדים לנוחות) לטבלת ההצבות.",
+                ui: { panel: 'panel-b', bTransition: [4, 5] }
+            },
+            {
+                title: "סעיף ג': הצבת t1 ב-t0",
+                text: "נותרה רק המשוואה האחרונה <code>t0 = tx &rarr; t1</code>. נציב בה את <code>t1 = tx</code> שמצאנו הרגע, ונקבל: <code>t0 = tx &rarr; tx</code>.",
+                ui: { panel: 'panel-b', bTransition: [5, 6] }
+            },
+            {
+                title: "מסקנה סופית!",
+                text: "כל המשוואות נפתרו ועמודת ה-Equations התרוקנה! קיבלנו את הטיפוס הפולימורפי של התוכנית. המשתנה tx נותר ללא תלות, לכן נקרא לו &alpha;.",
+                ui: { panel: 'panel-b', bTransition: [6, 7], finalConclusion: true }
+            }
+        ];
+
+        const bTables = [
+            { // Table 0
+                title: "שלב 0: מצב התחלתי",
+                equ: [
+                    `${t('4')} = ${t('x')}`,
+                    `${t('3')} = int`,
+                    `${t('2')} = ${t('y')} &rarr; ${t('4')}`,
+                    `${t('2')} = ${t('3')} &rarr; ${t('1')}`,
+                    `${t('0')} = ${t('x')} &rarr; ${t('1')}`
+                ],
+                sub: []
+            },
+            { // Table 1
+                title: "שלב 1: בחירת משוואות פשוטות",
+                equ: [
+                    `${t('2')} = ${t('y')} &rarr; ${t('4')}`,
+                    `${t('2')} = ${t('3')} &rarr; ${t('1')}`,
+                    `${t('0')} = ${t('x')} &rarr; ${t('1')}`
+                ],
+                sub: [
+                    `${m} ${t('4')} = ${t('x')}`,
+                    `${m} ${t('3')} = int`
+                ]
+            },
+            { // Table 2
+                title: "שלב 2: ביצוע ההצבות",
+                equ: [
+                    `${m} ${t('2')} = ${t('y')} &rarr; ${t('x')}`,
+                    `${m} ${t('2')} = int &rarr; ${t('1')}`,
+                    `${t('0')} = ${t('x')} &rarr; ${t('1')}`
+                ],
+                sub: [
+                    `${t('4')} = ${t('x')}`,
+                    `${t('3')} = int`
+                ]
+            },
+            { // Table 3
+                title: "שלב 3: חילוץ t2",
+                equ: [
+                    `${m} ${t('y')} &rarr; ${t('x')} = int &rarr; ${t('1')}`,
+                    `${t('0')} = ${t('x')} &rarr; ${t('1')}`
+                ],
+                sub: [
+                    `${m} ${t('2')} = int &rarr; ${t('1')}`,
+                    `${t('4')} = ${t('x')}`,
+                    `${t('3')} = int`
+                ]
+            },
+            { // Table 4
+                title: "שלב 4: פירוק משוואת החץ",
+                equ: [
+                    `${m} ${t('y')} = int`,
+                    `${m} ${t('x')} = ${t('1')}`,
+                    `${t('0')} = ${t('x')} &rarr; ${t('1')}`
+                ],
+                sub: [
+                    `${t('2')} = int &rarr; ${t('1')}`,
+                    `${t('4')} = ${t('x')}`,
+                    `${t('3')} = int`
+                ]
+            },
+            { // Table 5
+                title: "שלב 5: העברת משתנים בסיסיים",
+                equ: [
+                    `${t('0')} = ${t('x')} &rarr; ${t('1')}`
+                ],
+                sub: [
+                    `${m} ${t('y')} = int`,
+                    `${m} ${t('1')} = ${t('x')}`,
+                    `${t('2')} = int &rarr; ${t('x')}`,
+                    `${t('4')} = ${t('x')}`,
+                    `${t('3')} = int`
+                ]
+            },
+            { // Table 6
+                title: "שלב 6: הצבה אחרונה ב-t0",
+                equ: [
+                    `${m} ${t('0')} = ${t('x')} &rarr; ${t('x')}`
+                ],
+                sub: [
+                    `${t('y')} = int`,
+                    `${t('1')} = ${t('x')}`,
+                    `${t('2')} = int &rarr; ${t('x')}`,
+                    `${t('4')} = ${t('x')}`,
+                    `${t('3')} = int`
+                ]
+            },
+            { // Table 7
+                title: "שלב 7: מצב סופי (פולימורפי)",
+                equ: [],
+                sub: [
+                    `${m} ${t('0')} = ${t('x')} &rarr; ${t('x')}`,
+                    `${t('y')} = int`,
+                    `${t('1')} = ${t('x')}`,
+                    `${t('2')} = int &rarr; ${t('x')}`,
+                    `${t('4')} = ${t('x')}`,
+                    `${t('3')} = int`,
+                    "<span class='bg-green-100 font-bold px-3 py-1.5 border border-green-400 rounded-lg shadow-sm text-green-900 block text-center mt-2 text-[15px]' dir='ltr'>t<sub>0</sub> = &alpha; &rarr; &alpha;</span>"
+                ]
+            }
+        ];
+
+        let currentStep = -1;
+
+        const annotations = [
+            { id: 't0', type: 'bracket-left', start: 'code-t0-start', end: 'code-t0-end', xOffset: -60, color: '#0ea5e9' },
+            { id: 't1', type: 'bracket-left', start: 'code-t1-start', end: 'code-t1-end', xOffset: -50, color: '#f59e0b' },
+            { id: 't2', type: 'bracket-left', start: 'code-t2-start', end: 'code-t2-end', xOffset: -40, color: '#ef4444' },
+            { id: 't3', type: 'bracket-bottom', start: 'code-t3-start', end: 'code-t3-end', yOffset: 5, color: '#3b82f6' },
+            { id: 't4', type: 'bracket-bottom', start: 'code-t4-start', end: 'code-t4-end', yOffset: 5, color: '#f97316' },
+            { id: 'tx', type: 'arrow-up', target: 'code-tx', color: '#10b981' },
+            { id: 'ty', type: 'arrow-up', target: 'code-ty', color: '#d946ef' }
+        ];
+
+        function getRelativeRect(el, containerId = 'code-container') {
+            const container = document.getElementById(containerId);
+            if (!container || !el) return null;
+            const containerRect = container.getBoundingClientRect();
+            const rect = el.getBoundingClientRect();
+            return {
+                left: rect.left - containerRect.left + container.scrollLeft,
+                right: rect.right - containerRect.left + container.scrollLeft,
+                top: rect.top - containerRect.top + container.scrollTop,
+                bottom: rect.bottom - containerRect.top + container.scrollTop,
+                width: rect.width,
+                height: rect.height
+            };
+        }
+
+        const sidebarAnnotations = [
+            { id: 't0', type: 'bracket-left', start: 'side-t0-start', end: 'side-t0-end', xOffset: -15, color: '#0ea5e9' },
+            { id: 't1', type: 'bracket-left', start: 'side-t1-start', end: 'side-t1-end', xOffset: -5, color: '#f59e0b' },
+            { id: 't2', type: 'bracket-bottom', start: 'side-t2-start', end: 'side-t2-end', yOffset: 5, color: '#ef4444' },
+            { id: 't3', type: 'bracket-bottom', start: 'side-t3-start', end: 'side-t3-end', yOffset: 5, color: '#3b82f6' },
+            { id: 't4', type: 'bracket-bottom', start: 'side-t4-start', end: 'side-t4-end', yOffset: 5, color: '#f97316' },
+            { id: 'tx', type: 'arrow-up', target: 'side-tx', color: '#10b981' },
+            { id: 'ty', type: 'arrow-up', target: 'side-ty', color: '#d946ef' }
+        ];
+
+        function drawAnySVG(svgId, containerId, anns, isSidebar = false) {
+            const svg = document.getElementById(svgId);
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const stepData = steps[currentStep];
+            if (!stepData) return;
+            
+            const activeBoxId = stepData.ui.activeBox;
+            const activeId = activeBoxId ? activeBoxId.replace('ast-', '') : null;
+            const isTablePhase = (stepData.ui.panel === 'panel-a' || stepData.ui.panel === 'panel-b');
+            const activeIndex = anns.findIndex(ann => ann.id === activeId);
+
+            anns.forEach((ann, index) => {
+                const startEl = document.getElementById(ann.start || ann.target);
+                const endEl = document.getElementById(ann.end || ann.target);
+                if (!startEl || !endEl) return;
+
+                const isPassed = isTablePhase || (activeIndex === -1) || (index <= activeIndex);
+                if (!isPassed && currentStep !== -1) return;
+
+                const isActive = (!isSidebar && activeId === ann.id);
+                const strokeColor = ann.color;
+                const strokeWidth = isActive ? 3 : 1.5;
+                const opacity = isActive ? 1 : (isSidebar ? 0.7 : 0.45);
+                const textWeight = isActive ? 'bold' : 'normal';
+                const fontSize = isActive ? '14px' : '11px';
+                const textColor = isActive ? ann.color : (isSidebar ? '#94a3b8' : '#64748b');
+
+                if (ann.type === 'arrow-up') {
+                    const rect = getRelativeRect(startEl, containerId);
+                    if (!rect) return;
+                    
+                    if (!isSidebar) {
+                        const bgHighlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        bgHighlight.setAttribute('x', rect.left - 2);
+                        bgHighlight.setAttribute('y', rect.top + 2);
+                        bgHighlight.setAttribute('width', rect.width + 4);
+                        bgHighlight.setAttribute('height', rect.height - 4);
+                        bgHighlight.setAttribute('fill', '#fef08a');
+                        bgHighlight.setAttribute('opacity', isActive ? 0.85 : 0.35);
+                        bgHighlight.setAttribute('rx', '4');
+                        svg.appendChild(bgHighlight);
+                    }
+                    
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const x = rect.left + rect.width / 2;
+                    const yEnd = rect.bottom + (isSidebar ? 2 : 4);
+                    const yStart = yEnd + (isSidebar ? 10 : 15);
+                    line.setAttribute('d', `M ${x} ${yStart} L ${x} ${yEnd}`);
+                    line.setAttribute('stroke', strokeColor);
+                    line.setAttribute('stroke-width', strokeWidth);
+                    line.setAttribute('opacity', opacity);
+                    
+                    if (!isSidebar) {
+                        line.setAttribute('marker-end', `url(#arrowhead-${ann.id})`);
+                    }
+                    svg.appendChild(line);
+                    
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x);
+                    text.setAttribute('y', yStart + (isSidebar ? 10 : 12));
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('font-size', isSidebar ? '9px' : fontSize);
+                    text.setAttribute('font-family', 'monospace');
+                    text.setAttribute('opacity', opacity);
+                    text.innerHTML = `t<tspan dy="2" font-size="0.75em">${ann.id.replace('t', '')}</tspan>`;
+                    svg.appendChild(text);
+
+                    if (!isSidebar) {
+                        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                        const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+                        marker.setAttribute('id', `arrowhead-${ann.id}`);
+                        marker.setAttribute('markerWidth', '6');
+                        marker.setAttribute('markerHeight', '4');
+                        marker.setAttribute('refX', '5');
+                        marker.setAttribute('refY', '2');
+                        marker.setAttribute('orient', 'auto');
+                        const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                        polygon.setAttribute('points', '0 0, 6 2, 0 4');
+                        polygon.setAttribute('fill', strokeColor);
+                        marker.appendChild(polygon);
+                        defs.appendChild(marker);
+                        svg.appendChild(defs);
+                    }
+
+                } else if (ann.type === 'bracket-bottom') {
+                    const rectStart = getRelativeRect(startEl, containerId);
+                    const rectEnd = getRelativeRect(endEl, containerId);
+                    if(!rectStart || !rectEnd) return;
+
+                    const left = rectStart.left;
+                    const right = rectEnd.right;
+                    const y = Math.max(rectStart.bottom, rectEnd.bottom) + (ann.yOffset||0) + (isSidebar ? -2 : 0);
+                    
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${left} ${y - 4} L ${left} ${y} L ${right} ${y} L ${right} ${y - 4}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    svg.appendChild(path);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', left + (right - left) / 2);
+                    text.setAttribute('y', y + (isSidebar ? 10 : 14));
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('font-size', isSidebar ? '9px' : fontSize);
+                    text.setAttribute('font-family', 'monospace');
+                    text.setAttribute('opacity', opacity);
+                    text.innerHTML = `t<tspan dy="2" font-size="0.75em">${ann.id.replace('t', '')}</tspan>`;
+                    svg.appendChild(text);
+
+                } else if (ann.type === 'bracket-left') {
+                    const rectStart = getRelativeRect(startEl, containerId);
+                    const rectEnd = getRelativeRect(endEl, containerId);
+                    if(!rectStart || !rectEnd) return;
+
+                    const top = rectStart.top;
+                    const bottom = rectEnd.bottom;
+                    const x = rectStart.left + (ann.xOffset||-10) + (isSidebar ? 5 : 0);
+                    
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M ${x + 5} ${top} L ${x} ${top} L ${x} ${bottom} L ${x + 5} ${bottom}`);
+                    path.setAttribute('stroke', strokeColor);
+                    path.setAttribute('stroke-width', strokeWidth);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('opacity', opacity);
+                    svg.appendChild(path);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x - (isSidebar ? 3 : 8));
+                    text.setAttribute('y', top + (bottom - top) / 2 + 4);
+                    text.setAttribute('text-anchor', 'end');
+                    text.setAttribute('fill', textColor);
+                    text.setAttribute('font-weight', textWeight);
+                    text.setAttribute('font-size', isSidebar ? '9px' : fontSize);
+                    text.setAttribute('font-family', 'monospace');
+                    text.setAttribute('opacity', opacity);
+                    text.innerHTML = `t<tspan dy="2" font-size="0.75em">${ann.id.replace('t', '')}</tspan>`;
+                    svg.appendChild(text);
+                }
+            });
+        }
+
+        function drawSVG() {
+            drawAnySVG('annotations-svg', 'code-container', annotations, false);
+        }
+
+        function drawSidebarSVG() {
+            drawAnySVG('annotations-svg-sidebar', 'sidebar-ast-container', sidebarAnnotations, true);
+        }
+
+        function createRowHtml(row) {
+            if (!row) return '';
+            return `
+                <tr class="${row.hl ? 'row-highlight table-row-enter' : 'table-row-enter'}" style="border-bottom: 1px solid #f1f5f9;">
+                    <td class="py-1 px-2 text-slate-800 break-all leading-tight"><code>${row.exp}</code></td>
+                    <td class="py-1 px-2 border-r border-slate-200 text-center font-bold text-primary text-[14px]"><code>${row.tvar}</code></td>
+                    <td class="py-1 px-2 border-r border-slate-200 font-semibold text-[13px] leading-tight"><code>${row.equ}</code></td>
+                </tr>
+            `;
+        }
+
+        function createBTable(idx, data) {
+            const active = idx === steps[currentStep].ui.bTransition[steps[currentStep].ui.bTransition.length - 1];
+            const baseClass = "flex-shrink-0 w-80 bg-white rounded-xl shadow-sm border overflow-hidden transition-all duration-500";
+            const stateClass = active ? "border-blue-300 ring-2 ring-blue-100 shadow-md transform scale-100 opacity-100" : "border-slate-200 opacity-60 scale-95";
+
+            let equHtml = data.equ.map(e => `<li class="py-1 border-b border-slate-50 last:border-0">${e}</li>`).join('');
+            let subHtml = data.sub.map(s => `<li class="py-1 border-b border-slate-50 last:border-0 text-slate-600">${s}</li>`).join('');
+
+            return `
+                <div class="${baseClass} ${stateClass}">
+                    <div class="${active ? 'bg-blue-50 border-blue-200' : 'bg-slate-50 border-slate-200'} p-3 border-b text-center">
+                        <h4 class="text-xs font-bold ${active ? 'text-blue-700' : 'text-slate-600'}">${data.title}</h4>
+                    </div>
+                    <div class="p-4 bg-white min-h-[160px]">
+                        <div class="mb-4">
+                            <h5 class="text-[10px] uppercase font-bold text-slate-400 mb-2 tracking-wider">Equations</h5>
+                            <ul class="font-mono text-xs leading-relaxed text-slate-800 px-2 space-y-1">
+                                ${equHtml || '<li class="text-slate-400 italic text-center text-[10px]">-- Empty --</li>'}
+                            </ul>
+                        </div>
+                        <div class="border-t border-dashed border-slate-200 pt-3">
+                            <h5 class="text-[10px] uppercase font-bold text-slate-400 mb-2 tracking-wider">Substitutions</h5>
+                            <ul class="font-mono text-[11.5px] leading-relaxed px-2 space-y-1">
+                                ${subHtml || '<li class="text-slate-400 italic text-center text-[10px]">-- Empty --</li>'}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateUI() {
+            const stepData = steps[currentStep];
+
+            if (currentStep === -1) {
+                document.getElementById('exam-paper').style.opacity = '1';
+                document.getElementById('exam-paper').style.pointerEvents = 'auto';
+                document.getElementById('workbench').classList.add('hidden');
+                document.getElementById('btn-prev').disabled = true;
+                return;
+            }
+
+            document.getElementById('exam-paper').style.opacity = '0';
+            document.getElementById('exam-paper').style.pointerEvents = 'none';
+            document.getElementById('workbench').classList.remove('hidden');
+
+            document.getElementById('progress-bar').style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+            document.getElementById('step-title').innerHTML = stepData.title;
+            document.getElementById('step-description').innerHTML = stepData.text;
+
+            document.getElementById('btn-prev').disabled = currentStep === 0;
+            const btnNext = document.getElementById('btn-next');
+            if (currentStep === steps.length - 1) {
+                btnNext.innerHTML = "סיום המסלול ✓";
+                btnNext.classList.replace('bg-highlight', 'bg-green-500');
+                btnNext.classList.replace('hover:bg-blue-400', 'hover:bg-green-400');
+                btnNext.classList.replace('shadow-[0_0_15px_rgba(56,189,248,0.4)]', 'shadow-[0_0_15px_rgba(34,197,94,0.4)]');
+            } else {
+                btnNext.innerHTML = "הבא &rarr;";
+                btnNext.classList.replace('bg-green-500', 'bg-highlight');
+                btnNext.classList.replace('hover:bg-green-400', 'hover:bg-blue-400');
+                btnNext.classList.replace('shadow-[0_0_15px_rgba(34,197,94,0.4)]', 'shadow-[0_0_15px_rgba(56,189,248,0.4)]');
+            }
+
+            // Manage AST visibility
+            const codeContainer = document.getElementById('code-container');
+            const astCard = codeContainer ? codeContainer.closest('.bg-white') : null;
+            const sidebarAst = document.getElementById('sidebar-ast-container');
+
+            if (astCard) {
+                if (stepData.ui.panel === 'panel-a' || stepData.ui.panel === 'panel-b') {
+                    astCard.classList.add('hidden');
+                } else {
+                    astCard.classList.remove('hidden');
+                    if (codeContainer) codeContainer.classList.remove('shrunk');
+                }
+            }
+
+            if (sidebarAst) {
+                if (stepData.ui.panel === 'panel-a' || stepData.ui.panel === 'panel-b') {
+                    sidebarAst.classList.remove('hidden');
+                } else {
+                    sidebarAst.classList.add('hidden');
+                }
+            }
+
+            // Manage panels
+            const pA = document.getElementById('panel-a');
+            const pB = document.getElementById('panel-b');
+
+            if (stepData.ui.panel === 'ast') {
+                pA.classList.add('hidden');
+                pB.classList.add('hidden');
+            } else if (stepData.ui.panel === 'panel-a') {
+                pA.classList.remove('hidden');
+                pA.classList.add('flex');
+                pB.classList.add('hidden');
+
+                const tbody = document.getElementById('table-a-body');
+                tbody.innerHTML = stepData.ui.aRows.map(createRowHtml).join('');
+                
+                const workspaceScroll = document.getElementById('workspace-scroll');
+                if (workspaceScroll && stepData.ui.panel === 'panel-a') {
+                    setTimeout(() => {
+                        workspaceScroll.scrollTop = workspaceScroll.scrollHeight;
+                    }, 10);
+                }
+            } else if (stepData.ui.panel === 'panel-b') {
+                pA.classList.add('hidden');
+                pB.classList.remove('hidden');
+                pB.classList.add('flex');
+
+                const container = document.getElementById('b-content-area');
+                container.innerHTML = stepData.ui.bTransition.map(idx => createBTable(idx, bTables[idx])).join('');
+                
+                // scroll to end smoothly
+                setTimeout(() => {
+                    const workspaceScroll = document.getElementById('workspace-scroll');
+                    if (workspaceScroll) workspaceScroll.scrollTop = workspaceScroll.scrollHeight;
+                    container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+                }, 50);
+
+                if (stepData.ui.finalConclusion) {
+                    document.getElementById('final-conclusion').classList.remove('hidden');
+                } else {
+                    document.getElementById('final-conclusion').classList.add('hidden');
+                }
+            }
+
+            setTimeout(() => {
+                if (stepData.ui.panel === 'ast') {
+                    if (typeof drawSVG === 'function') drawSVG();
+                } else if (stepData.ui.panel === 'panel-a' || stepData.ui.panel === 'panel-b') {
+                    if (typeof drawSidebarSVG === 'function') drawSidebarSVG();
+                }
+            }, 35);
+        }
+
+        document.getElementById('btn-start').addEventListener('click', () => {
+            currentStep = 0;
+            updateUI();
+        });
+
+        document.getElementById('btn-next').addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateUI();
+            }
+        });
+
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateUI();
+            } else if (currentStep === 0) {
+                currentStep = -1;
+                updateUI();
+            }
+        });
+
+        window.addEventListener('resize', drawSVG);
+
+        function init() {
+            updateUI();
+        }
+        init();
+    </script>
+</body>
+</html>
