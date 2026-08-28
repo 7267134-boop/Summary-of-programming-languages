@@ -15,6 +15,7 @@
 !theme-manager.js
 !dictionary-tooltip.js
 !functions_data.js
+!ai_widget.js
 
 # Allow the Exams/exam folder and all its contents
 ![Ee]xam*/
