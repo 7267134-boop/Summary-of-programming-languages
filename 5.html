@@ -628,6 +628,136 @@
                         הלימוד בסדר כרונולוגי.</p>
                 </div>
 
+                <!-- Filter Options -->
+                <div
+                    class="relative py-8 my-12 border-y-2 border-slate-200/60 bg-white/20 backdrop-blur-sm mx-auto max-w-5xl shadow-sm rounded-3xl">
+                    <div class="flex flex-wrap gap-4 justify-center items-center" id="exam-filters">
+                        <button data-filter="all"
+                            class="filter-btn active px-6 py-3 rounded-2xl text-base font-black border-2 border-slate-300 bg-white text-slate-800 shadow-sm transition-all hover:shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-list-check"></i>
+                            הכל
+                        </button>
+                        <button data-filter="questionnaire"
+                            class="filter-btn opacity-50 grayscale px-6 py-3 rounded-2xl text-base font-bold border border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm transition-all hover:shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            שאלונים
+                        </button>
+                        <button data-filter="notebook"
+                            class="filter-btn opacity-50 grayscale px-6 py-3 rounded-2xl text-base font-bold border border-rose-200 bg-rose-50 text-rose-700 shadow-sm transition-all hover:shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-file-pen"></i>
+                            מחברות בחינה
+                        </button>
+                        <button data-filter="q1"
+                            class="filter-btn opacity-50 grayscale px-6 py-3 rounded-2xl text-base font-bold border border-blue-200 bg-blue-50 text-blue-700 shadow-sm transition-all hover:shadow-md flex items-center gap-2">
+                            <span
+                                class="w-6 h-6 rounded flex items-center justify-center bg-blue-500/20 text-xs">Q1</span>
+                            שאלה 1
+                        </button>
+                        <button data-filter="q2"
+                            class="filter-btn opacity-50 grayscale px-6 py-3 rounded-2xl text-base font-bold border border-indigo-200 bg-indigo-50 text-indigo-700 shadow-sm transition-all hover:shadow-md flex items-center gap-2">
+                            <span
+                                class="w-6 h-6 rounded flex items-center justify-center bg-indigo-500/20 text-xs">Q2</span>
+                            שאלה 2
+                        </button>
+                        <button data-filter="q3"
+                            class="filter-btn opacity-50 grayscale px-6 py-3 rounded-2xl text-base font-bold border border-violet-200 bg-violet-50 text-violet-700 shadow-sm transition-all hover:shadow-md flex items-center gap-2">
+                            <span
+                                class="w-6 h-6 rounded flex items-center justify-center bg-violet-500/20 text-xs">Q3</span>
+                            שאלה 3
+                        </button>
+                    </div>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const filterBtns = document.querySelectorAll('#exam-filters .filter-btn');
+                        const btnAll = document.querySelector('#exam-filters [data-filter="all"]');
+                        const specificBtns = Array.from(filterBtns).filter(b => b.dataset.filter !== 'all');
+
+                        const examLinks = document.querySelectorAll('#view-exams .mb-12 a');
+
+                        examLinks.forEach(link => {
+                            const text = link.innerText;
+                            if (text.includes('שאלון')) link.dataset.category = 'questionnaire';
+                            else if (text.includes('מחברת')) link.dataset.category = 'notebook';
+                            else if (text.includes('Q1') || text.includes('שאלה 1')) link.dataset.category = 'q1';
+                            else if (text.includes('Q2') || text.includes('שאלה 2')) link.dataset.category = 'q2';
+                            else if (text.includes('Q3') || text.includes('שאלה 3')) link.dataset.category = 'q3';
+                        });
+
+                        function setButtonActive(btn, isActive) {
+                            if (isActive) {
+                                btn.classList.add('active');
+                                btn.classList.remove('opacity-50', 'grayscale');
+                            } else {
+                                btn.classList.remove('active');
+                                btn.classList.add('opacity-50', 'grayscale');
+                            }
+                        }
+
+                        function applyFilters() {
+                            const isAll = btnAll.classList.contains('active');
+                            const activeFilters = specificBtns.filter(btn => btn.classList.contains('active')).map(btn => btn.dataset.filter);
+
+                            examLinks.forEach(link => {
+                                const cat = link.dataset.category;
+                                if (!cat) return;
+
+                                if (isAll || activeFilters.includes(cat)) {
+                                    link.style.display = '';
+                                } else {
+                                    link.style.display = 'none';
+                                }
+                            });
+
+                            document.querySelectorAll('#view-exams .mb-12 .grid > div').forEach(box => {
+                                const links = box.querySelectorAll('a[data-category]');
+                                if (links.length === 0) return;
+                                const visibleLinks = Array.from(links).filter(a => a.style.display !== 'none');
+                                box.style.display = visibleLinks.length === 0 ? 'none' : '';
+                            });
+
+                            document.querySelectorAll('#view-exams .mb-12').forEach(yearSection => {
+                                const boxes = yearSection.querySelectorAll('.grid > div');
+                                if (boxes.length === 0) return;
+                                const visibleBoxes = Array.from(boxes).filter(box => box.style.display !== 'none');
+                                yearSection.style.display = visibleBoxes.length === 0 ? 'none' : '';
+                            });
+                        }
+
+                        filterBtns.forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                const isAllBtn = btn.dataset.filter === 'all';
+
+                                if (isAllBtn) {
+                                    if (!btn.classList.contains('active')) {
+                                        setButtonActive(btnAll, true);
+                                        specificBtns.forEach(b => setButtonActive(b, false));
+                                    }
+                                } else {
+                                    const isAllActive = btnAll.classList.contains('active');
+
+                                    if (isAllActive) {
+                                        setButtonActive(btnAll, false);
+                                        specificBtns.forEach(b => setButtonActive(b, false));
+                                        setButtonActive(btn, true);
+                                    } else {
+                                        const willBeActive = !btn.classList.contains('active');
+                                        setButtonActive(btn, willBeActive);
+
+                                        const numActive = specificBtns.filter(b => b.classList.contains('active')).length;
+                                        if (numActive === 0 || numActive === specificBtns.length) {
+                                            setButtonActive(btnAll, true);
+                                            specificBtns.forEach(b => setButtonActive(b, false));
+                                        }
+                                    }
+                                }
+                                applyFilters();
+                            });
+                        });
+                    });
+                </script>
+
                 <div class="mb-12 w-full">
                     <div class="flex items-center gap-4 mb-6">
                         <h3

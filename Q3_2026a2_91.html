@@ -126,8 +126,7 @@
                         מועד א2 (2026)</h2>
                     <div class="mb-4 text-right" dir="rtl">
     <p>להלן נתונה תוכנית בשפת "ויקיש" (INFERRED):</p>
-    <pre class="bg-gray-100 p-4 rounded-lg my-4 text-left border-l-4 border-indigo-500 font-mono text-lg" dir="ltr">proc (x:?)
-  (proc (y:?) x 10)</pre>
+    <pre class="bg-gray-100 p-4 rounded-lg my-4 text-left border-l-4 border-indigo-500 font-mono text-lg" dir="ltr">proc (x:?) (proc (y:?) x 10)</pre>
     <p>ברצוננו לקבוע מהו טיפוס התוכנית (אם קיים). לשם כך, עליכם להשתמש באלגוריתם שנלמד בפרק 7 להקשת הטיפוס.</p>
 </div>
 
@@ -189,7 +188,7 @@
                             <span id="side-t0-start"></span><span>proc (</span><span id="side-tx" class="relative px-0.5 font-bold rounded">x</span><span>:?)</span>
                         </div>
                         <div class="code-line relative pl-8 py-0.5 font-mono" style="z-index: 10; color: #cbd5e1;">
-                            <span id="side-t1-start"></span><span>(</span><span id="side-t2-start"></span><span>proc (</span><span id="side-ty" class="relative px-0.5 font-bold rounded">y</span><span>:?) </span><span id="side-t4-start"></span><span id="side-t4-end">x</span><span id="side-t2-end"></span><span> </span><span id="side-t3-start"></span><span id="side-t3-end">10</span><span>)</span><span id="side-t1-end"></span><span id="side-t0-end"></span>
+                            <span id="side-t1-start"></span><span>(</span><span id="side-t2-start"></span><span>proc (</span><span id="side-ty" class="relative px-0.5 font-bold rounded">y</span><span>:?) </span><span id="side-x">x</span><span id="side-t2-end"></span><span> </span><span>10</span><span>)</span><span id="side-t1-end"></span><span id="side-t0-end"></span>
                         </div>
                     </div>
 
@@ -224,7 +223,7 @@
                             <span id="code-t0-start"></span><span>proc (</span><span id="code-tx" class="relative px-1 font-bold rounded">x</span><span>:?)</span>
                         </div>
                         <div class="code-line relative pl-24 py-1 font-mono" style="z-index: 10;">
-                            <span id="code-t1-start"></span><span>(</span><span id="code-t2-start"></span><span>proc (</span><span id="code-ty" class="relative px-1 font-bold rounded">y</span><span>:?) </span><span id="code-t4-start"></span><span id="code-t4-end">x</span><span id="code-t2-end"></span><span> </span><span id="code-t3-start"></span><span id="code-t3-end">10</span><span>)</span><span id="code-t1-end"></span><span id="code-t0-end"></span>
+                            <span id="code-t1-start"></span><span>(</span><span id="code-t2-start"></span><span>proc (</span><span id="code-ty" class="relative px-1 font-bold rounded">y</span><span>:?) </span><span id="code-x">x</span><span id="code-t2-end"></span><span> </span><span>10</span><span>)</span><span id="code-t1-end"></span><span id="code-t0-end"></span>
                         </div>
                     </div>
                 </div>
@@ -284,10 +283,10 @@
         const m = `<span class="font-bold text-red-600 mr-1 select-none">(*)</span>`;
 
         // Expression rows
-        const rx = { exp: "x", tvar: t('4'), equ: `${t('4')} = ${t('x')}`, hl: false };
-        const r10 = { exp: "10", tvar: t('3'), equ: `${t('3')} = int`, hl: false };
-        const rproc_y = { exp: "proc (y:?) x", tvar: t('2'), equ: `${t('2')} = ${t('y')} &rarr; ${t('4')}`, hl: false };
-        const rapp = { exp: "(proc (y:?) x) 10", tvar: t('1'), equ: `${t('2')} = ${t('3')} &rarr; ${t('1')}`, hl: false };
+        const rx = { exp: "x", tvar: t('x'), equ: "", hl: false };
+        const ry = { exp: "y", tvar: t('y'), equ: "", hl: false };
+        const rproc_y = { exp: "proc (y:?) x", tvar: t('2'), equ: `${t('2')} = ${t('y')} &rarr; ${t('x')}`, hl: false };
+        const rapp = { exp: "(proc (y:?) x 10)", tvar: t('1'), equ: `${t('2')} = int &rarr; ${t('1')}`, hl: false };
         const rproc_x = { exp: "proc (x:?) (proc (y:?) x 10)", tvar: t('0'), equ: `${t('0')} = ${t('x')} &rarr; ${t('1')}`, hl: false };
 
         const empty = (r) => ({ ...r, equ: "" });
@@ -296,203 +295,147 @@
         const steps = [
             // PART A
             {
-                title: "סעיף א': הקצאת t0",
-                text: "הביטוי החיצוני ביותר הוא הפרוצדורה הראשונה <code>proc (x:?) ...</code>. נקצה לביטוי זה את משתנה הטיפוס <b>t0</b>.",
+                title: "סעיף א': הקצאת t0 לפרוצדורה החיצונית",
+                text: "הביטוי החיצוני ביותר הוא הפרוצדורה הראשונה <code>proc (x:?) (proc (y:?) x 10)</code>. נקצה לביטוי זה את משתנה הטיפוס <b>t0</b>.",
                 ui: { panel: 'ast', activeBox: 'ast-t0' }
             },
             {
-                title: "סעיף א': גוף הפרוצדורה החיצונית",
-                text: "גוף הפרוצדורה הוא ביטוי הפעלה (Application) המוקף בסוגריים עגולים: <code>(proc (y:?) x 10)</code>. נקצה לגוף זה את המשתנה <b>t1</b>.",
+                title: "סעיף א': פרמטר x מקבל tx",
+                text: "הפרמטר המוצהר בפרוצדורה החיצונית הוא <b>x</b>. לפי חוקי ההקשה, הפרמטר מקבל את משתנה הטיפוס <b>tx</b>.",
+                ui: { panel: 'ast', activeBox: 'ast-tx' }
+            },
+            {
+                title: "סעיף א': הקצאת t1 לגוף ההפעלה",
+                text: "גוף הפרוצדורה החיצונית הוא ביטוי הפעלה (Application): <code>(proc (y:?) x 10)</code>. נקצה לו את משתנה הטיפוס <b>t1</b>.",
                 ui: { panel: 'ast', activeBox: 'ast-t1' }
             },
             {
-                title: "סעיף א': מרכיבי ההפעלה (אופרטור)",
-                text: "האופרטור של ההפעלה הוא הפרוצדורה הפנימית <code>proc (y:?) x</code>. נקצה לו את המשתנה <b>t2</b>.",
+                title: "סעיף א': הקצאת t2 לפרוצדורה הפנימית",
+                text: "האופרטור של ההפעלה הוא הפרוצדורה <code>proc (y:?) x</code>. נקצה לה את משתנה הטיפוס <b>t2</b>.",
                 ui: { panel: 'ast', activeBox: 'ast-t2' }
             },
             {
-                title: "סעיף א': מרכיבי ההפעלה (ארגומנט)",
-                text: "הארגומנט של ההפעלה הוא המספר <code>10</code>. נקצה לו את המשתנה <b>t3</b>.",
-                ui: { panel: 'ast', activeBox: 'ast-t3' }
-            },
-            {
-                title: "סעיף א': גוף הפרוצדורה הפנימית",
-                text: "גוף הפרוצדורה הפנימית הוא המשתנה <code>x</code>. נקצה לו את המשתנה <b>t4</b>.",
-                ui: { panel: 'ast', activeBox: 'ast-t4' }
-            },
-            {
-                title: "סעיף א': משתני הפרמטרים",
-                text: "הפרמטרים המוצהרים בפרוצדורות <b>x</b> ו-<b>y</b> יקבלו משתני-עזר פנימיים: <b>tx</b> ו-<b>ty</b> בהתאמה. <br><br>בכך סיימנו את שלב הקצאת משתני הטיפוסים (סעיף א').",
-                ui: { panel: 'ast', activeBox: 'ast-tx' }
+                title: "סעיף א': פרמטר y מקבל ty",
+                text: "הפרמטר המוצהר בפרוצדורה הפנימית הוא <b>y</b>. לפי חוקי ההקשה, הפרמטר מקבל את משתנה הטיפוס <b>ty</b>.<br><br><b>שים לב לחוקי ההקשה:</b><br>• גוף הפרוצדורה הפנימית הוא המשתנה <code>x</code> שטיפוסו כבר ידוע כ-<b>tx</b>.<br>• הארגומנט של ההפעלה הוא המספר הקבוע <code>10</code> שטיפוסו ידוע ישירות כ-<b>int</b>.<br>לכן שניהם <u>אינם</u> מקבלים משתני טיפוס חדשים!",
+                ui: { panel: 'ast', activeBox: 'ast-ty' }
             },
 
             // PART B
             {
-                title: "סעיף ב': הרכבת משוואות",
-                text: "נסדר את תתי-הביטויים בטבלה, מלמטה למעלה (מהפנימי ביותר החוצה), ונרכיב את משוואות ההקשה.",
-                ui: { panel: 'panel-a', aRows: [empty(rproc_x), empty(rapp), empty(rproc_y), empty(r10), empty(rx)] }
+                title: "סעיף ב': פריסת טבלת משוואות",
+                text: "נסדר את תתי-הביטויים בטבלה מלמטה למעלה (מהפנימי ביותר החוצה), ונרכיב את משוואות ההקשה (AQ).",
+                ui: { panel: 'panel-a', aRows: [empty(rproc_x), empty(rapp), empty(rproc_y), empty(rx), empty(ry)] }
             },
             {
-                title: "סעיף ב': משוואות הבסיס (x ו-10)",
-                text: "עבור משתנה x הטיפוס שלו שווה לטיפוס המוצהר שלו, לכן <b>t4 = tx</b>.<br>עבור הקבוע 10, הטיפוס הוא בבירור <b>t3 = int</b>.",
-                ui: { panel: 'panel-a', aRows: [empty(rproc_x), empty(rapp), empty(rproc_y), highlight(r10), highlight(rx)] }
+                title: "סעיף ב': משוואת הפרוצדורה הפנימית (t2)",
+                text: "הפרוצדורה <code>proc (y:?) x</code> מקבלת את <code>y</code> (שטיפוסו ty) ומחזירה את <code>x</code> (שטיפוסו tx). לכן: <b>t2 = ty &rarr; tx</b>.",
+                ui: { panel: 'panel-a', aRows: [empty(rproc_x), empty(rapp), highlight(rproc_y), rx, ry] }
             },
             {
-                title: "סעיף ב': הפרוצדורה הפנימית",
-                text: "הפרוצדורה <code>proc (y:?) x</code> מקבלת את y ומחזירה את x (שטיפוסו t4). חוק הפרוצדורה אומר: <b>t2 = ty &rarr; t4</b>.",
-                ui: { panel: 'panel-a', aRows: [empty(rproc_x), empty(rapp), highlight(rproc_y), r10, rx] }
+                title: "סעיף ב': משוואת ביטוי ההפעלה (t1)",
+                text: "ביטוי ההפעלה <code>(proc (y:?) x 10)</code> מפעיל את האופרטור (t2) על האופרנד <code>10</code> (שהוא מסוג int) ומחזיר את תוצאת ההפעלה (t1). לכן חוק ההפעלה מניב: <b>t2 = int &rarr; t1</b>.",
+                ui: { panel: 'panel-a', aRows: [empty(rproc_x), highlight(rapp), rproc_y, rx, ry] }
             },
             {
-                title: "סעיף ב': ביטוי ההפעלה",
-                text: "ביטוי ההפעלה <code>(proc (y:?) x) 10</code> גורס כי טיפוס האופרטור (t2) חייב לקבל את טיפוס הארגומנט (t3) ולהחזיר את טיפוס התוצאה (t1). לכן חוק ההפעלה מניב: <b>t2 = t3 &rarr; t1</b>.",
-                ui: { panel: 'panel-a', aRows: [empty(rproc_x), highlight(rapp), rproc_y, r10, rx] }
-            },
-            {
-                title: "סעיף ב': הפרוצדורה החיצונית",
-                text: "הפרוצדורה החיצונית <code>proc (x:?) ...</code> מקבלת את x ומחזירה את ביטוי ההפעלה (t1). לכן: <b>t0 = tx &rarr; t1</b>.<br><br>סיימנו את סעיף ב'!",
-                ui: { panel: 'panel-a', aRows: [highlight(rproc_x), rapp, rproc_y, r10, rx] }
+                title: "סעיף ב': משוואת הפרוצדורה החיצונית (t0)",
+                text: "הפרוצדורה החיצונית <code>proc (x:?) (proc (y:?) x 10)</code> מקבלת את <code>x</code> (שטיפוסו tx) ומחזירה את גוף ההפעלה (t1). לכן: <b>t0 = tx &rarr; t1</b>.<br><br>סיימנו את סעיף ב'!",
+                ui: { panel: 'panel-a', aRows: [highlight(rproc_x), rapp, rproc_y, rx, ry] }
             },
 
             // PART C
             {
-                title: "סעיף ג': אלגוריתם איחוד (Unification)",
-                text: "נעבור לסעיף ג'. נרכז את כל המשוואות שיצרנו ונתחיל לפתור אותן בצד שמאל.",
+                title: "סעיף ג': אלגוריתם איחוד והצבות (Unification)",
+                text: "נעבור לסעיף ג'. נרכז את כל המשוואות שיצרנו ונתחיל לפתור אותן בצורה שיטתית.",
                 ui: { panel: 'panel-b', bTransition: [0] }
             },
             {
-                title: "סעיף ג': פישוט והצבות (t4 ו-t3)",
-                text: "נשלוף את המשוואות המיידיות <code>t4 = tx</code> ו-<code>t3 = int</code>, ונעביר אותן לקבוצת ה-Substitutions.",
+                title: "סעיף ג': איחוד (Unify) עבור t2",
+                text: "אנו רואים ש-t2 שווה לשני ביטויים: <code>ty &rarr; tx</code> ו-<code>int &rarr; t1</code>. כדי לאחד אותם, האגפים חייבים להיות שווים זה לזה: <code>ty &rarr; tx = int &rarr; t1</code>.",
                 ui: { panel: 'panel-b', bTransition: [0, 1] }
             },
             {
-                title: "סעיף ג': הצבת t4 ו-t3",
-                text: "נציב את הערכים של t4 ו-t3 במשוואות שנותרו. <br><code>t2 = ty &rarr; t4</code> הופך ל-<code>t2 = ty &rarr; tx</code>. <br><code>t2 = t3 &rarr; t1</code> הופך ל-<code>t2 = int &rarr; t1</code>.",
+                title: "סעיף ג': פירוק משוואת החץ (Structural Unification)",
+                text: "המשוואה <code>ty &rarr; tx = int &rarr; t1</code> מתפרקת לשתי משוואות פשוטות: <br>1. <b>ty = int</b><br>2. <b>t1 = tx</b>.",
                 ui: { panel: 'panel-b', bTransition: [1, 2] }
             },
             {
-                title: "סעיף ג': איחוד (Unify) עבור t2",
-                text: "אנו רואים ש-t2 שווה לשני ביטויים שונים: <code>ty &rarr; tx</code> ו-<code>int &rarr; t1</code>. כדי לאחד אותם, האגפים חייבים להיות שווים זה לזה: <code>ty &rarr; tx = int &rarr; t1</code>.",
+                title: "סעיף ג': העברת ty ו-t1 להצבות",
+                text: "נעביר את <code>ty = int</code> ואת <code>t1 = tx</code> לקבוצת ההצבות (Substitutions).",
                 ui: { panel: 'panel-b', bTransition: [2, 3] }
             },
             {
-                title: "סעיף ג': פירוק משוואת החץ",
-                text: "המשוואה <code>ty &rarr; tx = int &rarr; t1</code> מתפרקת לשתי משוואות קטנות יותר על בסיס התאמת אגפים: <br>1. <code>ty = int</code><br>2. <code>tx = t1</code>.",
+                title: "סעיף ג': הצבת t1 ב-t0",
+                text: "נותרה המשוואה האחרונה <code>t0 = tx &rarr; t1</code>. נציב בה <code>t1 = tx</code>, ונקבל: <b>t0 = tx &rarr; tx</b>.",
                 ui: { panel: 'panel-b', bTransition: [3, 4] }
             },
             {
-                title: "סעיף ג': העברת ty ו-tx להצבות",
-                text: "נעביר את <code>ty = int</code> ואת <code>t1 = tx</code> (הפכנו צדדים לנוחות) לטבלת ההצבות.",
-                ui: { panel: 'panel-b', bTransition: [4, 5] }
-            },
-            {
-                title: "סעיף ג': הצבת t1 ב-t0",
-                text: "נותרה רק המשוואה האחרונה <code>t0 = tx &rarr; t1</code>. נציב בה את <code>t1 = tx</code> שמצאנו הרגע, ונקבל: <code>t0 = tx &rarr; tx</code>.",
-                ui: { panel: 'panel-b', bTransition: [5, 6] }
-            },
-            {
-                title: "מסקנה סופית!",
+                title: "מסקנה סופית: הטיפוס הפולימורפי!",
                 text: "כל המשוואות נפתרו ועמודת ה-Equations התרוקנה! קיבלנו את הטיפוס הפולימורפי של התוכנית. המשתנה tx נותר ללא תלות, לכן נקרא לו &alpha;.",
-                ui: { panel: 'panel-b', bTransition: [6, 7], finalConclusion: true }
+                ui: { panel: 'panel-b', bTransition: [4, 5], finalConclusion: true }
             }
         ];
 
         const bTables = [
-            { // Table 0
+            { // Table 0: Initial
                 title: "שלב 0: מצב התחלתי",
                 equ: [
-                    `${t('4')} = ${t('x')}`,
-                    `${t('3')} = int`,
-                    `${t('2')} = ${t('y')} &rarr; ${t('4')}`,
-                    `${t('2')} = ${t('3')} &rarr; ${t('1')}`,
+                    `${t('2')} = ${t('y')} &rarr; ${t('x')}`,
+                    `${t('2')} = int &rarr; ${t('1')}`,
                     `${t('0')} = ${t('x')} &rarr; ${t('1')}`
                 ],
                 sub: []
             },
-            { // Table 1
-                title: "שלב 1: בחירת משוואות פשוטות",
-                equ: [
-                    `${t('2')} = ${t('y')} &rarr; ${t('4')}`,
-                    `${t('2')} = ${t('3')} &rarr; ${t('1')}`,
-                    `${t('0')} = ${t('x')} &rarr; ${t('1')}`
-                ],
-                sub: [
-                    `${m} ${t('4')} = ${t('x')}`,
-                    `${m} ${t('3')} = int`
-                ]
-            },
-            { // Table 2
-                title: "שלב 2: ביצוע ההצבות",
-                equ: [
-                    `${m} ${t('2')} = ${t('y')} &rarr; ${t('x')}`,
-                    `${m} ${t('2')} = int &rarr; ${t('1')}`,
-                    `${t('0')} = ${t('x')} &rarr; ${t('1')}`
-                ],
-                sub: [
-                    `${t('4')} = ${t('x')}`,
-                    `${t('3')} = int`
-                ]
-            },
-            { // Table 3
-                title: "שלב 3: חילוץ t2",
+            { // Table 1: Unify t2
+                title: "שלב 1: איחוד עבור t2",
                 equ: [
                     `${m} ${t('y')} &rarr; ${t('x')} = int &rarr; ${t('1')}`,
                     `${t('0')} = ${t('x')} &rarr; ${t('1')}`
                 ],
                 sub: [
-                    `${m} ${t('2')} = int &rarr; ${t('1')}`,
-                    `${t('4')} = ${t('x')}`,
-                    `${t('3')} = int`
+                    `${m} ${t('2')} = int &rarr; ${t('1')}`
                 ]
             },
-            { // Table 4
-                title: "שלב 4: פירוק משוואת החץ",
+            { // Table 2: Arrow decomposition
+                title: "שלב 2: פירוק משוואת החץ",
                 equ: [
                     `${m} ${t('y')} = int`,
-                    `${m} ${t('x')} = ${t('1')}`,
+                    `${m} ${t('1')} = ${t('x')}`,
                     `${t('0')} = ${t('x')} &rarr; ${t('1')}`
                 ],
                 sub: [
-                    `${t('2')} = int &rarr; ${t('1')}`,
-                    `${t('4')} = ${t('x')}`,
-                    `${t('3')} = int`
+                    `${t('2')} = int &rarr; ${t('1')}`
                 ]
             },
-            { // Table 5
-                title: "שלב 5: העברת משתנים בסיסיים",
+            { // Table 3: Move to substitutions
+                title: "שלב 3: העברת שוויונות בסיסיים",
                 equ: [
                     `${t('0')} = ${t('x')} &rarr; ${t('1')}`
                 ],
                 sub: [
                     `${m} ${t('y')} = int`,
                     `${m} ${t('1')} = ${t('x')}`,
-                    `${t('2')} = int &rarr; ${t('x')}`,
-                    `${t('4')} = ${t('x')}`,
-                    `${t('3')} = int`
+                    `${t('2')} = int &rarr; ${t('x')}`
                 ]
             },
-            { // Table 6
-                title: "שלב 6: הצבה אחרונה ב-t0",
+            { // Table 4: Substitute in t0
+                title: "שלב 4: הצבה ב-t0",
                 equ: [
                     `${m} ${t('0')} = ${t('x')} &rarr; ${t('x')}`
                 ],
                 sub: [
                     `${t('y')} = int`,
                     `${t('1')} = ${t('x')}`,
-                    `${t('2')} = int &rarr; ${t('x')}`,
-                    `${t('4')} = ${t('x')}`,
-                    `${t('3')} = int`
+                    `${t('2')} = int &rarr; ${t('x')}`
                 ]
             },
-            { // Table 7
-                title: "שלב 7: מצב סופי (פולימורפי)",
+            { // Table 5: Final
+                title: "שלב 5: מצב סופי (פולימורפי)",
                 equ: [],
                 sub: [
                     `${m} ${t('0')} = ${t('x')} &rarr; ${t('x')}`,
                     `${t('y')} = int`,
                     `${t('1')} = ${t('x')}`,
                     `${t('2')} = int &rarr; ${t('x')}`,
-                    `${t('4')} = ${t('x')}`,
-                    `${t('3')} = int`,
                     "<span class='bg-green-100 font-bold px-3 py-1.5 border border-green-400 rounded-lg shadow-sm text-green-900 block text-center mt-2 text-[15px]' dir='ltr'>t<sub>0</sub> = &alpha; &rarr; &alpha;</span>"
                 ]
             }
@@ -502,11 +445,9 @@
 
         const annotations = [
             { id: 't0', type: 'bracket-left', start: 'code-t0-start', end: 'code-t0-end', xOffset: -60, color: '#0ea5e9' },
-            { id: 't1', type: 'bracket-left', start: 'code-t1-start', end: 'code-t1-end', xOffset: -50, color: '#f59e0b' },
-            { id: 't2', type: 'bracket-left', start: 'code-t2-start', end: 'code-t2-end', xOffset: -40, color: '#ef4444' },
-            { id: 't3', type: 'bracket-bottom', start: 'code-t3-start', end: 'code-t3-end', yOffset: 5, color: '#3b82f6' },
-            { id: 't4', type: 'bracket-bottom', start: 'code-t4-start', end: 'code-t4-end', yOffset: 5, color: '#f97316' },
             { id: 'tx', type: 'arrow-up', target: 'code-tx', color: '#10b981' },
+            { id: 't1', type: 'bracket-left', start: 'code-t1-start', end: 'code-t1-end', xOffset: -40, color: '#f59e0b' },
+            { id: 't2', type: 'bracket-top', start: 'code-t2-start', end: 'code-t2-end', yOffset: -12, color: '#ef4444' },
             { id: 'ty', type: 'arrow-up', target: 'code-ty', color: '#d946ef' }
         ];
 
@@ -527,11 +468,9 @@
 
         const sidebarAnnotations = [
             { id: 't0', type: 'bracket-left', start: 'side-t0-start', end: 'side-t0-end', xOffset: -15, color: '#0ea5e9' },
-            { id: 't1', type: 'bracket-left', start: 'side-t1-start', end: 'side-t1-end', xOffset: -5, color: '#f59e0b' },
-            { id: 't2', type: 'bracket-bottom', start: 'side-t2-start', end: 'side-t2-end', yOffset: 5, color: '#ef4444' },
-            { id: 't3', type: 'bracket-bottom', start: 'side-t3-start', end: 'side-t3-end', yOffset: 5, color: '#3b82f6' },
-            { id: 't4', type: 'bracket-bottom', start: 'side-t4-start', end: 'side-t4-end', yOffset: 5, color: '#f97316' },
             { id: 'tx', type: 'arrow-up', target: 'side-tx', color: '#10b981' },
+            { id: 't1', type: 'bracket-left', start: 'side-t1-start', end: 'side-t1-end', xOffset: -5, color: '#f59e0b' },
+            { id: 't2', type: 'bracket-top', start: 'side-t2-start', end: 'side-t2-end', yOffset: -8, color: '#ef4444' },
             { id: 'ty', type: 'arrow-up', target: 'side-ty', color: '#d946ef' }
         ];
 

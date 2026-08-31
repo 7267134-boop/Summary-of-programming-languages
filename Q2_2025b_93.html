@@ -446,7 +446,7 @@
             "step4_2": `<div class="space-y-3"><p>המפרש בודק מאיזה סוג הקופסה <code>v</code>. המקרה הראשון הוא המקרה התקין: "אם זו קופסת <code>num-val</code> שהכניסו לתוכה מספר תקין (<code>num</code>), פשוט תשלוף את ה-<code>num</code> הזה ותחזיר אותו החוצה".</p></div>`,
             "step4_3": `<div class="space-y-3"><p>זוהי המלכודת שהוספנו! מנהל המחסן פתח את הקופסה וגילה שזו קופסת ה"קלקר" שלנו – <code>uninit-val</code>. המשתנה הפנימי <code>num</code> מכיל עכשיו את מספר הקסם (המספר 900, שזוכר שהכנסנו בשלב הקודם דרך <code>value-of</code>).</p></div>`,
             "step4_4": `<div class="space-y-3"><p>פה מתרחש הקסם האמיתי של הבלוק הזה. בגלל שאנחנו רוצים לעשות שתי פעולות שונות (גם להדפיס וגם להחזיר ערך), אנחנו עוטפים אותן ב-<code>begin</code>.</p><ol class="list-decimal list-inside ml-4 space-y-2 mb-4"><li><strong>ההדפסה:</strong> הפקודה <code>eopl:printf</code> לא עוצרת את התוכנית, היא רק זורקת טקסט למסך של המתכנת ("היי! אזהרה! אתה משתמש בערך שלא אותחל!"). ה-<code>~%</code> בסוף אומר פשוט לרדת שורה (כמו <code>
-</code>).</li><li><strong>ההחזרה:</strong> בשורה השנייה פשוט כתוב <code>num</code>. זה אומר שהפונקציה זורקת את המספר 900 החוצה ומעבירה אותו לפעולה המתמטית. המפרש ימשיך לחשב. אם התרגיל היה <code>(+ x 5)</code> כשהמשתנה <code>x</code> לא אותחל, התוצאה שתצא תהיה 905. התוכנית לא קרסה, אבל קיבלנו אזהרה ברורה שקרה כאן משהו לא תקין.</li></ol></div>`,
+</code>).</li><li><strong>ההחזרה:</strong> בשורה השנייה פשוט כתוב <code>num</code>. זה אומר שהפונקציה זורקת את המספר 900 החוצה ומעבירה אותו לפעולה המתמטית. המפרש ימשיך לחשב. אם התרגיל היה <code>+(x, 5)</code> כשהמשתנה <code>x</code> לא אותחל, התוצאה שתצא תהיה 905. התוכנית לא קרסה, אבל קיבלנו אזהרה ברורה שקרה כאן משהו לא תקין.</li></ol></div>`,
             "step4_5": `<div class="space-y-3"><p>זהו חוק הברזל. אם קרה משהו שהוא לא מספר רגיל ולא הערך הריק שלנו – למשל, המפרש קיבל קופסה של מילה בוליאנית (<code>bool-val</code>) או פונקציה (<code>proc-val</code>) והוא מנסה לעשות להן פלוס – כאן אין פשרות. המפעל עוצר מיד את העבודה וזורק שגיאת חילוץ מחמירה ("ציפיתי למספר וקיבלתי משהו אחר!").</p></div>`
 
         };
@@ -551,7 +551,7 @@
         <mark class="interactive-tooltip" data-key="step4_4">(begin
           (eopl:printf "Warning: using uninitialized value~%")
           num)) ; החזרת המספר 900 להמשך פעילות תקנית</mark>
-      <mark class="interactive-tooltip" data-key="step4_5">(else (expval-extractor-error 'num v)))))</mark>`,
+      <mark class="interactive-tooltip" data-key="step4_5">(else (report-expval-extractor-error 'num v)))))</mark>`,
                 mentalModelAfter: `
 <h4 class="font-bold text-slate-800 mb-2">סיכום התהליך</h4>
 <p class="mb-4">הקוד הזה סוגר לנו את המעגל השלם של בניית מנגנון ה"הכרזה ללא אתחול".</p>
