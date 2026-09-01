@@ -630,6 +630,7 @@
 
         document.addEventListener('mouseup', (e) => {
             if (e.target.closest('#ai-quick-tooltip')) return;
+            if (localStorage.getItem('ai_fab_minimized') === 'true') return;
 
             const selection = window.getSelection();
             if (selection && selection.toString().trim().length > 0) {
