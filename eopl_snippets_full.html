@@ -158,7 +158,6 @@
 
         /* Detailed Explanation Modal (From Q1) */
         #explanation-modal {
-            backdrop-filter: blur(4px);
         }
         
         .dark-scroll::-webkit-scrollbar {
@@ -559,17 +558,7 @@ function revealSnippets() {
 </div>
 
 <div id="snippets-main-container" class="hidden max-w-5xl mx-auto py-8">
-<!-- Tooltip Cycler Button (Floating or Top) -->
-<div class="bg-slate-900 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center mb-6 shadow-lg border border-slate-700">
-<div class="text-slate-300 font-bold mb-3 md:mb-0">
-<i class="fa-solid fa-wand-magic-sparkles text-yellow-400 mr-2"></i>
-                מצב הסברי קוד:
-            </div>
-<button class="w-full md:w-64 relative group overflow-hidden rounded-lg border border-slate-600 bg-slate-800 p-3 transition-all duration-300 hover:border-primary/50 flex items-center justify-center gap-3" id="tooltip-cycler" onclick="cycleTooltipMode()">
-<i class="fa-solid fa-mouse-pointer text-xl text-primary transition-transform group-hover:scale-110" id="cycler-icon"></i>
-<span class="text-white font-bold tracking-wide" id="cycler-text">מופעל - בריחוף</span>
-</button>
-</div>
+
 <!-- Filters Section -->
 <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 mb-8 shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
 <div class="flex flex-col gap-2">
@@ -9799,6 +9788,15 @@ Expression ::= instanceof Expression Identifier
 </div>
 </div> <!-- End of snippets-main-container -->
 
+<!-- Floating Circular Cycler (Glassmorphism design - 100% Exact Structure) -->
+<button onclick="cycleTooltipMode()" class="tooltip-cycler fixed top-32 left-12 w-24 h-24 bg-white/60 backdrop-blur-md border border-slate-200/50 hover:border-primary/50 hover:bg-white/80 rounded-full transition-all shadow-lg hover:shadow-xl flex flex-col items-center justify-center gap-0.5 z-50 group overflow-hidden" id="tooltip-cycler">
+    <span class="text-slate-500 text-[9px] font-bold uppercase tracking-wider mt-1">מצב הסבר</span>
+    <i class="cycler-icon fa-solid fa-mouse-pointer text-lg text-primary transition-transform group-hover:scale-110 my-0.5" id="cycler-icon"></i>
+    <span class="cycler-text text-slate-800 text-[10px] font-bold text-center leading-tight" id="cycler-text">מופעל - בריחוף</span>
+    <span class="text-slate-400 text-[8px]">לשינוי לחץ כאן</span>
+    <div class="cycler-glow absolute bottom-0 left-0 w-full h-[30%] bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" id="cycler-glow"></div>
+</button>
+
 <!-- Detailed Explanation Modal -->
 <div class="fixed inset-0 z-[100] bg-slate-900/5 hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300 pointer-events-none" id="explanation-modal">
 <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh] pointer-events-auto border border-slate-200/60" id="modal-card">
@@ -9824,6 +9822,7 @@ Expression ::= instanceof Expression Identifier
         const body = document.body;
         const cyclerIcon = document.getElementById('cycler-icon');
         const cyclerText = document.getElementById('cycler-text');
+        const cyclerGlow = document.getElementById('cycler-glow');
 
         function cycleTooltipMode() {
             tooltipMode = tooltipMode === 3 ? 1 : tooltipMode + 1;
@@ -9831,17 +9830,20 @@ Expression ::= instanceof Expression Identifier
 
             // Update UI
             if (tooltipMode === 1) {
-                cyclerIcon.className = 'fa-solid fa-mouse-pointer text-xl text-primary transition-transform group-hover:scale-110';
+                cyclerIcon.className = 'cycler-icon fa-solid fa-mouse-pointer text-lg text-primary transition-transform group-hover:scale-110 my-0.5';
                 cyclerText.textContent = 'מופעל - בריחוף';
-                cyclerText.className = 'text-white font-bold tracking-wide';
+                cyclerText.className = 'cycler-text text-slate-800 text-[10px] font-bold text-center leading-tight';
+                if(cyclerGlow) cyclerGlow.className = 'cycler-glow absolute bottom-0 left-0 w-full h-[30%] bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none';
             } else if (tooltipMode === 2) {
-                cyclerIcon.className = 'fa-solid fa-hand-pointer text-xl text-green-400 transition-transform group-hover:scale-110';
+                cyclerIcon.className = 'cycler-icon fa-solid fa-hand-pointer text-lg text-green-500 transition-transform group-hover:scale-110 my-0.5';
                 cyclerText.textContent = 'מופעל - בלחיצה';
-                cyclerText.className = 'text-green-400 font-bold tracking-wide';
+                cyclerText.className = 'cycler-text text-green-600 text-[10px] font-bold text-center leading-tight';
+                if(cyclerGlow) cyclerGlow.className = 'cycler-glow absolute bottom-0 left-0 w-full h-[30%] bg-gradient-to-t from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none';
             } else {
-                cyclerIcon.className = 'fa-solid fa-eye-slash text-xl text-slate-500 transition-transform group-hover:scale-110';
+                cyclerIcon.className = 'cycler-icon fa-solid fa-eye-slash text-lg text-slate-400 transition-transform group-hover:scale-110 my-0.5';
                 cyclerText.textContent = 'הסברים כבויים';
-                cyclerText.className = 'text-slate-400 font-bold tracking-wide';
+                cyclerText.className = 'cycler-text text-slate-400 text-[10px] font-bold text-center leading-tight';
+                if(cyclerGlow) cyclerGlow.className = 'cycler-glow absolute bottom-0 left-0 w-full h-[30%] bg-gradient-to-t from-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none';
             }
         }
 
@@ -9868,6 +9870,7 @@ Expression ::= instanceof Expression Identifier
             modal.classList.remove('hidden');
             void modal.offsetWidth; // Trigger reflow
             modal.classList.remove('opacity-0');
+            modal.classList.add('flex');
             
             if (tooltipMode === 1) {
                 // In hover mode, keep the overlay pointer-events-none so it doesn't steal the hover from the text
@@ -9888,6 +9891,7 @@ Expression ::= instanceof Expression Identifier
             modalCard.classList.remove('scale-100');
             modalCard.classList.add('scale-95');
             setTimeout(() => {
+                modal.classList.remove('flex');
                 modal.classList.add('hidden');
             }, 300);
         }
