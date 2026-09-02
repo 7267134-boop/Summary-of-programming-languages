@@ -161,27 +161,27 @@ const dictionaryData = [
     model: "מסנן רשימה: מחזיר רק את האיברים שהפונקציה החזירה עבורם אמת (#t).",
     code: `(filter even? '(1 2 3 4 5)) ; => (2 4)`,
     usage: "מציאת משתנים ספציפיים (לדוגמה הוצאת כל הפרוצדורות מתוך סביבה).",
-    detailed: ""
+    detailed: "פונקציה מסדר גבוה. מאפשרת הוצאת תת-רשימה של איברים העומדים בתנאי (הפרדיקט מחזיר אמת)."
   },
   {
-    id: "fold-left",
-    title: "fold-left",
+    id: "foldl",
+    title: "foldl",
     category: "general",
     subCategory: "higher-order",
     model: "צובר ערך תוך כדי מעבר על רשימה משמאל לימין.",
-    code: `(fold-left + 0 '(1 2 3)) ; => 6`,
+    code: `(foldl + 0 '(1 2 3)) ; => 6`,
     usage: "סכימת איברים בלולאות מיוחדות, כמו במימוש של פקודת reduce או sum.",
-    detailed: ""
+    detailed: "עוברת על הרשימה משמאל לימין, וצוברת תוצאה ביניים יחד עם כל איבר. שימושית לפעולות הנדרשות לשמור כיוון (כמו חיסור)."
   },
   {
-    id: "fold-right",
-    title: "fold-right",
+    id: "foldr",
+    title: "foldr",
     category: "general",
     subCategory: "higher-order",
     model: "צובר ערך תוך כדי מעבר על הרשימה מימין לשמאל.",
-    code: `(fold-right cons '() '(1 2 3)) ; => (1 2 3)`,
+    code: `(foldr cons '() '(1 2 3)) ; => (1 2 3)`,
     usage: "בניית מבנים מימין לשמאל כשסדר ההרכבה חשוב.",
-    detailed: ""
+    detailed: "דומה ל-foldl, אך אוספת מימין לשמאל (מהסוף להתחלה). שימושית ביותר להרכבת רשימות מחדש בעזרת cons."
   },
   {
     id: "for-each",
@@ -191,7 +191,7 @@ const dictionaryData = [
     model: "מפעיל פונקציה על כל האיברים אבל זורק את התוצאות לפח. מיועד לאפקטי לוואי בלבד.",
     code: `(for-each display '("A" "B" "C"))`,
     usage: "בשאלה 2 כשמעדכנים סדרת תאים בזיכרון בעזרת setref! ואין צורך בערכי החזר.",
-    detailed: ""
+    detailed: "פונקציה מסדר גבוה המיועדת נטו לאפקט צד (Side Effects). התוצאות נזרקות, ומשמשת לרוב כדי לבצע מוטציות."
   },
 
   // LOGIC
@@ -203,7 +203,7 @@ const dictionaryData = [
     model: "צומת החלטות בסיסי (כן/לא).",
     code: `(if (null? lst) 'empty 'not-empty)`,
     usage: "לבדיקות קצרות ופשוטות של תקינות במפרש.",
-    detailed: ""
+    detailed: "שימו לב: בסכמה, כל ערך שאינו #f נחשב לאמת, כולל מספרים (0) ורשימות ריקות. זה קריטי בפתרון שאלות מבחן."
   },
   {
     id: "cond",
@@ -216,7 +216,7 @@ const dictionaryData = [
   ((eqv? val 5) 0)
   (else 1))`,
     usage: "מושלם לפונקציות עזר רקורסיביות במבחן.",
-    detailed: ""
+    detailed: "חוסך כתיבת שרשרת ארוכה ומסורבלת של if-ים מקוננים. זכור תמיד להשתמש ב-else כתנאי האחרון בתחתית המבנה."
   },
   {
     id: "let",
@@ -226,7 +226,7 @@ const dictionaryData = [
     model: "הגדרת טיוטות משתנים 'באותו זמן'. המשתנים לא מכירים זה את זה.",
     code: `(let ((x 1) (y 2)) (+ x y))`,
     usage: "בתוך value-of לשמירת הערכים האמיתיים לפני שממשיכים לחשב את גוף הביטוי.",
-    detailed: ""
+    detailed: "הערכת הביטויים נעשית כולה מול הסביבה הקודמת - משתנים שמוגדרים יחד באותו בלוק let אינם יכולים להפנות זה לזה."
   },
   {
     id: "let-star",
@@ -236,7 +236,7 @@ const dictionaryData = [
     model: "הגדרת טיוטות מדרגות מדרגות. כל משתנה יכול להשתמש בזה שהוגדר מעליו.",
     code: `(let* ((x 5) (y (+ x 2))) y) ; => 7`,
     usage: "כשחישוב ב-value-of דורש תוצאה שכבר חושבה בבלוק ההגדרות הנוכחי.",
-    detailed: ""
+    detailed: "מרחיב את הסביבה באופן טורי (סדרתי). המשתנה השני יכול להשתמש בראשון. מבחינה סמנטית, זה שקול להרבה פקודות let מקוננות."
   },
   {
     id: "begin",
@@ -248,7 +248,7 @@ const dictionaryData = [
   (display "hello")
   (num-val 5)) ; יוחזר 5`,
     usage: "בשאלה 2 כשצריך קודם לשנות זיכרון (השמה) ואז להחזיר ערך נטול משמעות (כמו 27).",
-    detailed: ""
+    detailed: "מבנה בקרה המיועד ספציפית לביצוע תופעות לוואי (Side Effects), כיוון שתוצאות הביטויים נזרקות ולא מוערכות כהחזרה."
   },
   {
     id: "and",
@@ -258,7 +258,7 @@ const dictionaryData = [
     model: "מחזיר אמת רק אם הכל אמת. עוצר בבדיקה הראשונה שנכשלת.",
     code: `(and (> 5 3) (< 1 2)) ; => #f`,
     usage: "לבדיקת עמידה במספר תנאים לפעולות לוגיות.",
-    detailed: ""
+    detailed: "מבצע הערכה עצלה (Short-Circuit) - ברגע שביטוי אחד מחזיר שקר (#f), הלוגיקה עוצרת מיד."
   },
   {
     id: "or",
@@ -268,7 +268,7 @@ const dictionaryData = [
     model: "מחזיר אמת אם אחד הביטויים אמת. עוצר בבדיקה הראשונה שמצליחה.",
     code: `(or (> 5 10) (= 1 1)) ; => #t`,
     usage: "כשאנו רוצים לקבל כל תנאי שעומד בדרישה (למשל סוגי שגיאות מסוימות).",
-    detailed: ""
+    detailed: "מבצע הערכה עצלה (Short-Circuit) - תמיד יעצור בביטוי הראשון שמחזיר אמת."
   },
   {
     id: "lambda",
@@ -278,7 +278,7 @@ const dictionaryData = [
     model: "פונקציה אנונימית להרצה במקום.",
     code: `((lambda (x) (* x 2)) 5) ; => 10`,
     usage: "העברת לוגיקה זריזה ל-map או filter ללא צורך בהגדרת פונקציית עזר מלאה.",
-    detailed: ""
+    detailed: "יוצר סגור (Closure) ששומר בתוכו את הסביבה הלקסיקלית שבה הוגדר הפונקציה."
   },
 
   // PREDICATES
@@ -290,7 +290,7 @@ const dictionaryData = [
     model: "בודק האם הרשימה ריקה.",
     code: `(null? '()) ; => #t`,
     usage: "תנאי העצירה הראשי של כל הרקורסיות.",
-    detailed: ""
+    detailed: "פרדיקט קריטי וחשוב מאוד. הפעלה של car או cdr על רשימה ריקה תוביל לשגיאת ריצה."
   },
   {
     id: "pair-q",
@@ -300,7 +300,7 @@ const dictionaryData = [
     model: "בודק האם הערך הוא צמד שניתן לבצע עליו car/cdr.",
     code: `(pair? '(1 2)) ; => #t`,
     usage: "בתוך data-structures.scm לאישוש טיפוסים למבנים.",
-    detailed: ""
+    detailed: "לכל תא זיכרון של זוג (Pair) יש בדיוק שני מצביעים (Car ו-Cdr). בניגוד ל-list?, פרדיקט זה בודק רק האם מדובר בזוג כלשהו."
   },
   {
     id: "list-q",
@@ -310,7 +310,7 @@ const dictionaryData = [
     model: "בודק האם המבנה הוא רשימה שלמה (ולא רק צמד).",
     code: `(list? '(a b c)) ; => #t`,
     usage: "לוודא שהקלט הוא רשימה תקינה.",
-    detailed: ""
+    detailed: "בודק שהמבנה הוא שרשרת תקנית של זוגות שמסתיימת ברשימה ריקה."
   },
   {
     id: "symbol-q",
@@ -320,7 +320,7 @@ const dictionaryData = [
     model: "בודק האם זהו סמל שמיועד לזיהוי שמות משתנים.",
     code: `(symbol? 'x) ; => #t`,
     usage: "ב-define-datatype כאשר השדה הוא שם משתנה (כמו identifier).",
-    detailed: ""
+    detailed: "סמלים משמשים כמזהים ייחודיים בזיכרון. במפרשים שלנו, הם מייצגים את שמות המשתנים."
   },
   {
     id: "number-q",
@@ -330,7 +330,7 @@ const dictionaryData = [
     model: "בודק האם זהו מספר.",
     code: `(number? 5) ; => #t`,
     usage: "ב-define-datatype לשדה המקבל מספר קבוע.",
-    detailed: ""
+    detailed: "פרדיקט חשוב בזמן ריצה כדי לוודא שערך מסוים מתאים לפעולה אריתמטית."
   },
   {
     id: "boolean-q",
@@ -340,7 +340,7 @@ const dictionaryData = [
     model: "בודק האם הערך הוא אמת/שקר.",
     code: `(boolean? #f) ; => #t`,
     usage: "ב-define-datatype לקופסאות bool-val.",
-    detailed: ""
+    detailed: "בודק אם מדובר בערכים הלוגיים המפורשים #t או #f."
   },
   {
     id: "zero-q",
@@ -350,7 +350,7 @@ const dictionaryData = [
     model: "בודק ישירות האם המספר שווה 0.",
     code: `(zero? 0) ; => #t`,
     usage: "בדיקת אפס זריזה במימוש של פקודות כמו zero?-exp במפרש.",
-    detailed: ""
+    detailed: "בודק ספציפית האם המספר הנוכחי הוא אפס (0). שימושי כתנאי עצירה ברקורסיות אריתמטיות פשוטות."
   },
   {
     id: "integer-q",
@@ -375,7 +375,7 @@ const dictionaryData = [
 
   // COMPARISONS
   {
-    id: "equal",
+    id: "equals-math",
     title: "=",
     category: "general",
     subCategory: "comparisons",
@@ -402,7 +402,7 @@ const dictionaryData = [
     model: "כמו eq? אבל בטוח גם למספרים.",
     code: `(eqv? 5 5) ; => #t`,
     usage: "החיפוש המומלץ ב-apply-env.",
-    detailed: ""
+    detailed: "השוואה אמינה למספרים ותווים בנוסף למצביעים."
   },
   {
     id: "equal-q",
@@ -412,7 +412,7 @@ const dictionaryData = [
     model: "השוואת עומק שסורקת הכל איבר-איבר.",
     code: `(equal? '(1 2) '(1 2)) ; => #t`,
     usage: "כאשר המבחן מבקש לממש מילונים, חיפושי רשימות או השוואות עמוקות.",
-    detailed: ""
+    detailed: "עובר ריקורסיבית לעומק על כל מבנה הנתונים כדי לוודא התאמה מלאה (איבר-איבר). עשוי להיות כבד."
   },
 
   // SEARCH / DICTIONARIES
@@ -434,7 +434,7 @@ const dictionaryData = [
     model: "חיפוש מילון שמשתמש ב-eq? (מהיר).",
     code: `(assq 'b '((a 1) (b 2))) ; => (b 2)`,
     usage: "כאשר המפתחות מובטחים להיות רק סמלים (Symbols).",
-    detailed: ""
+    detailed: "מחפש רשומות במילון באמצעות eq? הבוחן כתובת בזיכרון, מתאים לחיפוש סמלים בסביבה."
   },
   {
     id: "assv",
@@ -444,7 +444,7 @@ const dictionaryData = [
     model: "חיפוש מילון שמשתמש ב-eqv?.",
     code: `(assv 5 '((1 a) (5 b))) ; => (5 b)`,
     usage: "כשהמפתחות עשויים לכלול מספרים.",
-    detailed: ""
+    detailed: "מחפש לפי eqv?, שמכיר בנוסף גם שוויון זהה של מספרים ותווים."
   },
   {
     id: "member",
@@ -464,7 +464,7 @@ const dictionaryData = [
     model: "בודק האם האיבר בפנים, משתמש ב-eq?.",
     code: `(memq 'c '(a b c)) ; => (c)`,
     usage: "חיפוש מהיר של סמלים ברשימות.",
-    detailed: ""
+    detailed: "חיפוש אבר ברשימה לפי כתובת זיכרון בלבד."
   },
   {
     id: "memv",
@@ -474,7 +474,7 @@ const dictionaryData = [
     model: "בודק האם האיבר בפנים, משתמש ב-eqv?.",
     code: `(memv 5 '(1 5 10)) ; => (5 10)`,
     usage: "מושלם לבדיקת מספרים/משתנים.",
-    detailed: ""
+    detailed: "חיפוש אבר ברשימה שתומך גם במספרים ותווים."
   },
 
   // VECTORS
@@ -486,7 +486,7 @@ const dictionaryData = [
     model: "יוצר מערך בגודל רצוי, עם ערך ברירת מחדל לכל תאיו.",
     code: `(make-vector 3 0) ; => #(0 0 0)`,
     usage: "כשהמבחן דורש מימוש 'מערכים משתנים' ב-EXPLICIT-REFS.",
-    detailed: ""
+    detailed: "מערכים ב-Scheme הם מבנים שגודלם קבוע מראש בעת ההקצאה."
   },
   {
     id: "vector-ref",
@@ -496,7 +496,7 @@ const dictionaryData = [
     model: "קריאה ישירה של תא מהמערך לפי אינדקס (O(1)).",
     code: `(vector-ref #(a b c) 1) ; => b`,
     usage: "שליפת ערכים ממערכים שמימשנו במפרש.",
-    detailed: ""
+    detailed: "קריאה מתוך מערך לפי אינדקס נעשית באופן ישיר ומידי O(1)."
   },
   {
     id: "vector-set",
@@ -506,7 +506,7 @@ const dictionaryData = [
     model: "השמה ישירה (דורס ערך בתא ספציפי במערך).",
     code: `(vector-set! my-vec 1 'apple)`,
     usage: "הזרקת ערכים חדשים או שינוי מצב (Mutation) במערך.",
-    detailed: ""
+    detailed: "פעולה אימפרטיבית המשנה ישירות את התוכן באותו הזיכרון."
   },
   {
     id: "vector-length",
@@ -516,7 +516,7 @@ const dictionaryData = [
     model: "מחזיר את הגודל המוגדר של המערך.",
     code: `(vector-length #(a b c)) ; => 3`,
     usage: "בדיקות גבול למניעת שגיאות Out-of-bounds.",
-    detailed: ""
+    detailed: "החזרת גודל המערך קריטית כדי להימנע משגיאות חריגה."
   },
   {
     id: "vector-q",
@@ -526,7 +526,7 @@ const dictionaryData = [
     model: "מזהה האם הטיפוס הוא מערך.",
     code: `(vector? #(1 2)) ; => #t`,
     usage: "במימוש של מערכת הטיפוסים לזיהוי קופסאות מסוג array-val.",
-    detailed: ""
+    detailed: "בדיקת טיפוס עבור קופסאות array-val או מערכי Scheme ישירים."
   },
 
   // STRINGS AND DEBUG
@@ -538,7 +538,7 @@ const dictionaryData = [
     model: "חיבור מחרוזות למחרוזת אחת.",
     code: `(string-append "Error " "here") ; => "Error here"`,
     usage: "הכנת הודעות שגיאה קריאות.",
-    detailed: ""
+    detailed: "חיבור מחרוזות ייצור מחרוזת חדשה לגמרי בזיכרון ויש להשתמש בכך למטרות הדפסה."
   },
   {
     id: "string-equal-q",
@@ -548,7 +548,7 @@ const dictionaryData = [
     model: "השוואה אבסולוטית בין שתי מחרוזות טקסט.",
     code: `(string=? "hello" "hello") ; => #t`,
     usage: "בדיקה אם מחרוזת קלט שווה לשם רצוי.",
-    detailed: ""
+    detailed: "פעולת ההשוואה התקנית למחרוזות. חשוב: שימוש ב-eq? יכשל כאן לרוב."
   },
   {
     id: "symbol-to-string",
@@ -558,7 +558,7 @@ const dictionaryData = [
     model: "המרת סמל למחרוזת שניתן להדפיס או להוסיף לטקסט.",
     code: `(symbol->string 'my-var) ; => "my-var"`,
     usage: "בהדפסת שמות משתנים כחלק מהודעת eopl:error מותאמת אישית.",
-    detailed: ""
+    detailed: "המרת מזהה (סמל) לטקסט שניתן להדפיס למשתמש כחלק משגיאה."
   },
   {
     id: "string-to-symbol",
@@ -568,7 +568,7 @@ const dictionaryData = [
     model: "המרת טקסט רגיל לסמל מזוהה זיכרון.",
     code: `(string->symbol "x") ; => 'x`,
     usage: "נדיר במבחנים, אך מועיל ביצירת משתנים דינמיים.",
-    detailed: ""
+    detailed: "המרת מחרוזת טקסט לסמל שישמר בטבלת הסמלים של המפרש."
   },
   {
     id: "display",
@@ -578,7 +578,7 @@ const dictionaryData = [
     model: "הדפסת טקסט אלטרנטיבית שלא יורדת שורה.",
     code: `(display "hello")`,
     usage: "הדפסות דיבאג רציפות.",
-    detailed: ""
+    detailed: "פעולת I/O הנועדה להצגת נתונים, שאינה מחזירה ערך שימושי (מחזירה void)."
   },
   {
     id: "newline",
@@ -588,7 +588,7 @@ const dictionaryData = [
     model: "מדפיס ירידת שורה למסך הטרמינל.",
     code: `(newline)`,
     usage: "אחרי הדפסת טקסטים בעזרת display.",
-    detailed: ""
+    detailed: "הפקודה להורדת השורה בסכמה."
   },
   {
     id: "error",
@@ -598,7 +598,7 @@ const dictionaryData = [
     model: "פקודת עזר של סכמה (או eopl:error) לקריסת התוכנית המבוקרת.",
     code: `(eopl:error 'value-of "not found ~s" var)`,
     usage: "טיפול במקרי קצה, משתנים לא קיימים, והדפסות יפות למשתמש.",
-    detailed: ""
+    detailed: "זריקת שגיאה סטנדרטית בשפת Scheme שתפיל את הריצה הנוכחית."
   },
   {
     id: "eopl-error",
@@ -620,7 +620,7 @@ const dictionaryData = [
     model: "שארית חלוקה חכמה (לרוב חיובית).",
     code: `(modulo 10 3) ; => 1`,
     usage: "מימוש פעולות מודולו מורחבות בסביבת ההרצה.",
-    detailed: ""
+    detailed: "פעולת השארית המתמטית - כאשר מתמודדים עם מספרים שליליים, modulo תמיד מחזיר תוצאה באותו הסימן של המחלק."
   },
   {
     id: "quotient",
@@ -630,7 +630,7 @@ const dictionaryData = [
     model: "חלוקת שלמים, השמטת השארית.",
     code: `(quotient 10 3) ; => 3`,
     usage: "מימוש פקודות של חלוקה ללא נקודה עשרונית.",
-    detailed: ""
+    detailed: "חילוק שלמים שמשמיט את השארית לגמרי."
   },
   {
     id: "remainder",
@@ -640,7 +640,7 @@ const dictionaryData = [
     model: "שארית חלוקה רגילה.",
     code: `(remainder 10 3) ; => 1`,
     usage: "כלי נוסף במימוש אריתמטיקה.",
-    detailed: ""
+    detailed: "שארית חלוקה רגילה, בשונה מ-modulo אינה מתקנת סימן שלילי."
   },
   {
     id: "even-q",
@@ -650,7 +650,7 @@ const dictionaryData = [
     model: "בודק האם המספר זוגי.",
     code: `(even? 4) ; => #t`,
     usage: "מימוש של אופרטור זוגי/אי זוגי בשפת המבחן.",
-    detailed: ""
+    detailed: "זיהוי מספר זוגי באופן אלגנטי."
   },
   {
     id: "odd-q",
@@ -660,7 +660,7 @@ const dictionaryData = [
     model: "בודק האם המספר אי-זוגי.",
     code: `(odd? 3) ; => #t`,
     usage: "בדיקות תנאי אריתמטיות.",
-    detailed: ""
+    detailed: "זיהוי מספר אי-זוגי."
   },
   {
     id: "max",
@@ -670,7 +670,7 @@ const dictionaryData = [
     model: "שולף את המספר הגדול ביותר.",
     code: `(max 1 9 5) ; => 9`,
     usage: "מימוש פקודות מערכים והגדרות אורך.",
-    detailed: ""
+    detailed: "מציאת הערך המקסימלי מבין כל הארגומנטים."
   },
   {
     id: "min",
@@ -680,7 +680,7 @@ const dictionaryData = [
     model: "שולף את המספר הקטן ביותר.",
     code: `(min 1 9 5) ; => 1`,
     usage: "שימושי למדידת חסמים.",
-    detailed: ""
+    detailed: "מציאת הערך המינימלי מבין כל הארגומנטים."
   },
   {
     id: "abs",
@@ -690,7 +690,7 @@ const dictionaryData = [
     model: "ערך מוחלט.",
     code: `(abs -5) ; => 5`,
     usage: "הרחבות מתמטיות של המבחן.",
-    detailed: ""
+    detailed: "פונקציית הערך המוחלט."
   },
 
   // MUTATION
@@ -712,7 +712,7 @@ const dictionaryData = [
     model: "דריסת האיבר הראשון ברשימה קיימת (Physical Mutation).",
     code: `(set-car! lst 99)`,
     usage: "נדיר במבחנים רגילים, אך מופיע לעיתים בשאלות מתקדמות על סביבות (Env) רקורסיביות.",
-    detailed: ""
+    detailed: "מוטציה פיזית על איבר ראשון של זוג קיים בזיכרון. פעולה זו הוצאה מספריית הבסיס של R6RS."
   },
   {
     id: "set-cdr-bang",
@@ -722,7 +722,7 @@ const dictionaryData = [
     model: "דריסת המשך הרשימה.",
     code: `(set-cdr! lst '(1 2))`,
     usage: "יצירת מבנים מעגליים מורכבים.",
-    detailed: ""
+    detailed: "מוטציה פיזית על המשך רשימה (זנב)."
   },
 
   // EOPL TYPES
@@ -734,7 +734,7 @@ const dictionaryData = [
     model: "יוצר בודק טיפוסים על כל איברי רשימה.",
     code: `(list-of expval?)`,
     usage: "משמש ב-define-datatype כאשר יש לנו קופסה שמכילה סדרה של ערכים מטיפוס ספציפי.",
-    detailed: ""
+    detailed: "פרדיקט המשמש ליצירת הגדרות datatype ומוודא שכל האיברים ברשימה הם מסוג מסוים."
   },
   {
     id: "always-q",
@@ -744,7 +744,7 @@ const dictionaryData = [
     model: "כלי של EoPL שמעביר כל טיפוס שהוא.",
     code: `(always? 5) ; => #t`,
     usage: "כאשר לא אכפת לנו מאיזה סוג משתנה נשמר בקופסה.",
-    detailed: ""
+    detailed: "פרדיקט של eopl שתמיד יחזיר אמת ונועד למצבי ברירת מחדל."
   },
   {
     id: "maybe",
@@ -754,7 +754,7 @@ const dictionaryData = [
     model: "כלי שמאפשר קבלת טיפוס ספציפי או השארת הערך ריק (#f).",
     code: `((maybe environment?) #f) ; => #t`,
     usage: "כשצריך לתמוך בסביבות משתנות, כמו שמירת Closure שלפעמים אין לו סביבה.",
-    detailed: ""
+    detailed: "כלי מסוג type checker המאפשר קבלת טיפוס ספציפי או את הערך #f."
   },
 
   // --- LANG ---
@@ -779,7 +779,7 @@ const dictionaryData = [
     model: "מזהה תו בודד של אות באנגלית (A-Z, a-z).",
     code: `(identifier (letter (arbno letter)) symbol)`,
     usage: "הגדרת מבנה של שמות משתנים חוקיים.",
-    detailed: ""
+    detailed: "סורק לקסיקלי של תו בודד מתוך a-z או A-Z."
   },
   {
     id: "digit",
@@ -789,7 +789,7 @@ const dictionaryData = [
     model: "מזהה תו ספרתי (0-9).",
     code: `(number (digit (arbno digit)) number)`,
     usage: "הגדרת איסוף מספרים.",
-    detailed: ""
+    detailed: "סורק לקסיקלי לספרה 0-9."
   },
   {
     id: "any",
@@ -799,7 +799,7 @@ const dictionaryData = [
     model: "כל תו שהוא מתוך מקלדת האותיות.",
     code: `(string ("\"" (arbno any) "\"") string)`,
     usage: "הגדרת מחרוזות שמקבלות הכל.",
-    detailed: ""
+    detailed: "סורק לקסיקלי המקבל כל תו."
   },
   {
     id: "whitespace",
@@ -809,7 +809,7 @@ const dictionaryData = [
     model: "רווחים, כרטיסיות (Tab) ושורות חדשות.",
     code: `(whitespace (whitespace) skip)`,
     usage: "כדי לומר לסורק להתעלם מרווחים מיותרים בתוכנית המקור.",
-    detailed: ""
+    detailed: "הגדרת רווחים ריקים לסורק על מנת שיוכל להתעלם מהם."
   },
   {
     id: "skip",
@@ -819,7 +819,7 @@ const dictionaryData = [
     model: "פקודה פנימית האומרת לסורק לזרוק את המידע לאחר הקריאה.",
     code: `(comment ("%" (arbno any)) skip)`,
     usage: "מושלם לבניית התעלמות מהערות קוד (Comments).",
-    detailed: ""
+    detailed: "הוראה ללקסר לדלג ולא לייצר טוקן."
   },
   {
     id: "symbol-lexer",
@@ -829,7 +829,7 @@ const dictionaryData = [
     model: "הפיכת רצף תווים לסמל מזוהה בזיכרון Scheme.",
     code: `(identifier (letter) symbol)`,
     usage: "הכרחי לכל דבר שהוא שם-משתנה (Identifier).",
-    detailed: ""
+    detailed: "שם כללי לטוקנים מסוג מזהה (identifier)."
   },
   {
     id: "number-lexer",
@@ -839,7 +839,7 @@ const dictionaryData = [
     model: "הפיכת רצף ספרות לערך מתמטי של Scheme.",
     code: `(number (digit) number)`,
     usage: "זיהוי מספרים לצורכי אריתמטיקה.",
-    detailed: ""
+    detailed: "זיהוי מחרוזת של ספרות כמספר אחד שלם."
   },
 
   // PARSER
@@ -873,7 +873,7 @@ const dictionaryData = [
     model: "רשימה של ביטויים המופרדת על ידי תו פרימיטיבי (למשל פסיק).",
     code: `(expression ("sum" "(" (separated-list expression ",") ")") sum-exp)`,
     usage: "חובה כאשר פונקציה דורשת פרמטרים מופרדים (f(x, y, z)).",
-    detailed: ""
+    detailed: "תחביר לאיסוף רשימה שמופרדת על ידי פסיק או כל תו מפריד אחר."
   },
   {
     id: "non-terminals",
@@ -910,7 +910,7 @@ const dictionaryData = [
   (empty-env)
   (extend-env (var symbol?) (val expval?) (env environment?)))`,
     usage: "מוסתר לרוב, אך לעיתים יש לבנות פונקציות סביבה חדשות לשאלות מתקדמות.",
-    detailed: ""
+    detailed: "הטיפוס הרשמי המייצג סביבה בספריית eopl."
   },
 
   // EXPVAL
@@ -923,7 +923,7 @@ const dictionaryData = [
     code: `(cases expval v
   (num-val (n) n))`,
     usage: "בדיקת ולידציה של פלט המנוע.",
-    detailed: ""
+    detailed: "טיפוס העל במפרש שעוטף כל ערך לוגי או מתמטי שמוחזר במהלך ההרצה."
   },
   {
     id: "expval-to-num",
@@ -1101,7 +1101,7 @@ const dictionaryData = [
     code: `(cases expval val
   (num-val (n) (num-val (+ n 1))))`,
     usage: "לעיתים משתמשים בזה בתוך interp כדי לבצע עבודת חילוץ מהירה (Inline).",
-    detailed: ""
+    detailed: "שימוש ב-cases על expval על מנת להפריד בין התנהגויות לפי התוכן (מספר, רשימה, פונקציה)."
   },
   {
     id: "apply-procedure",
@@ -1286,6 +1286,106 @@ const dictionaryData = [
     usage: "חלק ממימוש Call-exp, ברגע שהפונקציה עצמה מתחילה לרוץ עם הארגומנט שהועבר אליה.",
     detailed: "<strong>המנגנון התיאורטי (העברה לפי ערך):</strong> כשאנו מעבירים ארגומנט לפונקציה, המפרש לוקח את הערך שכבר חושב (`val`) ומייצר עבורו תא זיכרון <strong>חדש לחלוטין</strong> (`newref`). הסביבה החדשה של הפונקציה תכיר את הפרמטר רק כמצביע לתא החדש הזה. המשמעות המעשית היא שהפונקציה מקבלת <strong>עותק מבודד</strong>. אם הפונקציה תבצע השמה (`set!`) לפרמטר שלה, הפעולה תשפיע רק על התא החדש ולא תשנה את המשתנה המקורי שנמצא בסביבת הקריאה (Caller). <br><strong>הקשר למבחן:</strong> כאשר נדרשים לממש 'העברה לפי הפניה' (Call-by-Reference), מנגנון זה משתנה מן היסוד: המפרש מדלג על ה-`newref`, ומעביר את הכתובת המקורית של המשתנה ישירות לתוך ה-`extend-env`, כך שהפונקציה והקוד הקורא חולקים את אותו תא זיכרון."
   },
+  {
+    id: "add",
+    title: "+",
+    category: "general",
+    subCategory: "math",
+    model: "חיבור של מספרים. התקן של R6RS תומך במספר רב של ארגומנטים (כולל אפס, שמחזיר 0).",
+    code: `(+ 1 2 3) ; => 6`,
+    usage: "ביצוע חישובים אריתמטיים בסיסיים בתוך המפרש.",
+    detailed: "זוהי פונקציית ליבה בסכמה. רוב מפרשי EoPL תומכים בגרסה הדו-מקומית בלבד מטעמי פשטות."
+  },
+  {
+    id: "subtract",
+    title: "-",
+    category: "general",
+    subCategory: "math",
+    model: "חיסור של מספרים. כאשר ניתן ארגומנט יחיד, מחזיר את ערכו השלילי.",
+    code: `(- 5 2) ; => 3`,
+    usage: "פעולות אריתמטיות בסיסיות, שינויי סימן ופעולות תנאי.",
+    detailed: "במפרשי שפת היעד ב-EoPL, נהוג לפעמים להגדיר פקודת -(exp1, exp2) ייעודית."
+  },
+  {
+    id: "multiply",
+    title: "*",
+    category: "general",
+    subCategory: "math",
+    model: "כפל של מספרים.",
+    code: `(* 2 3 4) ; => 24`,
+    usage: "הכרחי לרוב השאלות האריתמטיות במבחנים.",
+    detailed: "אופרטור מתמטי ליבה מתוך R6RS."
+  },
+  {
+    id: "divide",
+    title: "/",
+    category: "general",
+    subCategory: "math",
+    model: "חילוק של מספרים.",
+    code: `(/ 10 2) ; => 5`,
+    usage: "אריתמטיקה.",
+    detailed: "שים לב: חילוק ב-0 יוביל לקריסה. ב-R6RS חילוק 1 ב-2 יכול להחזיר שבר מדויק."
+  },
+  {
+    id: "less-than",
+    title: "<",
+    category: "general",
+    subCategory: "comparisons",
+    model: "בודק האם המספר הראשון קטן ממש מהשני.",
+    code: `(< 3 5) ; => #t`,
+    usage: "אופרטור מרכזי בהערכת תנאים וכתיבת לולאות רקורסיביות.",
+    detailed: "פונקציית ליבה מתוך R6RS."
+  },
+  {
+    id: "greater-than",
+    title: ">",
+    category: "general",
+    subCategory: "comparisons",
+    model: "בודק האם המספר הראשון גדול ממש מהשני.",
+    code: `(> 5 3) ; => #t`,
+    usage: "תנאי יחס אריתמטיים.",
+    detailed: "אופרטור יחס מתוך סכמה תקנית."
+  },
+  {
+    id: "not",
+    title: "not",
+    category: "general",
+    subCategory: "logic",
+    model: "שלילה לוגית. הופך ערך אמת לשקר ולהיפך.",
+    code: `(not #t) ; => #f`,
+    usage: "היפוך תנאי בדיקה ופרדיקטים.",
+    detailed: "בסכמה, כל דבר שאינו #f נחשב באופן אוטומטי לאמת."
+  },
+  {
+    id: "letrec",
+    title: "letrec",
+    category: "general",
+    subCategory: "logic",
+    model: "מאפשר הגדרת משתנים המפנים זה לזה ליצירת פונקציות רקורסיביות.",
+    code: `(letrec ((f (lambda (n) ...))) (f 5))`,
+    usage: "יצירת פונקציה רקורסיבית מבוססת סביבה מקומית.",
+    detailed: "המפרש קודם יוצר סביבה מורחבת עם מקומות ריקים, מעריך את הביטויים, ו'משתיל' אותם חזרה. (R6RS)."
+  },
+  {
+    id: "procedure-q",
+    title: "procedure?",
+    category: "general",
+    subCategory: "predicates",
+    model: "פרדיקט תקני של R6RS הבוחן האם הערך הוא סגור פונקציה תקין.",
+    code: `(procedure? (lambda (x) x)) ; => #t`,
+    usage: "אימות טיפוסי משתנים כדי להימנע מקריסות.",
+    detailed: "זוהי הפונקציה הכללית של סכמה ולא רק של מפרש EOPL."
+  },
+  {
+    id: "vector",
+    title: "vector",
+    category: "general",
+    subCategory: "vectors",
+    model: "בנאי מערכים ישיר. יוצר מערך בגודל מדויק ומאכלס אותו בארגומנטים שהועברו.",
+    code: `(vector 1 2 3) ; => #(1 2 3)`,
+    usage: "אתחול מהיר של מערכים כשידוע מראש התוכן.",
+    detailed: "תקן R6RS."
+  }
 ];
 
 window.dictionaryData = dictionaryData;
