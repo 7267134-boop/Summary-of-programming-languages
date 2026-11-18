@@ -13,6 +13,7 @@
 
 # Allow theme manager JS
 !theme-manager.js
+!course-modals.js
 !dictionary-tooltip.js
 !functions_data.js
 !ai_widget.js

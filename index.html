@@ -131,6 +131,7 @@
         }
     </style>
     <script src="theme-manager.js"></script>
+    <script src="course-modals.js?v=20261116"></script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230284c7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 18 22 12 16 6'/%3E%3Cpolyline points='8 6 2 12 8 18'/%3E%3C/svg%3E">
 </head>
 
@@ -450,6 +451,22 @@
                     </svg>
                 </div>
             </a>
+        </div>
+
+        <!-- Quick Access Buttons for Welcome Roadmap & Share Modal -->
+        <div class="flex flex-wrap justify-center items-center gap-3 mt-12 mb-4">
+            <button type="button" onclick="window.showCourseWelcomeModal()"
+                title="פתיחת מדריך האתר ומפת הלימוד"
+                class="px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-sky-200/90 hover:border-sky-500 hover:bg-sky-50 text-sky-800 hover:text-sky-900 text-xs sm:text-sm font-bold transition-all duration-300 shadow-xs hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer">
+                <span>ℹ️</span>
+                <span>מדריך ומפת האתר</span>
+            </button>
+            <button type="button" onclick="window.showCourseShareModal()"
+                title="פתיחת חלון שיתוף הקורס ומאגר הקורסים הראשי"
+                class="px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-blue-200/90 hover:border-blue-500 hover:bg-blue-50 text-blue-800 hover:text-blue-900 text-xs sm:text-sm font-bold transition-all duration-300 shadow-xs hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer">
+                <span>💙</span>
+                <span>שיתוף האתר ומאגר הקורסים</span>
+            </button>
         </div>
 
         <!-- רשתות חברתיות ויצירת קשר -->
